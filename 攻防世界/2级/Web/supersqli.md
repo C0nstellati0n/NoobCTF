@@ -66,7 +66,7 @@ MariaDB又是什么数据库啊？
 那么我们可以准备下面这个payload：
 
 - ?inject=1';set @sql=concat('s','elect * from \`1919810931114514`');PREPARE pre FROM @sql;EXECUTE pre; #
-- > 不能在直接拼接select，因为这样就是字符串而不是可以执行的语句了。
+- > 不能直接拼接select，因为这样就是字符串而不是可以执行的语句了。
 
 这条语句意为：set准备需要的select语句（用concat拼接字符串绕过过滤，prepare预编译语句，execute执行语句。
 
