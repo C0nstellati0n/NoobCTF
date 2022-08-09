@@ -8,7 +8,7 @@
 
 看名称感觉是个猜数字的挑战，反编译程序也发现确实如此。
 
-![main](https://github.com/C0nstellati0n/NoobCTF/blob/main/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/images/packets.png)
+![main](../../images/theMain.png)
 
 看到srand我的DNA就动了，C语言随机数这类的题之前做过了，起码有点思路了。FUN_00100a20是判断猜的数字对不对的函数。
 
