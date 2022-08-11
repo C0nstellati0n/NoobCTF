@@ -53,7 +53,7 @@ pop()大概就是返回当前路径下FLAG文件的值。app.config\['FLAG']的�
 
 通过replace还发现圆括号也被过滤了。但是blacklist并没有过滤完全，只是规定了输入不能等于config，没说不能包含config。我从[这里](https://10-0-0-55.github.io/web/flask/ssti/)找到了一个完全可行的payload。
 
-- http://61.147.171.105:60143/shrine/{{url_for.\__globals__\['current_app'].config\["FLAG"]}}
+- http://61.147.171.105:60143/shrine/{{url_for.__globals__['current_app'].config["FLAG"]}}
   
 直接打印出config中FLAG的内容。
 
