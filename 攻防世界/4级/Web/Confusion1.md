@@ -10,8 +10,7 @@
 
 没啥思路，随便点点，发现报错页面的源代码中有注释。
 
-- <!--Flag @ /opt/flag_1de36dff62a3a54ecfbc6e1fd2ef0ad1.txt-->
-- <!--Salt @ /opt/salt_b420e8cfb8862548e68459ae1d37a1d5.txt-->
+- <\!--Flag @ /opt/flag_1de36dff62a3a54ecfbc6e1fd2ef0ad1.txt--><br><\!--Salt @ /opt/salt_b420e8cfb8862548e68459ae1d37a1d5.txt-->
 
 莫名其妙告诉了我们flag的路径，难不成又是任意文件读取这类的东西？robots.txt没有发现，phps也没法看。这时想到python，你说python在ctf里比较常见的考点是啥呢？Flask模版注入？
 
