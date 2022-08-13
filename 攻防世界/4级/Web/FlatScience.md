@@ -124,7 +124,7 @@ highlight_file('login.php');
 
 或者也可以直接 ' union select 1,group_concat(name) from Users--+ ，一次查完全部数据。
 
-根据 \$res = \$db->query("SELECT id,name from Users where name='".\$user."' and password='".sha1($pass."Salz!")."'"); 可以得知 明文密码+Salz! 的sha1值就是password。偷懒的方法是放到[这里](https://www.somd5.com/)解密，而正确做法是爬取全部pdf论文然后一个一个试（根据my+fav+word+in+my+fav+paper?!提示得出）
+根据 \$res = \$db->query("SELECT id,name from Users where name='".\$user."' and password='".sha1($pass."Salz!")."'"); 可以得知 明文密码+Salz! 的sha1值就是password。偷懒的方法是放到[这里](https://www.somd5.com/)解密，得出密码ThinJerboa。而正确做法是爬取全部pdf论文然后一个一个试（根据my+fav+word+in+my+fav+paper?!提示得出）
 
 直接上大佬的代码吧，我很明显是属于偷懒那拨人的。
 
