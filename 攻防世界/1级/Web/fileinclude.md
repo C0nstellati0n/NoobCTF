@@ -6,6 +6,8 @@
 
 进来就几个大字，告诉我们flag在flag.php。检查元素发现了源代码。
 
+![fileinclude](../../images/fileinclude.png)
+
 ```php
 <?php
 if( !ini_get('display_errors') ) {
