@@ -130,7 +130,7 @@ p.interactive()
 
 当然用普通方法在libc里找/bin/sh再调用system也是可以的。具体[看这](https://blog.csdn.net/Y_peak/article/details/114234059)。原理只要你看懂第一个rop链就能懂了。
 
-我突然意识到我可以在能运行elf的机子上拿出需要的地址再放到能连接nc的机子上运行。于是我拿到flag了。（＾∇＾）
+我突然意识到我可以在能运行elf的机子上拿出需要的地址再放到能连接nc的机子上运行,因为elf中的地址是不会变的。于是我拿到flag了。（＾∇＾）
 
 
 - ### Flag
