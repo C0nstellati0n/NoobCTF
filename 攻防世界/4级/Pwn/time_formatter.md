@@ -257,8 +257,8 @@ strdup函数的操作涉及到堆。详情见[这里](https://stackoverflow.com/
   - 声明：int snprintf ( char * str, size_t size, const char * format, ... );
   - 参数
     > str -- 目标字符串。<br>
-    > size -- 拷贝字节数(Bytes)。
-    > format -- 格式化成字符串。
+    > size -- 拷贝字节数(Bytes)。<br>
+    > format -- 格式化成字符串。<br>
     > ... -- 可变参数。
 
 跟__snprintf_chk的套路一样，__snprintf_chk和snprintf差不多，就是检查了栈。local_810中的内容应该为/bin/date -d @time +\'format\'。此处有个命令注入。linux中命令之间用;分割，所以我们可以在format的payload中包含;号，然后接着getshell的命令。问题是format有过滤，不能包含分号。是时候放出UAF了。
