@@ -28,7 +28,7 @@ for i in range(100):
 
 - jdr78772Q82jhQ62jaLLs
 
-python3里面b64decode是个已经被ord的数组，所以直接异或就行了。但是为什么不对？我真的百思不得其解，只能去看官方wp了。wp如下：
+python3.10里面list b64decode的结果直接就是ord结果，所以直接异或就行了。但是为什么不对？我真的百思不得其解，只能去看官方wp了。wp如下：
 
 ```python
 import string
