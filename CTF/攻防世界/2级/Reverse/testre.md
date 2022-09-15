@@ -188,7 +188,7 @@ undefined Main(char *param_1,ulong *param_2,long param_3,ulong param_4)
 
 - D9cS9N9iHjMLTdA8YSMRMp
 
-cyberchef解密得到flag。
+cyberchef解密得到flag。好耶不用看烦人的混淆逻辑了。
 
 - ### Flag
   > flag{base58_is_boring}
