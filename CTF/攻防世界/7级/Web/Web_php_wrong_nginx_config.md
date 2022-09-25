@@ -349,36 +349,6 @@ while cmd != '':
 我尝试搞成python3，能正常运行但是无法输出内容。
 
 ```python
-""" from Crypto.Util.number import *
-import string
-import random
-table = string.ascii_letters+string.digits+string.punctuation
-FLAG=b'moectf{'
-for _ in range(49-len(FLAG)):
-    FLAG += random.choice(table).encode()
-FLAG+=b'}'
-key='11010'
-class LFSR:
-    def __init__(self):
-        self.data = list(map(int,list(bin(bytes_to_long(FLAG))[2:].rjust(400,'0'))))
-        print(''.join([str(i) for i in self.data]))
-        for _ in range(2022):
-            self.cycle()
-            self.cycle()
-            break
-    def cycle(self):
-        bit = self.data[0]
-        new = 0
-        for i in key:
-            new ^= self.data[int(i)]
-        self.data = self.data[1:] + [new]
-        print(''.join([str(i) for i in self.data]))
-        print(new)
-        print(bit)
-        return bit
-ILOVEMOECTF = LFSR()
-print(''.join([str(i) for i in ILOVEMOECTF.data]))
- """
 # encoding: utf-8
 
 from operator import xor
