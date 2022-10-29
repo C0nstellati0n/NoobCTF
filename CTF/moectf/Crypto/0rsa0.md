@@ -92,5 +92,29 @@ for i in range(1,65538):
 
 这是脚本小子的绝对胜利！不知道为啥，数论已经学到整除了，等我学成归来必写解释ʕ •ᴥ•ʔ
 
+我回来了，现在比赛早就结束了，刷题时又遇见了相同知识点的题。根据大佬[博客](https://blog.csdn.net/weixin_45369385/article/details/109208109)做个笔记。
+
+首先是rsa提供的已知条件。
+
+$c≡m^e \mod n$<br>
+$m\equiv c^d \mod n$<Br>
+$\phi(n)=(p-1)\times(q-1)$<br>
+$d\times e \equiv 1 \mod\phi (n)$
+$dp=d\mod (p-1)$
+
+将dp的式子变形：
+
+$dp=d\mod (p-1)\rightarrow dp*e\equiv d*e \mod (p-1)\rightarrow d \times e = k \times (p-1) + dp \times e$
+
+因为ϕ(n)=(p−1)×(q−1)，所以替换式子$d\times e \equiv 1 \mod\phi (n)$得到d×e≡1 mod (p−1)×(q−1)。d和dp同余，所以我们可以把d和dp互换；ϕ(n)=(p−1)×(q−1)，所以加上k个(p−1)后不会改变余数的结果，于是可以得到k×(p−1)+dp×e=1 mod ϕ(n)。继续变形，k×(p−1)+dp×e=1 \mod (p−1)×(q−1)。把这个k叫做$k_1$，以便后续区分$k_2*(p-1)*(q-1)+1$。不难看出$k_1×(p−1)+dp×e=k_2×(p−1)×(q−1)+1$，还是因为模的定义。现在就是方程了，做一些简单的代数。
+
+$dp×e= [k_2 ×( p − 1 ) × ( q − 1 ) + 1 ] − [ k_1 × ( p − 1 ) ] =k_2 ×( p − 1 ) × ( q − 1 )- k_1 × ( p − 1 )+1=[k_2*(q-1)-k_1]*(p-1)+1$
+
+设$X=k_2*(q-1)-k_1$,就有
+
+dp\*e=X\*(p-1)+1
+
+$dp=d\mod (p-1)$,所以必定小于p-1。要想满足上面的等式，X必须小小于e，$X\in (0,e)$，只要爆破X筛选flag就行了。
+
 - ### Flag
   > moectf{T8uus_23jkjw_asr_3d32awd!5f&#@sd}
