@@ -13,11 +13,14 @@
 这里是利用get传参的方式获取到页面，而像这种动态包含就很有可能是文件包含漏洞。至于包含什么文件，可以利用一个php的伪协议。
 
 - ### php://filter
-- > 该协议的参数会在该协议路径上进行传递，多个参数都可以在同一个路径上传递
-- resource=<要过滤的数据流>     必须项。指定了要筛选过滤的数据流。
-- read=<读链的过滤器>           可选项。可以设定一个或多个过滤器名称，以管道符（|）分隔
-- write=<写链的筛选列表>        可选。可以设定一个或多个过滤器名称，以管道符（|）分隔。
-- <；两个链的筛选列表>           任何没有以 read= 或 write= 作前缀 的筛选器列表会视情况应用于读或写链。
+  > 该协议的参数会在该协议路径上进行传递，多个参数都可以在同一个路径上传递
+
+```
+resource=<要过滤的数据流>     必须项。指定了要筛选过滤的数据流。
+read=<读链的过滤器>           可选项。可以设定一个或多个过滤器名称，以管道符（|）分隔
+write=<写链的筛选列表>        可选。可以设定一个或多个过滤器名称，以管道符（|）分隔。
+<；两个链的筛选列表>           任何没有以 read= 或 write= 作前缀 的筛选器列表会视情况应用于读或写链。
+```
 
 是不是看起来很模糊，不知道在干啥？这里只需要记住一个最常见的用法就行了。
 
@@ -200,26 +203,26 @@ if ($_SERVER['HTTP_X_FORWARDED_FOR'] === '127.0.0.1') {
 }
 ```
 
-- ### $_SERVER
-- > 一个包含了诸如头信息(header)、路径(path)、以及脚本位置(script locations)等等信息的数组。
+### $_SERVER
+  > 一个包含了诸如头信息(header)、路径(path)、以及脚本位置(script locations)等等信息的数组。
 
 那HTTP_X_FORWARDED_FOR很明显就是取出头部信息的HTTP_X_FORWARDED_FOR字段值。HTTP_X_FORWARDED_FOR我们可以自己伪造，所以不是大问题。重中之重在下面的preg_replace()函数。
 
-- ### preg_replace
-- > 执行一个正则表达式的搜索和替换。
-- > 语法：mixed preg_replace ( mixed \$pattern , mixed \$replacement , mixed \$subject [, int \$limit = -1 [, int &$count ]] ),搜索 subject 中匹配 pattern 的部分， 以 replacement 进行替换。
+### preg_replace
+  > 执行一个正则表达式的搜索和替换。
+  <br>语法：mixed preg_replace ( mixed \$pattern , mixed \$replacement , mixed \$subject [, int \$limit = -1 [, int &$count ]] ),搜索 subject 中匹配 pattern 的部分， 以 replacement 进行替换。
 - 参数：
-- > $pattern: 要搜索的模式，可以是字符串或一个字符串数组。
-- > $replacement: 用于替换的字符串或字符串数组。
-- > $subject: 要搜索替换的目标字符串或字符串数组。
-- > $limit: 可选，对于每个模式用于每个 subject 字符串的最大可替换次数。 默认是-1（无限制）。
-- > $count: 可选，为替换执行的次数。
+  > \$pattern: 要搜索的模式，可以是字符串或一个字符串数组。
+  <br>\$replacement: 用于替换的字符串或字符串数组。
+  <br>\$subject: 要搜索替换的目标字符串或字符串数组。
+  <br>\$limit: 可选，对于每个模式用于每个 subject 字符串的最大可替换次数。 默认是-1（无限制）。
+  <br>\$count: 可选，为替换执行的次数。
 - 返回值：如果 subject 是一个数组， preg_replace() 返回一个数组， 其他情况下返回一个字符串。如果匹配被查找到，替换后的 subject 被返回，其他情况下 返回没有改变的 subject。如果发生错误，返回 NULL。
 
 光看这个还不足以让我们找到漏洞点。仔细看会发现preg_replace()的所有参数都可以由我们自由控制，而安全的准则之一就是不要相信用户的输入。既然和正则有关系，那么正则有没有什么比较特殊的选项呢？
 
-- ### /e
-- > 使 preg_replace() 将 replacement 参数当作 PHP 代码（在替换完成之后）执行。要确保  replacement 构成一个合法的 PHP 代码字符串，否则 PHP 会在报告在包含 preg_replace() 的行中出现语法解析错误。
+### /e
+  > 使 preg_replace() 将 replacement 参数当作 PHP 代码（在替换完成之后）执行。要确保  replacement 构成一个合法的 PHP 代码字符串，否则 PHP 会在报告在包含 preg_replace() 的行中出现语法解析错误。
 
 这就是我们想要的了，执行任意命令。很容易就可以构建出payload。
 
@@ -239,6 +242,5 @@ if ($_SERVER['HTTP_X_FORWARDED_FOR'] === '127.0.0.1') {
 
 - /index.php?pat=/flag/e&rep=system("cat+s3chahahaDir/flag/flag.php")&sub=flag
 
-- ### Flag
-- > cyberpeace{96c585a509c100a7a043fb7f9d4ea085}
-
+## Flag
+> cyberpeace{96c585a509c100a7a043fb7f9d4ea085}
