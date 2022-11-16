@@ -62,4 +62,4 @@ function getFlag(){
 
 - 对一个正则表达式模式或部分模式 两边添加圆括号 将导致相关 匹配存储到一个临时缓冲区 中，所捕获的每个子匹配都按照在正则表达式模式中从左到右出现的顺序存储。缓冲区编号从 1 开始，最多可存储 99 个捕获的子表达式。
 
-所以`\1`代表第一个子匹配项。[${}](https://www.php.net/manual/zh/language.variables.variable.php)可php的可变变量有关。直接传`getFlag()`，确实能够执行，但是程序回显的地方只有`echo complex($re, $str). "\n";`，也就是preg_replace的返回值：替换后的内容。那getFlag就被原封不动返回来了，看不到执行效果。`${getFlag()}`把getFlag看作参数，先执行getFlag获取其返回值，这样`/1`取到的就是函数执行的结果了。
+所以`\1`代表第一个子匹配项。[${}](https://www.php.net/manual/zh/language.variables.variable.php)和php的可变变量有关。直接传`getFlag()`，确实能够执行，但是程序回显的地方只有`echo complex($re, $str). "\n";`，也就是preg_replace的返回值：替换后的内容。那getFlag就被原封不动返回来了，看不到执行效果。`${getFlag()}`把getFlag看作参数，先执行getFlag获取其返回值，这样`/1`取到的就是函数执行的结果了。
