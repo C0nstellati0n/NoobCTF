@@ -234,7 +234,9 @@ p.interactive()
 
 首先Add三个用户，第一个用来释放，第二个用来当被溢出的chunk，第三个提前把要用的/bin/sh放好。Del释放掉索引0处的user，由于我们设置desc长度为0x80，释放时结构体固定的0x80和desc的0x80就会合并（unlink）。接下来我们再添加一个用户，desc大小为0x108。0x108是因为堆头也有8个字节，0x80+0x80=0x100，再加0x8=0x108，这才保证了大小的完全一致。0x19c的内容可以完美溢出到下一个用户并改写第二个用户的desc指针为free。至于为什么是0x19c，desc的0x108+用户2的结构体堆头0x8+用户2的结构体0x80+用户2的desc堆头0x8,这样是0x198，正好到达用户2desc的起点。再来8个字节写free地址，故再+4（32位），0x198+0x4=0x19c。
 
-现在结构体和desc就没有挨在一起了，防御便失效了。打印用户2的信息便可以得到free的真实地址。updata更改free的got表为system地址，完成got表改写。最后删除提前预留好/bin/sh的用户即getshell。
+现在结构体和desc就没有挨在一起了，防御便失效了。打印用户2的信息便可以得到free的真实地址。update更改free的got表为system地址，完成got表改写。最后删除提前预留好/bin/sh的用户即getshell。
+
+时隔两月再次遇见这道题，还是没做出来。笑死，继续补充一点细节。不难发现Add函数要求输入两个大小，这是因为程序的Add函内部写desc用了Update函数，而Update函数内部又要求输入大小。Add内部询问的大小是malloc的堆的大小，Update是填充字节时的大小，这也是为啥`Add(0x108,0x19C,payload)`的两个大小不一样。
 
 - ### Flag
   > cyberpeace{b7a2cb035785cc1ded8e18ecf25809dd}
