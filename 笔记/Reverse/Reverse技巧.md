@@ -18,6 +18,13 @@
 12. ida中的数字有时候会带类型后缀。比如10h表示16进制的0x10，0i64表示int_64下的0。做题时注意区分，很容易把16进制看漏导致数据出现问题。
 13. 在字符串窗口看见一个字符串并想找其引用时，先双击字符串，就会进入到另一个窗口，可以在字符串右侧看见DATA XREF。最后双击DATA XREF显示的函数名即可。
 14. 有时候一些字符串会以hex形式出现在ida中，此时右键转char得到的字符串因为端序问题是反过来的，逆向时要注意手动将字符串倒序回来。
+15. 遇见`Reverse技巧`一栏第5点的情况时，也可以考虑右键那个不够长的数组，选择Set Ivar Type，然后改成想要的长度。
+
+## Jadx使用
+
+1. 直接去[github](https://github.com/skylot/jadx/releases)下载最新release，电脑装了jre的下载`jadx-gui-1.4.5-no-jre-win.exe`，没装的下载`jadx-gui-1.4.5-with-jre-win.zip`。不需要过多配置，如果不确定装没装，就先下载`jadx-gui-1.4.5-no-jre-win.exe`，能运行就是装了，不能运行就是没装。
+2. 导入文件后直接去找MainActivity，跟普通逆向第一步找main一样。
+3. 没有关闭当前项目键，想反编译新文件直接文件->打开文件选个新的，点击不保存当前就可以了。
 
 ## Reverse技巧
 
@@ -431,3 +438,47 @@ if (s__*******_*_****_*_****_*_***_*#_*_00601060[(long)(int)local_28 * 8 + (long
 注意到`local_28 * 8`。很多正方形的迷宫题都是这个套路，先找到终点，然后看乘以了什么数字。这里是8，因此迷宫为8*8。
 
 8. 逆向出来的程序判断输入是否是字母或转大小写的方式会比较奇怪，以及一些加密算法爆破比强行逆向好。例题：[SimpleRev](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/SimpleRev.md)
+9. r2 patch程序。有些时候flag就在程序中，但是有一个复杂的逻辑判断输入是否正确，而且flag的生成也无法得知。这个时候用于判断的if分支可以直接patch掉。`r2 程序名`使用r2进行分析，aaa分析全部，s前往地址，oo+打开写入模式，wao选择要更改的字节。完整如下：
+
+```bash
+$ r2 luck_guy 
+ -- You can mark an offset in visual mode with the cursor and the ',' key. Later press '.' to go back
+[0x004006b0]> aaa
+[x] Analyze all flags starting with sym. and entry0 (aa)
+[x] Analyze all functions arguments/locals
+[x] Analyze function calls (aac)
+[x] Analyze len bytes of instructions for references (aar)
+[x] Finding and parsing C++ vtables (avrr)
+[x] Type matching analysis for all functions (aaft)
+[x] Propagate noreturn information (aanr)
+[x] Use -AA or aaaa to perform additional experimental analysis.
+[0x004006b0]> s 0x004009b6
+[0x004009b6]> pd 1
+|       ,=< 0x004009b6      750c           jne 0x4009c4
+[0x004009b6]> oo+
+[0x004009b6]> wao
+| wao [op]  performs a modification on current opcode
+| wao nop   nop current opcode
+| wao jinf  assemble an infinite loop
+| wao jz    make current opcode conditional (same as je) (zero)
+| wao jnz   make current opcode conditional (same as jne) (not zero)
+| wao ret1  make the current opcode return 1
+| wao ret0  make the current opcode return 0
+| wao retn  make the current opcode return -1
+| wao nocj  remove conditional operation from branch (make it unconditional)
+| wao trap  make the current opcode a trap
+| wao recj  reverse (swap) conditional branch instruction
+| WIP:      not all archs are supported and not all commands work on all archs
+[0x004009b6]> wao je
+[0x004009b6]> pd 1
+|       ,=< 0x004009b6      740c           je 0x4009c4
+[0x004009b6]> quit
+```
+
+发现0x004009b6成功从jne改为je。此题为[[GXYCTF2019]luck_guy](https://buuoj.cn/challenges#[GXYCTF2019]luck_guy)的patch部分。
+
+10. 逆向从输入开始。有些程序在最开始可能会放很多复杂的难以分析的函数，此时分辨其参数和我们的输入是否有关。如果无关说明是程序自动生成的，把使用的值连同函数抄下来运行或者下断点就能得到结果了。
+11. 算是对第10点的补充，逆向从判断开始。一定要看判断对错的关键if语句引用的变量是什么，根据那个变量的引用看看哪些是加密函数，没用的不用看，节省时间和精力。
+12. java换行输出内容：`System.out.println()`，不换行输出：`System.out.print()`
+13. apk是可以解压的（把后缀名从apk改为zip），里面不仅仅有class文件，还会可能会有so文件。so文件里面还有一部分逆向逻辑，在程序中会以`System.loadLibrary("so文件名")`的形式来加载。
+14. 有些时候给出flag的函数不会在程序内部被调用，因此逆向时要看完整函数列表，注意有什么漏掉的函数。
