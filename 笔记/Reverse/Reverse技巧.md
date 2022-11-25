@@ -25,6 +25,7 @@
 1. 直接去[github](https://github.com/skylot/jadx/releases)下载最新release，电脑装了jre的下载`jadx-gui-1.4.5-no-jre-win.exe`，没装的下载`jadx-gui-1.4.5-with-jre-win.zip`。不需要过多配置，如果不确定装没装，就先下载`jadx-gui-1.4.5-no-jre-win.exe`，能运行就是装了，不能运行就是没装。
 2. 导入文件后直接去找MainActivity，跟普通逆向第一步找main一样。
 3. 没有关闭当前项目键，想反编译新文件直接文件->打开文件选个新的，点击不保存当前就可以了。
+4. 当程序内很多类名和函数名都是a，b，c这种时，程序很可能被混淆了。菜单栏->工具->反混淆可以将a，b，c这类名字重命名为不重复的名字。不过重命名完会变成类似`f2488d`这种名，还是需要人工进一步区分。
 
 ## Reverse技巧
 
@@ -482,3 +483,44 @@ $ r2 luck_guy
 12. java换行输出内容：`System.out.println()`，不换行输出：`System.out.print()`
 13. apk是可以解压的（把后缀名从apk改为zip），里面不仅仅有class文件，还会可能会有so文件。so文件里面还有一部分逆向逻辑，在程序中会以`System.loadLibrary("so文件名")`的形式来加载。
 14. 有些时候给出flag的函数不会在程序内部被调用，因此逆向时要看完整函数列表，注意有什么漏掉的函数。
+15. 将apk导入jadx后，`资源文件`文件夹中有apk解压出来的内容，其中res里面是二进制的xml资源，可能会有一些信息藏在里面；lib下有so资源，有些程序会调用里面的函数。apk内容详情见[此处](https://www.jianshu.com/p/d29c37dda256)。
+16. 下面的代码看起来很长，实际上逻辑非常简单。
+
+```c
+  length = strlen(result);
+  if (1 < length) {
+    index = 0;
+    do {
+      cVar1 = result[index];
+      result[index] = result[index + 0x10];
+      result[index + 0x10] = cVar1;   //上方是关键识别处，很明显是一个交换逻辑，重点在于很什么交换，因此index + 0x10处的数据是最重要的。0x10是16，说明是把前16位和后16位整体交换
+      index = index + 1;
+      length = strlen(result);
+    } while (index < length >> 1); //无需纠结此处，length>>1等同于把length除以2
+  }
+  cVar1 = *result;
+  if (cVar1 != '\0') {
+    *result = result[1];
+    result[1] = cVar1;
+    length = strlen(result);
+    if (2 < length) {
+      index = 2;
+      do {
+        cVar1 = result[index];
+        result[index] = result[index + 1];  //同样的交换逻辑，但是此处的数据变为了index + 1]，那就是相邻两个数据的交换了
+        result[index + 1] = cVar1;
+        index = index + 2;
+        length = strlen(result);
+      } while (index < length);
+```
+
+这两个交换搭配起来无需在意顺序，先两个交换在一半一半地交换等同于先一半一半地交换再两个交换。知道逻辑本身的情况下我们可以选择更简单的方式重现逻辑，如下面这样(脚本为[easy-so](https://adworld.xctf.org.cn/challenges/details?hash=b902eb43-71de-43a5-b70b-8424f986f61e_2&task_category_id=6)解题脚本）：
+
+```python
+data=list('f72c5a36569418a20907b55be5bf95ad')
+index=0
+for i in range(0,len(data),2):
+	data[i],data[i+1]=data[i+1],data[i]
+flag=''.join(data[16:]+data[:16])
+print(flag)
+```
