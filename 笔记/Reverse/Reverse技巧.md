@@ -512,6 +512,8 @@ $ r2 luck_guy
         index = index + 2;
         length = strlen(result);
       } while (index < length);
+    }
+  }
 ```
 
 这两个交换搭配起来无需在意顺序，先两个交换在一半一半地交换等同于先一半一半地交换再两个交换。知道逻辑本身的情况下我们可以选择更简单的方式重现逻辑，如下面这样(脚本为[easy-so](https://adworld.xctf.org.cn/challenges/details?hash=b902eb43-71de-43a5-b70b-8424f986f61e_2&task_category_id=6)解题脚本）：
@@ -524,3 +526,50 @@ for i in range(0,len(data),2):
 flag=''.join(data[16:]+data[:16])
 print(flag)
 ```
+
+17. 使用python双端队列实现字符轮转效果。轮转效果指的是：
+
+```
+a b c d e
+轮转一圈
+b c d e a
+轮转两圈
+d e a b c
+```
+
+例题：[easyjava](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Reverse/easyjava.md)
+
+18. 有些看起来很复杂难以逆向的算法就运行一下看看结果是什么，也许是出题人故意把一个很简单的效果写成很复杂的样子。比如[[ACTF新生赛2020]rome](https://www.cnblogs.com/Mayfly-nymph/p/12805930.html)，这题的加密代码看起来很怪，又减又模又加的，怎么逆向呢？实际运行一下会发现仅仅是跟凯撒类似的位移操作罢了。这题的解密脚本也值得积累。
+
+```python
+import string
+
+model = [81,115,119,51,115,106,95,108,122,52,95,85,106,119,64,108]
+
+s1 = string.ascii_lowercase
+s2 = string.ascii_uppercase
+
+flag = ""
+#chr(65)='A',chr(97)='a'
+for i in model:
+    if i > 64 and i <= 90:
+        flag += s2[i-14-65]  #假设i没有被位移，那么其ascii值减去A的ascii值得到的差值正是其在s1中的索引。程序加密时加上了14，那么我们减回来再取索引就好了
+    elif i > 96 and i <= 122:
+        flag += s1[i-18-97]  #此处同理，只不过是小写字母
+    else:
+        flag += chr(i)
+print ('flag{'+flag+'}')
+```
+
+19. 简单的内容考虑爆破。上述题目也可以用爆破的方式解出，毕竟大小写字母不多，全部遍历一遍比对期望输出完全不难。这就要求对爆破数量级有个估计。
+20. 限定条件不一定要明确指出。比如下面的场景：
+
+```python
+a=input()
+if len(a)!=5:
+  print("no!")
+  exit(0)
+b=int(a)
+```
+
+有两个限定条件，明显的是长度必须为5，不明显的是int(a)，提示输入是数字。同时限定条件也能在判断是否正确的if语句后。
