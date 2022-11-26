@@ -121,7 +121,7 @@ payload2=payload2.ljust(0x28,b'\x00')
 payload2+=p32(ebp-0x38)+p32(leave_ret)
 ```
 
-从后面开始看。我们把程序的ebp改成了ebp-0x38，这里是local_2c的位置。可能会有疑问，local_2c看着不是ebp-0x28吗？确实是，但是ebp-0x28是一个指针，指向ebp-0x38，我们构建栈肯定要直接在内容上而不是指针傻姑娘运行。p32(leave_ret)是真正溢出到返回地址的值。那么接下来的leave将ebp赋值给esp，现在esp就在local_2c的开头了。之后还有个pop ebp，会把local_2c的前4个字节弹出到ebp中，因此开头的4个a是填充，不让要执行的system函数被弹出到ebp中。
+从后面开始看。我们把程序的ebp改成了ebp-0x38，这里是local_2c的位置。可能会有疑问，local_2c看着不是ebp-0x28吗？确实是，但是ebp-0x28是一个指针，指向ebp-0x38，我们构建栈肯定要直接在内容上而不是指针上运行。p32(leave_ret)是真正溢出到返回地址的值。那么接下来的leave将ebp赋值给esp，现在esp就在local_2c的开头了。之后还有个pop ebp，会把local_2c的前4个字节弹出到ebp中，因此开头的4个a是填充，不让要执行的system函数被弹出到ebp中。
 
 接着ret，也就是pop eip。现在栈已经在local_2c了，leave的pop后接着system地址，顺利把system弹到eip里。接着4个b伪造system执行后的返回地址，正常rop操作。p32(ebp-0x28)就是system的参数/bin/sh。这里乍一看很奇怪，为什么p32(ebp-0x28)后还有个/bin/sh？这是因为当然不能直接把/bin/sh作为system的函数，程序会把它看成地址。ebp-0x28就是输入的payload中/bin/sh的位置，这样参数传ebp-0x28时就引用到了接下来的b'/bin'+b'/sh\x00'。ljust填充paylaod到0x28个字节，为了后面溢出。这样我们就巧妙地利用栈迁移getshell了。
 
