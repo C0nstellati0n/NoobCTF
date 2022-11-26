@@ -572,4 +572,4 @@ if len(a)!=5:
 b=int(a)
 ```
 
-有两个限定条件，明显的是长度必须为5，不明显的是int(a)，提示输入是数字。同时限定条件也能在判断是否正确的if语句后。
+有两个限定条件，明显的是长度必须为5，不明显的是int(a)，提示输入是数字。同时限定条件也能在判断是否正确的if语句后。例题:[CrackRTF](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/CrackRTF.md)
