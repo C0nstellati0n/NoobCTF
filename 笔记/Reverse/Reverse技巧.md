@@ -573,3 +573,12 @@ b=int(a)
 ```
 
 有两个限定条件，明显的是长度必须为5，不明显的是int(a)，提示输入是数字。同时限定条件也能在判断是否正确的if语句后。例题:[CrackRTF](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/CrackRTF.md)
+
+19. .ab 后缀是Android的备份文件，需要使用[Android backup extractor](https://github.com/nelenkov/android-backup-extractor)从中提取出apk。ab文件分为加密的和不加密的，想要区分可以16进制编辑器打开，它们的开头会不一样：
+
+- 未加密，文件前面有24字节文件头，文件头包含none标志，文件头之后就是数据
+- 加密，文件头包含AES-256标志
+
+例题：[app3](https://www.jianshu.com/p/04a78d45b2cf),这题还有SQLiteStudio的使用。
+
+20. 有些函数的调用不会明显出现在main函数中，init_array和fini_array里有时也会有出题人刻意藏起来的函数。
