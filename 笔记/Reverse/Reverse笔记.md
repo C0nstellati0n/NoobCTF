@@ -1,4 +1,4 @@
-# Reverse技巧
+# Reverse笔记
 
 ## IDA使用
 
@@ -581,4 +581,4 @@ b=int(a)
 
 例题：[app3](https://www.jianshu.com/p/04a78d45b2cf),这题还有SQLiteStudio的使用。
 
-20. 有些函数的调用不会明显出现在main函数中，init_array和fini_array里有时也会有出题人刻意藏起来的函数。
+20. 有些函数的调用不会明显出现在main函数中，init_array和fini_array里有时也会有出题人刻意藏起来的函数。例题：[[2019红帽杯]easyRE](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/%5B2019%E7%BA%A2%E5%B8%BD%E6%9D%AF%5DeasyRE.md)
