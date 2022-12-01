@@ -582,3 +582,21 @@ b=int(a)
 例题：[app3](https://www.jianshu.com/p/04a78d45b2cf),这题还有SQLiteStudio的使用。
 
 20. 有些函数的调用不会明显出现在main函数中，init_array和fini_array里有时也会有出题人刻意藏起来的函数。例题：[[2019红帽杯]easyRE](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/%5B2019%E7%BA%A2%E5%B8%BD%E6%9D%AF%5DeasyRE.md)
+21. 不要过于相信伪代码，汇编才是王，要有看汇编的习惯，里面可能藏着一些伪代码看不到的重要信息。比如[[WUSTCTF2020]level2](https://buuoj.cn/challenges#[WUSTCTF2020]level2)，脱upx壳后main函数非常简单：
+
+```c
+undefined4 main(void)
+
+{
+  puts("where is it?");
+  return 0;
+}
+```
+
+flag在汇编代码里就很明显了。
+
+```
+        0804888a 83 ec 14        SUB        ESP,0x14
+        0804888d c7 45 f4        MOV        dword ptr [EBP + -0xc]=>local_14,flag
+                 68 a0 0e 08
+```
