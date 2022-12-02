@@ -1,4 +1,4 @@
-# Web技巧
+# Web笔记
 
 越来越认识到什么是“好记性不如烂笔头”。
 
@@ -64,7 +64,7 @@
 
 18. 多文件内寻找可用shell脚本。今天遇见一道题，整个网站全是后门文件，然而只有一个是有用的。算是fuzz题的变种，可以用以下多线程脚本找到。
 
-```php
+```python
 import os
 import requests
 import re
@@ -126,4 +126,11 @@ for i in files:
 ```
 
 题目及来源：[[强网杯 2019]高明的黑客](https://blog.csdn.net/qq_51684648/article/details/120167176)
+
 19. php extract变量覆盖+反序列化逃逸漏洞。例题:[[安洵杯 2019]easy_serialize_php](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5B%E5%AE%89%E6%B4%B5%E6%9D%AF%202019%5Deasy_serialize_php.md)
+
+20. python unicodedata.numeric 漏洞。例题：[[ASIS 2019]Unicorn shop](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BASIS%202019%5DUnicorn%20shop.md)
+
+21. php魔术方法：[官方文档](https://www.php.net/manual/zh/language.oop5.magic.php)
+
+22. php [->,=>和::符号详解](https://segmentfault.com/a/1190000008600674)。
