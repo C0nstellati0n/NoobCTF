@@ -22,6 +22,41 @@ for i in range(2000):
             break
 ```
 
+也可以考虑下面这个脚本自动改宽高并生成文件:
+
+```python
+#coding=utf-8
+import zlib
+import struct
+#读文件
+file = '1.png'
+fr = open(file,'rb').read()
+data = bytearray(fr[12:29])
+crc32key = eval(str(fr[29:33]).replace('\\x','').replace("b'",'0x').replace("'",''))
+#crc32key = 0xCBD6DF8A #补上0x，copy hex value
+#data = bytearray(b'\x49\x48\x44\x52\x00\x00\x01\xF4\x00\x00\x01\xF1\x08\x06\x00\x00\x00')  #hex下copy grep hex
+n = 4095 #理论上0xffffffff,但考虑到屏幕实际，0x0fff就差不多了
+for w in range(n):#高和宽一起爆破
+    width = bytearray(struct.pack('>i', w))#q为8字节，i为4字节，h为2字节
+    for h in range(n):
+        height = bytearray(struct.pack('>i', h))
+        for x in range(4):
+            data[x+4] = width[x]
+            data[x+8] = height[x]
+            #print(data)
+        crc32result = zlib.crc32(data)
+        if crc32result == crc32key:
+            print(width,height)
+            #写文件
+            newpic = bytearray(fr)
+            for x in range(4):
+                newpic[x+16] = width[x]
+                newpic[x+20] = height[x]
+            fw = open(f"{file}.png",'wb')#保存副本
+            fw.write(newpic)
+            fw.close
+```
+
 5. 遇见webshell查杀题直接用D盾扫。例题:[webshell后门](https://buuoj.cn/challenges#webshell%E5%90%8E%E9%97%A8)
 6. 音频隐写题首先考虑audacity打开看波形图和频谱图。发现可疑的线索时多缩放。今天就看见了一道藏摩斯电码然而默认缩放比例下无法展示完全的题：[来首歌吧](https://buuoj.cn/challenges#%E6%9D%A5%E9%A6%96%E6%AD%8C%E5%90%A7)
 7. 从宽带备份文件出恢复账户名密码名等信息：使用工具[RouterPassView](https://www.nirsoft.net/utils/router_password_recovery.html)。
@@ -34,6 +69,7 @@ for i in range(2000):
 > binwalk xxx(支持任何类型，加上-e可以提取，不过有时候提取不出来，下方的foremost补充使用)
 - foremost
 - outguess，例题：[Avatar](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/4%E7%BA%A7/Misc/Avatar.md)
-- [F5隐写](https://github.com/matthewgao/F5-steganography)，例题：[刷新过的图片](https://github.com/matthewgao/F5-steganography)
+- [F5隐写](https://github.com/matthewgao/F5-steganography)，例题：[刷新过的图片](https://blog.csdn.net/destiny1507/article/details/102079695)
 - stegsolve
 10. 当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)，如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
+11. 010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
