@@ -124,3 +124,26 @@ import sympy
 x=sympy.discrete_log(n,c,m)  #参数顺序：sympy.discrete_log(模数，结果，底数)
 print(long_to_bytes(x))
 ```
+
+6. 海明码（汉明码）问题。例题：[H■m■i■g](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Misc/H%E2%96%A0m%E2%96%A0i%E2%96%A0g.md)。今天又遇见一道题：[鸡藕椒盐味](https://buuoj.cn/challenges#%E9%B8%A1%E8%97%95%E6%A4%92%E7%9B%90%E5%91%B3)，也是海明码，没想到直接用当时写的脚本就能出答案。
+
+```python
+import hashlib
+def hamming_correct(bitblock):
+    result=''
+    for t in range(4):
+        bits=[bit for i,bit in enumerate(bitblock) if i&(1<<t)]
+        if bits.count(1)%2==0:
+            result+='0'
+        else:
+            result+='1'
+    return int(result[::-1],2)
+code=[1,1,0,0,1,0,1,0,0,0,0,0]
+wrong_pos=hamming_correct(code)
+code[wrong_pos]=int(not code[wrong_pos])
+c=''.join([str(i) for i in code])
+md=hashlib.md5()
+md.update(c.encode("utf8"))
+flag = md.hexdigest()
+print(flag)                   
+```
