@@ -15,26 +15,187 @@
 来来来直接上[wp](https://blog.csdn.net/mcmuyanga/article/details/112466134)，不挣扎了。这题经典堆菜单题，用某个大佬的话说就是“毫无想象力”。
 
 ```c
+__int64 __fastcall main(__int64 a1, char **a2, char **a3)
+
+{
+
+  char *heap; // [rsp+8h] [rbp-8h]
+
+
+
+  heap = GetHeap();
+
+  while ( 1 )
+
+  {
+
+    Menu(a1, a2);
+
+    switch ( GetInput() )
+
+    {
+
+      case 1LL:
+
+        a1 = (__int64)heap;
+
+        Allocate(heap);
+
+        break;
+
+      case 2LL:
+
+        a1 = (__int64)heap;
+
+        Fill(heap);
+
+        break;
+
+      case 3LL:
+
+        a1 = (__int64)heap;
+
+        FreeHeap(heap);
+
+        break;
+
+      case 4LL:
+
+        a1 = (__int64)heap;
+
+        Dump(heap);
+
+        break;
+
+      case 5LL:
+
+        return 0LL;
+
+      default:
+
+        continue;
+
+    }
+
+  }
+
+}
 ```
 
 Allocate分配堆块，重点看一下堆块的结构。
 
 ```c
+void __fastcall Allocate(__int64 a1)
+{
+  int index; // [rsp+10h] [rbp-10h]
+  int v2; // [rsp+14h] [rbp-Ch]
+  void *v3; // [rsp+18h] [rbp-8h]
+
+  for ( index = 0; index <= 15; ++index )
+  {
+    if ( !*(_DWORD *)(24LL * index + a1) )      // 1个自定义堆块结构占用24字节
+    {
+      printf("Size: ");
+      v2 = GetInput();
+      if ( v2 > 0 )
+      {
+        if ( v2 > 4096 )
+          v2 = 4096;
+        v3 = calloc(v2, 1uLL);
+        if ( !v3 )
+          exit(-1);
+        *(_DWORD *)(24LL * index + a1) = 1;     // heap第一位记录占用情况
+        *(_QWORD *)(a1 + 24LL * index + 8) = v2;// +8处记录申请的堆块大小
+        *(_QWORD *)(a1 + 24LL * index + 16) = v3;// +16处记录实际存储内容的堆块
+        printf("Allocate Index %d\n", (unsigned int)index);
+      }
+      return;
+    }
+  }
+}
 ```
 
 Fill的漏洞就很明显了，连我都能看出来。填充内容时又问了一遍size，导致堆溢出。
 
 ```c
+__int64 __fastcall Fill(__int64 a1)
+{
+  __int64 result; // rax
+  int v2; // [rsp+18h] [rbp-8h]
+  int v3; // [rsp+1Ch] [rbp-4h]
+
+  printf("Index: ");
+  result = GetInput();
+  v2 = result;
+  if ( (int)result >= 0 && (int)result <= 15 )
+  {
+    result = *(unsigned int *)(24LL * (int)result + a1);
+    if ( (_DWORD)result == 1 )
+    {
+      printf("Size: ");
+      result = GetInput();
+      v3 = result;
+      if ( (int)result > 0 )
+      {
+        printf("Content: ");
+        result = sub_11B2(*(_QWORD *)(24LL * v2 + a1 + 16), v3);
+      }
+    }
+  }
+  return result;
+}
 ```
 
 free很正常，把Allocate里的结构全置空，该free的free了，没有uaf。
 
 ```c
+__int64 __fastcall FreeHeap(__int64 a1)
+{
+  __int64 result; // rax
+  int v2; // [rsp+1Ch] [rbp-4h]
+
+  printf("Index: ");
+  result = GetInput();
+  v2 = result;
+  if ( (int)result >= 0 && (int)result <= 15 )
+  {
+    result = *(unsigned int *)(24LL * (int)result + a1);
+    if ( (_DWORD)result == 1 )
+    {
+      *(_DWORD *)(24LL * v2 + a1) = 0;
+      *(_QWORD *)(24LL * v2 + a1 + 8) = 0LL;
+      free(*(void **)(24LL * v2 + a1 + 16));
+      result = 24LL * v2 + a1;
+      *(_QWORD *)(result + 16) = 0LL;
+    }
+  }
+  return result;
+}
 ```
 
 Dump打印内容，注意它是根据Allocate时存储的size来决定打印多少的，这种结构10个里面7个有问题。
 
 ```c
+int __fastcall Dump(__int64 a1)
+{
+  int result; // eax
+  int v2; // [rsp+1Ch] [rbp-4h]
+
+  printf("Index: ");
+  result = GetInput();
+  v2 = result;
+  if ( result >= 0 && result <= 15 )
+  {
+    result = *(_DWORD *)(24LL * result + a1);
+    if ( result == 1 )
+    {
+      puts("Content: ");
+      sub_130F(*(_QWORD *)(24LL * v2 + a1 + 16), *(_QWORD *)(24LL * v2 + a1 + 8));
+      result = puts(byte_14F1);
+    }
+  }
+  return result;
+}
 ```
 
 看来漏洞只有个堆溢出。由于开了全relro，不能用普通的改got表为system的方法了，要想办法往`__malloc_hook`里填one_gadget地址。这就很容易想到fastbin attack中的一个技术——让malloc返回任意地址处的堆块。如果我们能让malloc返回`__malloc_hook`周围地址的堆块，就能改写`__malloc_hook`了。堆溢出在手，这点不难办到，通过溢出修改一个堆块的fd指针，由于malloc根据fd指针取堆块，所以如果我们把fd指针改到`__malloc_hook`附近，就能分配到那块区域了。
