@@ -53,6 +53,7 @@
 
 - [twig](https://xz.aliyun.com/t/10056#toc-13)(php)
 - [smarty](https://www.anquanke.com/post/id/272393)(php)
+- [flask](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Web/shrine.md)(python)
 
 14. [浏览器设置编码](https://blog.csdn.net/jnx1142410525/article/details/55271037)。如果浏览器的编码不对就会出现乱码。
 15. php md5相关特性。
@@ -131,6 +132,10 @@ for i in files:
 
 20. python unicodedata.numeric 漏洞。例题：[[ASIS 2019]Unicorn shop](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BASIS%202019%5DUnicorn%20shop.md)
 
-21. php魔术方法：[官方文档](https://www.php.net/manual/zh/language.oop5.magic.php)
+21. php魔术方法：[官方文档](https://www.php.net/manual/zh/language.oop5.magic.php)。例题：[[MRCTF2020]Ezpop](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BMRCTF2020%5DEzpop.md)
 
 22. php [->,=>和::符号详解](https://segmentfault.com/a/1190000008600674)。
+
+23. 命令注入的nmap利用：-oG选项写shell并绕过php escapeshellarg和escapeshellcmd函数。例题：[[BUUCTF 2018]Online Tool](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BBUUCTF%202018%5DOnline%20Tool.md)
+
+24. [php特殊标签绕过滤](https://www.cnblogs.com/jinqi520/p/11417365.html)
