@@ -13,7 +13,9 @@
 
 不好有过滤。手动测试了一下，空格和#被过滤了。这俩都不是问题，空格用注释/**/绕，注释用另一个'闭合。这题不按套路出牌，平时我习惯直接1，2，3，4这样打，order by基本不用，因为一般都不会太多。这题打到10列的时候怀疑人生，遂用order by，然后被ban。行吧，上group by加二分法，上限50，最后得到有22行。
 
-- 'union/**/select/**/1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22'
+```
+'union/**/select/**/1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22'
+```
 
 回显在2和3。
 
@@ -26,10 +28,14 @@ sys.schema_auto_increment_columns
 
 开开心心构造payload。
 
-- 'union/**/select/**/1,2,group_concat(table_name),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22/**/from/**/mysql.innodb_table_stats/**/where/**/database_name="web1"'
+```
+'union/**/select/**/1,2,group_concat(table_name),4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22/**/from/**/mysql.innodb_table_stats/**/where/**/database_name="web1"'
+```
 
 这题比较奇怪，database_name必须是这种形式而不能是database()。不是大事，之前多花一步爆数据库名就好了。表有ads和users，现在终极问题来了，由于我们使用的不是information_schema，导致没发直接查列名，因为无论是mysql.innodb_table_stats还是sys.schema_auto_increment_columns，都没有记录列名。于是引入第二个技巧：[无列名注入](https://err0r.top/article/mardasctf/)。这个技巧可以让我们在不知道列名的情况下直接爆值。先看payload。
 
-- -1'union/**/select/**/1, (select/**/group_concat(b)/**/from(select/**/1,2,3/**/as/**/b/**/union/**/select * from/**/users)x),3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,'22 
+```
+-1'union/**/select/**/1, (select/**/group_concat(b)/**/from(select/**/1,2,3/**/as/**/b/**/union/**/select * from/**/users)x),3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,'22 
+```
 
 这里我们选择2的位置回显爆出的内容，把2处的查询语句分解来看。`select/**/group_concat(b)/**/from`是一部分，`(select/**/1,2,3/**/as/**/b/**/union/**/select * from/**/users)x`是另一部分。第一部分的b来自于第二部分`select 1,2,3 as b`这一小部分给第三号列取了个别名b，而第二部分括号里的内容，叫派生表，完全是无列名差值的公式，刚刚给的文章内有详细说明。x是这个派生表的名字，随便取一个就行。或者我们这么看，`(select/**/1,2,3/**/as/**/b/**/union/**/select * from/**/users)x`从users中展开一个名为x的派生表，里面有列1，2，b（3的别名）。就把这个表看作正常表，该怎么select怎么select，于是有了`select/**/group_concat(b)/**/from`。
