@@ -600,3 +600,4 @@ flag在汇编代码里就很明显了。
         0804888d c7 45 f4        MOV        dword ptr [EBP + -0xc]=>local_14,flag
                  68 a0 0e 08
 ```
+22. windows多线程时，注意不同线程的函数是否访问了同一个数据内容，逆向时要考虑到这样的影响。例题：[Youngter-drive](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/Youngter-drive.md)
