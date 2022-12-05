@@ -16,11 +16,41 @@
 啥也没开，好事。main函数内部调用了pwn函数。
 
 ```c
+int pwn()
+{
+
+  char s[24]; // [esp+8h] [ebp-20h] BYREF
+
+
+
+  puts("\nHey! ^_^");
+
+  puts("\nIt's nice to meet you");
+
+  puts("\nDo you have anything to tell?");
+
+  puts(">");
+
+  fflush(stdout);
+
+  fgets(s, 0x32, stdin);
+
+  puts("OK bye~");
+
+  fflush(stdout);
+
+  return 1;
+
+}
 ```
 
 很明显的栈溢出，虽然溢出字节不多，但是我们可以把shellcode存进buffer里，然后想个办法跳转过去就行了，毕竟nx没开。程序内还有个hint函数，佐证了我的思路。
 
 ```c
+void hint()
+{
+  __asm { jmp     esp }
+}
 ```
 
 本来打算用pwntools直接生成shellcode，结果发现太长了。我也不会缩短，找个[wp](https://blog.csdn.net/mcmuyanga/article/details/113317412)看看吧。缩短后如下：
