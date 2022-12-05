@@ -15,21 +15,146 @@ unlink对于像我一样的小白的难点不在于理解攻击本身，而是�
 堆题重要的只有开没开全RELRO和有没有pie，canary和nx看都不看一眼。没开全relro能搞got，没pie读地址简单。这题是个创新菜单类堆题，因为它压根没给你菜单，只能自己读这几个函数推断是干啥的。
 
 ```c
+__int64 __fastcall main(int a1, char **a2, char **a3)
+{
+  int choice; // eax
+  int v5; // [rsp+Ch] [rbp-74h]
+  char nptr[104]; // [rsp+10h] [rbp-70h] BYREF
+  unsigned __int64 v7; // [rsp+78h] [rbp-8h]
+
+  v7 = __readfsqword(0x28u);
+  while ( fgets(nptr, 10, stdin) )
+  {
+    choice = atoi(nptr);
+    if ( choice == 2 )
+    {
+      v5 = Edit();
+      goto LABEL_14;
+    }
+    if ( choice > 2 )
+    {
+      if ( choice == 3 )
+      {
+        v5 = FreeHeap();
+        goto LABEL_14;
+      }
+      if ( choice == 4 )
+      {
+        v5 = sub_400BA9();
+        goto LABEL_14;
+      }
+    }
+    else if ( choice == 1 )
+    {
+      v5 = Allocate();
+      goto LABEL_14;
+    }
+    v5 = -1;
+LABEL_14:
+    if ( v5 )
+      puts("FAIL");
+    else
+      puts("OK");
+    fflush(stdout);
+  }
+  return 0LL;
+}
 ```
 
 allocate分配堆块，没有什么特殊的结构，heap数组单纯存申请的各个堆块的地址，外加另外一个index变量记录索引。
 
 ```c
+__int64 Allocate()
+{
+
+  __int64 size; // [rsp+0h] [rbp-80h]
+
+  char *v2; // [rsp+8h] [rbp-78h]
+
+  char s[104]; // [rsp+10h] [rbp-70h] BYREF
+
+  unsigned __int64 v4; // [rsp+78h] [rbp-8h]
+
+
+
+  v4 = __readfsqword(0x28u);
+
+  fgets(s, 16, stdin);
+
+  size = atoll(s);
+
+  v2 = (char *)malloc(size);
+
+  if ( !v2 )
+
+    return 0xFFFFFFFFLL;
+
+  (&heap)[++index] = v2;
+
+  printf("%d\n", (unsigned int)index);
+
+  return 0LL;
+
+}
 ```
 
 edit标准堆溢出。
 
 ```c
+__int64 Edit()
+{
+  __int64 result; // rax
+  int i; // eax
+  unsigned int ind; // [rsp+8h] [rbp-88h]
+  __int64 length; // [rsp+10h] [rbp-80h]
+  char *ptr; // [rsp+18h] [rbp-78h]
+  char s[104]; // [rsp+20h] [rbp-70h] BYREF
+  unsigned __int64 v6; // [rsp+88h] [rbp-8h]
+
+  v6 = __readfsqword(0x28u);
+  fgets(s, 16, stdin);
+  ind = atol(s);
+  if ( ind > 0x100000 )
+    return 0xFFFFFFFFLL;
+  if ( !(&heap)[ind] )
+    return 0xFFFFFFFFLL;
+  fgets(s, 16, stdin);
+  length = atoll(s);
+  ptr = (&heap)[ind];
+  for ( i = fread(ptr, 1uLL, length, stdin); i > 0; i = fread(ptr, 1uLL, length, stdin) )
+  {
+    ptr += i;
+    length -= i;
+  }
+  if ( length )
+    result = 0xFFFFFFFFLL;
+  else
+    result = 0LL;
+  return result;
+}
+
 ```
 
 free没有啥问题。
 
 ```c
+__int64 FreeHeap()
+{
+  unsigned int v1; // [rsp+Ch] [rbp-74h]
+  char s[104]; // [rsp+10h] [rbp-70h] BYREF
+  unsigned __int64 v3; // [rsp+78h] [rbp-8h]
+
+  v3 = __readfsqword(0x28u);
+  fgets(s, 16, stdin);
+  v1 = atol(s);
+  if ( v1 > 0x100000 )
+    return 0xFFFFFFFFLL;
+  if ( !(&heap)[v1] )
+    return 0xFFFFFFFFLL;
+  free((&heap)[v1]);
+  (&heap)[v1] = 0LL;
+  return 0LL;
+}
 ```
 
 剩下一个没改名的函数啥用没有，也没看出来是干啥的。这题堆溢出随便使用，掏出unlink，因为heap数组结构简单，在unlink攻击时比较容易预测和控制。没啥别的说了，直接看exp吧。
