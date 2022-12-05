@@ -111,11 +111,13 @@ p.interactive()
 
 ```python
 from pwn import *
-libc=ELF("libc-2.23.so")
+libc=ELF("./ubuntu16/libc-2.23.so.64")
 print(f"system:{libc.sym['system']}")
 print(f"write:{libc.sym['write']}")
 print(f"puts:{libc.sym['puts']}")
 print(f"/bin/sh:{libc.search(b'/bin/sh').__next__()}")
+print(f"free:{libc.sym['free']}")
+print(f"__malloc_hook:{libc.symbols['__malloc_hook']}")
 ```
 
 8. pwn heap题模板
