@@ -604,3 +604,4 @@ flag在汇编代码里就很明显了。
                  68 a0 0e 08
 ```
 22. windows多线程时，注意不同线程的函数是否访问了同一个数据内容，逆向时要考虑到这样的影响。例题：[Youngter-drive](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/Youngter-drive.md)
+23. z3求解无符号整数时要把数字转为二进制再计算。这里的“无符号”代表ida里经常看到的unsigned。例题:[[GWCTF 2019]xxor](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/%5BGWCTF%202019%5Dxxor.md)
