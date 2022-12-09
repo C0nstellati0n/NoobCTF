@@ -157,3 +157,5 @@ file_get_contents("/flag");
 readfile("/flag");
 highlight_file("/flag");
 ```
+
+30. MD5hash长度扩展攻击+chrome利用代码添加cookie。例题：[[De1CTF 2019]SSRF Me](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BDe1CTF%202019%5DSSRF%20Me.md)

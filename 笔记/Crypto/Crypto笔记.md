@@ -70,6 +70,29 @@ with open("result.txt",'w') as f:
 - lcm问题+e与toitent不互质。例题：[[NPUCTF2020]EzRSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BNPUCTF2020%5DEzRSA.md)
 - dp泄露。例题：[0rsa0](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/0rsa0.md)
 - sagemath解二元方程组+e，d泄露后分解n。例题:[[MRCTF2020]Easy_RSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BMRCTF2020%5DEasy_RSA.md)
+- rsa衍生算法：[Rabin](https://co5mos.github.io/2018/09/14/rsa-rabin/)。[原理](https://zhuanlan.zhihu.com/p/533927542)及脚本：
+
+```python
+import libnum
+
+p = 49123
+q = 10663
+c = 162853095
+n = p*q
+c_p = pow(c,(p+1)//4,p)
+c_q = pow(c,(q+1)//4,q)
+a = libnum.invmod(p,q)
+b = libnum.invmod(q,p)
+x = (b*q*c_p+a*p*c_q)%n
+y = (b*q*c_p-a*p*c_q)%n
+
+print(bin(x%n))
+print(bin((-x)%n))
+print(bin(y%n))
+print(bin((-y)%n))
+```
+
+rabin算法可以解出来4个明文，一般末尾会有类似校验码的东西，帮助分辨哪个是真正的明文。[来源](https://www.jianshu.com/p/00a35ebd36fb)。
 
 1. Crypto库根据已有信息构建私钥并解密
 

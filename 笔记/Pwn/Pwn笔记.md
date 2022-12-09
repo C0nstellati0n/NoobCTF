@@ -13,13 +13,13 @@
 from pwn import*
 context(log_level = 'debug', arch = 'i386', os = 'linux')
 shellcode=asm(shellcraft.sh())
-print(shellcode)
+print(f"32位:{shellcode}")
 
 #64位
 from pwn import*
 context(log_level = 'debug', arch = 'amd64', os = 'linux')
 shellcode=asm(shellcraft.sh())
-print(shellcode)
+print(f"64位:{shellcode}")
 ```
 
 6. pwn 栈题模板
@@ -129,5 +129,11 @@ print(f"__malloc_hook:{libc.symbols['__malloc_hook']}")
 - 利用Chunk Extend and Overlapping配合unsorted bin泄露地址+fastbin attack修改__malloc_hook:[0ctf_2017_babyheap](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/0ctf_2017_babyheap.md)
 - one_gadget失效时利用realloc_hook调整栈+Chunk Extend and Overlapping配合unsorted bin泄露地址+fastbin attack。例题:[roarctf_2019_easy_pwn](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/roarctf_2019_easy_pwn.md)
 
+### 32位
+
+- uaf更改heap数组函数指针:[hacknote](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/hacknote.md)
+
+
 9. 栈溢出[计算偏移量](https://blog.csdn.net/weixin_62675330/article/details/123344386)（gdb，gdb-peda,pwntools cyclic,ida)
-10. 手写shellcode。当pwntools自动生成的shellcode过长时，就要手动将shellcode长度缩减。例题：[ciscn_2019_s_9](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/ciscn_2019_s_9.md)
+10.  手写shellcode。当pwntools自动生成的shellcode过长时，就要手动将shellcode长度缩减。例题：[ciscn_2019_s_9](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/ciscn_2019_s_9.md)
+11.  32位&64位系统调用及其[系统调用号](https://introspelliam.github.io/2017/08/06/pwn/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/)。
