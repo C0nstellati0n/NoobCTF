@@ -17,6 +17,14 @@
 main函数里只调用了vuln，那就直接看vuln吧。
 
 ```c
+signed __int64 vuln()
+{
+  signed __int64 v0; // rax
+  char buf[16]; // [rsp+0h] [rbp-10h] BYREF
+
+  v0 = sys_read(0, buf, 0x400uLL);
+  return sys_write(1u, buf, 0x30uLL);
+}
 ```
 
 vuln里就调用了2个函数，结果出了2个问题。read明显栈溢出，write多打印了十几个字节，buf长度只有16却打印了0x30。配合read的栈溢出，我们先用一些填充填满buf，然后跟上一个栈上的地址。这样后面write打印时就能打印出那个栈上的运行地址，从而计算将来需要的偏移。

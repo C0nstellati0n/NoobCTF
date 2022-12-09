@@ -105,6 +105,8 @@ Quit()
 p.interactive()
 ```
 
+- srop基础利用。例题:[ciscn_2019_es_7](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/ciscn_2019_es_7.md)
+
 7. pwntools得到libc偏移
 
 承接rop题模板，上面的脚本中xxx_offset就是这么来的。至于为什么要多此一举打印出来，全是因为我没配置好linux环境。配置好的各位直接要`libc.sym['xxx]`那段就行了。
