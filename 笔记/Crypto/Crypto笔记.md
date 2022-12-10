@@ -204,3 +204,4 @@ for i in numsumresult:
 来源:[[BJDCTF2020]Polybius](https://blog.csdn.net/m0_52727862/article/details/119043003)
 
 8. 猪圈密码+动物密码。例题:[[NPUCTF2020]Classical Cipher](https://blog.csdn.net/m0_52727862/article/details/119043219)
+9. [四方密码](https://zh.wikipedia.org/zh-my/%E5%9B%9B%E6%96%B9%E5%AF%86%E7%A2%BC)，可用[网站](http://www.metools.info/code/four-square244.html)进行解密。例题:[四面八方](https://blog.csdn.net/LingDIHong/article/details/112684896)
