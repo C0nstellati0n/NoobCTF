@@ -83,3 +83,14 @@ for w in range(n):#高和宽一起爆破
 17.  010Editor可以更改阅读文本文件时的编码。菜单栏->视图->字符集。
 18.  福尔摩斯跳舞的小人密码。例题:[[SWPU2019]伟大的侦探](https://blog.csdn.net/mochu7777777/article/details/109387134)
 19.  音符密码，形如`♭♯♪‖¶♬♭♭♪♭‖‖♭♭♬‖♫♪‖♩♬‖♬♬♭♭♫‖♩♫‖♬♪♭♭♭‖¶∮‖‖‖‖♩♬‖♬♪‖♩♫♭♭♭♭♭§‖♩♩♭♭♫♭♭♭‖♬♭‖¶§♭♭♯‖♫∮‖♬¶‖¶∮‖♬♫‖♫♬‖♫♫§=`。可在[此处](https://www.qqxiuzi.cn/bianma/wenbenjiami.php?s=yinyue)直接解密。
+20.  AAEncode，特征是颜文字，是将js代码转换位颜文字的编码。可用[网站](http://www.atoolbox.net/Tool.php?Id=703)在线解码。例题:[[SUCTF2018]single dog](https://blog.csdn.net/mochu7777777/article/details/109481013)。
+21.  敲击码。类似棋盘密码，只不过与平时的棋盘排版不同，C和K在一个格，形如下方展示，/表示分割。
+
+```
+..... ../... ./... ./... ../
+  5,2     3,1    3,1    3,2
+```
+
+例题:[[SWPU2019]你有没有好好看网课?](https://blog.csdn.net/mochu7777777/article/details/109449494)
+
+22. 不要忘记查看压缩包注释。不装软件的情况下似乎看不到，可以安装Bandzip工具。
