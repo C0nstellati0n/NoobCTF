@@ -2,7 +2,7 @@
 
 [题目地址](https://buuoj.cn/challenges#[SUCTF%202019]Pythonginx)
 
-缝合怪题目。
+缝合怪题目名。
 
 网站源码如下：
 
