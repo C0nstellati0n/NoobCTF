@@ -120,6 +120,7 @@ print(f"puts:{libc.sym['puts']}")
 print(f"/bin/sh:{libc.search(b'/bin/sh').__next__()}")
 print(f"free:{libc.sym['free']}")
 print(f"__malloc_hook:{libc.symbols['__malloc_hook']}")
+print(f"realloc:{libc.symbols['realloc']}")                                       
 ```
 
 8. pwn heap题模板
