@@ -71,7 +71,7 @@ for w in range(n):#高和宽一起爆破
 - outguess，例题：[Avatar](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/4%E7%BA%A7/Misc/Avatar.md)。注意有时候outguess会需要密码，密码可能藏在exif里。例题:[[ACTF新生赛2020]outguess](https://blog.csdn.net/mochu7777777/article/details/108936734)
 - [F5隐写](https://github.com/matthewgao/F5-steganography)，例题：[刷新过的图片](https://blog.csdn.net/destiny1507/article/details/102079695)
 - stegsolve
-- NtfsStreamsEditor,用于处理NTFS流隐藏文件。例题：[[SWPU2019]我有一只马里奥](https://blog.csdn.net/mochu7777777/article/details/108934265)
+- NtfsStreamsEditor,用于处理NTFS流隐藏文件。例题：[[SWPU2019]我有一只马里奥](https://blog.csdn.net/mochu7777777/article/details/108934265)。当题目涉及到NTFS流时，题目文件都需要用Win RAR解压。
 
 10.  当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)，如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 11.  010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
