@@ -93,6 +93,7 @@ print(bin((-y)%n))
 ```
 
 rabin算法可以解出来4个明文，一般末尾会有类似校验码的东西，帮助分辨哪个是真正的明文。[来源](https://www.jianshu.com/p/00a35ebd36fb)。
+- 当模数n过大， $m^e$ 次方没有n大时，就可以直接对c开e次方。例题:[[INSHack2017]rsa16m](https://blog.csdn.net/zippo1234/article/details/109268561)。
 
 1. Crypto库根据已有信息构建私钥并解密
 
@@ -205,3 +206,70 @@ for i in numsumresult:
 
 8. 猪圈密码+动物密码。例题:[[NPUCTF2020]Classical Cipher](https://blog.csdn.net/m0_52727862/article/details/119043219)
 9. [四方密码](https://zh.wikipedia.org/zh-my/%E5%9B%9B%E6%96%B9%E5%AF%86%E7%A2%BC)，可用[网站](http://www.metools.info/code/four-square244.html)进行解密。例题:[四面八方](https://blog.csdn.net/LingDIHong/article/details/112684896)
+10. 伪代码题。题目会给出伪代码文件，要求写出其任意代码实现。如：
+
+```
+get buf unsign s[256]
+get buf t[256]
+we have key:whoami
+we have flag:????????????????????????????????
+
+for i:0 to 256
+    set s[i]:i
+
+for i:0 to 256
+    set t[i]:key[(i)mod(key.lenth)]
+
+for i:0 to 256
+    set j:(j+s[i]+t[i])mod(256) //前面从来没有出现过j，没出现过的实现时默认设为0
+        swap:s[i],s[j]
+//下面这段开始执行前要把i和j都归0，python里面for循环影响计数变量后会影响外面的
+for m:0 to 38
+    set i:(i + 1)mod(256)
+    set j:(j + S[i])mod(256)
+    swap:s[i],s[j]
+    set x:(s[i] + (s[j]mod(256))mod(256))
+    set flag[m]:flag[m]^s[x]
+
+fprint flagx to file
+```
+
+这种题一般来说不难，重点是要注意把变量清0。此题脚本：
+
+```python
+s=[]
+t=[]
+key="whoami"
+with open('file.txt','rb') as f:
+    cipher=f.read()
+for i in range(256):
+    s.append(i)
+for i in range(256):
+    t.append(ord(key[i%len(key)]))
+j=0
+for i in range(256):
+    j=(j+s[i]+t[i])%256
+    s[i],s[j]=s[j],s[i]
+i=j=0
+for m in range(38):
+    i=(i+1)%256
+    j=(j+s[i])%256
+    s[i],s[j]=s[j],s[i]
+    x=(s[i]+(s[j]%256))%256
+    print(chr(cipher[m]^s[x]),end='')
+```
+
+11. python解密aes。题目:[[ACTF新生赛2020]crypto-aes](https://buuoj.cn/challenges#[ACTF%E6%96%B0%E7%94%9F%E8%B5%9B2020]crypto-aes)
+
+```python
+from Crypto.Util.number import *
+from Crypto.Cipher import AES
+enc_flag=b'\x8c-\xcd\xde\xa7\xe9\x7f.b\x8aKs\xf1\xba\xc75\xc4d\x13\x07\xac\xa4&\xd6\x91\xfe\xf3\x14\x10|\xf8p'
+output=91144196586662942563895769614300232343026691029427747065707381728622849079757
+key=long_to_bytes(output)[:16]*2
+iv=long_to_bytes(bytes_to_long(long_to_bytes(output)[16:])^bytes_to_long(key[16:]))
+aes = AES.new(key,AES.MODE_CBC,iv)
+flag = aes.decrypt(enc_flag)
+print(flag)
+
+```
