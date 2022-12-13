@@ -42,14 +42,14 @@ print('c2=',c2)
 $x\equiv c1(\mod n1)$<br>
 $x\equiv c2(\mod n2)$
 
-这里的x表示什么呢？我们知道两个密文都是由$m^e$模各自的n得到的，所以x就是$m^e$。crt求解就可以得到$m^e$的一个特解。
+这里的x表示什么呢？我们知道两个密文都是由$m^e$模各自的n得到的，所以x就是 $m^e$ 。crt求解就可以得到 $m^e$ 的一个特解。
 
 但是求完还是有问题。e值没有改变，还是那么大，意味着无法爆破或者有限域开根。必须要找到d，但n1和n2都有公因数q，q-1又和e不互质，似乎钻进死胡同了。除非……我们把模数换成p*r。
 
 $result\equiv x=m^e\%p(\mod p)$<br>
 $result\equiv x=m^e\%r(\mod r)$
 
-把q去掉，拿刚刚求出的特解再次构造同余方程组。这个同余方程组求出来的特解$result\equiv m^e (\mod p*r)$。可以这么想，设$a\equiv m^e\%p(\mod p),b\equiv m^e\%r(\mod r)$，那么a*b必定是这个同余方程组的解之一。$a=k1*p+m^e,b=k2*r+m^e$，那么$ab=(k1p+m^e)*(k2r+m^e)=k1*k2*pr+k1pm^e+k2rm^e+m^a,a=2e$。$k1*k2*pr+k1pm^e+k2rm^e$这段模pr余数肯定是0，但是我不太理解$m^a$这段模pr怎么得到余数是$m^e$的。
+把q去掉，拿刚刚求出的特解再次构造同余方程组。这个同余方程组求出来的特解 $result\equiv m^e (\mod p*r)$ 。可以这么想，设 $a\equiv m^e\%p(\mod p),b\equiv m^e\%r(\mod r)$ ，那么a\*b必定是这个同余方程组的解之一。 $a=k1\times p+m^e,b=k2\times r+m^e$ ，那么 $ab=(k1p+m^e)\times (k2r+m^e)=k1\times k2\times pr+k1pm^e+k2rm^e+m^a,a=2e$ 。 $k1\times k2\times pr+k1pm^e+k2rm^e$ 这段模pr余数肯定是0，但是我不太理解 $m^a$ 这段模pr怎么得到余数是 $m^e$ 的。
 
 推导过程我是跟着大佬做的，大佬使用了三个同余方程组，后面我觉得q用不着就没放进方程组里，最后发现两者都可以求出flag。不知道是只有这道题碰巧了还是所有的都可以。
 
