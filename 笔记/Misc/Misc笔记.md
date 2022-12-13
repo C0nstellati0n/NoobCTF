@@ -67,7 +67,7 @@ for w in range(n):#高和宽一起爆破
 > zsteg xxx.png(仅图片)
 - binwalk
 > binwalk xxx(支持任何类型，加上-e可以提取，不过有时候提取不出来，下方的foremost补充使用)
-- foremost
+- foremost(有时候即使binwalk没有提示任何文件，foremost也能提取出东西。所以binwalk提示没有问题时，也不要忘记试foremost)
 - outguess，例题：[Avatar](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/4%E7%BA%A7/Misc/Avatar.md)。注意有时候outguess会需要密码，密码可能藏在exif里。例题:[[ACTF新生赛2020]outguess](https://blog.csdn.net/mochu7777777/article/details/108936734)
 - [F5隐写](https://github.com/matthewgao/F5-steganography)，例题：[刷新过的图片](https://blog.csdn.net/destiny1507/article/details/102079695)
 - stegsolve
