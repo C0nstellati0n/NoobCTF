@@ -608,3 +608,4 @@ flag在汇编代码里就很明显了。
 23. z3求解无符号整数时要把数字转为二进制再计算。这里的“无符号”代表ida里经常看到的unsigned。例题:[[GWCTF 2019]xxor](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/%5BGWCTF%202019%5Dxxor.md)
 24. 在逆向android前，要确认是不是纯native开发的app，可在资源文件文件夹下的AndroidManifest.xml查看是否有`android:hasCode="false"`字样。如果有就代表是这种，jadx分析apk是找不到mainActivity的，直接ida看so文件，寻找`android_main`。
 25. twofish算法。例题:[easy-dex](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/7%E7%BA%A7/Reverse/easy-dex.md)
+26. C# dll文件逆向题，需使用[dnspy](https://github.com/dnSpy/dnSpy)。Unity逆向题也是这个思路，一般题目里有dll文件，使用编译器反编译找到逻辑才能开始逆向。例题:[[BJDCTF2020]BJD hamburger competition](https://blog.csdn.net/Lenard404/article/details/123854785)
