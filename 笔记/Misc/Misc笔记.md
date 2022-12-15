@@ -83,7 +83,7 @@ for w in range(n):#高和宽一起爆破
 17.  010Editor可以更改阅读文本文件时的编码。菜单栏->视图->字符集。
 18.  福尔摩斯跳舞的小人密码。例题:[[SWPU2019]伟大的侦探](https://blog.csdn.net/mochu7777777/article/details/109387134)
 19.  音符密码，形如`♭♯♪‖¶♬♭♭♪♭‖‖♭♭♬‖♫♪‖♩♬‖♬♬♭♭♫‖♩♫‖♬♪♭♭♭‖¶∮‖‖‖‖♩♬‖♬♪‖♩♫♭♭♭♭♭§‖♩♩♭♭♫♭♭♭‖♬♭‖¶§♭♭♯‖♫∮‖♬¶‖¶∮‖♬♫‖♫♬‖♫♫§=`。可在[此处](https://www.qqxiuzi.cn/bianma/wenbenjiami.php?s=yinyue)直接解密。
-20.  AAEncode，特征是颜文字，是将js代码转换位颜文字的编码。可用[网站](http://www.atoolbox.net/Tool.php?Id=703)在线解码。例题:[[SUCTF2018]single dog](https://blog.csdn.net/mochu7777777/article/details/109481013)。
+20.  AAEncode，特征是颜文字，是将js代码转换为颜文字的编码。可用[网站](http://www.atoolbox.net/Tool.php?Id=703)在线解码。例题:[[SUCTF2018]single dog](https://blog.csdn.net/mochu7777777/article/details/109481013)。
 21.  敲击码。类似棋盘密码，只不过与平时的棋盘排版不同，C和K在一个格，形如下方展示，/表示分割。
 
 ```
@@ -94,3 +94,7 @@ for w in range(n):#高和宽一起爆破
 例题:[[SWPU2019]你有没有好好看网课?](https://blog.csdn.net/mochu7777777/article/details/109449494)
 
 22. 不要忘记查看压缩包注释。不装软件的情况下似乎看不到，可以安装Bandzip工具。
+23. 遇见docx文件时，粗略看一遍看不出来线索就改后缀名为rar后解压查看里面是否有东西，或者直接binwalk -e提取内容。
+24. [lsb隐写工具](https://github.com/livz/cloacked-pixel)（不是stegsolve可以提取的那种lsb隐写，可以加密码的另外一种）
+25. 视频题粗略看一遍后最好放慢来看有没有漏掉的信息，可用[Kinovea](https://www.kinovea.org/)。例题:[[RoarCTF2019]黄金6年](https://blog.csdn.net/mochu7777777/article/details/109461931)
+26. 磁盘、映像题，比如iso文件，打开后注意勾选上“隐藏的项目”，这种藏文件的方法不能漏掉了。
