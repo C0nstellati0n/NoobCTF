@@ -610,4 +610,4 @@ flag在汇编代码里就很明显了。
 25. twofish算法。例题:[easy-dex](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/7%E7%BA%A7/Reverse/easy-dex.md)
 26. C# dll文件逆向题，需使用[dnspy](https://github.com/dnSpy/dnSpy)。Unity逆向题也是这个思路，一般题目里有dll文件，使用编译器反编译找到逻辑才能开始逆向。例题:[[BJDCTF2020]BJD hamburger competition](https://blog.csdn.net/Lenard404/article/details/123854785)
 27. hook题型。程序内会调用一个函数，但在调用那个函数之前改动了那个函数的got表，导致实际调用的其实是另一个函数。在逆向前整体看一遍并把函数列表粗略看一遍，可以避免被骗。或者在发现逆向出来的结果与预期不一致时，考虑是否有hook。例题:[[Zer0pts2020]easy strcmp](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/%5BZer0pts2020%5Deasy%20strcmp.md)
-28. 用z3爆破字符的数字值时，记得加上约束`xxx<128`，防止得到不必要的答案
+28. 用z3爆破字符的数字值时，记得加上约束`xxx<128`，防止得到不必要的答案。

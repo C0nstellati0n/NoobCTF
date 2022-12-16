@@ -164,3 +164,44 @@ highlight_file("/flag");
 32. idna编码+utf-8解码造成的过滤绕过。例题:[[SUCTF 2019]Pythonginx](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BSUCTF%202019%5DPythonginx.md)
 33. php格式化字符串逃逸+数组绕过strlen检查。例题1:[[0CTF 2016]piapiapia](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5B0CTF%202016%5Dpiapiapia.md)；例题2:[baby_unserialize](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Web/baby_unserialize.md)
 34. php普通无字母数字getshell+绕过disable functions
+35. chrome console发送post请求
+
+[来源](https://cloud.tencent.com/developer/article/1805343)
+
+```js
+var url = "http://28401609-7e35-445a-84b7-509187f6de3f.node4.buuoj.cn:81/secrettw.php";
+
+var params = "Merak=a";
+
+var xhr = new XMLHttpRequest();
+
+xhr.open("POST", url, true);
+
+xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded"); 
+
+xhr.onload = function (e) {
+
+  if (xhr.readyState === 4) {
+
+    if (xhr.status === 200) {
+
+      console.log(xhr.responseText);
+
+    } else {
+
+      console.error(xhr.statusText);
+
+    }
+
+  }
+
+};
+
+xhr.onerror = function (e) {
+
+  console.error(xhr.statusText);
+
+};
+
+xhr.send(params);
+```

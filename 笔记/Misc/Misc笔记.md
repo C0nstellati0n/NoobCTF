@@ -98,3 +98,35 @@ for w in range(n):#高和宽一起爆破
 24. [lsb隐写工具](https://github.com/livz/cloacked-pixel)（不是stegsolve可以提取的那种lsb隐写，可以加密码的另外一种）
 25. 视频题粗略看一遍后最好放慢来看有没有漏掉的信息，可用[Kinovea](https://www.kinovea.org/)。例题:[[RoarCTF2019]黄金6年](https://blog.csdn.net/mochu7777777/article/details/109461931)
 26. 磁盘、映像题，比如iso文件，打开后注意勾选上“隐藏的项目”，这种藏文件的方法不能漏掉了。
+27. pdf文件可以用photoshop等软件打开，能找到里面隐藏的图片等内容。
+28. crc值爆破恢复文件内容。zip加密的文件内容不应过小，因为此时攻击者可以通过爆破crc值的形式恢复文件内容。例题:[crc](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/4%E7%BA%A7/Misc/crc.md)。下方脚本可以通过crc值破解多个zip，并将zip的内容写入一个文件中。
+
+```python
+import zipfile
+import string
+import binascii
+
+def CrackCrc(crc):
+	for i in dic:
+		for j in dic:
+			for k in dic:
+				for h in dic:
+					s = i + j + k + h
+					if crc == (binascii.crc32(s.encode())):
+						f.write(s)
+						return
+
+def CrackZip():
+	for i in range(0,68):
+		file = 'out'+str(i)+'.zip'
+		crc = zipfile.ZipFile(file,'r').getinfo('data.txt').CRC
+		CrackCrc(crc)
+		print('\r'+"loading：{:%}".format(float((i+1)/68)),end='')
+
+dic = string.ascii_letters + string.digits + '+/='
+f = open('out.txt','w')
+print("\nCRC32begin")
+CrackZip()
+print("\nCRC32finished")
+f.close()
+```
