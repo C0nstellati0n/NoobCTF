@@ -205,3 +205,11 @@ xhr.onerror = function (e) {
 
 xhr.send(params);
 ```
+
+36. PHP会将传参中的空格( )、小数点(.)自动替换成下划线。例题:[[MRCTF2020]套娃](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BMRCTF2020%5D%E5%A5%97%E5%A8%83.md)
+37. 以下代码可传入23333%0a绕过。
+```php
+ if($_GET['b_u_p_t'] !== '23333' && preg_match('/^23333$/', $_GET['b_u_p_t'])){
+    echo "you are going to the next ~";
+}
+```

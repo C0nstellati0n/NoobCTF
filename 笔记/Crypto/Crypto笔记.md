@@ -272,5 +272,6 @@ iv=long_to_bytes(bytes_to_long(long_to_bytes(output)[16:])^bytes_to_long(key[16:
 aes = AES.new(key,AES.MODE_CBC,iv)
 flag = aes.decrypt(enc_flag)
 print(flag)
-
 ```
+
+12. Many Time pad攻击。例题:[不止一次](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/%E4%B8%8D%E6%AD%A2%E4%B8%80%E6%AC%A1.md)。
