@@ -130,3 +130,5 @@ CrackZip()
 print("\nCRC32finished")
 f.close()
 ```
+
+29. 中文电码+五笔编码。例题:[信息化时代的步伐](../../CTF/BUUCTF/Crypto/信息化时代的步伐.md)
