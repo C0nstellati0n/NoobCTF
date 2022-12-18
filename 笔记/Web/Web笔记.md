@@ -213,3 +213,5 @@ xhr.send(params);
     echo "you are going to the next ~";
 }
 ```
+
+1.  php pcre回溯限制绕过preg_match。例题:[[FBCTF2019]RCEService](../../CTF/BUUCTF/Web/[FBCTF2019]RCEService.md)
