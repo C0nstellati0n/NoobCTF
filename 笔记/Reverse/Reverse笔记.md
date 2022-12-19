@@ -21,6 +21,7 @@
 15. 遇见`Reverse技巧`一栏第5点的情况时，也可以考虑右键那个不够长的数组，选择Set Ivar Type，然后改成想要的长度。
 16. 基础ida动调。例题:[[FlareOn4]IgniteMe](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/%5BFlareOn4%5DIgniteMe.md)
 17. 使用ida分析Android的so文件时，要注意so文件是32位还是64位。如果把32位的文件错用64位ida打开，不会和平时的文件一样提示，而是会直接加载，但是出不来伪代码。反之亦然。
+18. 鼠标选中一片区域再按p可以生成函数，然后f5生成伪代码。该操作常用于最开始因为花指令反编译失败的函数。例题:[findKey](../../CTF/BUUCTF/Reverse/findKey.md)
 
 ## Jadx使用
 
