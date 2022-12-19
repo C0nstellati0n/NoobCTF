@@ -611,3 +611,4 @@ flag在汇编代码里就很明显了。
 27. hook题型。程序内会调用一个函数，但在调用那个函数之前改动了那个函数的got表，导致实际调用的其实是另一个函数。在逆向前整体看一遍并把函数列表粗略看一遍，可以避免被骗。或者在发现逆向出来的结果与预期不一致时，考虑是否有hook。例题:[[Zer0pts2020]easy strcmp](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/%5BZer0pts2020%5Deasy%20strcmp.md)
 28. 用z3爆破字符的数字值时，记得加上约束`xxx<128`，防止得到不必要的答案。
 29. 逆向apk题第一步先看AndroidManifest.xml文件，有可能会遇到AndroidManifest.xml文件损坏需要修复的情况。例题:[APK逆向-2](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/7%E7%BA%A7/Reverse/APK%E9%80%86%E5%90%91-2.md)
+30. cocos2d 游戏apk逆向。先看AndroidManifest.xml的`android:name`确定主函数，以及要分析so文件，游戏的逻辑都在里面。分析时首先关注update函数。例题:[boomshakalaka-3](https://blog.csdn.net/shadow20080578/article/details/124124832)
