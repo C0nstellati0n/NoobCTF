@@ -276,3 +276,4 @@ print(flag)
 
 12. Many Time pad攻击。例题:[不止一次](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/%E4%B8%8D%E6%AD%A2%E4%B8%80%E6%AC%A1.md)。
 13. 希尔密码（hill）。例题:[[UTCTF2020]hill](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BUTCTF2020%5Dhill.md)
+14. 秘密共享（Secret sharing）的Asmuth-Bloom方案。例题:[[AFCTF2018]花开藏宝地](../../CTF/BUUCTF/Crypto/[AFCTF2018]花开藏宝地.md)
