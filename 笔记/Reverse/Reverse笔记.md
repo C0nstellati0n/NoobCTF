@@ -613,3 +613,5 @@ flag在汇编代码里就很明显了。
 28. 用z3爆破字符的数字值时，记得加上约束`xxx<128`，防止得到不必要的答案。
 29. 逆向apk题第一步先看AndroidManifest.xml文件，有可能会遇到AndroidManifest.xml文件损坏需要修复的情况。例题:[APK逆向-2](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/7%E7%BA%A7/Reverse/APK%E9%80%86%E5%90%91-2.md)
 30. cocos2d 游戏apk逆向。先看AndroidManifest.xml的`android:name`确定主函数，以及要分析so文件，游戏的逻辑都在里面。分析时首先关注update函数。例题:[boomshakalaka-3](https://blog.csdn.net/shadow20080578/article/details/124124832)
+31. android逆向时注意RegisterNatives函数，里面可能会将已知函数名注册为另一个函数。比如分析apk有个CheckFlag函数，加载so也能直接找到CheckFlag，但并不代表这个CheckFlag就是调用的CheckFlag。在JNI_OnLoad中可能调用了RegisterNatives将CheckFlag注册为另一个函数。例题:[Illusion](https://www.cnblogs.com/hktk1643/p/15186377.html)
+32. android中getAssets函数可加载apk中assets目录下的文件，而反编译apk是可以看到assets目录中的文件的。
