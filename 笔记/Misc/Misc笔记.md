@@ -133,3 +133,4 @@ f.close()
 
 29. 中文电码+五笔编码。例题:[信息化时代的步伐](../../CTF/BUUCTF/Crypto/信息化时代的步伐.md)
 30. DTMF拨号音识别+手机键盘密码。DTMF拨号音就像平时座机拨号的声音，手机键盘密码就是9键。例题:[[WUSTCTF2020]girlfriend]([[WUSTCTF2020]girlfriend](https://blog.csdn.net/mochu7777777/article/details/105412940))
+31. mimikatz可分析dmp后缀文件并获取密码。例题：[[安洵杯 2019]Attack](../../CTF/BUUCTF/Misc/[安洵杯%202019]Attack.md)
