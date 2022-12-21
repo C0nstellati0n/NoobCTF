@@ -2,7 +2,7 @@
 
 [题目地址](https://adworld.xctf.org.cn/challenges/details?hash=100497b9-0ff5-4427-8159-060062da0c4c_2)
 
-场景打开只看见了一段flask源代码，而flask的考点也很明确了——模版注入。先把这串源代码美化一下，使用这个[网站](https://codebeautify.org/python-formatter-beautifier)。
+场景打开只看见了一段flask源代码，而flask的考点也很明确了——[模板注入](https://www.freebuf.com/column/187845.html)。先把这串源代码美化一下，使用这个[网站](https://codebeautify.org/python-formatter-beautifier)。
 
 ```python
 import flask

