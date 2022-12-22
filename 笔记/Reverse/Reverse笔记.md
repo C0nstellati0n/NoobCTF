@@ -22,6 +22,8 @@
 16. 基础ida动调。例题:[[FlareOn4]IgniteMe](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Reverse/%5BFlareOn4%5DIgniteMe.md)
 17. 使用ida分析Android的so文件时，要注意so文件是32位还是64位。如果把32位的文件错用64位ida打开，不会和平时的文件一样提示，而是会直接加载，但是出不来伪代码。反之亦然。
 18. 鼠标选中一片区域再按p可以生成函数，然后f5生成伪代码。该操作常用于最开始因为花指令反编译失败的函数。例题:[findKey](../../CTF/BUUCTF/Reverse/findKey.md)
+19. ida默认无法反编译过大的函数，要将ida /ctg目录下的hexrays.cfg文件中的MAX_FUNCSIZE=64 改为 MAX_FUNCSIZE=1024后才能正常反编译。
+20. idc脚本基础使用（解密简单自加密函数）。例题:[[GWCTF 2019]re3](../../CTF/BUUCTF/Reverse/[GWCTF%202019]re3.md)
 
 ## Jadx使用
 
@@ -617,3 +619,5 @@ flag在汇编代码里就很明显了。
 32. android中getAssets函数可加载apk中assets目录下的文件，而反编译apk是可以看到assets目录中的文件的。
 33. 基础ollydbg下断点、脱程序自制壳。例题:[[网鼎杯 2020 青龙组]jocker](../../CTF/BUUCTF/Reverse/[网鼎杯%202020%20青龙组]jocker.md)
 34. android利用[objection](https://book.hacktricks.xyz/mobile-pentesting/android-app-pentesting/frida-tutorial/objection-tutorial)对apk下hook。例题:[ill-intentions](https://www.cnblogs.com/hktk1643/p/15187619.html)
+35. 路由器固件逆向。需要先用binwalk从路由器固件的bin文件中提取东西，再用[firmware-mod-kit](https://github.com/rampageX/firmware-mod-kit#kit-executables)分析。例题:[firmware](https://www.cnblogs.com/Mayfly-nymph/p/12609657.html)
+36. python解密AES密码。例题:[[GWCTF 2019]re3](../../CTF/BUUCTF/Reverse/[GWCTF%202019]re3.md)
