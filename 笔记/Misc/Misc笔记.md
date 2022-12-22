@@ -29,11 +29,11 @@ for i in range(2000):
 import zlib
 import struct
 #读文件
-file = '1.png'
+file = 'ctf.png'
 fr = open(file,'rb').read()
 data = bytearray(fr[12:29])
-crc32key = eval(str(fr[29:33]).replace('\\x','').replace("b'",'0x').replace("'",''))
-#crc32key = 0xCBD6DF8A #补上0x，copy hex value
+#crc32key = str(fr[29:33]).replace('\\x','').replace("b'",'0x').replace("'",'')
+crc32key = 0x1670BAE6 #补上0x，copy hex value
 #data = bytearray(b'\x49\x48\x44\x52\x00\x00\x01\xF4\x00\x00\x01\xF1\x08\x06\x00\x00\x00')  #hex下copy grep hex
 n = 4095 #理论上0xffffffff,但考虑到屏幕实际，0x0fff就差不多了
 for w in range(n):#高和宽一起爆破
@@ -134,3 +134,55 @@ f.close()
 29. 中文电码+五笔编码。例题:[信息化时代的步伐](../../CTF/BUUCTF/Crypto/信息化时代的步伐.md)
 30. DTMF拨号音识别+手机键盘密码。DTMF拨号音就像平时座机拨号的声音，手机键盘密码就是9键。例题:[[WUSTCTF2020]girlfriend]([[WUSTCTF2020]girlfriend](https://blog.csdn.net/mochu7777777/article/details/105412940))
 31. mimikatz可分析dmp后缀文件并获取密码。例题：[[安洵杯 2019]Attack](../../CTF/BUUCTF/Misc/[安洵杯%202019]Attack.md)
+32. 当一串base64解码后是`Salted__`，可能的密文格式为AES，3DES或者Rabbit。
+33. usb流量包数据提取。例题:[usb](../../CTF/moectf/Misc/usb.md)
+34. rar文件可以通过更改文件结构隐藏文件，效果是让rar里有的文件解压不出来。用010 Editor打开rar文件，注意用文件名的区域开头是否是74（在[RAR文件结构](https://www.freebuf.com/column/199854.html)中，文件块的位置应该是74并不是7A，74让文件可以被解压出来，7A则不能），如果不是要改成74让文件被解压出来。例题:[USB](https://blog.csdn.net/mochu7777777/article/details/109632626)
+35. python3 单字节16进制异或结果写入文件。今天遇到一道题，文本文件里的内容需要需要单字节与5异或后转为16进制写入文件。不知道为啥大佬们的脚本我用不了，可能是版本的问题，故自己写了一个python3的简陋玩意。题目:[[GUET-CTF2019]虚假的压缩包](https://blog.csdn.net/mochu7777777/article/details/105367979)
+
+```python
+from Crypto.Util.number import *
+original = open("亦真亦假",'r').read()
+flag = open("ctf",'wb')
+res=''
+for i in original:
+	tmp = int(i,16)^5
+	res+=hex(tmp)[2:]
+flag.write(long_to_bytes(int(res,16)))
+```
+
+36. ttl隐写脚本。例题:[[SWPU2019]Network](https://blog.csdn.net/mochu7777777/article/details/109633675)
+
+```python
+import binascii
+with open('attachment.txt','r') as fp:
+    a=fp.readlines()
+    p=[]
+    for x in range(len(a)):
+       p.append(int(a[x])) 
+    s=''
+    for i in p:
+        if(i==63):
+            b='00'
+        elif(i==127):
+            b='01'
+        elif(i==191):
+            b='10'
+        else:
+            b='11'
+        s +=b
+flag = ''
+for i in range(0,len(s),8):
+    flag += chr(int(s[i:i+8],2))
+flag = binascii.unhexlify(flag)
+wp = open('ans','wb')
+wp.write(flag)
+wp.close()
+```
+
+37. logo编程语言，可用于绘画，形如：
+
+```
+cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 135 pu bk 100 pd setcolor pick [ red orange yellow green blue violet ] repeat 18[fd 5 rt 10] rt 90 fd 60 rt 90 bk 30 rt 90 fd 60 pu lt 90 fd 100 pd rt 90 fd 50 bk 50 setcolor pick [ red orange yellow green blue violet ] lt 90 fd 50 rt 90 fd 50 pu fd 50 pd fd 25 bk 50 fd 25 rt 90 fd 50 pu setcolor pick [ red orange yellow green blue violet ] fd 100 rt 90 fd 30 rt 45 pd fd 50 bk 50 rt 90 fd 50 bk 100 fd 50 rt 45 pu fd 50 lt 90 pd fd 50 bk 50 rt 90 setcolor pick [ red orange yellow green blue violet ] fd 50 pu lt 90 fd 100 pd fd 50 rt 90 fd 25 bk 25 lt 90 bk 25 rt 90 fd 25 setcolor pick [ red orange yellow green blue violet ] pu fd 25 lt 90 bk 30 pd rt 90 fd 25 pu fd 25 lt 90 pd fd 50 bk 25 rt 90 fd 25 lt 90 fd 25 bk 50 pu bk 100 lt 90 setcolor pick [ red orange yellow green blue violet ] fd 100 pd rt 90 arc 360 20 pu rt 90 fd 50 pd arc 360 15 pu fd 15 setcolor pick [ red orange yellow green blue violet ] lt 90 pd bk 50 lt 90 fd 25 pu home bk 100 lt 90 fd 100 pd arc 360 20 pu home
+```
+
+[在线解释器](https://www.calormen.com/jslogo/)
