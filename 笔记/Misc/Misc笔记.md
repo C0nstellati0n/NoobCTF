@@ -82,6 +82,7 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
 - [F5隐写](https://github.com/matthewgao/F5-steganography)，例题：[刷新过的图片](https://blog.csdn.net/destiny1507/article/details/102079695)
 - stegsolve
 - NtfsStreamsEditor,用于处理NTFS流隐藏文件。例题：[[SWPU2019]我有一只马里奥](https://blog.csdn.net/mochu7777777/article/details/108934265)。当题目涉及到NTFS流时，题目文件都需要用Win RAR解压。
+- SilentEye（音频隐写工具）
 
 1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)，如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
@@ -198,3 +199,5 @@ cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 1
 [在线解释器](https://www.calormen.com/jslogo/)
 
 38. [zip明文攻击](https://www.cnblogs.com/LEOGG321/p/14493327.html)，[原理](https://www.aloxaf.com/2019/04/zip_plaintext_attack/)。明文攻击可以用[archpr](https://blog.csdn.net/weixin_43778378/article/details/106077774)跑。archpr里面选好加密的zip文件后攻击类型选明文，然后点到明文，明文文件路径选择包含明文内容的zip（没错是zip，不是写有明文的txt，是装有明文的txt的zip）。例题:[[ACTF新生赛2020]明文攻击](https://blog.csdn.net/qq_46230755/article/details/112108707)
+39. [零宽字符隐写](https://zhuanlan.zhihu.com/p/87919817)。[解密网站](http://330k.github.io/misc_tools/unicode_steganography.html)
+40. 010Editor找到工具->十六进制运算->二进制异或，可以直接对整个文件异或。
