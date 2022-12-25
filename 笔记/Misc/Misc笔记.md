@@ -201,3 +201,4 @@ cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 1
 38. [zip明文攻击](https://www.cnblogs.com/LEOGG321/p/14493327.html)，[原理](https://www.aloxaf.com/2019/04/zip_plaintext_attack/)。明文攻击可以用[archpr](https://blog.csdn.net/weixin_43778378/article/details/106077774)跑。archpr里面选好加密的zip文件后攻击类型选明文，然后点到明文，明文文件路径选择包含明文内容的zip（没错是zip，不是写有明文的txt，是装有明文的txt的zip）。例题:[[ACTF新生赛2020]明文攻击](https://blog.csdn.net/qq_46230755/article/details/112108707)
 39. [零宽字符隐写](https://zhuanlan.zhihu.com/p/87919817)。[解密网站](http://330k.github.io/misc_tools/unicode_steganography.html)
 40. 010Editor找到工具->十六进制运算->二进制异或，可以直接对整个文件异或。
+41. gaps+montage工具自动拼图。例题:[[MRCTF2020]不眠之夜](https://blog.csdn.net/mochu7777777/article/details/109649446)
