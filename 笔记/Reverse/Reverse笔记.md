@@ -621,3 +621,6 @@ flag在汇编代码里就很明显了。
 34. android利用[objection](https://book.hacktricks.xyz/mobile-pentesting/android-app-pentesting/frida-tutorial/objection-tutorial)对apk下hook。例题:[ill-intentions](https://www.cnblogs.com/hktk1643/p/15187619.html)
 35. 路由器固件逆向。需要先用binwalk从路由器固件的bin文件中提取东西，再用[firmware-mod-kit](https://github.com/rampageX/firmware-mod-kit#kit-executables)分析。例题:[firmware](https://www.cnblogs.com/Mayfly-nymph/p/12609657.html)
 36. python解密AES密码。例题:[[GWCTF 2019]re3](../../CTF/BUUCTF/Reverse/[GWCTF%202019]re3.md)
+37. 安卓unity游戏的核心逻辑一般位于assets\bin\Data\Managed\Assembly-CSharp.dll
+38. dnSpy基础[调试](https://www.singoo.top/article/detail/161.html)。注意32位的dnSpy只能调试32位的程序，64位dnSpy只能调试64位程序。
+39. xxtea逆向。例题:[xx](../../CTF/攻防世界/6级/Reverse/xx.md)
