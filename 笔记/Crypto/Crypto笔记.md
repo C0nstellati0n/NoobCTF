@@ -306,34 +306,7 @@ for i in range(0,len(ss),8):
 print(res)
 ```
 
-17. python以大端和小端处理数据。
-
-[题目及来源](https://blog.csdn.net/MikeCoke/article/details/113796480)
-
-```python
-from Crypto.Util.number import *
-import struct
-
-s = [72143238992041641000000.000000,77135357178006504000000000000000.000000,1125868345616435400000000.000000,67378029765916820000000.000000,75553486092184703000000000000.000000,4397611913739958700000.000000,76209378028621039000000000000000.000000]
-a = ''
-b = ''
-for i in s:
-    i = float(i)
-    a += struct.pack('<f',i).hex()        #小端
-print(a)
-
-for j in s:
-    i = float(i)
-    b += struct.pack('>f',i).hex()        #大端
-print(b)
-
-a = 0x496e74657265737472696e67204964656120746f20656e6372797074
-b = 0x74707972747079727470797274707972747079727470797274707972
-print(long_to_bytes(a))
-print(long_to_bytes(b))
-```
-
-18. pyDes解密des密文。
+17.  pyDes解密des密文。
 
 [题目及来源](https://blog.csdn.net/MikeCoke/article/details/113796480)
 
@@ -370,3 +343,5 @@ data = base64.b64decode(k)
 flag = DES.decrypt(data)
 print(flag)
 ```
+
+18. [梅森旋转算法](https://liam.page/2018/01/12/Mersenne-twister/)（Mersenne Twister Algorithm，简称 MT）相关[考点](https://badmonkey.site/archives/mt19937.html)。

@@ -139,5 +139,5 @@ category是之前发帖时可以决定的，content在category的下面，且会
 
 hex解码得到flag。
 
-- ### Flag
+## Flag
   > flag{0dd14aae81d94904b3492117e2a3d4df}
