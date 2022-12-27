@@ -202,3 +202,8 @@ cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 1
 39. [零宽字符隐写](https://zhuanlan.zhihu.com/p/87919817)。[解密网站](http://330k.github.io/misc_tools/unicode_steganography.html)
 40. 010Editor找到工具->十六进制运算->二进制异或，可以直接对整个文件异或。
 41. gaps+montage工具自动拼图。例题:[[MRCTF2020]不眠之夜](https://blog.csdn.net/mochu7777777/article/details/109649446)
+42. 汉信码，形如：
+
+![hanxin_code](../images/hanxin_code.png)
+
+可用[网站](https://tuzim.net/hxdecode/)解码。
