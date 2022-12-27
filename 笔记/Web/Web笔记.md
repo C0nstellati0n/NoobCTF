@@ -359,3 +359,7 @@ Content-Disposition: form-data; name="submit"
 51. [koa框架结构](https://www.cnblogs.com/wangjiahui/p/12660093.html)。
 52. 无列名注入+布尔盲注。例题:[[GYCTF2020]Ezsqli](https://blog.csdn.net/qq_45521281/article/details/106647880)(里面最后一道例题)
 53. sql多行二次注入+git目录泄漏+.DS_Store泄露。例题:[comment](../../CTF/攻防世界/7级/Web/comment.md)
+54. sql注入中，空格能用内联注释符`/**/`代替；如果注释符`#`被过滤，可以用`;%00`替代，截断注释后面的内容。
+55. regexp盲注。例题:[[NCTF2019]SQLi](https://blog.csdn.net/l2872253606/article/details/125265138)
+56. [Arjun](https://github.com/s0md3v/Arjun) http参数爆破工具。
+57. 使用php://filter/string.strip_tags导致php崩溃清空堆栈重启，如果在同时上传了一个木马，那么这个tmp file就会一直留在tmp目录，再进行文件名爆破并连接木马就可以getshell。来自[php文件操作trick](https://www.cnblogs.com/tr1ple/p/11301743.html)。更多参考[PHP临时文件机制](https://www.cnblogs.com/linuxsec/articles/11278477.html)。例题:[[NPUCTF2020]ezinclude](https://www.cnblogs.com/Article-kelp/p/14826360.html)
