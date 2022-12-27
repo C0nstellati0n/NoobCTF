@@ -140,7 +140,7 @@ p.interactive()
 
 7. pwntools得到libc偏移
 
-承接rop题模板，上面的脚本中xxx_offset就是这么来的。至于为什么要多此一举打印出来，全是因为我没配置好linux环境。配置好的各位直接要`libc.sym['xxx]`那段就行了。
+承接rop题模板，给出做题时常见的偏移，上面的脚本中xxx_offset就是这么来的。至于为什么要多此一举打印出来，全是因为我没配置好linux环境。配置好的各位直接要`libc.sym['xxx]`那段就行了。
 
 ```python
 from pwn import *
@@ -155,7 +155,8 @@ print(f"realloc:{libc.symbols['realloc']}")
 print(f"printf:{libc.symbols['printf']}")
 print(f"__free_hook:{libc.sym['__free_hook']}")
 print(f"atoi:{libc.sym['atoi']}")
-print(f"__environ:{libc.sym['__environ']}")                                                                               
+print(f"__environ:{libc.sym['__environ']}")
+print(f"__libc_start_main:{libc.symbols['__libc_start_main']}")                                                                           
 ```
 
 8. pwn heap题模板
@@ -169,6 +170,7 @@ print(f"__environ:{libc.sym['__environ']}")
 - unlink更改got表。例题:[hitcontraining_unlink](../../CTF/BUUCTF/Pwn/hitcontraining_unlink.md)
 - house of force任意地址写。例题:[hitcontraining_bamboobox](../../CTF/BUUCTF/Pwn/hitcontraining_bamboobox.md)
 - uaf改free_hook为system+tcache dup。例题:[ciscn_2019_es_1](../../CTF/BUUCTF/Pwn/ciscn_2019_es_1.md)
+- off by one+unlink+格式化字符串泄露地址。例题:[axb_2019_heap](../../CTF/BUUCTF/Pwn/axb_2019_heap.md)
 
 ### 32位
 
