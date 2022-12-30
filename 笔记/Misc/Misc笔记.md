@@ -207,3 +207,6 @@ cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 1
 ![hanxin_code](../images/hanxin_code.png)
 
 可用[网站](https://tuzim.net/hxdecode/)解码。
+
+43. [snow隐写](https://lazzzaro.github.io/2020/06/20/misc-%E6%96%87%E4%BB%B6%E9%9A%90%E5%86%99/)，有[网页版](http://fog.misty.com/perry/ccs/snow/snow/snow.html)和[exe版](https://darkside.com.au/snow/)。例题:[看雪看雪看雪](https://blog.csdn.net/qq_53105813/article/details/127896201)
+44. 图片隐写工具[stegpy](https://github.com/dhsdshdhk/stegpy)。
