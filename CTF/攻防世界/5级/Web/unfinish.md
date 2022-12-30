@@ -39,5 +39,7 @@ getFlag()
 
 数据库不用看了，表名没法知道，那就直接搞flag吧。有两种方法可以考虑。一种是像上面这样一次猜一个字符，第二种是select * from flag后将内容二次编码为hex，因为一次编码hex中有字母，而sql遇见字母后会截断，两次hex就不会有字母了。还要把二次hex的内容以12的长度使用substr进行分割，因为超过12就会用科学计数法表示。
 
-- ### Flag
+不知道为啥我这个脚本去buuctf就跑不出来了，因此我又找了个[wp](https://blog.csdn.net/rfrder/article/details/109352385)，进一步加深记忆（废物啊！）
+
+## Flag
   > flag{2494e4bf06734c39be2e1626f757ba4c}

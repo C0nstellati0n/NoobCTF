@@ -210,3 +210,6 @@ cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 1
 
 43. [snow隐写](https://lazzzaro.github.io/2020/06/20/misc-%E6%96%87%E4%BB%B6%E9%9A%90%E5%86%99/)，有[网页版](http://fog.misty.com/perry/ccs/snow/snow/snow.html)和[exe版](https://darkside.com.au/snow/)。例题:[看雪看雪看雪](https://blog.csdn.net/qq_53105813/article/details/127896201)
 44. 图片隐写工具[stegpy](https://github.com/dhsdshdhk/stegpy)。
+45. ppt文档密码爆破工具。可用[Accent OFFICE Password Recovery](https://www.52pojie.cn/thread-82569-1-1.html)工具，也能用[ffice2john.py](https://fossies.org/linux/john/run/office2john.py)或者john。
+46. 电动车钥匙信号PT224X解码。例题:[打开电动车](../../CTF/攻防世界/3级/Misc/打开电动车.md)
+47. TSL协议需要私钥（RSA）解密才能追踪。例题:[[DDCTF2018]流量分析](https://blog.csdn.net/qq_45699846/article/details/123529342)
