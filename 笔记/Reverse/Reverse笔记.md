@@ -330,3 +330,4 @@ flag在汇编代码里就很明显了。
 44. [WebAssembly](https://zhuanlan.zhihu.com/p/68048524)+Android。例题:[丛林的秘密](https://bbs.pediy.com/thread-252374.htm#msg_header_h1_0)。webAssembly可以被看作是web层面的汇编编译目标，可用[wasm2c](https://github.com/WebAssembly/wabt/blob/main/wasm2c/README.md)将wasm文件转为c语言。
 45. 如果程序的验证逻辑是很多if语句，可以用爆破解时，[angr](https://www.anquanke.com/post/id/212816#h2-8)符号执行也是一种选择。例题:[[WUSTCTF2020]funnyre](https://blog.csdn.net/ytj00/article/details/107735151)
 46. RC4算法。例题:[[GUET-CTF2019]encrypt](https://www.cnblogs.com/Moomin/p/15839791.html)
+47. perl是解释语言，perlapp只是把你的perl程序压缩后放在资源里面，执行的时候会解压的。意思就是，逆向perl程序动调比静态分析好。例题:[[WMCTF2020]easy_re](https://blog.csdn.net/qaq517384/article/details/124134079)
