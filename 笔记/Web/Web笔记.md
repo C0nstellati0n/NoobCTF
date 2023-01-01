@@ -384,3 +384,35 @@ Content-Disposition: form-data; name="submit"
 68. php的\$_SERVER['QUERY_STRING']不会对传入键值对进行url解码。
 69. php中虽然\$_REQUEST同时接收GET和POST的传参，但POST拥有更高的优先级，当\$_GET和\$_POST中的键相同时，\$_POST的值将覆盖\$_GET的值。
 70. php sha1加密数组绕过+extract变量覆盖漏洞+create_function代码注入。例题:[[BJDCTF2020]EzPHP](../../CTF/BUUCTF/Web/[BJDCTF2020]EzPHP.md)
+71. 代码执行题可通过输入Error().stack测试后台代码是不是js。
+72. js [vm2沙箱逃逸](https://www.anquanke.com/post/id/207291)。例题:[[HFCTF2020]JustEscape](https://blog.csdn.net/SopRomeo/article/details/108629520)
+73. web爬虫计算脚本。
+
+[例题及来源](https://blog.csdn.net/qq_46263951/article/details/118914287)
+
+```python
+import re
+import requests
+from time import sleep
+ 
+ 
+def count():
+    s = requests.session()
+    url = 'http://4cf5d9ba-2df8-4b52-88ff-5fcbd27c5fc9.node4.buuoj.cn:81/'
+    match = re.compile(r"[0-9]+ [+|-] [0-9]+")
+    r = s.get(url)
+    for i in range(1001):
+        sleep(0.1)
+        str = match.findall(r.text)[0]
+        # print(eval(str))
+        data = {"answer" : eval(str)}
+        r = s.post(url, data=data)
+        r.encoding = "utf-8"
+        # print(r.text)
+    print(r.text)
+ 
+ 
+ 
+if __name__ == '__main__':
+    count()
+```

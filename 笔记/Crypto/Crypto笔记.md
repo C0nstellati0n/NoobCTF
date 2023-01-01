@@ -277,7 +277,7 @@ flag = aes.decrypt(enc_flag)
 print(flag)
 ```
 
-12. Many Time pad攻击。例题:[不止一次](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/%E4%B8%8D%E6%AD%A2%E4%B8%80%E6%AC%A1.md)。
+12. Many Time pad攻击（利用空格异或其他字符会转大小写的特性）。例题:[不止一次](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/%E4%B8%8D%E6%AD%A2%E4%B8%80%E6%AC%A1.md)。
 13. 希尔密码（hill）。例题:[[UTCTF2020]hill](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BUTCTF2020%5Dhill.md)
 14. 秘密共享（Secret sharing）的Asmuth-Bloom方案。例题:[[AFCTF2018]花开藏宝地](../../CTF/BUUCTF/Crypto/[AFCTF2018]花开藏宝地.md)
 15. ecc（椭圆曲线加密算法）入门。[链接](https://www.pediy.com/kssd/pediy06/pediy6014.htm)。
@@ -348,3 +348,223 @@ print(flag)
 
 18. [梅森旋转算法](https://liam.page/2018/01/12/Mersenne-twister/)（Mersenne Twister Algorithm，简称 MT）相关[考点](https://badmonkey.site/archives/mt19937.html)。
 19. python的随机数（如random.getrandbits()）基于梅森旋转算法MT。MT19937能做到生成 1≤k≤623 个32位均匀分布的随机数，如果我们获取了624个，解下来的随机数就能用[randCrack](https://github.com/tna0y/Python-random-module-cracker)预测了。例题:[[GKCTF 2021]Random](https://blog.csdn.net/m0_57291352/article/details/119655082)
+20. Many time pad攻击（利用[汉明距离](https://baike.baidu.com/item/%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB/475174)。
+
+[题目及来源](https://codeleading.com/article/68135872581/)
+
+```python
+import string
+from binascii import unhexlify
+from itertools import *
+
+
+def bxor(a, b):  # xor two byte strings of different lengths
+    if len(a) > len(b):
+        return bytes([x ^ y for x, y in zip(a[:len(b)], b)])
+    else:
+        return bytes([x ^ y for x, y in zip(a, b[:len(a)])])
+
+
+def hamming_distance(b1, b2):
+    differing_bits = 0
+    for byte in bxor(b1, b2):
+        differing_bits += bin(byte).count("1")
+    return differing_bits
+
+
+def break_single_key_xor(text):
+    key = 0
+    possible_space = 0
+    max_possible = 0
+    letters = string.ascii_letters.encode('ascii')
+    for a in range(0, len(text)):
+        maxpossible = 0
+        for b in range(0, len(text)):
+            if (a == b):
+                continue
+            c = text[a] ^ text[b]
+            if c not in letters and c != 0:
+                continue
+            maxpossible += 1
+        if maxpossible > max_possible:
+            max_possible = maxpossible
+            possible_space = a
+    key = text[possible_space] ^ 0x20
+    return chr(key)
+
+
+salt = "WeAreDe1taTeam"
+si = cycle(salt)
+b = unhexlify(
+    b'49380d773440222d1b421b3060380c3f403c3844791b202651306721135b6229294a3c3222357e766b2f15561b35305e3c3b670e49382c295c6c170553577d3a2b791470406318315d753f03637f2b614a4f2e1c4f21027e227a4122757b446037786a7b0e37635024246d60136f7802543e4d36265c3e035a725c6322700d626b345d1d6464283a016f35714d434124281b607d315f66212d671428026a4f4f79657e34153f3467097e4e135f187a21767f02125b375563517a3742597b6c394e78742c4a725069606576777c314429264f6e330d7530453f22537f5e3034560d22146831456b1b72725f30676d0d5c71617d48753e26667e2f7a334c731c22630a242c7140457a42324629064441036c7e646208630e745531436b7c51743a36674c4f352a5575407b767a5c747176016c0676386e403a2b42356a727a04662b4446375f36265f3f124b724c6e346544706277641025063420016629225b43432428036f29341a2338627c47650b264c477c653a67043e6766152a485c7f33617264780656537e5468143f305f4537722352303c3d4379043d69797e6f3922527b24536e310d653d4c33696c635474637d0326516f745e610d773340306621105a7361654e3e392970687c2e335f3015677d4b3a724a4659767c2f5b7c16055a126820306c14315d6b59224a27311f747f336f4d5974321a22507b22705a226c6d446a37375761423a2b5c29247163046d7e47032244377508300751727126326f117f7a38670c2b23203d4f27046a5c5e1532601126292f577776606f0c6d0126474b2a73737a41316362146e581d7c1228717664091c')
+plain = ''.join([hex(ord(c) ^ ord(next(si)))[2:].zfill(2) for c in b.decode()])
+b = unhexlify(plain)
+print(plain)
+
+normalized_distances = []
+
+for KEYSIZE in range(2, 40):
+    n = len(b) // KEYSIZE
+    list_b = []
+    for i in range(n - 1):
+        list_b.append(b[i * KEYSIZE: (i + 1) * KEYSIZE])
+
+    normalized_distance = 0
+    for i in range(len(list_b) - 1):
+        normalized_distance += hamming_distance(list_b[i], list_b[i + 1])
+    normalized_distance = float(normalized_distance) / (KEYSIZE * (len(list_b) - 1))
+
+    normalized_distances.append(
+        (KEYSIZE, normalized_distance)
+    )
+normalized_distances = sorted(normalized_distances, key=lambda x: x[1])
+print(normalized_distances)
+
+for KEYSIZE, _ in normalized_distances[:5]:
+    block_bytes = [[] for _ in range(KEYSIZE)]
+    for i, byte in enumerate(b):
+        block_bytes[i % KEYSIZE].append(byte)
+    keys = ''
+    try:
+        for bbytes in block_bytes:
+            keys += break_single_key_xor(bbytes)
+        key = bytearray(keys * len(b), "utf-8")
+        plaintext = bxor(b, key)
+        print("keysize:", KEYSIZE)
+        print("key is:", keys)
+        s = bytes.decode(plaintext)
+        print(s)
+    except Exception:
+        continue
+```
+
+21. 通过分析重合指数破解类似维吉尼亚的密码。
+
+[题目及来源](https://blog.csdn.net/weixin_44110537/article/details/107947158)
+
+```python
+#重合指数的应用:
+import gmpy2
+c=open('/Users/constellation/Desktop/encrypted_message','r').read()
+best_index=0.065
+sum=0
+dic_index={'a': 0.08167,'b': 0.01492,'c': 0.02782,'d':0.04253,'e': 0.12702,'f':0.02228,'g': 0.02015,'h':0.06094,'i':0.06966,'j':0.00153,'k':0.00772,'l':0.04025,'m':0.02406,'n':0.06749,'o':0.07507,'p':0.01929,'q':0.00095,'r':0.05987,'s':0.06327,'t':0.09056,'u':0.02758,'v':0.00978,'w':0.02360,'x':0.00150,'y':0.01974,'z':0.00074}
+def index_of_coincidence(s):
+    '''
+    计算字符串的重合指数(所有字母出现频率的平方和)
+    :param s: 给定字符串
+    :return: 重合指数
+    '''
+    alpha='abcdefghijklmnopqrstuvwxyz'#给定字母表
+    freq={}#统计字母频率(frequency)
+    for i in alpha:
+        freq[i]=0
+    #先全部初始化为0
+    for i in s:
+        freq[i]=freq[i]+1
+    #统计频率
+    index=0
+    for i in alpha:
+        index = index + (freq[i] * (freq[i] - 1)) / (len(s) * (len(s) - 1))
+    return index
+def index_of_coincidence_m(s):
+    '''
+    计算明文s中的各字母的频率与英文字母中的频率的吻合程度.
+    :param s:明文s
+    :return:吻合程度
+    '''
+    alpha = 'abcdefghijklmnopqrstuvwxyz'  # 给定字母表
+    freq = {}  # 统计字母频率(frequency)
+    for i in alpha:
+        freq[i] = 0
+    # 先全部初始化为0
+    for i in s:
+        freq[i] = freq[i] + 1
+    # 统计频率
+    index = 0
+    for i in alpha:
+        index = index + freq[i] / len(s) * dic_index[i]
+    return index
+def get_cycle(c):
+    '''
+    求出最符合统计学的m,n的最小公共周期,方法为通过爆破足够大的周期样本,观察成倍出现的周期.
+    计算方法为解出每一个子密文段的重合指数和然后求平均值 再与最佳重合指数相减 误差在0.01以内.
+    :param c: 密文
+    :return: 公共周期列表
+    '''
+    cycle=[]
+    for i in range(1,100):
+        average_index=0#平均重合指数初始化为0
+        for j in range(i):
+            s = ''.join(c[j+i*x] for x in range(0,len(c)//i))
+            index=index_of_coincidence(s)
+            average_index+=index
+        average_index=average_index/i-best_index
+        if abs(average_index)<0.01:
+            cycle.append(i)
+    return cycle
+cycle=get_cycle(c)
+print(cycle)#[6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96]
+
+#通过计算得到cycle都是6的倍数,因此cycle最小很有可能为6
+
+cycle=6
+
+#开始爆破keys
+
+def decrypt(c,i,j):
+    '''
+    通过i,j解出与之相对应的密文段
+    :param c: 密文段
+    :param i:与明文相乘的key
+    :param j: 位移j(维吉尼亚密码)
+    :return: 明文段
+    '''
+    alpha = 'abcdefghijklmnopqrstuvwxyz'
+    m=''
+    for x in c:
+        m+=alpha[((alpha.index(x)-j)*gmpy2.invert(i,26))%26]
+    return m
+def get_key(c):
+    '''
+    得到某一密文段的单个字符key i j
+    方法为暴力枚举所有的可能性,找到最符合统计学规律的 i,j 即该密文段的重合指数与最佳重合指数误差小于0.01
+    :param c: 密文段
+    :return: i,j
+    '''
+    for i in range(26):
+        if  gmpy2.gcd(i,26)!=1:#i对26的逆元不只一个,造成明文不唯一,因此不符合条件.
+            continue
+        for j in range(26):
+            m=decrypt(c,i,j)
+            index=index_of_coincidence_m(m)
+            if abs(index-0.065)<0.01:
+                return (i,j)
+def get_all_key(s,cycle):
+    '''
+    得到一个周期内的所有的密文段的key
+    :param s: 原密文
+    :param cycle: 周期
+    :return: 无
+    '''
+    for i in range(cycle):
+        temps=''.join([s[i+x*cycle] for x in range(0,len(s)//cycle)])
+        print(get_key(temps))
+get_all_key(c,6)
+# (19, 10)
+# (7, 9)
+# (23, 3)
+# (19, 24)
+# (7, 14)
+# (23, 15)
+#此时我们大致可以推测出:keya=[19,7,23],keyb=[10,9,3,24,14,15],因此根据题目给的式子,我们就可以还原出明文了.
+plaintext=''
+keya=[19,7,23]
+keyb=[10,9,3,24,14,15]
+len_a=len(keya)
+len_b=len(keyb)
+alpha='abcdefghijklmnopqrstuvwxyz'
+for i in range(len(c)):
+    plaintext+=alpha[((alpha.index(c[i])-keyb[i%len_b])*gmpy2.invert(keya[i%len_a],26))%26]
+print(plaintext)
+```
