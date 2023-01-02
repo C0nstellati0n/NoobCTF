@@ -2,9 +2,8 @@
 
 1. 程序关闭标准输出会导致getshell后无法得到cat flag的输出。这时可以用命令`exec 1>&0`将标准输出重定向到标准输入，再执行cat flag就能看见了。因为默认打开一个终端后，0，1，2（标准输入，标准输出，标准错误）都指向同一个位置也就是当前终端。详情见这篇[文章](https://blog.csdn.net/xirenwang/article/details/104139866)。例题：[wustctf2020_closed](https://buuoj.cn/challenges#wustctf2020_closed)
 2. 做菜单类堆题时，添加堆块的函数一般是最重要的，需要通过分析函数来构建出程序对堆块的安排。比如有些笔记管理题会把笔记名称放一个堆中，笔记内容放另一个堆中，再用一个列表记录指针。了解程序是怎么安排堆后才能根据漏洞制定利用计划。如果分析不出来，用gdb调试对着看会好很多。例题：[babyfengshui](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/babyfengshui.md)
-3. 32位利用A和%p计算格式化字符串偏移+$hn按字节改got表。例题：[axb_2019_fmt32](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/axb_2019_fmt32.md)
-4. 堆uaf基本利用。例题：[ciscn_2019_n_3](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/ciscn_2019_n_3.md)
-5. pwntools生成shellcode
+3. 32位利用A和%p计算格式化字符串偏移+$hn按字节改got表。例题：[axb_2019_fmt32](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/axb_2019_fmt32.md)
+4. pwntools生成shellcode
 
 适用于linux。不过我到现在还没见过windows的pwn，可能是windows考的不多吧。
 
@@ -144,7 +143,7 @@ p.interactive()
 
 ```python
 from pwn import *
-libc=ELF("./ubuntu16/libc-2.23.so.64")
+libc=ELF("./ubuntu18/libc-2.27.so.64")
 print(f"system:{libc.sym['system']}")
 print(f"write:{libc.sym['write']}")
 print(f"puts:{libc.sym['puts']}")
@@ -156,7 +155,8 @@ print(f"printf:{libc.symbols['printf']}")
 print(f"__free_hook:{libc.sym['__free_hook']}")
 print(f"atoi:{libc.sym['atoi']}")
 print(f"__environ:{libc.sym['__environ']}")
-print(f"__libc_start_main:{libc.symbols['__libc_start_main']}")                                                                           
+print(f"__libc_start_main:{libc.symbols['__libc_start_main']}")
+print(f"_IO_2_1_stdin_:{libc.sym['_IO_2_1_stdin_']}")                                                                       
 ```
 
 8. pwn heap题模板
@@ -171,10 +171,12 @@ print(f"__libc_start_main:{libc.symbols['__libc_start_main']}")
 - house of force任意地址写。例题:[hitcontraining_bamboobox](../../CTF/BUUCTF/Pwn/hitcontraining_bamboobox.md)
 - uaf改free_hook为system+tcache dup。例题:[ciscn_2019_es_1](../../CTF/BUUCTF/Pwn/ciscn_2019_es_1.md)
 - off by one+unlink+格式化字符串泄露地址。例题:[axb_2019_heap](../../CTF/BUUCTF/Pwn/axb_2019_heap.md)
+- 劫持_IO_2_1_stdin_结构体里的_fileno使其读取制定文件而不是stdin+只能泄露地址后4字节的解决办法。例题:[](../../CTF/BUUCTF/Pwn/ciscn_2019_final_2.md)
 
 ### 32位
 
 - uaf更改heap数组函数指针:[hacknote](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/hacknote.md)
+- uaf修改程序功能函数指针。例题：[ciscn_2019_n_3](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/ciscn_2019_n_3.md)
 
 
 9. 栈溢出[计算偏移量](https://blog.csdn.net/weixin_62675330/article/details/123344386)（gdb，gdb-peda,pwntools cyclic,ida)

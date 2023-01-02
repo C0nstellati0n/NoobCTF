@@ -331,3 +331,5 @@ flag在汇编代码里就很明显了。
 45. 如果程序的验证逻辑是很多if语句，可以用爆破解时，[angr](https://www.anquanke.com/post/id/212816#h2-8)符号执行也是一种选择。例题:[[WUSTCTF2020]funnyre](https://blog.csdn.net/ytj00/article/details/107735151)
 46. RC4算法。例题:[[GUET-CTF2019]encrypt](https://www.cnblogs.com/Moomin/p/15839791.html)
 47. perl是解释语言，perlapp只是把你的perl程序压缩后放在资源里面，执行的时候会解压的。意思就是，逆向perl程序动调比静态分析好。例题:[[WMCTF2020]easy_re](https://blog.csdn.net/qaq517384/article/details/124134079)
+48. [控制流平坦化](http://www.qfrost.com/LLVM/%E3%80%90LLVM%E3%80%91Flattening%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/)混淆可以用[deflat](https://github.com/cq674350529/deflat)脚本部分去除。例题:[[RoarCTF2019]polyre](https://www.52pojie.cn/thread-1562227-1-1.html)
+49. 三维迷宫题+花指令去除。例题:[[SCTF2019]babyre](https://blog.nowcoder.net/n/46e15a89016144b899126fcd9644cdc0)。这题的另一个[wp](https://www.cnblogs.com/Moomin/p/15864510.html)有写ROR4和ROL4的c语言实现。
