@@ -568,3 +568,5 @@ for i in range(len(c)):
     plaintext+=alpha[((alpha.index(c[i])-keyb[i%len_b])*gmpy2.invert(keya[i%len_a],26))%26]
 print(plaintext)
 ```
+
+22. lfsr爆破mask。例题:[LittLe_FSR](../../CTF/moectf/Crypto/LittLe_FSR.md)
