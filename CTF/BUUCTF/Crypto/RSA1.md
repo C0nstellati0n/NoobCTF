@@ -15,7 +15,7 @@ dq≡d mod (q−1)
 
 以上是已知条件，目的是得到m，或者说 $c^d$ 。之前做过类似的题，利用中国剩余定理可以得到:
 
-m1≡$c^d\mod p$,m2≡$c^d\mod q$
+m1≡ $c^d\mod p$ ,m2≡ $c^d\mod q$
 
 当时一直不理解怎么得的，今天总算是知道一点了。由 $m≡c^{d} \mod n$ ,可以得到式子 $m=c^{d}+k∗n$ ；又因为n=p∗q，所以可以得到 $m=c^{d}+p∗q∗k$ 。两边取余p得到 $m = c^{d}+q∗k$ ,两边取余q得到 $m = c^{d}+p∗k$ 。这个式子像什么呢？这不跟最开始 $m=c^{d}+k∗n$ 式子长的很像吗？因此把m mod p写为m1，m mod q写为m2，得到 $m1≡c^d \mod p$ , $m2≡c^d \mod q$ 。
 
@@ -58,5 +58,5 @@ print(long_to_bytes(m))
 
 嗯我的模运算基础合格了。这题很坑的一点是输出不是flag，要把前缀换成flag。
 
-### Flag
-- flag{W31c0m3_70_Ch1n470wn}
+## Flag
+> flag{W31c0m3_70_Ch1n470wn}
