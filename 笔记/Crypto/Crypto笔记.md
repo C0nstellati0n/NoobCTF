@@ -570,3 +570,4 @@ print(plaintext)
 ```
 
 22. lfsr爆破mask。例题:[LittLe_FSR](../../CTF/moectf/Crypto/LittLe_FSR.md)
+23. [Schmidt-Samoa 密码体系](https://www.ruanx.net/schmidt-samoa/)。
