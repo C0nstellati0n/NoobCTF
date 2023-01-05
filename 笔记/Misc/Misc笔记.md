@@ -217,5 +217,6 @@ cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 1
 47. TSL协议需要私钥（RSA）解密才能追踪。例题:[[DDCTF2018]流量分析](https://blog.csdn.net/qq_45699846/article/details/123529342)
 48. VoIP——基于IP的语音传输（英语：Voice over Internet Protocol，缩写为VoIP）是一种语音通话技术，经由网际协议（IP）来达成语音通话与多媒体会议，也就是经由互联网来进行通信。其他非正式的名称有IP电话（IP telephony）、互联网电话（Internet telephony）、宽带电话（broadband telephony）以及宽带电话服务（broadband phone service）。在wireshark中可以根据数据包还原语音。菜单栏->Telephony->VoIP Calls。
 49. SSTV音频解码。例题:[[UTCTF2020]sstv](https://blog.csdn.net/mochu7777777/article/details/109882441)
-50. 图片缺少IDAT标识时😌在010 Editor中将缺少标识的chunk的union CTYPE type的位置补上IDAT十六进制标识49 44 41 54即可。例题:[[湖南省赛2019]Findme](https://blog.csdn.net/mochu7777777/article/details/107737687)
+50. 图片缺少IDAT标识时,在010 Editor中将缺少标识的chunk的union CTYPE type的位置补上IDAT十六进制标识49 44 41 54即可。例题:[[湖南省赛2019]Findme](https://blog.csdn.net/mochu7777777/article/details/107737687)
 51. BPG图片可用[honeyview](https://en.bandisoft.com/honeyview/)打开。
+52. 内存取证工具[Volatility](https://github.com/volatilityfoundation/volatility)。例题:[[HDCTF2019]你能发现什么蛛丝马迹吗](https://blog.csdn.net/mochu7777777/article/details/109853022)

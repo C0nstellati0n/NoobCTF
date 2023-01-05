@@ -156,7 +156,8 @@ print(f"__free_hook:{libc.sym['__free_hook']}")
 print(f"atoi:{libc.sym['atoi']}")
 print(f"__environ:{libc.sym['__environ']}")
 print(f"__libc_start_main:{libc.symbols['__libc_start_main']}")
-print(f"_IO_2_1_stdin_:{libc.sym['_IO_2_1_stdin_']}")                                                                       
+print(f"_IO_2_1_stdin_:{libc.sym['_IO_2_1_stdin_']}")
+print(f"setbuffer:{libc.sym['setbuffer']}")                                                                     
 ```
 
 8. pwn heap题模板
@@ -196,3 +197,4 @@ print(f"_IO_2_1_stdin_:{libc.sym['_IO_2_1_stdin_']}")
 18. stack smash泄露栈上内容+environ环境变量计算栈上变量地址。例题:[wdb2018_guess](../../CTF/BUUCTF/Pwn/wdb2018_guess.md)
 19. 在c语言中，无符号变量和有符号变量比较时，会将有符号变量转化为无符号变量来比较。可利用这个特点进行整形溢出，如数字为0的时候，(unsigned int)(0-1)就就是非常大的整数。
 20. 就算是32位程序，数组取索引`a[1]`仍然是一个索引对应8个字节。
+21. use without initialization漏洞。程序malloc后得到指针在free并设null后，同样应该将指针指向的内容置空，否则可能会导致程序逻辑漏洞。例题:[picoctf_2018_are you root](https://github.com/Dvd848/CTFs/blob/master/2018_picoCTF/are%20you%20root.md)
