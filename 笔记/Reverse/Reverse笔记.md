@@ -320,7 +320,7 @@ flag在汇编代码里就很明显了。
 34. android利用[objection](https://book.hacktricks.xyz/mobile-pentesting/android-app-pentesting/frida-tutorial/objection-tutorial)对apk下hook。例题:[ill-intentions](https://www.cnblogs.com/hktk1643/p/15187619.html)
 35. 路由器固件逆向。需要先用binwalk从路由器固件的bin文件中提取东西，再用[firmware-mod-kit](https://github.com/rampageX/firmware-mod-kit#kit-executables)分析。例题:[firmware](https://www.cnblogs.com/Mayfly-nymph/p/12609657.html)
 36. python解密AES密码。例题:[[GWCTF 2019]re3](../../CTF/BUUCTF/Reverse/[GWCTF%202019]re3.md)
-37. 安卓unity游戏的核心逻辑一般位于assets\bin\Data\Managed\Assembly-CSharp.dll
+37. 安卓unity游戏的核心逻辑一般位于assets\bin\Data\Managed\Assembly-CSharp.dll。不同题目可能路径不一样，但Assembly-CSharp.dll永远是要看的文件。
 38. dnSpy基础[调试](https://www.singoo.top/article/detail/161.html)。注意32位的dnSpy只能调试32位的程序，64位dnSpy只能调试64位程序。
 39. xxtea逆向。例题:[xx](../../CTF/攻防世界/6级/Reverse/xx.md)
 40. c++函数名修饰+二叉树变换动调解法。例题:[[2019红帽杯]childRE](../../CTF/BUUCTF/Reverse/[2019红帽杯]childRE.md)
@@ -333,3 +333,5 @@ flag在汇编代码里就很明显了。
 47. perl是解释语言，perlapp只是把你的perl程序压缩后放在资源里面，执行的时候会解压的。意思就是，逆向perl程序动调比静态分析好。例题:[[WMCTF2020]easy_re](https://blog.csdn.net/qaq517384/article/details/124134079)
 48. [Ollvm混淆](https://bbs.pediy.com/thread-274532.htm)([控制流平坦化](http://www.qfrost.com/LLVM/%E3%80%90LLVM%E3%80%91Flattening%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/)混淆可以用[deflat](https://github.com/cq674350529/deflat)脚本部分去除)。例题1:[[RoarCTF2019]polyre](https://www.52pojie.cn/thread-1562227-1-1.html)。例题2:[[安洵杯 2019]game](../../../../../../../../../../../../../CTF/BUUCTF/Reverse/[安洵杯%202019]game.md)
 49. 三维迷宫题+花指令去除。例题:[[SCTF2019]babyre](https://blog.nowcoder.net/n/46e15a89016144b899126fcd9644cdc0)。这题的另一个[wp](https://www.cnblogs.com/Moomin/p/15864510.html)有写ROR4和ROL4的c语言实现。
+50. python可利用[ctypes](https://docs.python.org/zh-cn/3.7/library/ctypes.html)调用dll或共享库中的函数。
+51. python字节码手动反编译[参考](https://bbs.kanxue.com/thread-246683.htm)。
