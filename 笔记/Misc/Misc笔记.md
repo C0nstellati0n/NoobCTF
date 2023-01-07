@@ -220,3 +220,4 @@ cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 1
 50. 图片缺少IDAT标识时,在010 Editor中将缺少标识的chunk的union CTYPE type的位置补上IDAT十六进制标识49 44 41 54即可。例题:[[湖南省赛2019]Findme](https://blog.csdn.net/mochu7777777/article/details/107737687)
 51. BPG图片可用[honeyview](https://en.bandisoft.com/honeyview/)打开。
 52. 内存取证工具[Volatility](https://github.com/volatilityfoundation/volatility)。例题:[[HDCTF2019]你能发现什么蛛丝马迹吗](https://blog.csdn.net/mochu7777777/article/details/109853022)
+53. 某些思路邪门的题里，图片的颜色十六进制号可能是flag的十六进制编码。

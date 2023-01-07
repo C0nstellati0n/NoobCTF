@@ -335,3 +335,4 @@ flag在汇编代码里就很明显了。
 49. 三维迷宫题+花指令去除。例题:[[SCTF2019]babyre](https://blog.nowcoder.net/n/46e15a89016144b899126fcd9644cdc0)。这题的另一个[wp](https://www.cnblogs.com/Moomin/p/15864510.html)有写ROR4和ROL4的c语言实现。
 50. python可利用[ctypes](https://docs.python.org/zh-cn/3.7/library/ctypes.html)调用dll或共享库中的函数。
 51. python字节码手动反编译[参考](https://bbs.kanxue.com/thread-246683.htm)。
+52. apk也可以加壳，可用[fridaDump](https://github.com/hluwa/FRIDA-DEXDump)脱壳，需要配置frida环境。例题:[[网鼎杯 2020 青龙组]bang](https://blog.csdn.net/m0_46296905/article/details/115727899)
