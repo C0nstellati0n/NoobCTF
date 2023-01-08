@@ -475,3 +475,73 @@ if __name__ == '__main__':
 77. ruby ERB模板注入+预定义变量。例题:[[SCTF2019]Flag Shop](../../CTF/BUUCTF/Web/[SCTF2019]Flag%20Shop.md)
 78. php require_once绕过。例题:[[WMCTF2020]Make PHP Great Again](https://www.anquanke.com/post/id/213235)
 79. 巧用函数嵌套绕过滤读文件（利用scandir配合next，current等函数取出文件名）。例题:[[GXYCTF2019]禁止套娃](../../CTF/BUUCTF/Web/[GXYCTF2019]禁止套娃.md)
+80. php finfo_file()函数仅识别PNG文件十六进制下的第一行信息，即文件头信息。而getimagesize()函数则会检测更多东西：
+
+```
+索引 0 给出的是图像宽度的像素值
+索引 1 给出的是图像高度的像素值
+索引 2 给出的是图像的类型，返回的是数字，其中1 = GIF，2 = JPG，3 = PNG，4 = SWF，5 = PSD，6 = BMP，7 = TIFF(intel byte order)，8 = TIFF(motorola byte order)，9 = JPC，10 = JP2，11 = JPX，12 = JB2，13 = SWC，14 = IFF，15 = WBMP，16 = XBM
+索引 3 给出的是一个宽度和高度的字符串，可以直接用于 HTML 的 <image> 标签
+索引 bits 给出的是图像的每种颜色的位数，二进制格式
+索引 channels 给出的是图像的通道值，RGB 图像默认是 3
+索引 mime 给出的是图像的 MIME 信息，此信息可以用来在 HTTP Content-type 头信息中发送正确的信息，如：header("Content-type: image/jpeg");
+```
+
+例题及来源:[[HarekazeCTF2019]Avatar Uploader 1](https://blog.csdn.net/weixin_44037296/article/details/112604812)
+
+81. php使用内置类Exception 和 Error绕过md5和sha1函数。例题:[[极客大挑战 2020]Greatphp](https://blog.csdn.net/LYJ20010728/article/details/117429054)
+82. php [parse_url解析漏洞](https://www.cnblogs.com/tr1ple/p/11137159.html)。再给出一个比较简短的[参考](https://blog.csdn.net/q1352483315/article/details/89672426)。例题:[[N1CTF 2018]eating_cms](https://blog.csdn.net/mochu7777777/article/details/105337682),这题还有个文件名命令注入。该题的关键点在于伪协议读取源码，但关键文件名被过滤。url经过parse_url过滤，所以构造`//user.php?page=php://filter/convert.base64-encode/resource=upllloadddd.php`来绕过过滤。注意题目的php版本是5.5.9，现在7+版本运行结果会不一样。
+
+```php
+<?php
+$url6 = "//user.php?page=php://filter/convert.base64-encode/resource=ffffllllaaaaggg";
+$keywords = ["flag","manage","ffffllllaaaaggg","info"];
+$uri=parse_url($url6);
+var_dump($uri);
+parse_str($uri['query'], $query);
+    foreach($keywords as $token)
+    {
+        foreach($query as $k => $v)
+        {
+            if (stristr($k, $token))
+                echo 'no1';
+            if (stristr($v, $token))
+                echo 'no2';
+        }
+    }
+'''
+7+
+array(2) {
+  ["host"]=>
+  string(8) "user.php"
+  ["query"]=>
+  string(64) "page=php://filter/convert.base64-encode/resource=ffffllllaaaaggg"
+}
+no2
+'''
+
+'''
+5.5.9
+array(2) {
+  ["host"]=>
+  string(17) "user.php?page=php"
+  ["path"]=>
+  string(55) "//filter/convert.base64-encode/resource=ffffllllaaaaggg"
+}
+'''
+```
+
+发现7+版本解析正常，而5.5.9版本把url的query解析成了path，自然就能绕过过滤了。同时，多加一条斜线不会影响apache解析路径。
+
+83. sqlmap使用[参考](https://www.freebuf.com/sectool/164608.html)。
+84. php引用赋值。例题:[BUU CODE REVIEW 1](https://blog.csdn.net/qq_45555226/article/details/110003144)
+85. 伪造本地ip的几种方式。
+
+```
+Client-Ip: 127.0.0.1
+X-Forwarded-For: 127.0.0.1
+X-Real-ip: 127.0.0.1
+```
+
+86. [使用curl发送post请求](https://blog.csdn.net/m0_37886429/article/details/104399554)。
+87. [存储型xss](https://www.ddddy.icu/2022/03/31/%E5%AD%98%E5%82%A8%E5%9E%8BXSS%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/)。

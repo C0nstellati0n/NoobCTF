@@ -207,3 +207,5 @@ print(f"setbuffer:{libc.sym['setbuffer']}")
 - %{offest}\$n : 如果有 A->B->C. 那么如果 %{offest}\$n指向A的话, 实际修改的是C.
 
 例题:[xman_2019_format](https://blog.csdn.net/Y_peak/article/details/115327826)
+
+24. ubuntu18中需要[栈平衡](https://blog.csdn.net/qq_41560595/article/details/112161243)（按照16字节对齐）才能正常调用system。例题:[suctf_2018_stack](https://buuoj.cn/challenges#suctf_2018_stack)
