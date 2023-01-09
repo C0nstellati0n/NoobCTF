@@ -221,3 +221,39 @@ cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 1
 51. BPG图片可用[honeyview](https://en.bandisoft.com/honeyview/)打开。
 52. 内存取证工具[Volatility](https://github.com/volatilityfoundation/volatility)。例题:[[HDCTF2019]你能发现什么蛛丝马迹吗](https://blog.csdn.net/mochu7777777/article/details/109853022)
 53. 某些思路邪门的题里，图片的颜色十六进制号可能是flag的十六进制编码。
+54. [GCode](https://baike.baidu.com/item/G%E4%BB%A3%E7%A0%81/2892251),形如：
+
+```
+M73 P0 R2
+M201 X9000 Y9000 Z500 E10000
+M203 X500 Y500 Z12 E120
+M204 P2000 R1500 T2000
+M205 X10.00 Y10.00 Z0.20 E2.50
+M205 S0 T0
+M107
+M115 U3.1.0
+M83
+M204 S2000 T1500
+M104 S215
+M140 S60
+M190 S60
+M109 S215
+G28 W
+G80
+G1 Y-3.0 F1000.0
+G92 E0.0
+G1 X60.0 E9.0  F1000.0
+M73 P4 R1
+G1 X100.0 E12.5  F1000.0
+G92 E0.0
+M900 K30
+G21
+G90
+M83
+G92 E0.0
+G1 E-0.80000 F2100.00000
+G1 Z0.600 F10800.000
+G1 X89.987 Y95.416
+G1 Z0.200
+G1 E0.80000 F2100.00000
+```
