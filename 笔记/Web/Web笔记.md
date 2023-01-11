@@ -548,3 +548,9 @@ X-Real-ip: 127.0.0.1
 88. linux下，/proc/self/pwd/代表当前路径。
 89. php session反序列化漏洞+SoapClient CRLF注入+SSRF。例题:[bestphp's revenge](../../CTF/BUUCTF/Web/bestphp's%20revenge.md)
 90. call_user_func()函数如果传入的参数是array类型的话，会将数组的成员当做类名和方法。
+91. js原型链污染导致的命令执行。例题:[[GYCTF2020]Ez_Express](../../CTF/BUUCTF/Web/[GYCTF2020]Ez_Express.md)
+92. js大小写特性
+- 对于toUpperCase():
+> 字符"ı"、"ſ" 经过toUpperCase处理后结果为 "I"、"S"
+- 对于toLowerCase():
+> 字符"K"经过toLowerCase处理后结果为"k"(这个K不是K)

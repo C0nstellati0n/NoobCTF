@@ -257,3 +257,9 @@ G1 X89.987 Y95.416
 G1 Z0.200
 G1 E0.80000 F2100.00000
 ```
+
+55. FAT文件可以使用[VeraCrypt](https://sourceforge.net/projects/veracrypt/)进行挂载
+56. FAT文件在挂载输入密码的时候，不同的密码可以进入不同的文件系统
+57. 遇见vmdk文件，可以试试使用7z这个压缩软件打开，里面可能藏着其他文件。
+58. 邮件协议：POP、SMTP、IMAP
+59. 火狐浏览器的登陆凭证文件可用[Firepwd](https://github.com/lclevy/firepwd)破解。
