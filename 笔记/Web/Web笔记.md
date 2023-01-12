@@ -554,3 +554,4 @@ X-Real-ip: 127.0.0.1
 > 字符"ı"、"ſ" 经过toUpperCase处理后结果为 "I"、"S"
 - 对于toLowerCase():
 > 字符"K"经过toLowerCase处理后结果为"k"(这个K不是K)
+93. 基础存储型xss获取管理员cookie。例题:[BUU XSS COURSE 1](https://www.cnblogs.com/rabbittt/p/13372401.html)

@@ -8,17 +8,11 @@
 适用于linux。不过我到现在还没见过windows的pwn，可能是windows考的不多吧。
 
 ```python
-#32位
-from pwn import*
-context(log_level = 'debug', arch = 'i386', os = 'linux')
+from pwn import *
+arch=input("arch? i386/amd64: ")
+context(log_level = 'debug', arch = arch[:-1], os = 'linux')
 shellcode=asm(shellcraft.sh())
-print(f"32位:{shellcode}")
-
-#64位
-from pwn import*
-context(log_level = 'debug', arch = 'amd64', os = 'linux')
-shellcode=asm(shellcraft.sh())
-print(f"64位:{shellcode}")
+print(shellcode)
 ```
 
 6. pwn 栈题模板
