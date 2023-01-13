@@ -263,3 +263,5 @@ G1 E0.80000 F2100.00000
 57. 遇见vmdk文件，可以试试使用7z这个压缩软件打开，里面可能藏着其他文件。
 58. 邮件协议：POP、SMTP、IMAP
 59. 火狐浏览器的登陆凭证文件可用[Firepwd](https://github.com/lclevy/firepwd)破解。
+60. ext4文件系统可用[extundelete](https://extundelete.sourceforge.net/)恢复被删除的目录或文件。例题:[[XMAN2018排位赛]file](https://blog.csdn.net/mochu7777777/article/details/110004817)
+61. 文件类型识别工具TrID（可识别Python Pickle序列号数据）。例题:[我爱Linux](https://blog.csdn.net/wangjin7356/article/details/122471475)
