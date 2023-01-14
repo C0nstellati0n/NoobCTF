@@ -266,7 +266,7 @@ print("index of subprocess.Popen:" + str(index))
 /etc/httpd/conf/httpd.conf //httpd的配置文件
 /proc/self/fd/fd[0-9]*(文件标识符)
 /proc/mounts
-/porc/config.gz
+/proc/config.gz
 /proc/sched_debug // 提供cpu上正在运行的进程信息，可以获得进程的pid号，可以配合后面需要pid的利用
 /proc/mounts // 挂载的文件系统列表
 /proc/net/arp //arp表，可以获得内网其他机器的地址
@@ -278,7 +278,9 @@ print("index of subprocess.Popen:" + str(index))
 /proc/[PID]/environ // 程序运行的环境变量信息，可以用来包含getshell
 /proc/[PID]/cwd // 当前进程的工作目录
 /proc/[PID]/fd/[#] // 访问file descriptors，某写情况可以读取到进程正在使用的文件，比如access.log
-ssh
+/proc/self/cmdline //获取当前启动进程的完整命令
+/proc/self/mem   //进程的内存内容。注意该文件内容较多而且存在不可读写部分，直接读取会导致程序崩溃。需要结合maps的映射信息来确定读的偏移值。即无法读取未被映射的区域，只有读取的偏移值是被映射的区域才能正确读取内存内容。
+/proc/self/maps  //当前进程的内存映射关系，通过读该文件的内容可以得到内存代码段基址。
 /root/.ssh/id_rsa
 /root/.ssh/id_rsa.pub
 /root/.ssh/authorized_keys
@@ -558,3 +560,5 @@ X-Real-ip: 127.0.0.1
 94. sql堆叠注入+预处理语句。例题:[supersqli](../../CTF/攻防世界/2级/Web/supersqli.md)
 95. [MySQL注入 利用系统读、写文件](https://www.cnblogs.com/mysticbinary/p/14403017.html)
 96. sql堆叠注入+预处理注入写入shell+[char函数](https://blog.csdn.net/asli33/article/details/7090717)绕过过滤。例题:[[SUCTF 2018]MultiSQL](https://blog.csdn.net/mochu7777777/article/details/105230001)
+97. [nginx配置错误导致的目录穿越漏洞](https://blog.csdn.net/haoren_xhf/article/details/107367766)。
+98. python存储对象的位置在堆上，因此可以利用/proc/self/maps+/proc/self/mem读取到SECRET_KEY。例题:[catcat-new](../../CTF/攻防世界/2级/Web/catcat-new.md)
