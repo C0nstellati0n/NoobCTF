@@ -129,7 +129,7 @@ Quit()
 p.interactive()
 ```
 
-- srop基础利用。例题:[ciscn_2019_es_7](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/ciscn_2019_es_7.md)
+- srop基础利用。例题:[ciscn_2019_es_7](../../CTF/BUUCTF/Pwn/ciscn_2019_es_7.md)
 
 7. pwntools得到libc偏移
 

@@ -735,6 +735,7 @@ $$det\:\begin{pmatrix}A&C\\ \:B&D\end{pmatrix}\cdot det\:\begin{pmatrix}a&\frac{
 $$\begin{pmatrix}A&C\\ \:B&D\end{pmatrix}$$
 
 和 
+
 $$\begin{pmatrix}A&B\\ \:\:C&D\end{pmatrix}$$
 
 互相为[转置矩阵](https://zh.wikipedia.org/zh-cn/%E8%BD%AC%E7%BD%AE%E7%9F%A9%E9%98%B5)，所以它们的det都是正负1。 
