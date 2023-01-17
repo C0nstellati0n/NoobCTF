@@ -265,3 +265,5 @@ G1 E0.80000 F2100.00000
 59. 火狐浏览器的登陆凭证文件可用[Firepwd](https://github.com/lclevy/firepwd)破解。
 60. ext4文件系统可用[extundelete](https://extundelete.sourceforge.net/)恢复被删除的目录或文件。例题:[[XMAN2018排位赛]file](https://blog.csdn.net/mochu7777777/article/details/110004817)
 61. 文件类型识别工具TrID（可识别Python Pickle序列号数据）。例题:[我爱Linux](https://blog.csdn.net/wangjin7356/article/details/122471475)
+62. [TestDisk](https://www.cgsecurity.org/wiki/TestDisk_CN)磁盘恢复工具。例题:[[BSidesSF2019]diskimage](https://blog.csdn.net/mochu7777777/article/details/110079540)
+63. usb数据提取+autokey爆破。例题:[[XMAN2018排位赛]AutoKey](https://ctf-wiki.org/en/misc/traffic/protocols/usb/#_2)

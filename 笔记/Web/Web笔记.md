@@ -565,3 +565,5 @@ X-Real-ip: 127.0.0.1
 99. [.htaccess的使用技巧](https://blog.csdn.net/solitudi/article/details/116666720)
 100. [php利用伪协议绕过exit](https://www.leavesongs.com/PENETRATION/php-filter-magic.html)。例题:[[EIS 2019]EzPOP](https://blog.csdn.net/TM_1024/article/details/116208390)
 101. php中使用create_function()创建的函数命名规律遵循：%00lambda_%d，其中%d是持续递增的。例题:[[SUCTF 2018]annonymous](https://blog.csdn.net/mochu7777777/article/details/105225558)
+102. [SSRF漏洞利用方式](https://www.anquanke.com/post/id/239994)
+103. thinkphp默认上传路径是/home/index/upload
