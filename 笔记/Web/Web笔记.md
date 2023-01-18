@@ -383,7 +383,7 @@ Content-Disposition: form-data; name="submit"
 64. sql注入逗号被过滤时的绕过[方法](https://www.jianshu.com/p/d10785d22db2)。
 65. sql注入弱类型相加。例题:[[网鼎杯2018]Unfinish](https://blog.csdn.net/rfrder/article/details/109352385)
 66. 由不安全的SessionId导致的[ThinkPHP6 任意文件操作漏洞](https://paper.seebug.org/1114/)。例题:[[GYCTF2020]EasyThinking](https://blog.csdn.net/mochu7777777/article/details/105160796)
-67. php中xxx session内容会被存储到/runtime/session/sess_xxx中。
+67. php中xxx session内容会被存储到/runtime/session/sess_xxx中。session默认存储文件名是sess_+PHPSESSID
 68. php的\$_SERVER['QUERY_STRING']不会对传入键值对进行url解码。
 69. php中虽然\$_REQUEST同时接收GET和POST的传参，但POST拥有更高的优先级，当\$_GET和\$_POST中的键相同时，\$_POST的值将覆盖\$_GET的值。
 70. php sha1加密数组绕过+extract变量覆盖漏洞+create_function代码注入。例题:[[BJDCTF2020]EzPHP](../../CTF/BUUCTF/Web/[BJDCTF2020]EzPHP.md)
@@ -397,8 +397,6 @@ Content-Disposition: form-data; name="submit"
 import re
 import requests
 from time import sleep
- 
- 
 def count():
     s = requests.session()
     url = 'http://4cf5d9ba-2df8-4b52-88ff-5fcbd27c5fc9.node4.buuoj.cn:81/'
@@ -413,9 +411,6 @@ def count():
         r.encoding = "utf-8"
         # print(r.text)
     print(r.text)
- 
- 
- 
 if __name__ == '__main__':
     count()
 ```
@@ -567,3 +562,12 @@ X-Real-ip: 127.0.0.1
 101. php中使用create_function()创建的函数命名规律遵循：%00lambda_%d，其中%d是持续递增的。例题:[[SUCTF 2018]annonymous](https://blog.csdn.net/mochu7777777/article/details/105225558)
 102. [SSRF漏洞利用方式](https://www.anquanke.com/post/id/239994)
 103. thinkphp默认上传路径是/home/index/upload
+104. php中不同的序列化引擎所对应的session的存储方式不相同。
+
+```
+php_binary:存储方式是，键名的长度对应的ASCII字符+键名+经过serialize()函数序列化处理的值
+php:存储方式是，键名+竖线+经过serialize()函数序列处理的值
+php_serialize(php>5.5.4):存储方式是，经过serialize()函数序列化处理的值
+```
+
+105. [利用本地DTD文件的xxe](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)。例题:[[GoogleCTF2019 Quals]Bnv](https://syunaht.com/p/1267717976.html)。
