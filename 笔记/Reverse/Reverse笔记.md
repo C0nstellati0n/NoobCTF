@@ -340,3 +340,4 @@ flag在汇编代码里就很明显了。
 54. 在C#中，字符串默认是Unicode字符串，所以转成字节数组，在每个字符字节后都要加一个"\x00"
 55. [MFC](https://baike.baidu.com/item/MFC/2530850)逆向，需要使用[xspy](https://www.52pojie.cn/forum.php?mod=viewthread&tid=193686&highlight=xspy)。例题:[[HDCTF2019]MFC](https://blog.csdn.net/m0_46296905/article/details/116240702)。
 56. [golang无符号程序逆向](https://static.anquanke.com/download/b/security-geek-2019-q1/article-13.html)。
+57. 迷宫+blowfish加密算法。例题:[[RCTF2019]DontEatMe](https://lantern.cool/wp-games-2019rctf/#DontEatMe)

@@ -276,8 +276,9 @@ print("index of subprocess.Popen:" + str(index))
 /proc/net/tcp and /proc/net/udp // 活动连接的信息
 /proc/net/fib_trie // 路由缓存,可用于泄露内网网段
 /proc/version // 内核版本
+//以下文件若不知道PID，用self代替也可以
 /proc/[PID]/cmdline // 可能包含有用的路径信息
-/proc/[PID]/environ // 程序运行的环境变量信息，可以用来包含getshell
+/proc/[PID]/environ // 程序运行的环境变量信息，可以用来包含getshell。也有例如flask的题目会把SECRET KEY放里面
 /proc/[PID]/cwd // 当前进程的工作目录
 /proc/[PID]/fd/[#] // 访问file descriptors，某写情况可以读取到进程正在使用的文件，比如access.log
 /proc/self/cmdline //获取当前启动进程的完整命令
