@@ -270,3 +270,8 @@ G1 E0.80000 F2100.00000
 63. usb数据提取+autokey爆破。例题:[[XMAN2018排位赛]AutoKey](https://ctf-wiki.org/en/misc/traffic/protocols/usb/#_2)
 64. [toy加密](https://eprint.iacr.org/2020/301.pdf)。例题:[[羊城杯 2020]signin](https://www.cnblogs.com/vuclw/p/16424799.html)
 65. ALPHUCK一种 Programming Language ,只由 a,c,e,i,j,o,p,s 这 8 个小写字母组成。
+66. [三分密码](https://baike.baidu.com/item/%E4%B8%89%E5%88%86%E5%AF%86%E7%A0%81/2250183)+veracrypt挂载被加密磁盘。例题:[[GKCTF 2021]0.03](https://www.cnblogs.com/vuclw/p/16428558.html)
+67. 条形码修复。例题:[[BSidesSF2020]barcoder](https://blog.csdn.net/zippo1234/article/details/109249593)
+68. TLS协议需要解密才能追踪。菜单栏->Wireshark->Preferences->Protocols->TLS。有RSA私钥选RSA key list，有sslkey的log文件在下方log filename选择log文件。
+69. TCP-IP数据报的Identification字段隐写。例题:[[羊城杯 2020]TCP_IP](https://blog.csdn.net/qq_45699846/article/details/123833160)
+70. 小米手机的备份文件实际也是ANDROID BACKUP文件，去掉小米的header后即可使用[脚本](https://github.com/nelenkov/android-backup-extractor)解压。

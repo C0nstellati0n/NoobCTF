@@ -216,3 +216,18 @@ print(f"setbuffer:{libc.sym['setbuffer']}")
 25. 程序在推出是会调用fini_array，因此可以通过改fini_array获取一次循环。需要注意的是，这个数组的内容在再次从start开始执行后又会被修改，由此无法获得无限循环。例题:[ciscn_2019_sw_1](https://blog.csdn.net/wuyvle/article/details/116310454)
 26. strcpy 在复制字符串时会拷贝结束符 '\x00'，比如原字符串长8，strcpy会连着末尾的\x00一起拷贝到目标地址，也就是9个字符，易发生off-by-null。
 27. 拟态入门。该类题型会给出两个功能完全相同的程序，还有一个裁决程序，fork出这两个程序，并监听着它们的输出。如果两者输出不一样或者一方崩溃，则裁决程序就会kill掉它们两个，要求我们写出两个程序都共用的exp。例题:[强网杯2019 拟态 STKOF](https://blog.csdn.net/seaaseesa/article/details/105407007)
+28. realloc函数下的tcache dup+stdout泄露libc地址。realloc函数相比malloc，有4种情况：
+
+① 当ptr == nullptr的时候，相当于malloc(size)， 返回分配到的地址<br>
+② 当ptr != nullptr && size == 0的时候，相当于free(ptr)，返回空指针<br>
+③ 当size小于原来ptr所指向的内存的大小时，直接缩小，返回ptr指针。被削减的那块内存会被释放，放入对应的bins中去<br>
+④ 当size大于原来ptr所指向的内存的大小时，如果原ptr所指向的chunk后面又足够的空间，那么直接在后面扩容，返回ptr指针；如果后面空间不足，先释放ptr所申请的内存，然后试图分配size大小的内存，返回分配后的指针
+
+利用io file的stdout泄露libc地址则要满足下面的条件：
+
+① 设置_flags & _IO_NO_WRITES = 0<br>
+② 设置_flags & _IO_CURRENTLY_PUTTING = 1<br>
+③ 设置_flags & _IO_IS_APPENDING = 1<br>
+④ 将_IO_write_base设置为要泄露的地方
+
+例题:[roarctf_2019_realloc_magic](https://blog.csdn.net/qq_35078631/article/details/126913140)
