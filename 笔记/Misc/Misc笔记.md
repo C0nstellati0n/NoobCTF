@@ -276,3 +276,31 @@ G1 E0.80000 F2100.00000
 69. TCP-IP数据报的Identification字段隐写。例题:[[羊城杯 2020]TCP_IP](https://blog.csdn.net/qq_45699846/article/details/123833160)
 70. 小米手机的备份文件实际也是ANDROID BACKUP文件，去掉小米的header后即可使用[脚本](https://github.com/nelenkov/android-backup-extractor)解压。
 71. rpg maker修改游戏。例题:[[*CTF2019]She](https://blog.csdn.net/qq_49354488/article/details/115655115)
+72. ARCHPR无法爆破RAR5，可以用rar2john提取hash后利用hashcat爆破密码。例题:[[羊城杯 2020]image_rar](https://blog.csdn.net/mochu7777777/article/details/118422921)
+73. 字符串经过brainfuck加密后应该是++++++++[开头的，所以遇见解出来是乱码的brainfuck可以看看开头是否正确。
+74. 空格+tab隐写过滤脚本
+
+[例题及来源](https://www.bilibili.com/read/cv14000314)
+
+```python
+import os
+def get_file_list(dir_path):
+    _file_list = os.listdir(dir_path)
+    file_list = []
+    for file_str in _file_list:
+        new_dir_path = dir_path+'/'+file_str
+        if os.path.isdir(new_dir_path):
+            file_list.extend(get_file_list(new_dir_path))
+        else:
+            file_list.append(new_dir_path)
+    return file_list
+file_list = get_file_list(r'/Users/constellation/Desktop/source_code')
+for file_str in file_list:
+    f = open(file_str, 'r', encoding='utf-8')
+    try:
+        data = f.read()
+        if ' \t \t' in data:
+            print(file_str)
+    except:
+        pass
+```

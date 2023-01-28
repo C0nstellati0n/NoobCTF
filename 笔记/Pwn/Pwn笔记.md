@@ -159,7 +159,8 @@ print(f"atoi:{libc.sym['atoi']}")
 print(f"__environ:{libc.sym['__environ']}")
 print(f"__libc_start_main:{libc.symbols['__libc_start_main']}")
 print(f"_IO_2_1_stdin_:{libc.sym['_IO_2_1_stdin_']}")
-print(f"setbuffer:{libc.sym['setbuffer']}")                                                                     
+print(f"setbuffer:{libc.sym['setbuffer']}")       
+print(f"_IO_list_all: {libc.symbols['_IO_list_all']}")                                                              
 ```
 
 8. pwn heap题模板
@@ -168,7 +169,7 @@ print(f"setbuffer:{libc.sym['setbuffer']}")
 
 - unsorted bin attack:[hitcontraining_magicheap](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/hitcontraining_magicheap.md)
 - Chunk Extend and Overlapping+off by one:[hitcontraining_heapcreator](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/hitcontraining_heapcreator.md)
-- 利用Chunk Extend and Overlapping配合unsorted bin泄露地址+fastbin attack修改__malloc_hook:[0ctf_2017_babyheap](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/0ctf_2017_babyheap.md)
+- 利用Chunk Extend and Overlapping配合unsorted bin泄露地址+fastbin attack修改__malloc_hook:[0ctf_2017_babyheap](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/0ctf_2017_babyheap.md)
 - one_gadget失效时利用realloc_hook调整栈+Chunk Extend and Overlapping配合unsorted bin泄露地址+fastbin attack。例题:[roarctf_2019_easy_pwn](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/pwn/roarctf_2019_easy_pwn.md)
 - unlink更改got表。例题:[hitcontraining_unlink](../../CTF/BUUCTF/Pwn/hitcontraining_unlink.md)
 - house of force任意地址写。例题:[hitcontraining_bamboobox](../../CTF/BUUCTF/Pwn/hitcontraining_bamboobox.md)
@@ -234,3 +235,16 @@ print(f"setbuffer:{libc.sym['setbuffer']}")
 
 29. tcache attack中tcache_perthread_struct的利用。在tcache机制下利用unsorted bin泄露地址时，需要先填满tcache。但有些题会限制free的次数。这时可以尝试利用例如tcache dup这种漏洞，分配到tcache_perthread_struct处，更改tcache bins中chunk的数量和分配地址。tcache_perthread_struct结构体在堆上，大小一般为0x250。它的前64个字节，分别代表0x20~0x410大小的chunk(包括chunk头)的数量。当超过7（这个值由里面的一个字段决定，如果我们修改这个字段，比如0，就能直接把chunk放入unsorted bin）的时候，再次释放的chunk会被放入到fastbin或者unsorted bin。后面的内存，则分别表示0x20~0x410大小tcache bins的首地址。首地址如果是一个有效的地址，下一次分配对应大小的chunk会直接从该地址处分配，没有chunk size的检查。例题:[SWPUCTF_2019_p1KkHeap](https://www.cnblogs.com/LynneHuan/p/14589294.html)
 30. bss段上的格式化字符串漏洞。和堆上的格式化字符串漏洞一样，都是利用ebp的地址链间接修改got等地址。got表通常是0x80开头，先让ebp指向一个指向0x80地址开头的指针（方便修改），下一次再修改ebp就是修改那个指针，改成system即可getshell。例题:[SWPUCTF_2019_login](https://blog.csdn.net/weixin_46521144/article/details/119567212)
+31. [exit_hook](https://www.cnblogs.com/pwnfeifei/p/15759130.html)的[利用](https://www.cnblogs.com/bhxdn/p/14222558.html)。其实没有exit hook，它是函数指针，故无法直接libc.sym找到，只能手动记录值。
+
+```
+在libc-2.23中
+exit_hook = libc_base+0x5f0040+3848（64）
+exit_hook = libc_base+0x5f0040+3856（32）
+
+在libc-2.27中
+exit_hook = libc_base+0x619060+3840（64）
+exit_hook = libc_base+0x619060+3848（32）
+```
+
+只要知道libc版本和任意地址的写，就可以直接写这个指针，执行exit后就可以拿到shell了。（也不用非要执行exit函数，程序正常返回也可以执行到这里）

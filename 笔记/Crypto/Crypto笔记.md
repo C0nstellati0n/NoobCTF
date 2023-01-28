@@ -98,6 +98,22 @@ rabin算法可以解出来4个明文，一般末尾会有类似校验码的东�
 - 低解密指数攻击（wiener attack）。例题:[[羊城杯 2020]RRRRRRRSA](../../CTF/BUUCTF/Crypto/[羊城杯%202020]RRRRRRRSA.md)
 - 多项式下的RSA(PolynomialRing)。例题:[[watevrCTF 2019]Swedish RSA](../../CTF/BUUCTF/Crypto/[watevrCTF%202019]Swedish%20RSA.md)
 - e与phi不互质且gcd很大，使用AMM开根法+CRT。例题:[[NCTF2019]easyRSA](https://blog.soreatu.com/posts/intended-solution-to-crypto-problems-in-nctf-2019/#easyrsa909pt-2solvers)
+- p和q相邻或接近，使用费马分解法。
+
+```python
+import gmpy2
+def Fermat(num):
+    x = gmpy2.iroot(num,2)[0]
+    if x*x < num:
+        x += 1
+    while(True):
+        y2 = x*x - num
+        y = gmpy2.iroot(y2,2)[0]
+        if y*y == y2:
+            break
+        x += 1
+    return [x+y, x-y]
+```
 
 1. Crypto库根据已有信息构建私钥并解密
 
