@@ -592,3 +592,19 @@ php_serialize(php>5.5.4):存储方式是，经过serialize()函数序列化处�
 114. node js 8.12.0版本的[拆分攻击（CRLF）可造成SSRF](https://xz.aliyun.com/t/2894)+pug模板引擎命令执行。例题:[[GYCTF2020]Node Game](https://blog.csdn.net/cjdgg/article/details/119068329)
 115. php7.4的FFI扩展安全问题以及利用（绕过disabled functions）。例题:[[RCTF 2019]Nextphp](https://blog.csdn.net/RABCDXB/article/details/120319633)
 116. perl 文件上传+ARGV的利用。例题:[i-got-id-200](../../CTF/攻防世界/6级/Web/i-got-id-200.md)
+117. unzip中[软链接](https://blog.csdn.net/weixin_44966641/article/details/119915004)的利用。ln -s是Linux的一种软连接,类似与windows的快捷方式。可以利用压缩了软链接的zip包[任意读取文件](https://xz.aliyun.com/t/2589)。例题:[[SWPU2019]Web3](https://blog.csdn.net/mochu7777777/article/details/105666388)
+118. 特殊的flask cookie伪造。与一般的不同，使用get_signing_serializer。
+
+```python
+from flask import Flask
+from flask.sessions import SecureCookieSessionInterface
+app = Flask(__name__)
+app.secret_key = b'fb+wwn!n1yo+9c(9s6!_3o#nqm&&_ej$tez)$_ik36n8d7o6mr#y'
+session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
+def index():
+    print(session_serializer.dumps("admin"))
+index()
+#ImFkbWluIg.Y9WDSA.AbIYU50Boq_syWcomulegtw9fnc
+```
+
+例题:[[FBCTF2019]Event](https://blog.csdn.net/mochu7777777/article/details/107653920)
