@@ -550,7 +550,7 @@ X-Real-ip: 127.0.0.1
 88. linux下，/proc/self/pwd/代表当前路径。
 89. php session反序列化漏洞+SoapClient CRLF注入+SSRF。例题:[bestphp's revenge](../../CTF/BUUCTF/Web/bestphp's%20revenge.md)
 90. call_user_func()函数如果传入的参数是array类型的话，会将数组的成员当做类名和方法。
-91. js原型链污染导致的命令执行。例题:[[GYCTF2020]Ez_Express](../../CTF/BUUCTF/Web/[GYCTF2020]Ez_Express.md)
+91. js原型链污染导致的命令执行。例题:[[GYCTF2020]Ez_Express](../../CTF/BUUCTF/Web/[GYCTF2020]Ez_Express.md)。不仅仅是merge、clone函数会导致原型链污染，同样是express带有的[undefsafe](https://security.snyk.io/vuln/SNYK-JS-UNDEFSAFE-548940)函数也会引发此漏洞。例题:[[网鼎杯 2020 青龙组]notes](https://blog.csdn.net/qq_45708109/article/details/108233667)
 92. js大小写特性
 - 对于toUpperCase():
 > 字符"ı"、"ſ" 经过toUpperCase处理后结果为 "I"、"S"
@@ -574,6 +574,8 @@ php_binary:存储方式是，键名的长度对应的ASCII字符+键名+经过se
 php:存储方式是，键名+竖线+经过serialize()函数序列处理的值
 php_serialize(php>5.5.4):存储方式是，经过serialize()函数序列化处理的值
 ```
+
+Ubuntu默认安装的PHP中session.serialize_handler默认设置为php。
 
 105. [利用本地DTD文件的xxe](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)。例题:[[GoogleCTF2019 Quals]Bnv](https://syunaht.com/p/1267717976.html)。
 106. [xpath注入](https://www.cnblogs.com/backlion/p/8554749.html)。例题:[[NPUCTF2020]ezlogin](https://tyaoo.github.io/2020/05/26/BUUCTF-2/)
@@ -608,3 +610,8 @@ index()
 ```
 
 例题:[[FBCTF2019]Event](https://blog.csdn.net/mochu7777777/article/details/107653920)
+
+119. python利用type函数[动态创建类](http://c.biancheng.net/view/2292.html)。
+120. python路径拼接os.path.join()函数当其中一个参数为绝对路径时，前面的参数会被舍弃，利用这个特点可以绕过一些路径限制。例题:[[HFCTF 2021 Final]easyflask](https://blog.csdn.net/LYJ20010728/article/details/117422046)
+121. 一段数据以rO0AB开头，基本可以确定这串就是Java序列化base64加密的数据;如果以aced开头，那么是一段Java序列化的16进制。
+122. java [JDBCsql注入](https://www.wangan.com/docs/94)+burpsuite java Deserialization Scanner插件+ysoserial（java反序列化漏洞工具）。例题:[[网鼎杯 2020 朱雀组]Think Java](https://blog.csdn.net/RABCDXB/article/details/124003575)

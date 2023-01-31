@@ -18,8 +18,8 @@ NX开了应该是要rop，栈溢出加上canary难道是要爆破canary值？放
 
 剩下的部分就是实现功能了。既然这道题是说栈溢出，那先看看有scanf的地方：第33，38，49，54，71和74行。
 
-- ### scanf
-- > 从标准输入 stdin 读取格式化输入。
+### scanf
+- 从标准输入 stdin 读取格式化输入。
 - 声明：int scanf(const char *format, ...)
 - 参数：format -- 这是 C 字符串，包含了以下各项中的一个或多个：空格字符、非空格字符 和 format 说明符。
 - format说明符格式：\[=%\[*][width][modifiers]type=]
@@ -60,9 +60,9 @@ proc.interactive()
 可以很容易在ghidra或者ida中找到system的地址：0x08048450。这里是小端所以要倒过来写。拿shell可以直接system("sh")，简单省力。sh也可以在内存中找到。
 
 - ROPgadget --binary 3fb1a42837be485aae7d85d11fbc457b --string 'sh'
-- > Strings information<br>============================================================<br>0x08048987 : sh<br>0x08048ab3 : sh
+  > Strings information<br>============================================================<br>0x08048987 : sh<br>0x08048ab3 : sh
 
 ROPgadget可以帮助寻找gadget。--binary指定文件，--string指定查找的字符串。这里就用上面那个了：0x08048987。因为是x86，所以函数参数在函数返回地址的上方。中间空了4个字节是为了伪造了一个x86平台下的函数调用(plt，返回地址，参数)。很多时候看起来没啥问题的payload却总是拿不到shell有可能就是这个原因（虽然其实我不太懂）
 
-- ### Flag
-- > cyberpeace{0240e66795b6c099e73711bb2292af63}
+## Flag
+  > cyberpeace{0240e66795b6c099e73711bb2292af63}
