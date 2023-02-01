@@ -309,3 +309,5 @@ for file_str in file_list:
 76. 音频lsb提取。例题将一张bmp图片通过lsb的形式写入音频，需要知道正确的宽高才能恢复原来的图片。例题:[静静听这么好听的歌](https://blog.csdn.net/qq_45699846/article/details/123847848)
 77. [TSPL/TSPL2 Programming Language](https://www.pos-shop.ru/upload/iblock/ebd/ebd9bed075d1b925be892b297590fc18.pdf)，用于打印机。例题:[[RCTF2019]printer](https://tobatu.gitee.io/blog/2020/10/06/BUUCTF-%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95-9/#RCTF2019-printer)
 78. [北约音标字母](https://zh.wikipedia.org/wiki/%E5%8C%97%E7%BA%A6%E9%9F%B3%E6%A0%87%E5%AD%97%E6%AF%8D)，Alfa，Bravo之类的，其实就是每个单词的首字母。
+79. pgp加密，使用[PGPTool](https://pgptool.github.io/)解密。例题:[[BSidesSF2019]bWF0cnlvc2hrYQ](https://blog.csdn.net/mochu7777777/article/details/115856882)
+80. 镜像FTK挂载仿真，使用[AccessData FTK Imager](https://accessdata-ftk-imager.software.informer.com/3.1/)。例题:[[NPUCTF2020]回收站](https://shimo.im/docs/6hyIjGkLoRc43JRs)
