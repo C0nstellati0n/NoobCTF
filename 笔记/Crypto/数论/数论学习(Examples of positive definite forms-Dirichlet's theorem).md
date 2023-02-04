@@ -96,7 +96,7 @@ $ki=-ik=j$
 
 不过高斯整数上的欧几里德法怎么用？根据平常的定义，两个数a和b，带余除法可被写为 $a=bp+r,b\not ={0}$ ，r小于b。但是高斯整数值的大小怎么定义呢？答案是与原点的距离，(distance to 0) 。一个高斯整数r=s+it，算出点(s,t)到原点的距离，就是 $\sqrt{s^2+t^2}$ ，为了方便可以只算 $s^2+t^2$ 。a=bp+r整体除以b，得到 $\frac{a}{b}=q+|\frac{r}{b}|$ ， $|\frac{r}{b}|$ 按照定义应该是小于1的，q是一个高斯整数， $\frac{a}{b}$ 则是一个复数。如果我们能证明任何一个复数都可以被写为一个高斯整数+某个绝对值最多是1的形式，欧几里得的问题就迎刃而解了。答案是肯定的，画个图就知道了。
 
-![euclid_in_gaussian](../images/euclid_in_gaussian.png)
+![euclid_in_gaussian](../../images/euclid_in_gaussian.png)
 
 在每个高斯整数周围画一个半径为1的圆，可以完美覆盖整个复数平面，说明欧几里得法存在。注意平时的质数在高斯整数中不一定是质数，比如5。
 
@@ -112,13 +112,13 @@ $ki=-ik=j$
 
 第二种方法是几何方法。 $x^2+y^2=z^2$ ，两边除以 $z^2$ ，得到 $X^2+Y^2=1$ ，X和Y都是有理数。很明显这个式子会形成一个圆：
 
-![form_circle](../images/form_circle.png)
+![form_circle](../../images/form_circle.png)
 
 圆与x轴和y轴的交点是原方程的平凡解，没意思。过其中两个交点作一条线，查看其与y轴的交点，斜率为t。计算这条线的斜率： $t=\frac{\Delta y}{\Delta x}=\frac{y}{x+1}$ ，变形一下得到y=t(x+1)，代入 $X^2+Y^2=1$ ，得到 $x^2+t^2(x+1)^2=1$ 。分别解X和Y，得到 $x=\frac{1-t^2}{1+t^2},y=\frac{2t}{1+t^2}$ 。如果我们取 $x=\frac{1}{2}$ ，则 $x=\frac{3}{5},y=\frac{4}{5},(\frac{3}{5})^2+(\frac{4}{5})^2=1$ ，这便是 $3^2+4^2=5^2$ 了。取t的其他有理数值即可得到别的方程的解， $\frac{1}{3},\frac{1}{4}$ 什么的。
 
 第三种方法和上一种很像，不过使用高斯整数。同样的方式构造出 $X^2+Y^2=1$ ，画个圆：
 
-![gauss_form_circle](../images/gauss_form_circle.png)
+![gauss_form_circle](../../images/gauss_form_circle.png)
 
 X和Y都是有理数，且X+iY是一个复数。我们的目标是找到绝对值为1的复数，且整数部分和虚数部分都是整数。如果我们有两个满足的复数a和b，|a|=|b|=1，则|ab|=1。看来只要有两个毕达哥拉斯方程的解，两者相乘又是一个新的解。比如已知解 $3^2+4^2=5^2$ ，自己乘自己: $(\frac{3}{5}+\frac{4}{5}i)(\frac{3}{5}+\frac{4}{5}i)$ ，得到 $(\frac{-7}{25}+\frac{24}{25}i)$ ，这就是另一个解 $7^2+24^2=25^2$ 。
 
@@ -268,15 +268,15 @@ $\zeta(s-2it)\zeta(s-it)^4\zeta(s)^6\zeta(s+it)^4\zeta(s+2it)$
 
 这不禁要问，哪来的这么个玩意？首先指数来自之前学的二项式系数， $(z+z^{-1})^4=z^4+4z^2+6+4z^{-2}+z^{-4}$ ，发现得到的系数1，4，6，4，1对应着函数的指数。接着我们取对数，先取 $log\zeta(s)=\sum_{n,p} \frac{p^{-ns}}{n}$ ,此处利用公式 $-log(1-x)=x+\frac{x^2}{2}+\frac{x^3}{3}$ 。知道了普通 $\zeta(s)$ 的对数，再求那个是几个zeta乘积的函数的对数就能得到 $\sum_{p,n} p^{-ns}\frac{(p^{in\frac{t}{2}}+p^{-in\frac{t}{2}})^4}{n}$ 。其中 $p^{in\frac{t}{2}}\rightarrow p^{2it}+p^{it}+6+4p^{-it}+p^{-2it}\geq 0$ 。看起来还是很乱，但是其大于等于0的性质告诉我们上面那个函数一定大于等于1，毕竟某个东西的对数总是大于等于0意味着那个东西总是大于等于1。放图了，需要复分析的知识，完全不会。
 
-![prove_prime_theorem](../images/prove_prime_theorem.png)
+![prove_prime_theorem](../../images/prove_prime_theorem.png)
 
 跳过证明newman's tauberian theorem的步骤，因为这涉及到更多更复杂的复分析知识。来到第三步：证明 $\int^{\infty}_1\frac{\psi(x)-x}{x^2} dx$ 收敛。别忘了 $\psi(x)=\sum_{n\leq x}\Lambda(n)$ ，如果p是质数，则有 $\Lambda(p^k)=log(p)$ ，其余情况等于0。然后又涉及到复分析了，又不会了，截图摆烂。
 
-![prove_prime_theorem_3](../images/prove_prime_theorem_3.png)
+![prove_prime_theorem_3](../../images/prove_prime_theorem_3.png)
 
 第四步证明 $\psi(x)\lim x$ 。 $\psi(x)$ 是一个递增函数，如果我们能证明 $\int^{\infty}_0 \frac{\psi(u)-u}{u^2} du$ < $\infty$ ，等同于证明 $\psi(x)\lim x$ 。
 
-![prove_prime_theorem_4](../images/prove_prime_theorem_4.png)
+![prove_prime_theorem_4](../../images/prove_prime_theorem_4.png)
 
 第五步：通过 $\psi(x)\lim x$ 得到 $\frac{x}{log(x)}\lim \Pi(x)$ 。关键点在于意识到log(x)几乎是个常数。根据 $\psi(x)$ 的定义，我们得到了质数相关的和以及质数幂相关的和。发现完全可以忽略质数幂，因为质数幂本身就很稀有， $2^2,3^2,5^2...p^2$ ，这些数里面小于x的最多只有 $\sqrt{x}$ 个；同理， $2^3,3^3,5^3...p^3$ 这些数里面小于x的最多只有 $^3\sqrt{x}$ 个，以此类推。这么看来质数幂的和就为 $\sqrt{x}+^3\sqrt{x}+^4\sqrt{x}+...+^k\sqrt{x}$ ，其中 $2^k=x,k\approx log(x)$ 。全部小于x的质数幂最多只有 $log(x)\sqrt{x}$ 个，远小于 $\frac{x}{log(x)}$ 。忽略掉质数幂后， $\psi(x)\approx log(2)+log(3)+log(5)+...$ 。当x是大数时， $log(p)\approx log(x)$ ，就有 $\psi(x)\approx log(x)+log(x)+log(x)+...$ ，log(x)的数量为 $\Pi(x)$ 。忽略素数幂并将log(x)看为常数项后，我们终于得到了 $\psi(x)\approx log(x)\Pi(x)$ 。既然 $\psi(x)\lim x$ ，最后有 $\Pi(x)\lim \frac{x}{log(x)}$ 。
 
@@ -320,11 +320,11 @@ N=6时没有新东西。1和5分别得到1和1以及1和-1，前者给出 $\frac
 
 N=7和N=5时类似，毕竟都是质数。
 
-![N=7](../images/N=7.png)
+![N=7](../../images/N=7.png)
 
 N=8会给我们两个新的L级数。
 
-![N=8](../images/N=8.png)
+![N=8](../../images/N=8.png)
 
 N=12时给出1,3,7,11 mod 12。不过我们还能发现N=3\*4， $(Z/12Z)^{\*}=(Z/3Z)^{\*}\times (Z/4Z)^{\*}$ 。 $(Z/3Z)^{\*}$ 有2个特征， $(Z/4Z)^{\*}$ 有2个特征，那么 $(Z/12Z)^{\*}$ 必然有4个特征。
 
@@ -333,3 +333,5 @@ N=12时给出1,3,7,11 mod 12。不过我们还能发现N=3\*4， $(Z/12Z)^{\*}=(
 1. N有原根g。此时群 $(Z/NZ)^{\*}$ 中的元素为 $1,g,g^2...g^{\phi(n)}$ 。通过将g映射到 $\epsilon^{k}$ （ $\epsilon^{N}\equiv 1$ ）即可得到特征。能看出来正好有 $\phi(N)$ 个特征。这种情况适用于当 $N=p^k$ （p为奇数）时。
 
 2. $N=p_1^{n_1}p_2^{n_2}...$ 。此时应用中国剩余定理： $(Z/NZ)^{\*}=(Z/p_1^{n_1}Z)^{\*}\times ...$ ，那么 $(Z/NZ)^{\*}$ 的特征数等于 $\phi(p_1^{n_1})\phi(p_2^{n_2})$ 。注意到 $\phi$ 是multiplicative函数，因此等于 $\phi(N)$ 。至此得到一个基本定理： $(Z/NZ)^{\*}$ 的特征数等于 $\phi(N)$ ，也等于 $(Z/NZ)^{\*}$ 的阶数。
+
+(其实后面还有，但是我基本听不懂。数论先到此为止了，赶紧去学抽象代数，再不学就来不及了)

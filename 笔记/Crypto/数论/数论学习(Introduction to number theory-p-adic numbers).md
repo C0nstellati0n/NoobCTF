@@ -10,7 +10,7 @@
 
 这最早由Euclid提出，不过他最开始不是这么说的。希腊人不喜欢“无限”的概念，于是他换了一种说法：取有限的质数 $P_1...P_n$ ，可以找到另外一个不在此集合中的质数。他求出这些质数的乘积后加1, $P_1\*P_2\*...\*P_n+1$ ，然后找到这个数的一个素数因子 $P_{n+1}$ 。会发现这个素数因子不可能在已有的质数集合 $P_1...P_n$ 中，因为在已有的质数集合中的质数无论如何都不可能整除于其乘积+1。由此得出 $P_{n+1}$ 是一个新质数。
 
-![find_primes](../images/find_primes.png)
+![find_primes](../../images/find_primes.png)
 
 上图展示了这一流程。注意所有已知质数的乘积+1不一定是一个质数，比如最后一步。目前我们有了找质数的稳定方法，可是这个方法生成的质数不一定一个比一个大，怎么找大质数呢？有种Mersenne质数，其形如 $2^n-1$ 。试一下， $2^2-1=3,2^3-1=7,2^4-1=15=3\*5$ ,不对啊，这哪是质数？确实不是，因为使用的n不是质数。 $2^{ab}-1=(2^a-1)\*(2^{ab-a}+...+1)$ ，会被 $2^a-1$ 整除。好，从现在开始我们只取n为质数， $2^5-1=31,2^4-1=127,2^11-1=2047=23\*199$ 。又不是质数了。没错这个方法就是这样，虽然 $2^n-1$ ，n为质数时很多时候都是质数，不过总有一些例外。其实也是个不错的生成质数的方法了。不过这个方法可以一直用吗？换句话说，是否有无数多个Mersenne质数？这个问题目前还没有被解决，所以我就等着各位在国际数学界一展风采了:D
 
@@ -107,7 +107,7 @@ $5\*13=65$
 
 上节课提到辗转相除法，可用于找gcd（a，b）。让gcd（a，b）=d，引出一个著名的方程ax+by=d。
 
-![solve_equation](../images/solve_equation.png)
+![solve_equation](../../images/solve_equation.png)
 
 上图展示了如何利用辗转相除法找方程的解。关键思路在于每个式子的余数可以用上一个式子来表达。2=2\*1+0，这里的除数1正好是上一个式子的余数，所以可以被表达为1=3-1\*2。仔细一看，2又可以利用17=5\*3+2来表示。这样往上推并化简，得到1=6\*71-25\*17。正常试错法需要大概a步，而辗转相除法仅log a步。
 
@@ -126,7 +126,7 @@ $5\*13=65$
 
 该算法需要的步骤大概是log(a)，和欧几里得算法差不多，都是某个常数项乘以对数。这个算法需要的步骤可能会比欧几里得算法多一点，因为前者每次都要做减法然后除以2的倍数，而后者直接做除法。所以怎么看出来这个算法比欧几里得算法好的？这就是长除法的锅了，这个算法把步骤拆解为减法和除以2，对于电脑都是小菜一碟，需要的时间不多。而长除法复杂多了，省下来的步骤和时间全部在这里还回去了。实际使用要根据a和b的大小及硬件来决定。只要你愿意，这个算法也能用来解线性方程。
 
-![another_algorithm](../images/another_algorithm.png)
+![another_algorithm](../../images/another_algorithm.png)
 
 结果并不是1而是2，最后1-1=0中的1要乘上2，因为之前一直都在除以2。想解68x+142y=2的话，反着来就行了。
 
@@ -337,11 +337,11 @@ $(^5_2)=\frac{5!}{(5-2)!2!}=\frac{120}{6\*2}=10$
 
 二项式系数还出现在杨辉三角中。刚刚粗略地看了一遍二项式系数出没的地方，现在教授要告诉你，这几种定义本质上是一样的。仔细看展开二项式 $(x+y)^5$ 的例子。
 
-![binomial_coefficient](../images/binomial_coefficient.png)
+![binomial_coefficient](../../images/binomial_coefficient.png)
 
 这张图展示了如何找 $(x+y)^5$ 展开后 $x^3y^2$ 的系数。每个(x+y)展开后都有两种选择，x和y。 $x^3y^2$ 可以看作拿出3个x 2个y，此时就能排列组合了。因此找 $x^3y^2$ 的系数等同于找从5个元素里取两个元素的搭配的数量，这不就和n选k那个定义是一样的吗？
 
-![pascal_triangle](../images/pascal_triangle.png)
+![pascal_triangle](../../images/pascal_triangle.png)
 
 然后是杨辉三角的例子。杨辉三角中，上面两个数字的和是下面一个数字。把注意点放在其中一个小部分。
 
@@ -354,7 +354,7 @@ $(^5_2)=\frac{5!}{(5-2)!2!}=\frac{120}{6\*2}=10$
 
 我们只剩下最后一种情况了，公式。
 
-![n_c_k_formula](../images/n_c_k_formula.png)
+![n_c_k_formula](../../images/n_c_k_formula.png)
 
 把公式展开得到：
 
@@ -364,11 +364,11 @@ $\frac{n(n-1)(n-2)...(n-k+1)}{k!}$
 
 至此我们发现所有定义本质上是一家人。其实二项式的情况还能推广到三项式。
 
-![trinomial_coefficient](../images/trinomial_coefficient.png)
+![trinomial_coefficient](../../images/trinomial_coefficient.png)
 
 下方那个箭头表示n-i=j。此处不过多介绍，了解一下就好了，因为我们并不需要三项式系数。
 
-![application_of_binomial_coefficient](../images/application_of_binomial_coefficient.png)
+![application_of_binomial_coefficient](../../images/application_of_binomial_coefficient.png)
 
 把二项式系数写出来，可以发现呈三角形状。这个特性可以用于下面的式子：
 
@@ -414,13 +414,13 @@ $2^n=\sum_k (^n_k)$
 
 正是我们想要的。
 
-![alternate_sum](../images/alternate_sum.png)
+![alternate_sum](../../images/alternate_sum.png)
 
 又又又是杨辉三角，这次是交替求和。可以发现除了第一行，剩下的行进行交替求和的结果都是0。因为每一行的交替求和相当于干这么一件事：“拥有偶数个元素的子集数量-拥有奇数个元素的子集数量”。继续让n=5，第一个元素为特殊元素。形成子集时我们可以考虑带上这个特殊元素或者不带上这个特殊元素，因此每一对奇偶子集的数量都是配对的，数量相减一定为0。
 
 有很多关于二项式系数的求和公式，不过下面这个可能是最常见的。
 
-![binomial_coefficient_sum](../images/binomial_coefficient_sum.png)
+![binomial_coefficient_sum](../../images/binomial_coefficient_sum.png)
 
 公式如下：
 
@@ -430,7 +430,7 @@ $\sum_i (^m_i)(^n_{k-i})=(^{m+n}_k)$
 
 最后用一个很巧妙的找方程有多少个解的办法收尾。
 
-![pirates_and_gold_coins](../images/pirates_and_gold_coins.png)
+![pirates_and_gold_coins](../../images/pirates_and_gold_coins.png)
 
 有5个海盗分100个金币，能写出方程a+b+c+d+e=100,其中a,b,c,d,e都是整数且大于等于0。这个方程的解的数量为 $(^{104}_4)$ 。为什么？我们把100个金币铺开，分配金币的问题等同于在这100个金币里放4条竖线。100个金币加4条竖线是104个东西，方程的解的数量就是找104个东西里放4条竖线的不同方式的数量。
 
@@ -438,7 +438,7 @@ $\sum_i (^m_i)(^n_{k-i})=(^{m+n}_k)$
 
 要用什么开头呢，嗯……杨辉三角，但是变异版本。这个版本的杨辉三角当顶上两个数的和为偶数时为0，奇数时为1。所以这玩意大概长这样：
 
-![various_pascal_triangle](../images/various_pascal_triangle.png)
+![various_pascal_triangle](../../images/various_pascal_triangle.png)
 
 有点像一个很有名的分形。如果让第一行的编号是0，就会发现每当行号是2次幂时，我们会得到一行的0（排除两边的，那个无论怎样都是1）。用二项式系数表达就是， $(^n_k)=0$ ，如果 $n=2^k$ ,0<k<n。让三角再变异一次，变异成另一个质数3，当顶上两个数的和是3的倍数时为0。写出来就会是这样：
 
@@ -613,7 +613,7 @@ $f(x)=\frac{1-\sqrt{1-4x}}{2x}$
 
 接下来的公式有点多，直接放图吧。
 
-![prove_atalan_numbers](../images/prove_atalan_numbers.png)
+![prove_atalan_numbers](../../images/prove_atalan_numbers.png)
 
 这张图回顾了怎么用二项式系数算 $(1+x)^n$ ，并且说明同样的规律也适用于n不是整数的情况。还介绍了怎么利用阶乘的技巧简化表达式。
 
@@ -668,13 +668,13 @@ $n^p\equiv n\mod p$ ，p为质数
 
 光会用肯定不行，我们还要看看怎么证明费马小定理。借用一下上节课二项式系数的定理： $(^p_k)$ 整除p，如果 $1\leq k\leq p-1$ 。二项式还有个定理， $(x+y)^p\equiv x^p+y^p\mod p$ ，证明很简单，比如p=5，手动把 $(x+y)^5$ 拆开就知道了。结合这个定理和归纳法，就能证明费马小定理了。
 
-![prove_fermat](../images/prove_fermat.png)
+![prove_fermat](../../images/prove_fermat.png)
 
 先代入前几个数字直接验证是否正确，然后假设 $n^p\equiv n\mod p$ 成立，推断n+1的情况同样成立，于是得证对所有正整数成立。
 
 看一个问题。35是质数吗？目前为止最蠢的问题出现了，不过我们假装一下，假装35是一个1000位的数字。可以利用 $2^{35}\equiv 2\mod 35$ 来检查，如果不成立，35就不是一个质数。现在要找 $2^{35}$ 模35的值。笨方法，一个一个乘下去，2\*2=4,2\*4=8,2\*8=16,2\*16=32...这个方法明显有问题，这么乘下去会得到一个大得离谱的数字。再试一次，每次我们把结果模35。 $2\*32=64\equiv 29\mod 35,2\*29\equiv 23\mod 35...$ ，还是有点问题，这样仍然要算35次，数字越大需要的步骤就越多。还有更快速的方法吗？
 
-![faster_way](../images/faster_way.png)
+![faster_way](../../images/faster_way.png)
 
 我们取2的2次方幂模目标数35的结果，然后把 $2^{35}$ 写为 $2^{32}\*2^2\*2^1$ 次方的形式，就很容易算出来结果了。
 
@@ -911,7 +911,7 @@ $y\rightarrow y\mod m_1,m\mod y_2$
 
 教授给了个例子。
 
-![bijection_example](../images/bijection_example.png)
+![bijection_example](../../images/bijection_example.png)
 
 最上面是两个模数互质的例子。会发现每组数的配对都不重复，而且单双数都有。但是不互质的情况就不是这样了。不是单射，因为出现了重复的一组；也不是满射，因为这些数字配对要么全是单数，要么全是双数。
 
@@ -965,7 +965,7 @@ $6(1-\frac{1}{2})(1-\frac{1}{3})$
 
 放一张图就懂了，下面是30的情况。
 
-![inclusion&exclusion_principle](../images/inclusion&exclusion_principle.png)
+![inclusion&exclusion_principle](../../images/inclusion&exclusion_principle.png)
 
 甚至还能用概率取考虑。用概率的视角看，找 $\phi(30)$ 的值就等于找与30互质的数的概率。有3种事件：
 
@@ -1154,7 +1154,7 @@ n和e是公钥，pq是这里的"陷阱门"。不知道pq就没办法找到 $\phi
 1. 笨方法：直接尝试 $x=0,1,2...3^{100}-1$ 直至找到解。太笨了， $3^{100}$ 是 $p^n$ ，那这个方法就要 $O(p^n)$ ，一直算到宇宙尽头。
 2. 没那么笨的方法：把原式拆分成 $mod 3^1,mod 3^2,mod 3^3...$ 。接着先解 $x^22\equiv 7\mod 3$ ，得到 $x_1=1\mod 3$ ；然后解 $x^2\equiv 7\mod 3^2$ ，注意到这个解是包含了上一个解的，因此 $x_2$ 的可能解为 $x_1,x_1+3,x_1+6...$ ，最后发现是 $x_1+3$ 。后续以此类推，直到我们达到 $3^{100}$ 。不难看出该算法需要把原式模数 $p^n$ 拆分成n个小模数，然后每个模数需要搜寻p次去找到结果，故用时为 $O(pn)$ ，比第一个好多了。但是当p很大的时候还是不够快。而且有个很致命的问题，看下面这张图：
 
-![problem](../images/problem.png)
+![problem](../../images/problem.png)
 
 每当我们在前一个式子找到一个解的时候，下一个式子应该可以通过前一个式子的解抬升k倍模数得到。然而图中的情况一个解可以抬升出不同的两个答案，导致解不唯一，而且有些解抬升到某个程度会发现是死路。可是为什么之前这么解没问题呢？接下来的hensel引理会告诉我们答案。
 
@@ -1171,7 +1171,7 @@ n和e是公钥，pq是这里的"陷阱门"。不知道pq就没办法找到 $\phi
 
 最后是[牛顿法](https://zh.wikipedia.org/wiki/%E7%89%9B%E9%A1%BF%E6%B3%95)。用图来解释比较好。
 
-![newton's_method](../images/newton's_method.png)
+![newton's_method](../../images/newton's_method.png)
 
 牛顿法用于找f(x)=0的x。比如图上的函数，随便找个点 $x_1$ ，然后过 $x_1$ 做切线，即导数。这条切线会与x轴相交于 $x_2$ ，找到函数 $x_2$ 的地方，再于此处做切线……最后就能找到函数的根。
 

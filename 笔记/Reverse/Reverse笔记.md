@@ -343,3 +343,21 @@ flag在汇编代码里就很明显了。
 57. 迷宫+blowfish加密算法。例题:[[RCTF2019]DontEatMe](https://lantern.cool/wp-games-2019rctf/#DontEatMe)
 58. Smart Assembly混淆可用[de4dot](https://github.com/de4dot/de4dot)去混淆。例题:[[FlareOn2]YUSoMeta](https://blog.csdn.net/weixin_53349587/article/details/122310993)
 59. 双进程保护程序逆向。关键的加密和检查逻辑无法通过静态分析得到，程序在动态运行时开启另外的进程，利用[int3](https://www.codenong.com/cs106526086/)和WriteProcessMemory向具有检查逻辑的进程写入正确的字节。例题:[[SWPU2019]EasiestRe](https://blog.csdn.net/weixin_53349587/article/details/122279966)
+60. angr[基本使用](https://www.anquanke.com/post/id/212816)。例题:[[NPUCTF2020]EzObfus-Chapter2](https://blog.csdn.net/weixin_53349587/article/details/121880972)。这题的脚本如下：
+
+```python
+from angr import *
+p = Project('C:\\Users\\admin\\Desktop\\attachment.exe',auto_load_libs = False) #创建Project加载二进制文件。auto_load_libs 设置是否自动载入依赖的库，在基础题目中我们一般不需要分析引入的库文件，这里设置为否
+state = p.factory.blank_state(addr=0x004164F8) #这里不用initial_state，使用factory的blank_state方法，传入地址，表示从该地址的状态开始。此步跳过程序开始的输入部分，直接从逻辑开始
+simfd = state.posix.get_fd(0) #创建一个标准输入对象
+data,real_size = simfd.read_data(22) #read_data函数返回两个值 第一个是读到的数据内容 第二个为内容长度
+state.memory.store(0x0042612C,data) #直接把数据存到相应地址
+state.memory.store(0x00426020,data)
+sm = p.factory.simulation_manager(state) #用刚才的state创建manager
+sm.one_active.options.add(options.LAZY_SOLVES) #添加这行提高脚本运行效率
+sm.explore(find = 0x00416609,avoid = 0x004165EA) #寻找有解分支，0x00416609是成功分支，0x004165EA是失败分支
+text = sm.one_found.solver.eval(sm.one_found.memory.load(0x0042612C,22),cast_to = bytes) #memory.load从addr地址处的数据取出size字节，solver.eval打印定义的BVS的值
+print (text)
+```
+
+参考[此处](https://b0ldfrev.gitbook.io/note/symbolic_execution/angr-jin-jie)
