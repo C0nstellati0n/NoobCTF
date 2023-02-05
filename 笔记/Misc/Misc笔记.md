@@ -311,3 +311,5 @@ for file_str in file_list:
 78. [北约音标字母](https://zh.wikipedia.org/wiki/%E5%8C%97%E7%BA%A6%E9%9F%B3%E6%A0%87%E5%AD%97%E6%AF%8D)，Alfa，Bravo之类的，其实就是每个单词的首字母。
 79. pgp加密，使用[PGPTool](https://pgptool.github.io/)解密。例题:[[BSidesSF2019]bWF0cnlvc2hrYQ](https://blog.csdn.net/mochu7777777/article/details/115856882)
 80. 镜像FTK挂载仿真，使用[AccessData FTK Imager](https://accessdata-ftk-imager.software.informer.com/3.1/)。例题:[[NPUCTF2020]回收站](https://shimo.im/docs/6hyIjGkLoRc43JRs)
+81. 利用[dig](https://developer.aliyun.com/article/418787)命令分析dns shell。例题:[[UTCTF2020]dns-shell](https://meowmeowxw.gitlab.io/ctf/utctf-2020-do-not-stop/)
+82. 乐高ev3机器人分析（蓝牙协议）。基本的4个协议为HCI、L2CAP、SDP、RFCOMM。对比于英特网五层结构来说：HCI相当于与物理层打交道的协议，L2CAP协议则是链路层相关协议，SDP和RFCOMM则是运输层相关协议，当然其上也有对应的应用层相关的一些协议。SDP用来发现周围蓝牙服务，然后由L2CAP来建立信道链接，然后传输由上层RFCOMM给予的数据分组。如果只是提取数据的话，只需要关心：RFCOMM协议。例题:[[HITCON2018]ev3basic](https://www.youncyb.cn/?p=493)

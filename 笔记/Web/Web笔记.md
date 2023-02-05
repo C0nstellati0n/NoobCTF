@@ -619,3 +619,47 @@ index()
 124. node.js早期版本（<8.0)中，沙箱vm2有个特性：当 Buffer 的构造函数传入数字时, 会得到与数字长度一致的一个 Buffer，并且这个 Buffer 是未清零的。8.0 之后的版本可以通过另一个函数 Buffer.allocUnsafe(size) 来获得未清空的内存。一个调用过的变量，一定会存在内存中，也就是说，我们可以使用Buffer函数读取沙箱之外的变量内容，实现沙箱逃逸。例题:[[HITCON 2016]Leaking](https://blog.csdn.net/weixin_44037296/article/details/112387663)
 125. 对于SSRF，127.0.0.1无法使用的情况下，可以考虑0.0.0.0。
 126. [redis](https://blog.csdn.net/like98k/article/details/106417214) [主从复制](https://www.cnblogs.com/karsa/p/14123957.html) [SSRF](https://xz.aliyun.com/t/5665)（RCE）。主要利用[Redis Rogue Server](https://github.com/n0b0dyCN/redis-rogue-server)和[redis-ssrf](https://github.com/xmsec/redis-ssrf)两个工具。例题:[[网鼎杯 2020 玄武组]SSRFMe](https://blog.csdn.net/rfrder/article/details/113651337)
+127. [[NPUCTF2020]验证🐎](https://blog.csdn.net/hiahiachang/article/details/105756697)。本题的知识点有：
+
+- js中列表，对象等与字符串相加会导致强制类型转换，结果为字符串。可用这个特点绕过一些md5加盐。以及，绕过md5时如果程序启用了json，可以利用json构造对象绕过大部分限制。
+- js利用__proto__可从原型链上引出Function和String，Function用于构造函数，String用于得到fromCharCode绕过强制过滤。利用`process.mainModule.require('child_process').execSync('cat /flag')`进行rce，同时还利用了箭头函数。
+
+128. 可以使用以下内容来绕过php的getmagesize()函数获得的图片长宽。
+
+```
+#define width 1
+#define height 1
+```
+
+放头部和末尾都可以。
+
+129. php的mb_strtolower()函数可用于绕过一些过滤。
+
+```php
+<?php
+var_dump(mb_strtolower('İ')==='i');
+//true
+?>
+```
+
+130. 可绕过php getmagesize()函数的图片马生成[工具](https://github.com/huntergregal/PNG-IDAT-Payload-Generator)。例题:[[CISCN2021 Quals]upload](https://blog.csdn.net/jiangdie666/article/details/116997461)
+131. 网页版post上传文件代码。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POST数据包POC</title>
+</head>
+<body>
+<form action="http://faebbc7b-35b5-4792-8b8a-9af1ec7fc48f.node3.buuoj.cn/upload.php?ctf=upload" method="post" enctype="multipart/form-data">
+<!--链接是当前打开的题目链接-->
+    <label for="file">文件名：</label>
+    <input type="file" name="postedFile" id="postedFile"><br>
+    <input type="submit" name="submit" value="提交">
+</form>
+</body>
+</html>
+```

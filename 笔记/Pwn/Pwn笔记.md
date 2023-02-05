@@ -145,7 +145,7 @@ p.interactive()
 
 ```python
 from pwn import *
-libc=ELF("./ubuntu18/libc-2.27.so.64")
+libc=ELF("./ubuntu16/libc-2.23.so.64")
 print(f"system:{libc.sym['system']}")
 print(f"write:{libc.sym['write']}")
 print(f"puts:{libc.sym['puts']}")
@@ -159,8 +159,10 @@ print(f"atoi:{libc.sym['atoi']}")
 print(f"__environ:{libc.sym['__environ']}")
 print(f"__libc_start_main:{libc.symbols['__libc_start_main']}")
 print(f"_IO_2_1_stdin_:{libc.sym['_IO_2_1_stdin_']}")
-print(f"setbuffer:{libc.sym['setbuffer']}")       
-print(f"_IO_list_all: {libc.symbols['_IO_list_all']}")                                                              
+print(f"setbuffer:{libc.sym['setbuffer']}")
+print(f"_IO_list_all: {libc.symbols['_IO_list_all']}")
+print(f"read: {libc.symbols['read']}")
+print(f"open: {libc.symbols['open']}")                                                            
 ```
 
 8. pwn heap题模板
@@ -250,3 +252,4 @@ exit_hook = libc_base+0x619060+3848（32）
 只要知道libc版本和任意地址的写，就可以直接写这个指针，执行exit后就可以拿到shell了。（也不用非要执行exit函数，程序正常返回也可以执行到这里）
 
 32. arm架构下的栈溢出。例题:[jarvisoj_typo](https://www.cnblogs.com/LynneHuan/p/16104052.html)。在ARM架构中，PC寄存器相当于rip，保存的是当前正在取指的指令的地址，因此栈溢出控制[pc寄存器](https://blog.51cto.com/u_13682052/2977378)就能控制程序流程。
+33. [tcache Stashing Unlnk](https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/tcache-attack/#tcache-stashing-unlink-attack)。利用Smallbin的相关分配机制进行攻击，需要可控一个chunk或者构造一个fake chunk的bk，效果为在任意地址上写一个 libc 地址 (类似 unsorted bin attack)。例题:[[2020 新春红包题]3](https://www.anquanke.com/post/id/198173#h3-6)
