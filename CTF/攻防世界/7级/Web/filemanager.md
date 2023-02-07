@@ -2,7 +2,7 @@
 
 [题目地址](https://adworld.xctf.org.cn/challenges/details?hash=240f5d83-b4c9-436a-b131-8a1193d5312a_2&task_category_id=3)
 
-文件上传题。直接扫目录，以前没有这个习惯，现在1分钟内没头绪就扫目录。发现/www.tar.gz可以直接下载源码。来吧审计。
+文件上传题。直接扫目录，以前没有这个习惯，现在1分钟内没头绪就扫目录。发现`/www.tar.gz`可以直接下载源码。来吧审计。
 
 ```sql
 SET NAMES utf8;
@@ -291,7 +291,7 @@ if (file_exists($oldname)) {
 }
 ```
 
-重命名时是新名字拼接后缀名，\$result是查询结果，\$req是网页请求。猛地发现改名界面是没有过滤的啊，newname可以直接提交xxx.php，但是原来的后缀怎么办呢，xxx.php.jpg之类的显然不能执行。除非……后缀名是空？改名前正好有updata语句，正好又有二次注入，可不可以利用二次注入把后缀名改为空？
+重命名时是新名字拼接后缀名，\$result是查询结果，\$req是网页请求。猛地发现改名界面是没有过滤的啊，newname可以直接提交xxx.php，但是原来的后缀怎么办呢，xxx.php.jpg之类的显然不能执行。除非……后缀名是空？改名前正好有update语句，正好又有二次注入，可不可以利用二次注入把后缀名改为空？
 
 - ',extension='.txt
 
@@ -319,5 +319,5 @@ newname的值仍然要拼接上原来result的extension，这个result是在upda
 
 木马传上去后干啥就不用多说了，直接菜刀或蚁剑拿个快乐shell。
 
-- ### Flag
+## Flag
   > flag{bdda3c944a9e484eae50123afeeff56b}

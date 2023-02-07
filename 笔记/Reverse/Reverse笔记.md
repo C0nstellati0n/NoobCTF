@@ -361,3 +361,13 @@ print (text)
 ```
 
 参考[此处](https://b0ldfrev.gitbook.io/note/symbolic_execution/angr-jin-jie)
+
+61. 题目出现反调试内容，可能为：
+
+- TlsCallback相关函数逻辑
+- NtQueryInformationProcess： 取进程信息函数，可以用于反调试(有调试端口，可以检测进程是否被调试)。
+- ZwQueryInformationThread： 获取线程信息，可以用于反调试。
+- IsDebuggerPresent。可以进入该函数的api在执行逻辑前直接ret，剩下的全部nop掉
+- CheckRemoteDebuggerPresent
+
+基本都能直接靠patch反反调试。例题:[[SUCTF2019]Akira Homework](https://blog.csdn.net/weixin_53349587/article/details/122274017)。这题有很多反调试的函数，主要逻辑是解密程序内的数据，写为dll，在靠LoadLibrary加载解密出来的dll，使用dll里的aes逻辑检查flag。

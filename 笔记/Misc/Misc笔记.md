@@ -313,3 +313,5 @@ for file_str in file_list:
 80. 镜像FTK挂载仿真，使用[AccessData FTK Imager](https://accessdata-ftk-imager.software.informer.com/3.1/)。例题:[[NPUCTF2020]回收站](https://shimo.im/docs/6hyIjGkLoRc43JRs)
 81. 利用[dig](https://developer.aliyun.com/article/418787)命令分析dns shell。例题:[[UTCTF2020]dns-shell](https://meowmeowxw.gitlab.io/ctf/utctf-2020-do-not-stop/)
 82. 乐高ev3机器人分析（蓝牙协议）。基本的4个协议为HCI、L2CAP、SDP、RFCOMM。对比于英特网五层结构来说：HCI相当于与物理层打交道的协议，L2CAP协议则是链路层相关协议，SDP和RFCOMM则是运输层相关协议，当然其上也有对应的应用层相关的一些协议。SDP用来发现周围蓝牙服务，然后由L2CAP来建立信道链接，然后传输由上层RFCOMM给予的数据分组。如果只是提取数据的话，只需要关心：RFCOMM协议。例题:[[HITCON2018]ev3basic](https://www.youncyb.cn/?p=493)
+83. 使用[e2fsck](https://www.runoob.com/linux/linux-comm-e2fsck.html)命令修复超级块损坏的ext2文件。例题:[[BSidesSF2020]mpfrag](http://www.ga1axy.top/index.php/archives/17/)
+84. 压感数位板usb协议分析+emoji aes密码。例题:[[RoarCTF2019]davinci_cipher](http://www.ga1axy.top/index.php/archives/43/)
