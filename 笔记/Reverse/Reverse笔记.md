@@ -371,3 +371,5 @@ print (text)
 - CheckRemoteDebuggerPresent
 
 基本都能直接靠patch反反调试。例题:[[SUCTF2019]Akira Homework](https://blog.csdn.net/weixin_53349587/article/details/122274017)。这题有很多反调试的函数，主要逻辑是解密程序内的数据，写为dll，在靠LoadLibrary加载解密出来的dll，使用dll里的aes逻辑检查flag。
+
+62. nes后缀文件逆向，使用[FCEUX](https://fceux.com/web/download.html)。例题:[[FlareOn6]Snake](https://blog.csdn.net/weixin_53349587/article/details/122463460)
