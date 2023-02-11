@@ -315,3 +315,4 @@ for file_str in file_list:
 82. 乐高ev3机器人分析（蓝牙协议）。基本的4个协议为HCI、L2CAP、SDP、RFCOMM。对比于英特网五层结构来说：HCI相当于与物理层打交道的协议，L2CAP协议则是链路层相关协议，SDP和RFCOMM则是运输层相关协议，当然其上也有对应的应用层相关的一些协议。SDP用来发现周围蓝牙服务，然后由L2CAP来建立信道链接，然后传输由上层RFCOMM给予的数据分组。如果只是提取数据的话，只需要关心：RFCOMM协议。例题:[[HITCON2018]ev3basic](https://www.youncyb.cn/?p=493)
 83. 使用[e2fsck](https://www.runoob.com/linux/linux-comm-e2fsck.html)命令修复超级块损坏的ext2文件。例题:[[BSidesSF2020]mpfrag](http://www.ga1axy.top/index.php/archives/17/)
 84. 压感数位板usb协议分析+emoji aes密码。例题:[[RoarCTF2019]davinci_cipher](http://www.ga1axy.top/index.php/archives/43/)
+85. [exiftool](https://www.rmnof.com/article/exiftool-introduction/)使用。当用exiftool发现有`ThumbnailImage	(Binary data 215571 bytes, use -b option to extract)`一项时，可以用`exiftool -b -ThumbnailImage attachment.jpg > flag.jpg`提取出缩略图。例题:[[BSidesSF2019]delta](https://www.shawroot.cc/142.html)，这题还有条形码分析。

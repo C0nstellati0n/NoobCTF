@@ -1,4 +1,4 @@
-# 1. Two Sum
+# Two Sum
 
 [题目地址](https://leetcode.com/problems/two-sum/)
 

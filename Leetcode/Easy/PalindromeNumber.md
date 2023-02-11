@@ -1,4 +1,4 @@
-# 9. Palindrome Number
+# Palindrome Number
 
 [题目地址](https://leetcode.com/problems/palindrome-number/)
 
