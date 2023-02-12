@@ -97,7 +97,53 @@ rabin算法可以解出来4个明文，一般末尾会有类似校验码的东�
 - e和phi不互素+中国剩余定理解决多组c和n问题。例题1:[Weird_E_Revenge](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/Weird_E_Revenge.md)。例题2:[[De1CTF2019]babyrsa](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BDe1CTF2019%5Dbabyrsa.md)
 - 低解密指数攻击（wiener attack）。例题:[[羊城杯 2020]RRRRRRRSA](../../CTF/BUUCTF/Crypto/[羊城杯%202020]RRRRRRRSA.md)
 - 多项式下的RSA(PolynomialRing)。例题:[[watevrCTF 2019]Swedish RSA](../../CTF/BUUCTF/Crypto/[watevrCTF%202019]Swedish%20RSA.md)
-- e与phi不互质且gcd很大，使用AMM开根法+CRT。例题:[[NCTF2019]easyRSA](https://blog.soreatu.com/posts/intended-solution-to-crypto-problems-in-nctf-2019/#easyrsa909pt-2solvers)
+- e与phi不互质且gcd很大，使用AMM开根法+CRT。例题:[[NCTF2019]easyRSA](https://blog.soreatu.com/posts/intended-solution-to-crypto-problems-in-nctf-2019/#easyrsa909pt-2solvers)。附AMM算法（sagemath）：
+
+```python
+def AMM(o, r, q):
+    start = time.time()
+    print('\n----------------------------------------------------------------------------------')
+    print('Start to run Adleman-Manders-Miller Root Extraction Method')
+    print('Try to find one {:#x}th root of {} modulo {}'.format(r, o, q))
+    g = GF(q)
+    o = g(o)
+    p = g(random.randint(1, q))
+    while p ^ ((q-1) // r) == 1:
+        p = g(random.randint(1, q))
+    print('[+] Find p:{}'.format(p))
+    t = 0
+    s = q - 1
+    while s % r == 0:
+        t += 1
+        s = s // r
+    print('[+] Find s:{}, t:{}'.format(s, t))
+    k = 1
+    while (k * s + 1) % r != 0:
+        k += 1
+    alp = (k * s + 1) // r
+    print('[+] Find alp:{}'.format(alp))
+    a = p ^ (r**(t-1) * s)
+    b = o ^ (r*alp - 1)
+    c = p ^ s
+    h = 1
+    for i in range(1, t):
+        d = b ^ (r^(t-1-i))
+        if d == 1:
+            j = 0
+        else:
+            print('[+] Calculating DLP...')
+            j = - discrete_log(d, a)
+            print('[+] Finish DLP...')
+        b = b * (c^r)^j
+        h = h * c^j
+        c = c^r
+    result = o^alp * h
+    end = time.time()
+    print("Finished in {} seconds.".format(end - start))
+    print('Find one solution: {}'.format(result))
+    return result
+```
+
 - p和q相邻或接近，使用费马分解法。
 
 ```python

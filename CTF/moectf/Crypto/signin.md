@@ -27,5 +27,5 @@ print(long_to_bytes(nthroot_mod(c,e,q)))
 
 第三个参数填q是因为q-1是e的倍数。你没看错，仅此而已。signin还真挺signin的，如果不把理解原理算在内这道题唯一的难度就是找到脚本:-D。
 
-- ### Flag
+## Flag
   > moectf{Oh~Now_Y0u_Kn0W_HoW_RsA_W0rkS!}

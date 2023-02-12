@@ -22,7 +22,7 @@ wolstenholme定理说， $1+\frac{1}{2}+\frac{1}{3}+...+\frac{1}{p-1}$ 的分子
 
 wolstenholme定理还有更好的变种， $1+\frac{1}{2}+\frac{1}{3}+...+\frac{1}{p-1}$ 的分子可被 $p^2$ 整除。证明我直接截图了，已超出能力范围。
 
-![wolstenholme](../images/wolstenholme.png)
+![wolstenholme](../../images/wolstenholme.png)
 
 这节课还剩三分之一，开始考虑方程 $f(x)\equiv 0\mod p$ 。要问自己三个问题：
 
@@ -71,7 +71,7 @@ $0^i+1^i+2^i+...+(p-1)^i=0^i+a^i+(2a)^i+...$
 
 必须要问的问题是，什么数字有原根？有多少原根？举例子是最笨但也是最好理解的方法。
 
-![primitive_roots](../images/primitive_roots.png)
+![primitive_roots](../../images/primitive_roots.png)
 
 红圈圈起来的是原根。发现8是第一个没有原根的数，最下面也能检验这一点。 $x^2\equiv 1\mod 8$ 有4个解，如果一个数有原根的话，那么 $x^2\equiv 1$ 这个方程的解只可能是 $g^{\phi(m)}$ 和 $g^{\frac{\phi(m)}{2}}$ 。
 
@@ -315,7 +315,7 @@ $R\rightarrow R/I\times R/J$ 这个映射关系何时是满射呢？答案是当
 
 目前看不出高斯整数和欧几里得环有什么关系。现在要证明高斯整数的欧几里得性，即证明给定a和b时，能找到q和r满足a=qb+r， $0\leq |r|$ <b，b不等于0。我们希望绝对值是整数，所以绝对值函数的定义需要与普通整数的定义不同， $|x+iy|=x^2+y^2$ ，正是复数与原点的距离。此时变形一下， $\frac{a}{b}=q+\frac{r}{b}$ ，需要满足 $\frac{r}{b}$ 小于1，即复数 $\frac{a}{b}$ 与复数q之间的距离最多为1。看图可能会更清晰一点。
 
-![euclidean_gaussian_intergers](../images/euclidean_gaussian_intergers.png)
+![euclidean_gaussian_intergers](../../images/euclidean_gaussian_intergers.png)
 
 将来会学习如何将数字写为平方和的形式，这里剧透一下。 $|x+iy|=x^2+y^2$ ，容易看出 $(x+iy)(a+ib)=xa-yb+i(ay+xb)$ 。高斯整数的绝对值还有一个性质，|xy|=|x||y|。结合刚刚的式子就有 $(x^2+y^2)(a^2+b^2)=(xa-yb)^2+(ay+xb)^2$ 。如果两个整数m和n可被写为2个平方的和，则它们的乘积mn也可以。这里把 $(x^2+y^2)$ 看成m， $(a^2+b^2)$ 看成n就很明显了。
 
@@ -335,7 +335,7 @@ k[x]/(f)
 
 k[x]具有带余除法，因此有独特分解形式。可用第一节课提到的方法找到里面的不可约多项式。剩下的内容就截图了，包含当k=Z/2Z时找不可约多项式的步骤以及任意域上都有无限多个不可约多项式（证明这个也是用之前学过的欧几里得的方法）。
 
-![infinite_irreduceble_polys](../images/infinite_irreduceble_polys.png)
+![infinite_irreduceble_polys](../../images/infinite_irreduceble_polys.png)
 
 ## Fields in number theory
 
@@ -396,7 +396,7 @@ x^2     0       1       4       2       2       4       1
 
 有了这个符号就能计算出 $(\frac{2}{p})$ 了。 $(\frac{2}{p})=(-1)^n$ ，n等于2，4，6...p-1中在p/2和p之间内的数的数量，即 $n=\frac{p-1}{2}$ 减去0到 $\frac{p}{2}$ 之间的数的数量。0到 $\frac{p}{2}$ 之间的数的数量为 $[\frac{p}{4}]$ ，就有 $n=\frac{p-1}{2}-[\frac{p}{4}]$ 。n是什么取决于 $\frac{p-1}{2}$ 和 $[\frac{p}{4}]$ 是奇数还是偶数，它们是奇数还是偶数又取决于p模8是什么。分类讨论即可得到结果。
 
-![2/p](2/../../images/2:p.png)
+![2/p](2/../../../../images/2:p.png)
 
 完成全部证明后就能放心地用于梅森素数了。梅森素数形如 $2^p-1$ ,p是质数。一般情况下，当p很大的时候很难测试 $2^p-1$ 是不是质数，但是一切在我们学过二次剩余符号后改变了。如果 $q|2^p-1$ ，那么 $q\equiv 1\mod p$ ，因为2模q的阶是p，所以p一定整除于模q的非0剩余类的数量。说明q只能等于p+1,2p+1,3p+1,4p+1，然而q需要是奇数，因此只剩下2p+1和4p+1。最小的是2p+1，这时就可以问，什么时候q=2p+1整除 $2^p-1$ ?如果p和2p+1都是质数（p大于3），且 $p\equiv 3\mod 8$ ,那么 q=2p+1整除 $2^p-1$ , $2^p-1$ 不是质数。举两个例子，p=11， $2^{11}-1$ 能被23=2\*11+1整除；p=83， $2^{83}-1$ 能被167=2\*83+1整除。
 
@@ -424,15 +424,15 @@ $(\frac{-2}{p})$
 
 如果不能把勒让德符号拆成另外两个勒让德符号的积，就要用上节课学的高斯引理。比如 $(\frac{3}{p})$ ，需要依次计算 $3,6,9...\frac{p-1}{2}\*3$ ，这其中有多少数字在 $\frac{p}{2}$ 到p的范围里？在0-p范围内的数字有 $[\frac{p}{3}]$ 个，在0- $\frac{p}{2}$ 的范围内的数字有 $[\frac{p/2}{3}]$ 个，那么在 $\frac{p}{2}$ 到p的范围内的数字数量自然就是 $[\frac{p}{3}]-[\frac{p/2}{3}]$ 了。需要知道这个数字是奇是偶，因为 $[\frac{p/2}{3}]$ 这里除以了6，所以我们要看p模12是什么。
 
-![p_mod_12](../images/p_mod%20_12.png)
+![p_mod_12](../../images/p_mod%20_12.png)
 
 $(\frac{5}{p})$ 等于多少？还是用高斯引理，不过这次考虑的比较复杂，需要考虑模p后的余数结果。 $5,10...\frac{p-1}{2}\*5$ 这些数分布在0,p/2,p,3p/2,2p,5p/2这些分段中，模了p后在p/2到p之内的是原本在`p/2到p`和`3p/2到2p`两个区间内的数字。0-2p内的数字有 $[\frac{4p}{10}]$ 个；0-3p/2之间的数字有 $[\frac{3p}{10}]$ 个；0-p之间的数字有 $[\frac{2p}{10}]$ 个；0-p/2之间的数字有 $[\frac{p}{10}]$ 个。因此总数n就等于 $[\frac{4p}{10}]-[\frac{3p}{10}]+[\frac{2p}{10}]-[\frac{p}{10}]$ 。知道这个式子是奇是偶取决于p模20等于几。
 
-![p_mod_20](../images/p_mod_20.png)
+![p_mod_20](../../images/p_mod_20.png)
 
 最后再算个简单的。 $(\frac{6}{p})=(\frac{2}{p})(\frac{3}{p})$ 。我们知道 $(\frac{2}{p})$ 取决于模8是什么， $(\frac{3}{p})$ 模12是什么。那根据中国剩余定理， $(\frac{6}{p})$ 取决于模24是什么。
 
-![p_mod_24](../images/p_mod_24.png)
+![p_mod_24](../../images/p_mod_24.png)
 
 结论是， $(\frac{6}{p})=1\iff p\equiv 1,5,19,23\mod 24$ 。
 
@@ -451,7 +451,7 @@ $(\frac{p}{q})(\frac{q}{p})=(-1)^{(p-1)/2\*(q-1)/2}$
 
 有了二次互反律，我们就能计算出任意勒让德符号的值。比如 $(\frac{a}{p}),a=\pm 1\*2^{\*}\*q_1\*q_2...$ 。先看原勒让德符号能不能分解出 $(\frac{-1}{p}),(\frac{2}{p})$ 这种简单的符号，如果不能，则将a分解为质因数，得到若干个 $(\frac{q_i}{p})$ 。如果 $q_i$ 大于p，则将 $q_i$ 模p，缩减 $q_i$ 大小；如果 $q_i$ 小于p，则利用二次互反律把 $(\frac{q_i}{p})$ 转换为 $(\frac{p}{q_i})$ ，然后就是 $q_i$ 大于p的情况了。看例题。
 
-![calculate_Legendre_symbol](../images/calculate_Legendre_symbol.png)
+![calculate_Legendre_symbol](../../images/calculate_Legendre_symbol.png)
 
 对于较小的a，例如上节课计算的 $(\frac{3}{p})$ 和 $(\frac{5}{p})$ ,我们有没有计算方法？当然可以跟上节课一样分类讨论，但是有点烦人。有了二次互反律，算 $(\frac{13}{p})$ 都比之前的简单。我们可以把 $(\frac{13}{p})$ 转换为 $(\frac{p}{13})$ ，因为 $13\equiv 1\mod 4$ 。现在只需要看模13的平方，0-6的平方都看一下，分别对应1，4，9，3，12，10。7-12不需要看了，因为7的平方和6一样，8的平方和5一样，等等。于是就能得出结论，13模p是一个平方，当 $p\equiv 1,4,9,3,12,10\mod 13$ （p不等于2和13）。
 
@@ -465,17 +465,17 @@ $(\frac{p}{q})(\frac{q}{p})=(-1)^{(p-1)/2\*(q-1)/2}$
 
 取p=5，q=7，则我们要排列 $0,1...34\mod pq$ 这些数字。按照CRT的方式写出来，红圈，蓝圈和金圈分别是 0<a< $\frac{q}{2}$ ， 0<a< $\frac{p}{2}$ 和 0<a< $\frac{pq}{2}$ 。注意红圈乘积=蓝圈乘积 $\times (-1)(\frac{5-1}{2})(\frac{7-1}{2})$ ，因为红蓝圈的乘积区别于橙色圈圈起来的几个数字，两个圈内的数字仅区别于符号，所以要乘上对应数量 $(-1)^{(\frac{5-1}{2})(\frac{7-1}{2})}$。
 
-![list_all_numbers](../images/list_all_numbers.png)
+![list_all_numbers](../../images/list_all_numbers.png)
 
 接下来正式算乘积。写出小于 $\frac{pq-1}{2}$ 的正整数，先算p=5的乘积。我们需要划去所有是5的倍数的数字，然后将剩下的乘起来。结果需要除去7的倍数。q=5的乘积的计算类似，看图。
 
-![calculate_the_product](../images/calculate_the_product.png)
+![calculate_the_product](../../images/calculate_the_product.png)
 
 底部总结了计算任意pq乘积的方法。假设我们模p，先列出所有数 $1,2,3...p...\frac{pq-1}{2}$ ，然后划去p的倍数，相乘结果再除去q的倍数。会得到 $\frac{(p-1)!(p-1)!...(\frac{p-1}{2})!}{q\*2q...\frac{p-1}{2}q}=\frac{(p-1)!^{(q-1)/2}(\frac{p-1}{2})!}{q^{(p-1)/2}\*(\frac{p-1}{2})!}$ 。
 
 最后是总结部分。三个乘积仅互相区别于符号，任意两个符号相乘都等于第三个。一张图表明它们之间的关系。
 
-![Quadratic_reciprocity](../images/Quadratic%20reciprocity.png)
+![Quadratic_reciprocity](../../images/Quadratic%20reciprocity.png)
 
 ## Gauss sums
 
@@ -558,11 +558,11 @@ $(\frac{a}{b})(\frac{b}{a})=\prod_{i,j} (\frac{p_i}{q_i})(\frac{q_i}{p_i})$
 
 之前计算勒让德符号 $(\frac{a}{b})$ 时，如果a小于b，要用二次互反律将其倒过来，得到 $\pm (\frac{b}{a})$ 。问题是这仅对于质数a有效，如果a=pq，我们就要将其拆为 $(\frac{p}{b})(\frac{q}{b})=\pm (\frac{b}{p})(\pm (\frac{a}{q}))$ 。a要是不大倒还好，可是万一a很大呢？这就体现出雅可比符号的作用了，它无需分解a，过程如下，某种意义上有点像欧几里德算法。
 
-![calculate_jacobi_symbol](../images/calculate_jacobi_symbol.png)
+![calculate_jacobi_symbol](../../images/calculate_jacobi_symbol.png)
 
 不用分解确实让计算变得简单了很多，有没有更快的，不用做除法的方法？当然有，下面的方法只做减法和除以2的操作，虽然使用的步骤更多，但在计算机里是快上加快。
 
-![fast_jacobi](../images/fast_jacobi.png)
+![fast_jacobi](../../images/fast_jacobi.png)
 
 有了这个快速方法，现在我们有了新的素数测试方法。如果p是质数，则 $(\frac{a}{p})\equiv a^{\frac{p-1}{2}}\mod p$ 。 $(\frac{a}{p})$ 可以用快速雅可比计算， $a^{\frac{p-1}{2}}$ 可以用russian peasant快速计算。这个方法相比于费马小定理的方法，不会误判。
 
@@ -570,7 +570,7 @@ $(\frac{a}{b})(\frac{b}{a})=\prod_{i,j} (\frac{p_i}{q_i})(\frac{q_i}{p_i})$
 
 关于符号的排列，这边就放截图了。
 
-![sign_of_permutation](../images/sign_of_permutation.png)
+![sign_of_permutation](../../images/sign_of_permutation.png)
 
 因此zolotorov说， $(\frac{a}{b})=\epsilon(a)$ , $\epsilon(a)$ 表示Z/bZ上a的排列乘积（the permutation multiplication by a on Z modulo bZ)。有两种情况需要检查，第一种情况是当b为质数时。注意两边都是multiplicative的，因此能够检查 $(\frac{g}{b})=\epsilon(g)$ ,当g为b的原根时。能继续推导出， $(\frac{g^i}{b})=\epsilon(g^i)$ 。g是b的原根这点又告诉我们， $(\frac{g}{b})=(g)^{\frac{b-1}{2}}\mod b=-1$ 。
 
@@ -604,7 +604,7 @@ $(\frac{a}{b})=\pm (\frac{b}{a})$
 
 下面这张图展示了勒让德符号、雅可比符号和经典克罗内克符号的值的周期性。
 
-![symbols_periodicity](../images/symbols_periodicity.png)
+![symbols_periodicity](../../images/symbols_periodicity.png)
 
 一般用经典克罗内克符号，那什么时候不一般呢？在虚二次域的狄利克雷L级数（Dirichlet L Series of imaginary quadratic field）时。常见的一个虚二次域为Z[i]，i定义为 $i^2=-1$ ，因此这个域是所有形如m+ni数字的集合。一个虚二次域有不变量（invariant），称为判别式（discriminant），用D表示。高斯整数环的判别式为D=-4。这时克罗内克符号就派上用场了， $(\frac{D}{p})$ ， $D\equiv 0,1\mod 4$ ,p是奇质数。这里的克罗内克符号告诉我们质数在这个虚二次域里是如何分解的。 $(\frac{D}{p})=1$ ，如果p可被分解为两个不同素数的积。比如说5，5=(2+i)(2-i)。 $(\frac{D}{p})=-1$ ，如果p无法被分解； $(\frac{D}{p})=0$ ，如果p可被分解为某个数的平方。例如 $2=(1+i)^2(-i)$ 。
 
@@ -644,7 +644,7 @@ $(1151-240\sqrt{23})(1151+240\sqrt{23})=1$
 
 接下来来个复杂一点的， $x^2-67y^2=1$ 。过程直接截图，太多了懒得抄。
 
-![solve_complex_pelian_equation](../images/solve_complex_pelian_equation.png)
+![solve_complex_pelian_equation](../../images/solve_complex_pelian_equation.png)
 
 这张图除了展示解方程的步骤，还给了我们3个规律。
 
