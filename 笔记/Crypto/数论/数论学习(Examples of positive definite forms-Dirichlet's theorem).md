@@ -234,10 +234,9 @@ $-(\frac{\zeta'(s)}{\zeta(s)})'+\frac{(\zeta'(s))^2}{\zeta(s)^2}=\frac{\zeta''(s
 
 ## The prime number theorem
 
-素数定理说， $\Pi(x)\approx \frac{x}{log(x)}$ ， $\Pi(x)$ 是小于x的质数的数量。之前有稍微看过一点，当时探究了相近上限与下限。根据 $\prod p\leq(^{2n}_n)\leq 2^{2n}$ (n<p<2n)的事实，不难求出上限为 $\Pi(x)\leq 2\frac{x}{log(x)}$ ；再结合 $\prod_{p^k\leq 2n} p\geq (^{2n}_n)$ ，又能得出下限 $\prod(x)\geq \frac{1}{2}\frac{x}{log(x)}$ 。已经和原素数定理很相似了，不过还是多了个2和 $\frac{1}{2}$ 。
+素数定理说， $\Pi(x)\approx \frac{x}{log(x)}$ ， $\Pi(x)$ 是小于x的质数的数量。之前有稍微看过一点，当时探究了相近上限与下限。根据 $\prod p\leq(^{2n}_n)\leq 2^{2n}$ (n\<p\<2n)的事实，不难求出上限为 $\Pi(x)\leq 2\frac{x}{log(x)}$ ；再结合 $\prod_{p^k\leq 2n} p\geq (^{2n}_n)$ ，又能得出下限 $\prod(x)\geq \frac{1}{2}\frac{x}{log(x)}$ 。已经和原素数定理很相似了，不过还是多了个2和 $\frac{1}{2}$ 。
 
-尝试摆脱掉这两个数又要借助zeta函数 $\zeta(s)=\frac{1}{1^s}+\frac{1}{2^s}+...$ 。求zeta函数的对数后再求导，得到 $(log(\zeta(s)))'=\frac{\zeta'(s)}{\zeta(s)}=\frac{\Lambda(1)}{1^s}+\frac{\Lambda(2)}{2^s}+...$ 。其中，对于所有质数次幂，  $\Lambda(p^n)=log(p)$ ，其他情况则是0。借用 $\Lambda$ 再定义 $\psi(n)=\Lambda(1)+\Lambda(2)+...+\Lambda(n)$ 。比如 $\psi(10)=log(2)+log(3)+log(2)+log(5)+log(7)+log(2)+log(3)
-\approx 7.83$ 。再多看个 $\psi(20)\approx 19$ ，注意到 $\psi(n)\approx n$ 。那构造比率 $\frac{\psi(n)}{n}$ ，该比例在n越大时越趋近无限，这点和素数定理很像。
+尝试摆脱掉这两个数又要借助zeta函数 $\zeta(s)=\frac{1}{1^s}+\frac{1}{2^s}+...$ 。求zeta函数的对数后再求导，得到 $(log(\zeta(s)))'=\frac{\zeta'(s)}{\zeta(s)}=\frac{\Lambda(1)}{1^s}+\frac{\Lambda(2)}{2^s}+...$ 。其中，对于所有质数次幂，  $\Lambda(p^n)=log(p)$ ，其他情况则是0。借用 $\Lambda$ 再定义 $\psi(n)=\Lambda(1)+\Lambda(2)+...+\Lambda(n)$ 。比如 $\psi(10)=log(2)+log(3)+log(2)+log(5)+log(7)+log(2)+log(3)\approx 7.83$ 。再多看个 $\psi(20)\approx 19$ ，注意到 $\psi(n)\approx n$ 。那构造比率 $\frac{\psi(n)}{n}$ ，该比例在n越大时越趋近无限，这点和素数定理很像。
 
 接下来正式考虑如何证明素数定理。第一步，也是最关键的一步：
 

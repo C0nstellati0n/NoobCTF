@@ -316,3 +316,32 @@ for file_str in file_list:
 83. 使用[e2fsck](https://www.runoob.com/linux/linux-comm-e2fsck.html)命令修复超级块损坏的ext2文件。例题:[[BSidesSF2020]mpfrag](http://www.ga1axy.top/index.php/archives/17/)
 84. 压感数位板usb协议分析+emoji aes密码。例题:[[RoarCTF2019]davinci_cipher](http://www.ga1axy.top/index.php/archives/43/)
 85. [exiftool](https://www.rmnof.com/article/exiftool-introduction/)使用。当用exiftool发现有`ThumbnailImage	(Binary data 215571 bytes, use -b option to extract)`一项时，可以用`exiftool -b -ThumbnailImage attachment.jpg > flag.jpg`提取出缩略图。例题:[[BSidesSF2019]delta](https://www.shawroot.cc/142.html)，这题还有条形码分析。
+86. Discord服务器link泄露。可用下方的代码插入一个iframe，强制加入服务器。
+
+例题及来源:[discord l34k](https://github.com/uclaacm/lactf-archive/tree/main/2023/misc/discord-leak)
+
+```html
+<!DOCTYPE html>
+<html>
+    <body>
+        <!-- 1. Copy Discord embed iframe template (visit any server Server Settings -> Widget -> Premade Widget). -->
+        <!-- 2. Replace id with id from prompt. -->
+        <!-- 3. Open this file up in a browser. -->
+        <!-- 4. Click "Join Discord" to access the server. -->
+        <iframe src="https://discord.com/widget?id=1060030874722259057&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+    </body>
+</html>
+```
+
+87. 利用Google Sheets API获取被保护、隐藏的sheet内容。需要在[这里](https://www.google.com/script/start/)运行。
+
+例题及来源:[hidden in plain sheets](https://github.com/uclaacm/lactf-archive/tree/main/2023/misc/hidden-in-plain-sheets)
+
+```js
+function myFunction() {
+  const sheet = SpreadsheetApp.openById("1ULdm_KCOYCWuf6gqpg6tm0t-wnWySX_Bf3yUYOfZ2tw");
+  const sheets = sheet.getSheets();
+  const secret = sheets.find(x => x.getName() == "flag");
+  console.log(secret.getDataRange().getValues().map(l => l.join("")).join("\n"));
+}
+```
