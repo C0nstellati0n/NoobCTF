@@ -345,3 +345,6 @@ function myFunction() {
   console.log(secret.getDataRange().getValues().map(l => l.join("")).join("\n"));
 }
 ```
+
+88. 智能汽车协议分析+arm可执行文件逆向。例题:[[网鼎杯 2020 青龙组]Teslaaaaa](https://blog.csdn.net/Breeze_CAT/article/details/106156567)
+89. 利用相位抵消分离特殊信号。例题:[[QCTF2018]Noise](https://blog.csdn.net/u011297466/article/details/81059248)
