@@ -161,6 +161,19 @@ def Fermat(num):
     return [x+y, x-y]
 ```
 
+- 低加密指数（e为3等较小数）攻击。
+
+```python
+from Crypto.Util.number import *
+from gmpy2 import iroot
+def smallEattack(c, e, n):
+        for i in range(10 ** 10):
+            res = iroot(n * i + c, e)
+            if res[1]:
+                print(long_to_bytes(res[0]))
+                break
+```
+
 1. Crypto库根据已有信息构建私钥并解密
 
 如果给出的是flag.enc和public.key这种形式的题目，平时的方法可能会解出乱码，需要利用私钥文件来解密。

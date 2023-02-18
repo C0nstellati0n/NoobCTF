@@ -348,3 +348,4 @@ function myFunction() {
 
 88. 智能汽车协议分析+arm可执行文件逆向。例题:[[网鼎杯 2020 青龙组]Teslaaaaa](https://blog.csdn.net/Breeze_CAT/article/details/106156567)
 89. 利用相位抵消分离特殊信号。例题:[[QCTF2018]Noise](https://blog.csdn.net/u011297466/article/details/81059248)
+90. Wireshark菜单栏->Statistics->Conversations可以看到抓到的包的所有通信的ip和端口号，有时候是流量题找ip的捷径。
