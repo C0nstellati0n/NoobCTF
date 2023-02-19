@@ -373,3 +373,32 @@ print (text)
 基本都能直接靠patch反反调试。例题:[[SUCTF2019]Akira Homework](https://blog.csdn.net/weixin_53349587/article/details/122274017)。这题有很多反调试的函数，主要逻辑是解密程序内的数据，写为dll，在靠LoadLibrary加载解密出来的dll，使用dll里的aes逻辑检查flag。
 
 62. nes后缀文件逆向，使用[FCEUX](https://fceux.com/web/download.html)。例题:[[FlareOn6]Snake](https://blog.csdn.net/weixin_53349587/article/details/122463460)
+63. python [struc.unpack](https://cloud.tencent.com/developer/article/1406350)使用+python直接读取so文件数据+字符处理。例题:[[FlareOn2]Android](https://www.cnblogs.com/Mz1-rc/p/17035685.html)。此题整体逻辑不难，一个apk内部调用加载的so文件的检查方法。方法逻辑是将输入的字符转为数字，将其质因数分解，看看分解结果是否和程序自带的相同。数据处理是这道题最难的部分。
+
+```python
+import struct
+# author Mz1
+t1_addr = 0x5004
+with open('libvalidate.so', 'rb') as f:
+	f.seek(t1_addr-0x1000)   # 这里要-0x1000可以在ida里看到，双击off_5004，看IDA View界面的下方的左边，能看见其地址为0x4004
+	t1_data = f.read(23*4)
+	t1 = struct.unpack("<"+"23I",t1_data) #<代表小端，单个I是unsigned int长4字节；下方的H是unsigned short，长两字节。加上数字代表有多少个（23*4//4=23，6952//2=3476）
+	f.seek(0x2214)
+	word_2214_data = f.read(6952)
+	word_2214 = struct.unpack("<"+"3476H", word_2214_data)
+	print(word_2214[:5])
+	res = []
+	for i in t1:
+		offset = i - 0x1000
+		f.seek(offset)
+		data = f.read(6952)
+		a = struct.unpack("<"+"H"*3476, data)
+		v = 1
+		for j in range(len(a)):
+			if a[j] != 0:
+				v *= word_2214[j] ** a[j]
+		res.append((v >> 8))
+		res.append((v & 0xff)) #似乎c里面的数字内存转字符都是这么做的
+for i in res:
+	print(chr(i),end='')
+```
