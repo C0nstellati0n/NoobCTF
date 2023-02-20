@@ -174,6 +174,8 @@ def smallEattack(c, e, n):
                 break
 ```
 
+- Franklin-Reiter相关信息攻击巧解给出d，phi密文，m非常大，e很小的题目。例题:[d-phi-enc](../../CTF/HackTM%20CTF/Crypto/d-phi-enc.md)
+
 1. Crypto库根据已有信息构建私钥并解密
 
 如果给出的是flag.enc和public.key这种形式的题目，平时的方法可能会解出乱码，需要利用私钥文件来解密。
