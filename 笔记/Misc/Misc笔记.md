@@ -365,7 +365,7 @@ function myFunction() {
 
 - grep -a "Linux release" dump.mem
 
-95. 遇到volatility不默认支持的image时，可以通过94条的方法手动获得版本，然后去官网下载对应的镜像，存到`volatility\plugins\overlays\linux`中。现在再用插件就能获取到信息了。例题:[PVE](https://xelessaway.medium.com/0xl4ugh-ctf-2023-c86b0421fd23)，这题也介绍了volatility的初步使用方法。补充更多例题：[Wanna](https://github.com/jackalkarlos/CTF-Writeups-and-Scripts/tree/main/0xL4ughCTF/Forensics/Wanna%201%20-%202%20-%203%20-%20%204-%205)
+95. 遇到volatility不默认支持的image时，可以通过94条的方法手动获得版本，然后去官网下载对应的镜像，存到`volatility\plugins\overlays\linux`中。现在再用插件就能获取到信息了。例题:[PVE](https://xelessaway.medium.com/0xl4ugh-ctf-2023-c86b0421fd23)，这题也介绍了volatility的初步使用方法。补充更多例题：[Wanna](https://hackmd.io/@TuX-/BkWQh8a6i#ForensicsWanna-1)
 
 96. 403 bypass的特殊技巧。一般是在路径上做手脚，例如：
 
