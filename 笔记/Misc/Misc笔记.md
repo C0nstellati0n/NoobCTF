@@ -84,6 +84,7 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
 - NtfsStreamsEditor,用于处理NTFS流隐藏文件。例题：[[SWPU2019]我有一只马里奥](https://blog.csdn.net/mochu7777777/article/details/108934265)。当题目涉及到NTFS流时，题目文件都需要用Win RAR解压。
 - SilentEye（音频隐写工具）
 - steghide（多类型文件隐写工具）
+> steghide有时需要密码，可以用[stegseek](https://github.com/RickdeJager/stegseek)破解。
 - [Stegosaurus](https://github.com/AngelKitty/stegosaurus)(pyc文件隐写工具)
 - [DeepSound](http://jpinsoft.net/deepsound/overview.aspx)（音频隐写工具）
 
@@ -349,3 +350,30 @@ function myFunction() {
 88. 智能汽车协议分析+arm可执行文件逆向。例题:[[网鼎杯 2020 青龙组]Teslaaaaa](https://blog.csdn.net/Breeze_CAT/article/details/106156567)
 89. 利用相位抵消分离特殊信号。例题:[[QCTF2018]Noise](https://blog.csdn.net/u011297466/article/details/81059248)
 90. Wireshark菜单栏->Statistics->Conversations可以看到抓到的包的所有通信的ip和端口号，有时候是流量题找ip的捷径。
+91. [WHITESPACES LANGUAGE](https://en.wikipedia.org/wiki/Whitespace_(programming_language))，由空格，tab键等字符组成，不可见。
+92. [hexahue cipher](https://www.dcode.fr/hexahue-cipher)，形如：
+
+![hexahue](../images/hexahue.png)
+
+93. windows powershell历史记录文件路径：`%userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt`。
+94. 对于未经改动过的linux vmem dump，可以直接用strings+grep过滤出操作系统（operating system）和内核版本（kernel version）：
+
+- strings PVE.vmem | grep -i "Linux version"
+- grep -a "BOOT_IMAGE" dump.mem （更详细的内核版本）
+
+操作系统版本号：
+
+- grep -a "Linux release" dump.mem
+
+95. 遇到volatility不默认支持的image时，可以通过94条的方法手动获得版本，然后去官网下载对应的镜像，存到`volatility\plugins\overlays\linux`中。现在再用插件就能获取到信息了。例题:[PVE](https://xelessaway.medium.com/0xl4ugh-ctf-2023-c86b0421fd23)，这题也介绍了volatility的初步使用方法。补充更多例题：[Wanna](https://github.com/jackalkarlos/CTF-Writeups-and-Scripts/tree/main/0xL4ughCTF/Forensics/Wanna%201%20-%202%20-%203%20-%20%204-%205)
+
+96. 403 bypass的特殊技巧。一般是在路径上做手脚，例如：
+
+- http://20.121.121.120/*/secret.php
+- http://20.121.121.120/./secret.php
+- http://20.121.121.120/%2f/secret.php 
+
+等。一个局限性较大的技巧是去[Wayback Machine](https://archive.org/web/)搜对应网址。要求题目网址提前上线过。
+
+97. [OSINT思维导图](https://osintframework.com/)。
+98. 某些电子邮件的密码可能在[pastebin](https://pastebin.com/)泄露。
