@@ -1,5 +1,7 @@
 # Remove Duplicates from Sorted Array
 
+[题目](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+
 这题看了半天才看懂要求。要去除数组重复的值，返回去重后数组的长度，同时修改参数nums传入的数组。C#其实自带一个数组去重的函数。
 
 ```c#
