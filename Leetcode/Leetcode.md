@@ -1,6 +1,6 @@
 # Leetcode
 
-最近打了个CTF，十几道题就做出来2道，还有一道是签到题……其中有部分算法题，看来是时候练Leetcode了。语言我用的是C#，不过各种语言差不多，选哪个不重要。现在记录说不定以后遇见类似的题可以直接抄。
+最近打了个CTF，十几道题就做出来2道，还有一道是签到题……其中有部分算法题，看来是时候练Leetcode了。语言我用的是C#，不过各种语言差不多(现在看来并不是），选哪个不重要。现在记录说不定以后遇见类似的题可以直接抄。
 
 ## Easy
 
@@ -10,4 +10,4 @@
 - [Longest Common Prefix](Easy/Longest%20Common%20Prefix.md)。Write a function to find the longest common prefix string amongst an array of strings. If there is no common prefix, return an empty string "". 写一个返回众多字符串共同前缀的函数，如果没有就返回""。
 - [Valid Parentheses](Easy/Valid%20Parentheses.md)。Given a string s containing just the characters '(', ')', '{', '}', '[' and ']',determine if the input string is valid.判断括号的闭合是否合法。
 - [Merge Two Sorted Lists](Easy/Merge%20Two%20Sorted%20Lists.md)。Merge the two lists in a one sorted list. The list should be made by splicing together the nodes of the first two lists.Return the head of the merged linked list.合并两个已排序的单向链表。
-
+- [Remove Duplicates from Sorted Array](Easy/Remove%20Duplicates%20from%20Sorted%20Array.md)。Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that each unique element appears only once. The relative order of the elements should be kept the same. The result should be placed in the first part of the array nums. More formally, if there are k elements after removing the duplicates, then the first k elements of nums should hold the final result. It does not matter what you leave beyond the first k elements.Return k after placing the final result in the first k slots of nums.Do not allocate extra space for another array. You must do this by modifying the input array in-place with O(1) extra memory.去除数组重复的值，返回去重后数组的长度，同时修改参数nums传入的数组。
