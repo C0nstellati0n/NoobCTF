@@ -378,3 +378,14 @@ function myFunction() {
 97. [OSINT思维导图](https://osintframework.com/)。
 98. 某些电子邮件的密码可能在[pastebin](https://pastebin.com/)泄露。
 99. [Fish](https://esolangs.org/wiki/Fish)编程语言+[解释器](https://gist.github.com/anonymous/6392418)。例题:[Flowers](https://github.com/ZorzalG/the-big-MHSCTF2023-writeups/blob/main/Flowers.md)
+100. Powershell命令历史存储于ConsoleHost_history.txt。
+101. volatility3使用。关于volatility的教程大多都是python2的，记录一些平时看到的命令。
+
+- python3 vol.py -f Memdump.raw windows.filescan.FileScan
+  > 搜寻Memdump.raw中的文件,会给出文件对应的偏移
+- python3 vol.py -f Memdump.raw windows.dumpfiles.DumpFiles --virtaddr 0xc88f21961af0
+  > 根据文件偏移提取文件
+- python3 vol.py -f mem.raw windows.cmdline.CmdLine
+  > cmd中运行的命令
+
+102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。

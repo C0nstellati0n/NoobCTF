@@ -402,3 +402,81 @@ with open('libvalidate.so', 'rb') as f:
 for i in res:
 	print(chr(i),end='')
 ```
+
+64. 利用侧信道攻击（Side-channel attacks）巧解vm逆向题。例题:[More Control](https://gynvael.coldwind.pl/?lang=en&id=763),以下是学习到的一些技巧
+
+- 缺少按位或字节码，因为大部分固定用时比较算法都会用上按位或。当然也有少部分会用按位与和ADD，这些都没有就要注意是否有侧信道攻击。
+- 对于去除符号的文件，确定虚拟机主循环通常是比较困难的事。可以用gdb打开文件，在输入处按ctrl+c强制退出，到gdb调试界面后用where就能知道自己在哪了。
+
+```
+$ gdb -q ./main
+Reading symbols from ./main...
+(No debugging symbols found in ./main)
+(gdb) r ext.bin
+Starting program: main ext.bin
+Give flag: ^C
+Program received signal SIGINT, Interrupt.
+0x00007ffff7e54992 in __GI___libc_read ...
+(gdb) where
+#0  0x00007ffff7e54992 in __GI___libc_read ...
+#1  0x000055555541b42d in ?? ()
+#2  0x000055555541b2e2 in ?? ()
+#3  0x000055555541c2c0 in ?? ()
+#4  0x0000555555407c04 in ?? ()
+#5  0x0000555555407fc3 in ?? ()
+#6  0x00005555554087a9 in ?? ()
+#7  0x0000555555419dae in ?? ()
+#8  0x0000555555407fb2 in ?? ()
+#9  0x00007ffff7d69d90 in __libc_start_call_main ...
+#10 0x00007ffff7d69e40 in __libc_start_main_impl ...
+#11 0x000055555540743a in ?? ()
+```
+
+- 简单的patch脚本。
+
+```python
+#!/usr/bin/python
+import os
+
+with open("main", "rb") as f:
+  d = bytearray(f.read())
+
+os.system("nasm patch.nasm")
+
+with open("patch", "rb") as f:
+  patch = f.read()
+
+while len(patch) < 3 + 6:
+  patch += b'\x90'
+
+assert len(patch) == 9
+
+# File offset for 0x107a5f default virtual address is 0x7a5f.
+d[0x7a5f:0x7a5f+9] = patch
+
+# Output executable will be called ./brute
+with open("brute", "wb") as f:
+  f.write(d)
+```
+
+- 基于侧信道攻击（时间）的简单自动脚本。
+
+```python
+#!/usr/bin/env python3
+import string, shlex, sys
+from subprocess import Popen, PIPE
+cmd = 'perf stat -r 25 -x, -e instructions:u %s ' % sys.argv[1]
+key = ''
+while True:
+ maximum = 0,0
+ for i in string.printable:
+ c = cmd + shlex.quote(key+i) + ' >/dev/null'
+ _, stdout = Popen(c, stderr=PIPE, shell=True).communicate()
+ nb_instructions = int(stdout.decode('utf-8').split(',')[0])
+ if nb_instructions > maximum[0]:
+ maximum = nb_instructions, i
+ key += maximum[1]
+ print(key)
+```
+
+- 一个记录海量技巧的[pdf](https://pagedout.institute/download/PagedOut_001_beta1.pdf)。
