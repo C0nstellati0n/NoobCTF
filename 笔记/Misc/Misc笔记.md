@@ -377,3 +377,4 @@ function myFunction() {
 
 97. [OSINT思维导图](https://osintframework.com/)。
 98. 某些电子邮件的密码可能在[pastebin](https://pastebin.com/)泄露。
+99. [Fish](https://esolangs.org/wiki/Fish)编程语言+[解释器](https://gist.github.com/anonymous/6392418)。例题:[Flowers](https://github.com/ZorzalG/the-big-MHSCTF2023-writeups/blob/main/Flowers.md)
