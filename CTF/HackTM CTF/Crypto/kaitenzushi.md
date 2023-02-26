@@ -94,14 +94,14 @@ x1, x2, y1, y2
 
 $x_1^2+ey_1^2=x_2^2+ey_2^2=p\*q$<br>
 $e=\frac{-x_1^2}{y_1^2}=\frac{-x_2^2}{y_2^2}=p\*q=n$<br>
-$\frac{-x_1^2}{y_1^2}-\frac{-x_2^2}{y_2^2}=n$<br>
-$\frac{-x_1^2}{y_1^2}+\frac{x_2^2}{y_2^2}=n$<br>
-$(\frac{x_2}{y_2})^2-(\frac{x_1}{y_1})^2=n$<br>
-$\left(\frac{x_2}{y_2}+\frac{x_1}{y_1}\right)\left(\frac{x_2}{y_2}-\frac{x_1}{y_1}\right)=n$
+$\frac{-x_1^2}{y_1^2}-\frac{-x_2^2}{y_2^2}=0$<br>
+$\frac{-x_1^2}{y_1^2}+\frac{x_2^2}{y_2^2}=0$<br>
+$(\frac{x_2}{y_2})^2-(\frac{x_1}{y_1})^2=0$<br>
+$\left(\frac{x_2}{y_2}+\frac{x_1}{y_1}\right)\left(\frac{x_2}{y_2}-\frac{x_1}{y_1}\right)=0$
 
 （我这里得出来的结果和wp的不一样，可能两者是相等的还是我算错了？）
 
-$\left(\frac{x_2}{y_2}-\frac{x_1}{y_1}\right)\not ={p,q}$ ，所以我们只能尝试用gcd找出p和q。
+我们可以尝试用gcd找出p和q。
 
 ```python
 p = int(gcd(n, x1*y2-x2*y1)) #用我算出来的p = int(gcd(n, x2*y1-x1*y2))也行，或者用另一个式子p = int(gcd(n, x2*y1+x1*y2))也行
