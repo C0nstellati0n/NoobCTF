@@ -293,3 +293,9 @@ int main() {
 ```
 
 print函数可正常使用。
+
+40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
+
+```python
+p=remote("trellixhax-free-yo-radicals-part-i.chals.io",443,ssl=True)
+```
