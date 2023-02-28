@@ -4,9 +4,9 @@
 
 我把智能合约题也归到web里了，web3怎么不算web呢ʕ •ᴥ•ʔ？当然我对智能合约一窍不通，所以此为[wp](https://www.youtube.com/watch?v=poqu6STdkOE)的笔记。
 
-首先来看看Setup.sol(markdown好像不支持solidity这门语言的高亮）。
+首先来看看Setup.sol(markdown好像不支持solidity这门语言的高亮，所以我用的是js的）。
 
-```
+```js
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.13;
@@ -45,7 +45,7 @@ contract Setup {
 
 为什么这里要把控制权转给我们？看Knight.sol。
 
-```
+```js
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.13;
@@ -208,7 +208,7 @@ contract Knight is Ownable {
 
 接下来我们看Shop.sol，看看装备的两个item都是什么。
 
-```
+```js
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.13;
@@ -300,7 +300,7 @@ contract Shop {
 
 是时候去bank.sol看看了，这个文件也是主要的漏洞点。
 
-```
+```js
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.13;
@@ -417,7 +417,7 @@ contract Bank {
 
 所以BankNote是什么？看BankNote.sol。
 
-```
+```js
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.13;
@@ -441,7 +441,7 @@ contract BankNote is ERC721, Ownable {
 
 Item.sol和BankNote.sol差不多。
 
-```
+```js
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.13;
@@ -467,7 +467,7 @@ contract Item is ERC1155, Ownable {
 
 选用bank的split函数作为跳板。
 
-```
+```js
 //举个该函数的例子。假设我们的bankNoteIdFrom是1，价值10，然后我们想将其分为5和5。
 //最开始是1:10
 //执行后是1:0;2:5;3:5
@@ -492,13 +492,13 @@ function split(uint bankNoteIdFrom, uint[] memory amounts) external {
     }
 ```
 
-为什么选它呢？首先是因为里面调用了bankNote.mint，但更重要的是它在调用mint之后才调用了burn销毁split前的id。这正是重入攻击的一个典型特征——先操作后改状态。此题我们将Re-Entrancy Attack搭配[fastLoan](https://www.coindesk.com/learn/what-is-a-flash-loan/)。我在注释里写的例子是正常情况下的执行结果，但是如果是不正常的情况呢？我们的bankNoteIdFrom还是1，但价值是0。接着将其分割为2000000和0。我们自己过一遍函数的执行过程。首先require语句没问题，1号note确实是我们自己的。接着遍历amounts数组，取出每个amount的value，这里是2000000。然后_ids增加，创建出一个新的bankNote，转账给msg.sender（此处执行我们的回调函数）。接着赋值bankNoteValues value，totalValue累加，两者的值都是2000000。接着for循环进入第二轮，一切照旧只不过value是0。注意，此时调用bankNote.mint就出问题了，我们之前那个价值2000000的bankNote还在呢，是不是意味着我们可以在回调函数里用这个bankNote了？
+为什么选它呢？首先是因为里面调用了bankNote.mint，但更重要的是它在调用mint之后才调用了burn销毁split前的id。这正是重入攻击的一个典型特征——先操作后改状态。此题我们将Re-Entrancy Attack搭配类似于[fastLoan](https://www.coindesk.com/learn/what-is-a-flash-loan/)的操作。我在注释里写的例子是正常情况下的执行结果，但是如果是不正常的情况呢？我们的bankNoteIdFrom还是1，但价值是0。接着将其分割为2000000和0。我们自己过一遍函数的执行过程。首先require语句没问题，1号note确实是我们自己的。接着遍历amounts数组，取出每个amount的value，这里是2000000。然后_ids增加，创建出一个新的bankNote，转账给msg.sender（此处执行我们的回调函数）。接着赋值bankNoteValues value，totalValue累加，两者的值都是2000000。接着for循环进入第二轮，一切照旧只不过value是0。注意，此时调用bankNote.mint就出问题了，我们之前那个价值2000000的bankNote还在呢，是不是意味着我们可以在回调函数里用这个bankNote了？
 
 想想我们要干什么。首先买那两个极品装备，然后装在knight身上，把龙杀掉。但还没完。split函数在for循环结束后还有个require，里面会检查totalValue是否等于bankNoteIdFrom的value，而我们肯定是不符合这个条件的。soliduty里的合约状态在函数执行完成后才会存储，中间因为require断掉后一切就重来了，龙白杀了。所以我们在杀完龙后要把两件装备卖掉，得到2000000，紧接着去bank调用deposit把这2000000存起来，最后再调用bank的transfer函数把2000000转到id为1的最开始的那个bankNote。此时require的条件就为True了。虽然split函数的最后把那2000000销毁了，但是龙已经死了。
 
 最后的问题，我们如何拥有一个bankNote？答案是调用bank的merge函数。
 
-```
+```js
 function merge(uint[] memory bankNoteIdsFrom) external {
         uint totalValue;
 
