@@ -468,15 +468,26 @@ from subprocess import Popen, PIPE
 cmd = 'perf stat -r 25 -x, -e instructions:u %s ' % sys.argv[1]
 key = ''
 while True:
- maximum = 0,0
- for i in string.printable:
- c = cmd + shlex.quote(key+i) + ' >/dev/null'
- _, stdout = Popen(c, stderr=PIPE, shell=True).communicate()
- nb_instructions = int(stdout.decode('utf-8').split(',')[0])
- if nb_instructions > maximum[0]:
- maximum = nb_instructions, i
- key += maximum[1]
- print(key)
+  maximum = 0,0
+  for i in string.printable:
+  c = cmd + shlex.quote(key+i) + ' >/dev/null'
+  _, stdout = Popen(c, stderr=PIPE, shell=True).communicate()
+  nb_instructions = int(stdout.decode('utf-8').split(',')[0])
+  if nb_instructions > maximum[0]:
+    maximum = nb_instructions, i
+    key += maximum[1]
+  print(key)
 ```
 
 - 一个记录海量技巧的[pdf](https://pagedout.institute/download/PagedOut_001_beta1.pdf)。
+
+65. gdb使用。
+
+- starti <参数>
+  > 无论程序去除符号与否，该命令都能保证在程序的开始断下。可以传入参数。
+- info file
+  > 查看文件信息，可用于获取文件加载基址
+- x/i $pc
+  > 查看当前地址的字节码的反汇编结果
+- layout asm
+  > 打开反汇编窗口
