@@ -16,3 +16,4 @@
 - [Length of Last Word](Easy/Length%20of%20Last%20Word.md).Given a string s consisting of words and spaces, return the length of the last word in the string.给定一个包含单词和空格的字符串，返回最后一个单词的长度。
 - [Plus One](Easy/Plus%20One.md).You are given a large integer represented as an integer array digits, where each digits[i] is the ith digit of the integer. The digits are ordered from most significant to least significant in left-to-right order.Increment the large integer by one and return the resulting array of digits.给定一个数组表示的数字，从左至右为高位到低位，返回加一后的数字的数组表达形式。
 - [Add Binary](Easy/Add%20Binary.md).Given two binary strings a and b, return their sum as a binary string.给出两个数组表示的二进制字符串，返回两者相加的二进制结果的数组形式。
+- [Sqrt(x)](Easy/Sqrt(x).md).Given a non-negative integer x, return the square root of x rounded down to the nearest integer. The returned integer should be non-negative as well. You must not use any built-in exponent function or operator.自己实现一个开方算法，不能使用语言自带的函数
