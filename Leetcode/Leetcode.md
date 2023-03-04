@@ -18,3 +18,4 @@
 - [Add Binary](Easy/Add%20Binary.md).Given two binary strings a and b, return their sum as a binary string.给出两个数组表示的二进制字符串，返回两者相加的二进制结果的数组形式。
 - [Sqrt(x)](Easy/Sqrt(x).md).Given a non-negative integer x, return the square root of x rounded down to the nearest integer. The returned integer should be non-negative as well. You must not use any built-in exponent function or operator.自己实现一个开方算法，不能使用语言自带的函数。binary search。
 - [Climbing Stairs](Easy/Climbing%20Stairs.md).You are climbing a staircase. It takes n steps to reach the top.Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?爬n阶楼梯，1次可以走2步或者1步，问有多少种爬法？记忆递归，动态规划（Dynamic Programming）以及dp的空间优化形式。
+- [Remove Duplicates from Sorted List](Easy/Remove%20Duplicates%20from%20Sorted%20List.md).Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well.从已排序的单向链表中移除重复元素
