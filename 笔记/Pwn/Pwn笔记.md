@@ -305,3 +305,34 @@ p=remote("trellixhax-free-yo-radicals-part-i.chals.io",443,ssl=True)
 41. pwndbg[使用](https://www.cnblogs.com/murkuo/p/15965270.html)。
 42. 算libc的偏移不一定要用有libc.sym能查到的符号偏移。可以开启gdb，随便选一个libc中的地址，然后查看libc基址。地址-基址就是固定偏移，就算泄露出来的地址不是libc中的一个符号，再次启动获取地址并减去之前算好的偏移仍然可以算出基址。
 43. 栈地址（64位）一般以0x7fff开头；libc地址一般以0x7f开头。
+44. gdb调试脚本。
+
+```python
+from pwn import *
+context.log_level='debug'
+p=process("gdb")
+sla=lambda d,payload:p.sendlineafter(d,payload)
+ia=lambda:p.interactive()
+ra=lambda timeout=0.5:p.recvall(timeout=timeout)
+rl=lambda keep=False:p.recvline(keepends=keep)
+sl=lambda payload:p.sendline(payload)
+rls=lambda line:p.recvlines(line)
+def PIEDebug(file,breakpoints):
+    sla("(gdb)",f"file {file}")
+    sla("(gdb)","starti")
+    sla("(gdb)","info proc mappings")
+    base=int(rls(5)[4].split(b'0x')[1][:-1],16)
+    for i in breakpoints:
+        sla("(gdb)",f"b *{base+i}")
+    sla("(gdb)","c")
+def Debug(file,breakpoints):
+    sla("(gdb)",f"file {file}")
+    for i in breakpoints:
+        sla("(gdb)",f"b *{i}")
+    sla("(gdb)",f"r")
+def test_format_string(times,start=0):
+    payload=''
+    for i in range(start,times):
+        payload+=f'{i}:%{i}$p '
+    return payload
+```
