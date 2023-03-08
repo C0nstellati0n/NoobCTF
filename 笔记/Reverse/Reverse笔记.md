@@ -480,3 +480,11 @@ while True:
 ```
 
 - 一个记录海量技巧的[pdf](https://pagedout.institute/download/PagedOut_001_beta1.pdf)。
+
+65. [snek](../../CTF/LA%20CTF/Reverse/snek.md).
+
+- 可利用pickletools反编译pickle序列化对象
+- pickle opcodes简单解释器
+- code object（CodeType）可用dis.dis反编译
+- 可重写常用函数（例如print）插入pdb断点。进入pdb调试界面后，可用inspect模块检查当前栈帧，返回上一栈帧，获取当前栈帧的code object等
+- 可将code object类型写为pyc文件后使用反编译器反编译（python3.10）
