@@ -5,6 +5,7 @@
 这题是合并两个已排序的列表。本来想着不难，最多实现丑陋一点。结果再仔细一看，不是列表，是单向列表，题目自己定义的。然后就有点难受，也不是说不能写，就是会很难看，程序内部需要判断是否为null的地方太多了。于是找到了一个比较简洁的算法，使用递归。
 
 ```c#
+//这个定义我只放一次
 /**
  * Definition for singly-linked list.
  * public class ListNode {
@@ -46,17 +47,6 @@ Beats
 很容易想到的思路是创建一个res，然后判断list1和list2的值，谁小就把谁加进res。递归的做法是全程不创建新ListNode，就判断参数list1和list2，覆盖原有的next为更小的ListNode。一层一层往下覆盖，完成后返回到第一层，此时第一层的next已经完成全部排序了。不递归也行，就是下面这种：
 
 ```c#
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     public int val;
- *     public ListNode next;
- *     public ListNode(int val=0, ListNode next=null) {
- *         this.val = val;
- *         this.next = next;
- *     }
- * }
- */
 public class Solution {
     public ListNode MergeTwoLists(ListNode list1, ListNode list2) {
         //If list1 is null means list2 is already sorted
