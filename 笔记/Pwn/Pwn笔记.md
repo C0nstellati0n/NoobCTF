@@ -303,6 +303,10 @@ print函数可正常使用。
 p=remote("trellixhax-free-yo-radicals-part-i.chals.io",443,ssl=True)
 ```
 
-41. pwndbg[使用](https://www.cnblogs.com/murkuo/p/15965270.html)。
-42. 算libc的偏移不一定要用有libc.sym能查到的符号偏移。可以开启gdb，随便选一个libc中的地址，然后查看libc基址。地址-基址就是固定偏移，就算泄露出来的地址不是libc中的一个符号，再次启动获取地址并减去之前算好的偏移仍然可以算出基址。
-43. 栈地址（64位）一般以0x7fff开头；libc地址一般以0x7f开头。
+41. pwndbg[使用](https://www.cnblogs.com/murkuo/p/15965270.html)。自己再加点补充。
+
+- stack \<num\>
+  > 指定查看多少栈内容，直接stack查看的栈帧是不完整的
+
+41. 算libc的偏移不一定要用有libc.sym能查到的符号偏移。可以开启gdb，随便选一个libc中的地址，然后查看libc基址。地址-基址就是固定偏移，就算泄露出来的地址不是libc中的一个符号，再次启动获取地址并减去之前算好的偏移仍然可以算出基址。
+42. 栈地址（64位）一般以0x7fff开头；libc地址一般以0x7f开头。
