@@ -611,3 +611,4 @@ print(plaintext)
 22. lfsr爆破mask。例题:[LittLe_FSR](../../CTF/moectf/Crypto/LittLe_FSR.md)
 23. [Schmidt-Samoa 密码体系](https://www.ruanx.net/schmidt-samoa/)。
 24. 求斐波那契数列大数取模值可利用[皮萨诺周期](https://blog.csdn.net/caozhk/article/details/53407845)。例题:[[INSHack2019]Crunchy](https://www.bilibili.com/read/cv13950329)
+25. [希尔密码](https://hstar.me/2020/08/hill-cipher-study/)（hill cipher，线性替换密码）。例题：[hill-hard](../../CTF/LA%20CTF/Crypto/hill-hard.md)

