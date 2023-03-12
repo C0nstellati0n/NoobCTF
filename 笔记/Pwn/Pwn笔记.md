@@ -312,3 +312,17 @@ p=remote("trellixhax-free-yo-radicals-part-i.chals.io",443,ssl=True)
 
 41. 算libc的偏移不一定要用有libc.sym能查到的符号偏移。可以开启gdb，随便选一个libc中的地址，然后查看libc基址。地址-基址就是固定偏移，就算泄露出来的地址不是libc中的一个符号，再次启动获取地址并减去之前算好的偏移仍然可以算出基址。
 42. 栈地址（64位）一般以0x7fff开头；libc地址一般以0x7f开头。
+43. [stuff](../../CTF/LA%20CTF/Pwn/stuff.md).
+- double read(利用fread，gets等函数+leave;ret gadget的多次栈迁移)，在无可控制参数寄存器(pop rdi)的情况使用。主要利用了fread末尾的gadget：
+
+```
+   0x00007ffff7a9aa9d <+205>:  add    rsp,0x8
+   0x00007ffff7a9aaa1 <+209>:  mov    rax,rbx
+   0x00007ffff7a9aaa4 <+212>:  pop    rbx
+   0x00007ffff7a9aaa5 <+213>:  pop    rbp
+   0x00007ffff7a9aaa6 <+214>:  pop    r12
+   0x00007ffff7a9aaa8 <+216>:  pop    r13
+   0x00007ffff7a9aaaa <+218>:  ret 
+```
+
+可控制rbx和rbp。配合`add    dword ptr [rbp - 0x3d], ebx`这个gadget实现更改got表。关键在于第二次fread的buf指针指向上一次fread迁移的栈的上方，即可任意控制栈顶。
