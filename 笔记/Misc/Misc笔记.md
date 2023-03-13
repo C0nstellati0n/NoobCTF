@@ -391,3 +391,11 @@ function myFunction() {
   > 显示windows镜像信息
 
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。
+103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
+
+- 分析end to end（e2e）加密（HTTPS，TLS）pcapng
+- TLS的握手报文会传输hostname信息（[SNI](https://www.cloudflare.com/zh-cn/learning/ssl/what-is-sni/)），可用`tls.handshake.extensions_server_name`过滤。
+- 获取TLS密钥后，可用`tls and (http or http2)`过滤出解密后的报文。
+- AES-256的密钥长度为32字节。
+  
+104. git命令更改config，使用制定用户的身份推送远程库。例题:[new-challenge](../../CTF/LA%20CTF/Misc/new-challenge.md)

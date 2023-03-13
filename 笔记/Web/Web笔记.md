@@ -814,7 +814,7 @@ method: 'POST',body:btoa(data)}));
 ```
 
 141. js中的type juggling。审查源码时，可能会发现服务器期望输入变量是字符串等简单类型，但如果没有对变量做严格过滤，或是使用了express的`express.urlencoded()`（其extended属性默认接受复杂类型），就可以尝试攻击，比如改成数组之类的。例题:[queue up!](https://github.com/sambrow/ctf-writeups/blob/main/2023/la-ctf/queue-up.md)
-142. 当xss代码以innerHTML形式插入时，浏览器不会执行这样的代码。可以用`<img/src=1 onerror=function()>`替代。
+142. 当xss代码以innerHTML形式插入时，浏览器不会执行这样的代码。可以用`<img/src=1 onerror=function()>`或`<iframe>`替代。`<iframe>`有个srcdoc属性，里面的内容会被当作html执行。这种解法可在[这里](https://hackmd.io/@lamchcl/r1zQkbvpj#webhptla)找到。
 143. js的多行注释/\*\*/可用于绕过滤和跨多行执行xss，不过要注意，多行注释不要用在js关键字中间，例如`win/**/dow`。因为js会把/\*\*/解释为空格，window就失效了。例题:[hptla](https://blog.jaquiez.dev/Blog/LACTF2023/#hptla)
 144. typescript+ssrf。例题:[[2021祥云杯]secrets_of_admin](https://blog.csdn.net/weixin_46081055/article/details/123959252)。此题的知识点：
 
@@ -933,4 +933,11 @@ $('#ajax-load').load('/ajax/articles?cat=news');
 在[ctf wiki](https://ctf-wiki.org/blockchain/ethereum/basics/#txorigin-vs-msgsender)看见了msg.sender的详细解释。msg.sender 是函数的直接调用方，在用户手动调用该函数时是发起交易的账户地址，但也可以是调用该函数的一个智能合约的地址。给定这样一个场景，如用户通过合约 A 调合约 B，此时对于合约 A : msg.sender 是用户；对于合约 B : msg.sender 是合约 A
 
 154. [Tor](https://zh.wikipedia.org/zh-cn/Tor)可以访问以onion结尾的网站。例题:[Hash Browns](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4)
-155. onERC721Received回调函数可能触发[Re-Entrancy Attack](https://steemit.com/cn/@chenlocus/reentrancy)（重入攻击，特征为先操作后改状态）+js/python释放合约。例题:[Dragon Slayer](../../CTF/HackTM%20CTF/Web/Dragon%20Slayer.md)
+155. onERC721Received回调函数可能触发[Re-Entrancy Attack](https://steemit.com/cn/@chenlocus/reentrancy)（重入攻击，特征为先操作后改状态）+js/python释放合约。例题:[Dragon Slayer](../../CTF/HackTM%20CTF/Web/Dragon%20Slayer.md)。
+156. [zero-trust](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/web/zero-trust/README.md)
+- AES-256-[GCM](https://zh.wikipedia.org/wiki/%E4%BC%BD%E7%BD%97%E7%93%A6/%E8%AE%A1%E6%95%B0%E5%99%A8%E6%A8%A1%E5%BC%8F)(带认证的AES加密)正确使用可防止密文篡改，此题演示了一种错误使用方式：使用decipher.setAuthTag()后却不使用decipher.final()（参考Node.js的[Crypto](https://nodejs.org/api/crypto.html#decipherfinaloutputencoding)模块）。setAuthTag()函数设置一个tag，在最后使用final函数时如果没有提供一样的tag或者密文被篡改，就会报错。
+- AES-256-GCM按128位分块。这题已知部分密文对应的明文，就可以用明文异或密文获取部分加密时的key。此时就能用这小部分key篡改密文了。
+157. [evmvm](../../CTF/LA%20CTF/Web/evmvm.md).
+- EVM虚拟机[opcode](https://www.evm.codes/?fork=merge)
+- solidity [assembly](https://docs.soliditylang.org/en/v0.8.19/assembly.html)内部的语言是[yul](https://docs.soliditylang.org/en/v0.8.17/yul.html)。
+- [GAS](https://zhuanlan.zhihu.com/p/34960267)，[calldata](https://www.oreilly.com/library/view/solidity-programming-essentials/9781788831383/f958b119-5a8d-4050-ad68-6422d10a7655.xhtml)和[function selector](https://solidity-by-example.org/function-selector/)等概念
