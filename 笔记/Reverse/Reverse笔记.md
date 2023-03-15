@@ -24,6 +24,7 @@
 18. 鼠标选中一片区域再按p可以生成函数，然后f5生成伪代码。该操作常用于最开始因为花指令反编译失败的函数。例题:[findKey](../../CTF/BUUCTF/Reverse/findKey.md)
 19. ida默认无法反编译过大的函数，要将ida /ctg目录下的hexrays.cfg文件中的MAX_FUNCSIZE=64 改为 MAX_FUNCSIZE=1024后才能正常反编译。
 20. idc脚本基础使用（解密简单自加密函数）。例题:[[GWCTF 2019]re3](../../CTF/BUUCTF/Reverse/[GWCTF%202019]re3.md)
+21. 菜单栏Search->Search immediate可搜寻汇编里的立即操作数，例如`add ptr 3`里面的3。勾选Find All Occurences可一次性列出全部出现位置。有时候利用这一点可以走捷径。例如一个贪吃蛇游戏，每次吃到东西后速度都会+3。这时就能直接搜寻这个3，patch成0就能让游戏变得很简单。
 
 ## Jadx使用
 

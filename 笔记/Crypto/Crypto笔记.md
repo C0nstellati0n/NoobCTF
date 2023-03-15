@@ -57,7 +57,7 @@ def decrypt(e1,e2,n,c1,c2):
         c2 = invert(c2, n)
     m = pow(c1,s1,n)*pow(c2,s2,n) % n
     return long_to_bytes(m)
-n=785095419718268286866508214304816985447077293766819398728046411166917810820484759314291028976498223661229395009474063173705162627037610993539617751905443039278227583504604808251931083818909467613277587874545761074364427549966555519371913859875313577282243053150056274667798049694695703660313532933165449312949725581708965417273055582216295994587600975970124811496270080896977076946000102701030260990598181466447208054713391526313700681341093922240317428173599031624125155188216489476825606191521182034969120343287691181300399683515414809262700457525876691808180257730351707673660380698973884642306898810000633684878715402823143549139850732982897459698089649561190746850698130299458080255582312696873149210028240898137822888492559957665067936573356367589784593119016624072433872744537432005911668494455733330689385141214653091888017782049043434862620306783436169856564175929871100669913438980899219579329897753233450934770193915434791427728636586218049874617231705308003720066269312729135764175698611068808404054125581540114956463603240222497919384691718744014002554201602395969312999994159599536026359879060218056496345745457493919771337601177449899066579857630036350871090452649830775029695488575574985078428560054253180863725364147
+n=0
 with open("HUB1",'r') as f:
     c1=f.read().split('\n')[3:]
 with open("HUB2",'r') as f:
@@ -175,6 +175,25 @@ def smallEattack(c, e, n):
 ```
 
 - Franklin-Reiter相关信息攻击巧解给出d，phi密文，m非常大，e很小的题目。例题:[d-phi-enc](../../CTF/HackTM%20CTF/Crypto/d-phi-enc.md)
+- 获得d后可用Cryptodome库获取p和q。
+
+```python
+from Crypto.Util.number import *
+from Crypto.PublicKey import RSA
+from pwn import xor
+
+n = 0
+e = 65537
+d = 0
+ciphertext = "x"
+
+p = RSA.construct((n, e, d)).p
+q = n//p
+
+key = xor(long_to_bytes(p), long_to_bytes(q)) #pwn的xor函数无需两个字符串相同长度
+plaintext = xor(bytes.fromhex(ciphertext), key).decode()
+print(plaintext)
+```
 
 1. Crypto库根据已有信息构建私钥并解密
 
@@ -186,10 +205,10 @@ import gmpy2
 import base64
 from Crypto.Util.number import *
 from Crypto.Cipher import PKCS1_OAEP
-n=79832181757332818552764610761349592984614744432279135328398999801627880283610900361281249973175805069916210179560506497075132524902086881120372213626641879468491936860976686933630869673826972619938321951599146744807653301076026577949579618331502776303983485566046485431039541708467141408260220098592761245010678592347501894176269580510459729633673468068467144199744563731826362102608811033400887813754780282628099443490170016087838606998017490456601315802448567772411623826281747245660954245413781519794295336197555688543537992197142258053220453757666537840276416475602759374950715283890232230741542737319569819793988431443
+n=0
 e=65537
 p=3133337
-q=25478326064937419292200172136399497719081842914528228316455906211693118321971399936004729134841162974144246271486439695786036588117424611881955950996219646807378822278285638261582099108339438949573034101215141156156408742843820048066830863814362379885720395082318462850002901605689761876319151147352730090957556940842144299887394678743607766937828094478336401159449035878306853716216548374273462386508307367713112073004011383418967894930554067582453248981022011922883374442736848045920676341361871231787163441467533076890081721882179369168787287724769642665399992556052144845878600126283968890273067575342061776244939
+q=0
 phi=(p-1)*(q-1)
 d=gmpy2.invert(e,phi)
 text='GVd1d3viIXFfcHapEYuo5fAvIiUS83adrtMW/MgPwxVBSl46joFCQ1plcnlDGfL19K/3PvChV6n5QGohzfVyz2Z5GdTlaknxvHDUGf5HCukokyPwK/1EYU7NzrhGE7J5jPdi0Aj7xi/Odxy0hGMgpaBLd/nL3N8O6i9pc4Gg3O8soOlciBG/6/xdfN3SzSStMYIN8nfZZMSq3xDDvz4YB7TcTBh4ik4wYhuC77gmT+HWOv5gLTNQ3EkZs5N3EAopy11zHNYU80yv1jtFGcluNPyXYttU5qU33jcp0Wuznac+t+AZHeSQy5vk8DyWorSGMiS+J4KNqSVlDs12EqXEqqJ0uA=='
@@ -435,7 +454,7 @@ def break_single_key_xor(text):
 salt = "WeAreDe1taTeam"
 si = cycle(salt)
 b = unhexlify(
-    b'49380d773440222d1b421b3060380c3f403c3844791b202651306721135b6229294a3c3222357e766b2f15561b35305e3c3b670e49382c295c6c170553577d3a2b791470406318315d753f03637f2b614a4f2e1c4f21027e227a4122757b446037786a7b0e37635024246d60136f7802543e4d36265c3e035a725c6322700d626b345d1d6464283a016f35714d434124281b607d315f66212d671428026a4f4f79657e34153f3467097e4e135f187a21767f02125b375563517a3742597b6c394e78742c4a725069606576777c314429264f6e330d7530453f22537f5e3034560d22146831456b1b72725f30676d0d5c71617d48753e26667e2f7a334c731c22630a242c7140457a42324629064441036c7e646208630e745531436b7c51743a36674c4f352a5575407b767a5c747176016c0676386e403a2b42356a727a04662b4446375f36265f3f124b724c6e346544706277641025063420016629225b43432428036f29341a2338627c47650b264c477c653a67043e6766152a485c7f33617264780656537e5468143f305f4537722352303c3d4379043d69797e6f3922527b24536e310d653d4c33696c635474637d0326516f745e610d773340306621105a7361654e3e392970687c2e335f3015677d4b3a724a4659767c2f5b7c16055a126820306c14315d6b59224a27311f747f336f4d5974321a22507b22705a226c6d446a37375761423a2b5c29247163046d7e47032244377508300751727126326f117f7a38670c2b23203d4f27046a5c5e1532601126292f577776606f0c6d0126474b2a73737a41316362146e581d7c1228717664091c')
+    b'hex')
 plain = ''.join([hex(ord(c) ^ ord(next(si)))[2:].zfill(2) for c in b.decode()])
 b = unhexlify(plain)
 print(plain)
@@ -612,3 +631,131 @@ print(plaintext)
 23. [Schmidt-Samoa 密码体系](https://www.ruanx.net/schmidt-samoa/)。
 24. 求斐波那契数列大数取模值可利用[皮萨诺周期](https://blog.csdn.net/caozhk/article/details/53407845)。例题:[[INSHack2019]Crunchy](https://www.bilibili.com/read/cv13950329)
 25. [希尔密码](https://hstar.me/2020/08/hill-cipher-study/)（hill cipher，线性替换密码）。例题：[hill-hard](../../CTF/LA%20CTF/Crypto/hill-hard.md)
+26. [subgroup confinement attack on Diffie-Hellman](https://crypto.stackexchange.com/questions/27584/small-subgroup-confinement-attack-on-diffie-hellman)。链接证明里涉及的[定理](https://github.com/C0nstellati0n/NoobCTF/blob/main/%E7%AC%94%E8%AE%B0/Crypto/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0.md#7-1-2%E5%8D%8A%E7%BE%A4%E4%B8%8E%E7%BE%A43).
+
+[例题及来源](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/crypto/Compromised/writeup.md)
+
+```python
+from hashlib import sha256
+from Crypto.Cipher import AES
+from Crypto.Util.number import long_to_bytes
+from Crypto.Util.Padding import unpad
+
+
+p = "prime"
+g = 65537
+prime_fac = ["factors"]
+w = prime_fac[1]
+k = (p-1)//w
+ct = bytes.fromhex('0123456789abcdef')
+iv = ct[:AES.block_size]
+ct = ct[AES.block_size:]
+
+# generator for subgroup
+sub_gen = pow(g, k, p)
+m = 1
+while m <= w:
+    key = pow(sub_gen, m, p)
+    key = sha256(long_to_bytes(key)).digest()
+    print('Key:', key.hex(), end='\r')
+    aes = AES.new(key, AES.MODE_CBC, iv)
+    try:
+        flag = aes.decrypt(ct)
+        flag = unpad(flag, AES.block_size).decode()
+        if flag.startswith('p_ctf{'):
+            break
+    except ValueError:
+        pass
+    finally:
+        m += 1
+
+print('Key:', key.hex())
+print('Flag:', flag)
+```
+
+27. md5算法的[特性](https://en.wikipedia.org/wiki/MD5#Collision_vulnerabilities)：
+
+```
+if h(a) = h(b),
+then h(a||c) = h(b||c)
+where, a, b and c are strings and || is concatenation
+```
+
+例题：[Broken Hash](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/crypto/BrokenHash/writeup.md)
+
+28. [CustomAESed](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/crypto/customAESed/writeup.md)
+- AES的[CTR模式](https://wumansgy.github.io/2018/11/03/AES%E7%9A%84CTR%E6%A8%A1%E5%BC%8F%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E8%AF%A6%E8%A7%A3/)的模拟加密与解密。
+
+```python
+#解密
+from Crypto.Util import Counter
+from Crypto.Cipher import AES
+from Crypto.Util.number import *
+from Crypto.Util.Padding import unpad
+from hashlib import sha256
+
+ct = "ciphertext"
+iv = ct[:12]
+ct = ct[12:]
+block_size = AES.block_size
+ctr = Counter.new(nbits=32, prefix=iv[:8], suffix=iv[8:], initial_value=1)
+key = sha256("128bit_secretkey".encode()).digest()
+cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
+pt = cipher.decrypt(ct)
+pt = unpad(pt, block_size)
+print(pt.decode())
+```
+
+- 汉明码（[hamming code](https://en.wikipedia.org/wiki/Hamming_code#General_algorithm)）的加密与解密
+
+```python
+from Crypto.Util.number import *
+from math import log2
+
+# pt is same as in above code
+bin_text = pt.decode()
+txt_len = len(bin_text)
+decoded_text = ''
+parity_bits = ''
+n_parity_bits = int(log2(txt_len))+1
+for x in range(n_parity_bits):
+    parity_bit = 0
+    for bit in range(1, txt_len+1):
+        if bit & (2**x) == 2**x:
+            parity_bit ^= int(bin_text[bit-1])
+    parity_bits = str(parity_bit) + parity_bits
+err_pos = int(parity_bits, 2)
+if err_pos != 0:
+    err_bit = '1' if bin_text[err_pos-1]=='0' else '0'
+    bin_text = bin_text[:err_pos-1] + err_bit + bin_text[err_pos:]
+x = 0
+for bit in range(1, txt_len+1):
+    if bit == (2**x):
+        x += 1
+        continue
+    decoded_text += bin_text[bit-1]
+decoded_text = long_to_bytes(int(decoded_text, 2))
+print(decoded_text.decode())
+```
+
+- 获取AES的[GCM](https://en.wikipedia.org/wiki/Galois/Counter_Mode)模式下的GMAC（Galois Message Authentication Code）。使用GCM的AES加密即可获得GMAC。
+
+```python
+from Crypto.Cipher import AES
+from Crypto.Util.number import *
+from hashlib import sha256
+from base64 import b64encode
+
+key = sha256("128bit_secretkey".encode()).digest()
+iv = ""
+cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
+
+# decoded_text is obtained in the above code
+ct, tag = cipher.encrypt_and_digest(decoded_text)
+encoded_tag = b64encode(tag)
+print(encoded_tag.decode())
+```
+
+29. [Blocks and Boxes](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/crypto/Blocks_and_Boxes/writeup.md)
+- propagating cipher block chaining（[PCBC](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Propagating_cipher_block_chaining_(PCBC))）
+- Caesar's box cipher(特征是密文的长度为平方数)
