@@ -399,3 +399,14 @@ function myFunction() {
 - AES-256的密钥长度为32字节。
   
 104. git命令更改config，使用制定用户的身份推送远程库。例题:[new-challenge](../../CTF/LA%20CTF/Misc/new-challenge.md)
+105. MSB（most signficant bit）隐写。将信息藏在RGB颜色分量二进制值的最高位。与[LSB](https://3gstudent.github.io/%E9%9A%90%E5%86%99%E6%8A%80%E5%B7%A7-PNG%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84LSB%E9%9A%90%E5%86%99)不同的是，这种隐写会使图片颜色失真（损坏）。例题:[msb](https://ctftime.org/writeup/16174)，里面有图片颜色失真的例子。可在[stegonline](https://stegonline.georgeom.net/extract)提取。选项设置如下：
+
+```
+R:7
+G:7
+B:7
+Pixel Order:Row
+Bit Order:MSB
+Bit Plane Order:RGB
+Trim Trailing Bits:No
+```

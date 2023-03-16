@@ -759,3 +759,7 @@ print(encoded_tag.decode())
 29. [Blocks and Boxes](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/crypto/Blocks_and_Boxes/writeup.md)
 - propagating cipher block chaining（[PCBC](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Propagating_cipher_block_chaining_(PCBC))）
 - Caesar's box cipher(特征是密文的长度为平方数)
+30. AES侧信道攻击（power trace analysis）。使用相同密钥加密不同已知明文，通过测量CPU的能源消耗推断出密钥（已知密文也可以）。下面为一些相关链接。
+- [Breaking AES with side channel analysis](https://www.youtube.com/watch?v=whhM_P7xMMU)
+- [DPA & CPA applied on AES Attack](https://yan1x0s.medium.com/side-channel-attacks-part-2-dpa-cpa-applied-on-aes-attack-66baa356f03f)
+- [CPA的python实现](https://teamrocketist.github.io/2018/11/14/Crypto-SquareCtf-2018-C4-leaky-power/)。

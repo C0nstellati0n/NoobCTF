@@ -27,4 +27,5 @@
 - [Maximum Depth of Binary Tree](Easy/Maximum%20Depth%20of%20Binary%20Tree.md).Given the root of a binary tree, return its maximum depth. A binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node. 给定一棵二叉树，返回该二叉树的最大深度（根到最远叶子的距离）。
 
 ## Medium
-- [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. A leaf node is a node with no children. 返回全部根节点到子节点路径数字的和。
+- [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
+- [Check Completeness of a Binary Tree](Medium/Check%20Completeness%20of%20a%20Binary%20Tree.md). Given the root of a binary tree, determine if it is a complete binary tree. 检查一个二叉树是不是[完全二叉树](https://zhuanlan.zhihu.com/p/152285749)。BFS/DFS/（遍历/递归）。
