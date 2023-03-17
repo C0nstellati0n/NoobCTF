@@ -29,3 +29,4 @@
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
 - [Check Completeness of a Binary Tree](Medium/Check%20Completeness%20of%20a%20Binary%20Tree.md). Given the root of a binary tree, determine if it is a complete binary tree. 检查一个二叉树是不是[完全二叉树](https://zhuanlan.zhihu.com/p/152285749)。BFS/DFS/（遍历/递归）。
+- [Construct Binary Tree from Inorder and Postorder Traversal](Medium/Construct%20Binary%20Tree%20from%20Inorder%20and.md). Given two integer arrays inorder and postorder where inorder is the inorder traversal of a binary tree and postorder is the postorder traversal of the same tree, construct and return the binary tree. 根据二叉树的中序和后序遍历构造出原本的二叉树。
