@@ -195,6 +195,8 @@ plaintext = xor(bytes.fromhex(ciphertext), key).decode()
 print(plaintext)
 ```
 
+- 根据d和e构造出n:[Calculating RSA Public Modulus from Private Exponent and Public Exponent](https://crypto.stackexchange.com/questions/81615/calculating-rsa-public-modulus-from-private-exponent-and-public-exponent)
+
 1. Crypto库根据已有信息构建私钥并解密
 
 如果给出的是flag.enc和public.key这种形式的题目，平时的方法可能会解出乱码，需要利用私钥文件来解密。

