@@ -31,3 +31,4 @@
 - [Check Completeness of a Binary Tree](Medium/Check%20Completeness%20of%20a%20Binary%20Tree.md). Given the root of a binary tree, determine if it is a complete binary tree. 检查一个二叉树是不是[完全二叉树](https://zhuanlan.zhihu.com/p/152285749)。BFS/DFS/（遍历/递归）。
 - [Construct Binary Tree from Inorder and Postorder Traversal](Medium/Construct%20Binary%20Tree%20from%20Inorder%20and.md). Given two integer arrays inorder and postorder where inorder is the inorder traversal of a binary tree and postorder is the postorder traversal of the same tree, construct and return the binary tree. 根据二叉树的中序和后序遍历构造出原本的二叉树。
 - [Implement Trie (Prefix Tree)](Medium/Implement%20Trie%20(Prefix%20Tree).md). 实现字典树（前缀树）的所有功能。
+- [Design Browser History](Medium/Design%20Browser%20History.md).实现一个浏览器历史记录功能。列表/栈/双向列表做法。
