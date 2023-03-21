@@ -33,3 +33,4 @@
 - [Implement Trie (Prefix Tree)](Medium/Implement%20Trie%20(Prefix%20Tree).md). 实现Trie字典树（前缀树）的所有功能。
 - [Design Browser History](Medium/Design%20Browser%20History.md).实现一个浏览器历史记录功能。列表/栈/双向列表做法。
 - [Design Add and Search Words Data Structure](Medium/Design%20Add%20and%20Search%20Words%20Data%20Struc.md).Trie字典树（前缀树）。
+- [Can Place Flowers](Easy/Can%20Place%20Flowers.md).You have a long flowerbed in which some of the plots are planted, and some are not. However, flowers cannot be planted in adjacent plots.Given an integer array flowerbed containing 0's and 1's, where 0 means empty and 1 means not empty, and an integer n, return if n new flowers can be planted in the flowerbed without violating the no-adjacent-flowers rule.给一个花田和要插花的数量n，要求插的花不能相邻。如果花田能插下n朵花，就返回True；否则返回False。花田用1表示有花，0表示空闲。

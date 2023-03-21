@@ -379,7 +379,7 @@ function myFunction() {
 98. 某些电子邮件的密码可能在[pastebin](https://pastebin.com/)泄露。
 99. [Fish](https://esolangs.org/wiki/Fish)编程语言+[解释器](https://gist.github.com/anonymous/6392418)。例题:[Flowers](https://github.com/ZorzalG/the-big-MHSCTF2023-writeups/blob/main/Flowers.md)
 100. Powershell命令历史存储于ConsoleHost_history.txt。
-101. volatility3使用。关于volatility的教程大多都是volatility2的，记录一些平时看到的命令。
+101. volatility3使用。关于volatility的教程大多都是volatility2的，记录一些平时看到的命令。注意镜像（如img后缀）和内存（如mem）后缀是不同的，工具不能混用。比如volatility就不能用来分析镜像。
 
 - python3 vol.py -f Memdump.raw windows.filescan.FileScan
   > 搜寻Memdump.raw中的文件,会给出文件对应的偏移
@@ -410,3 +410,10 @@ Bit Order:MSB
 Bit Plane Order:RGB
 Trim Trailing Bits:No
 ```
+
+106. linux img镜像挂载。
+
+- [Linux挂载img磁盘镜像文件](https://zhou-yuxin.github.io/articles/2015/Linux%E6%8C%82%E8%BD%BDimg%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6/index.html)
+- [Linux如何挂载img镜像](https://blog.51cto.com/u_3823536/2501563)
+- 
+偏移可用`binwalk xxx.img`获得。挂载镜像后，输入`sudo su`来获取root权限。分析镜像时，`tree`命令可帮助查看目录的结构。挂载镜像后,`.ash_history`文件将不会存储原本镜像的命令，而是挂载者在镜像里输入的命令。因此挂载是无法获取命令历史的。
