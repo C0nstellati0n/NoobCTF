@@ -494,3 +494,7 @@ while True:
 - angr.Project可添加base_addr(`angr.Project("./decode",main_opts={'base_addr': 0x100000})`)以及entry_state的参数(`p.factory.entry_state(args=["./decode",key,data])`)
 - 添加指定地址的内存内容的约束
 - angr介绍[pdf](https://flagbot.ch/lesson5.pdf)
+67. [Reachable Fruit](http://itsvipul.com/writeups/Trellix_Hax_2023/ReachableFruit.html).
+- 固件（firmware）逆向。可使用[firmware-mod-kit](https://github.com/rampageX/firmware-mod-kit)提取出系统。
+- 带有固件版本<= 1.0.02 (build3)的WUMC710 Wireless-AC Universal Media Connector的[命令注入漏洞](https://nvd.nist.gov/vuln/detail/CVE-2022-43971)的利用。
+68. DOS Executable文件可用[DOSBox](https://www.dosbox.com/)运行，并且其内置[调试](https://www.vogons.org/viewtopic.php?t=3944)功能。

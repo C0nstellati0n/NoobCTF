@@ -852,3 +852,15 @@ if bestguess == []:
         key += "%02x"%b
     print("Best Key Guess: %s" % key)
 ```
+31. [Classic Game Theory](http://itsvipul.com/writeups/Trellix_Hax_2023/GameTheory.html)
+- MD5函数的默认初始状态如下：
+
+```
+A = 0x67452301
+B = 0xefcdab89
+C = 0x98badcfe
+D = 0x10325476
+```
+
+如果使用的初始状态不同，md5的结果也会不同。可以通过修改[脚本](https://github.com/Utkarsh87/md5-hashing/blob/master/md5.py)里的初始值来获取自定义的md5函数。
+- 彩虹表攻击（rainbow table attack）。本质上还是爆破出哈希值的全部可能性后查表。
