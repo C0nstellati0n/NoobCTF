@@ -87,6 +87,8 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
 > steghide有时需要密码，可以用[stegseek](https://github.com/RickdeJager/stegseek)破解。
 - [Stegosaurus](https://github.com/AngelKitty/stegosaurus)(pyc文件隐写工具)
 - [DeepSound](http://jpinsoft.net/deepsound/overview.aspx)（音频隐写工具）
+- [stegolsb](https://github.com/ragibson/Steganography).
+> LSB隐写工具，音频图片都可以。
 
 1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)，如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
@@ -417,3 +419,9 @@ Trim Trailing Bits:No
 - [Linux如何挂载img镜像](https://blog.51cto.com/u_3823536/2501563)
 - 
 偏移可用`binwalk xxx.img`获得。挂载镜像后，输入`sudo su`来获取root权限。分析镜像时，`tree`命令可帮助查看目录的结构。挂载镜像后,`.ash_history`文件将不会存储原本镜像的命令，而是挂载者在镜像里输入的命令。因此挂载是无法获取命令历史的。
+
+107. [Nuclearophine](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/Forensics/Nuclearophine/writeup.md)
+- 使用python Scapy库提取udp包数据
+- WAV文件修复。WAV文件的第37-40个字节应为data。
+- stegolsb提取WAV文件内容。
+- [DTMF tones](https://rfmw.em.keysight.com/rfcomms/refdocs/cdma2k/cdma2000_meas_dtmf_desc.html)分析。

@@ -498,3 +498,4 @@ while True:
 - 固件（firmware）逆向。可使用[firmware-mod-kit](https://github.com/rampageX/firmware-mod-kit)提取出系统。
 - 带有固件版本<= 1.0.02 (build3)的WUMC710 Wireless-AC Universal Media Connector的[命令注入漏洞](https://nvd.nist.gov/vuln/detail/CVE-2022-43971)的利用。
 68. DOS Executable文件可用[DOSBox](https://www.dosbox.com/)运行，并且其内置[调试](https://www.vogons.org/viewtopic.php?t=3944)功能。
+69. 对一个文件使用`strings`命令，如果发现大量`esp32`，这可能是CPU类型，对应着xtensa处理器架构。在ida（7.7版本以上）里选择cpu famility为xtensa即可开始反编译。
