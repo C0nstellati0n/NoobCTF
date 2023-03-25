@@ -37,3 +37,4 @@
 - [Number of Zero-Filled Subarrays](Medium/Number%20of%20Zero-Filled%20Subarrays.md).Given an integer array nums, return the number of subarrays filled with 0.给定一个数组，返回数组内只包含0的子数组数量。
 - [Minimum Score of a Path Between Two Cities](Medium/Minimum%20Score%20of%20a%20Path%20Between%20Two%20Ci.md). 给出一个表示城市道路以及其长度的数组，找到城市1-n之间最短的路径。bfs/union find.
 - [Number of Operations to Make Network Connected](Medium/Number%20of%20Operations%20to%20Make%20Network%20C.md). 给出表示电脑之间连接情况的图表，返回将全部电脑连在一次所需的步骤次数。dfs/union find。
+- [Reorder Routes to Make All Paths Lead to the City Zero](Medium/Reorder%20Routes%20to%20Make%20All%20Paths%20Lead%20.md). 给出n个城市的有向单向连接图表，返回需要修改连接方向的道路数，使其全部指向节点0。[邻接表](https://zh.wikipedia.org/wiki/%E9%82%BB%E6%8E%A5%E8%A1%A8)（adjacency list），dfs。
