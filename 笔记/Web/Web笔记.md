@@ -978,3 +978,10 @@ $('#ajax-load').load('/ajax/articles?cat=news');
 163. [Pages of Turmoil](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/web/PagesOfTurmoil/writeup.md)。
 - 利用Chrome的[Text Fragments](https://developer.mozilla.org/en-US/docs/Web/Text_fragments)控制页面高亮、翻页到特定位置。
 - MongoDB [ObjectId](https://www.mongodb.com/docs/manual/reference/method/ObjectId/)格式。
+164. [Lerdof's Records](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/web/Lerdof's%20Records/writeup.md)
+- php的strcmp()只会对比null字节之前的字符，但strlen函数计算字符串长度是包含null字节
+- php[序列化字符串](https://www.neatstudio.com/show-161-1.shtml)利用引用符号R绕过`secret1 === secret2`。
+165. [Christmas Heist](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/web/ChristmasHeist/writeup.md)
+- 一个代表windows95的User-agent：`Opera/9.80 (Windows 95) Presto/2.12.388 Version/12.13`
+- 一个来自土耳其的ip：`31.143.76.255`
+- [hashcat](https://github.com/hashcat/hashcat)爆破jwt密钥:`hashcat -a0 -m 16500 jwt.hash rockyou.txt --show`
