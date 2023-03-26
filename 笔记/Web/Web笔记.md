@@ -985,3 +985,18 @@ $('#ajax-load').load('/ajax/articles?cat=news');
 - 一个代表windows95的User-agent：`Opera/9.80 (Windows 95) Presto/2.12.388 Version/12.13`
 - 一个来自土耳其的ip：`31.143.76.255`
 - [hashcat](https://github.com/hashcat/hashcat)爆破jwt密钥:`hashcat -a0 -m 16500 jwt.hash rockyou.txt --show`
+167. [Restricted Access](https://deyixtan.github.io/posts/wxmctf2023/web2-restricted-access/)
+- [http](https://developer.mozilla.org/en-US/docs/Web/HTTP)报文头（header）相关内容。
+- User-Agent指定使用的设备
+- Referer指定来自何处。题目这里给的提示是maclyonsden.com，实际要加的却是`Referer: https://maclyonsden.com/`。注意多试。
+- Date指定访问日期。
+- 将Upgrade-Insecure-Requests的值设为1可指定服务器返回加密的安全回复。
+- 网速/网络相关：Downlink，ECT或RTT。
+168. [NFTs](https://deyixtan.github.io/posts/wxmctf2023/web3-nfts/)
+- python无限制/任意文件上传（[Unrestricted File Upload](https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload)）+文件存储路径拼接文件名导致的文件覆盖。
+- 此题可以上传任意名字的任意文件，且文件名经过拼接存储。那么就可以上传`../app.py`覆盖原本flask的app.py，使其返回flag。
+169. [Brawl: Shopping Spree](https://deyixtan.github.io/posts/wxmctf2023/web4-brawl-shopping-spree/)
+- sqlite union联合注入（要注入的表名已知）。
+> 测试语句：`' UNION SELECT 1,2,3,4,5 FROM skins WHERE '1' = '1`。
+> 从sqlite_master表中找出指定表的结构：`' UNION SELECT sql,1,1,1,1 FROM sqlite_master WHERE name='secretskins`(表名secretskins需要已知)
+> 查询出值：`' UNION SELECT skinid,description,image,1,1 as name FROM secretskins WHERE '1' = '1`.
