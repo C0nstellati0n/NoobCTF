@@ -426,3 +426,9 @@ Trim Trailing Bits:No
 - WAV文件修复。WAV文件的第37-40个字节应为data。
 - stegolsb提取WAV文件内容。
 - [DTMF tones](https://rfmw.em.keysight.com/rfcomms/refdocs/cdma2k/cdma2000_meas_dtmf_desc.html)分析。
+108. audacity可以分析一段特定音频的频率情况。在audacity里选中一个范围的音频后，去Analyze --> Plot Spectrum即可查看该段音频的频率情况。例题:[Sneaky Spying](https://github.com/jdabtieu/wxmctf-2023-public/blob/main/foren2/writeup.md)
+109. [usb mouse](https://wiki.osdev.org/USB_Human_Interface_Devices)/usb鼠标流量包(如Microsoft Paint)分析。可直接用[脚本](https://github.com/WangYihang/UsbMiceDataHacker/tree/master)提取数据并matplotlib.pyplot绘制数据。例题:[Paint](https://github.com/jdabtieu/wxmctf-2023-public/blob/main/foren4/writeup.md)
+110. 一张png的文件结构包含下列字符串：`PNG`,`IHDR`,`sRGB`,`pHYs`,`IDAT`。只有第一个，第二个和第五个损坏会导致图片无法打开。
+111. [Broken Telephone](https://github.com/jdabtieu/wxmctf-2023-public/blob/main/misc2/writeup.md)
+- 根据svg图片数据写入svg图片文件
+- svg图片文件头+[<path>](https://www.w3school.com.cn/svg/svg_path.asp)标签的数据特征（hex颜色格式+路径数据MCZ等）。
