@@ -503,3 +503,6 @@ while True:
 71. [Gossip](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/Binary/Gossip/writeup.md)
 - [apktool](https://github.com/iBotPeaches/Apktool)的使用。此题需要用id加载一个string资源，id可在jadx里获取到。之后便可用grep命令在apktool的结果里面搜索这个id，获取资源。
 - Alicebot与.aiml后缀文件([Artificial Intelligence Markup Language，AIML](https://www.tutorialspoint.com/aiml/index.htm),基于xml文件语法)相关逆向。主要还是在逆向过程中找到线索后在apktool反编译结果里使用grep命令。
+72. [x130](https://github.com/jdabtieu/wxmctf-2023-public/blob/main/rev5/writeup.md)
+- yan85架构反编译[脚本](https://github.com/jdabtieu/yan85-disassembler)
+- 此题是yan85的变种，提供了一些逆向虚拟机vm的经验
