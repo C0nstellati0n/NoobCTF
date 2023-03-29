@@ -432,3 +432,4 @@ Trim Trailing Bits:No
 111. [Broken Telephone](https://github.com/jdabtieu/wxmctf-2023-public/blob/main/misc2/writeup.md)
 - 根据svg图片数据写入svg图片文件
 - svg图片文件头+[<path>](https://www.w3school.com.cn/svg/svg_path.asp)标签的数据特征（hex颜色格式+路径数据MCZ等）。
+112. [UBI Reader](https://github.com/jrspruitt/ubi_reader)可用于提取UBIfs镜像数据内的文件。

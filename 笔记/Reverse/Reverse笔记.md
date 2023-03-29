@@ -506,3 +506,6 @@ while True:
 72. [x130](https://github.com/jdabtieu/wxmctf-2023-public/blob/main/rev5/writeup.md)
 - yan85架构反编译[脚本](https://github.com/jdabtieu/yan85-disassembler)
 - 此题是yan85的变种，提供了一些逆向虚拟机vm的经验
+73. [TEJ5M](https://github.com/jdabtieu/wxmctf-2023-public/blob/main/rev6/writeup.md)
+- 浮点数表示标准[IEEE 754](https://baike.baidu.com/item/IEEE%20754/3869922),更详细的例子在[此处](http://c.biancheng.net/view/314.html)。
+- 另一种解法使用angr。用`eval_upto`（参考这篇[帖子](https://www.cnblogs.com/Here-is-SG/p/15815136.html))得出全部可行解，hook防止路径爆炸。
