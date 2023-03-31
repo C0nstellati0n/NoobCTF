@@ -864,3 +864,55 @@ D = 0x10325476
 
 如果使用的初始状态不同，md5的结果也会不同。可以通过修改[脚本](https://github.com/Utkarsh87/md5-hashing/blob/master/md5.py)里的初始值来获取自定义的md5函数。
 - 彩虹表攻击（rainbow table attack）。本质上还是爆破出哈希值的全部可能性后查表。
+32. [DSA](https://github.com/xalanq/jarvisoj-solutions/blob/master/crypto/DSA.md)
+- DSA签名算法[介绍](https://ctf-wiki.org/crypto/signature/dsa/#k_1)
+- 随机密钥k共享攻击脚本：
+
+```python
+from Crypto.PublicKey import DSA
+from Crypto.Util.asn1 import DerSequence
+from Crypto.Hash import SHA1
+import gmpy2
+
+pubkey_file = 'dsa_public.pem'
+file_1 = ['./packet3/message3', './packet3/sign3.bin']
+file_2 = ['./packet4/message4', './packet4/sign4.bin']
+
+pubkey = DSA.import_key(open(pubkey_file, 'r').read())
+
+y = pubkey.y
+g = pubkey.g
+p = pubkey.p
+q = pubkey.q
+
+print('y =', y)
+print('g =', g)
+print('p =', p)
+print('q =', q)
+
+def get_rs(signature):
+    der_seq = DerSequence().decode(signature, strict=True)
+    return int(der_seq[0]), int(der_seq[1])
+
+hm1 = int(SHA1.new(open(file_1[0], 'rb').read()).hexdigest(), 16)
+hm2 = int(SHA1.new(open(file_2[0], 'rb').read()).hexdigest(), 16)
+r, s1 = get_rs(open(file_1[1], 'rb').read())
+_, s2 = get_rs(open(file_2[1], 'rb').read())
+
+print('r =', r)
+print('hm1 =', hm1)
+print('s1 =', s1)
+print('hm2 =', hm1)
+print('s2 =', s2)
+
+print('cracking')
+
+ds = s2 - s1
+dhm = hm2 - hm1
+k = gmpy2.mul(dhm, gmpy2.invert(ds, q))
+k = gmpy2.f_mod(k, q)
+tmp = gmpy2.mul(k, s1) - hm1
+x = tmp * gmpy2.invert(r, q)
+x = gmpy2.f_mod(x, q)
+print('x =', x)
+```

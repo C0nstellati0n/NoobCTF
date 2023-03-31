@@ -1057,3 +1057,6 @@ nc -lv 7777
 172. [[网鼎杯 2020 青龙组]filejava](http://www.xianxianlabs.com/blog/2020/06/02/377.html)
 - 路径穿越导致任意文件下载漏洞。因为是java题，所以根据[Java web应用目录结构](https://www.qikegu.com/docs/1424)，下载WEB-INF里面的web.xml，获取所有的类源码文件。
 - poi-ooxml-3.10（一个处理word文档，excel文件的组建）的excel-xxe漏洞：[CVE-2014-3529](https://xz.aliyun.com/t/6996)利用。
+173. git文件夹泄露后的版本回退。题目提示flag在git的旧版本里，且可获得完整.git目录。首先用[GitHacker](https://github.com/WangYihang/GitHacker)获取.git目录，然后进行[版本回退](https://www.liaoxuefeng.com/wiki/896043488029600/897013573512192)：`git reset --hard HEAD^`。
+174. 绕过302重定向（[bypass 302 redirect](https://gostart.biz/en/how-to-bypass-a-302-redirect/)）。其中一个方法是用curl访问目标网址。
+175. ip的两种表示[方式](https://blog.csdn.net/xiaolong_4_2/article/details/80857941)。
