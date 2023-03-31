@@ -980,6 +980,27 @@ $('#ajax-load').load('/ajax/articles?cat=news');
 - MongoDB [ObjectId](https://www.mongodb.com/docs/manual/reference/method/ObjectId/)格式。
 164. [Lerdof's Records](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/web/Lerdof's%20Records/writeup.md)
 - php的strcmp()只会对比null字节之前的字符，但strlen函数计算字符串长度是包含null字节
+
+补充：当strcmp的参数是数组时，会抛出warning且返回true，故可绕过。例如下方代码：
+
+```php
+<?php
+    $flag="";
+    try {
+        if (isset($_GET['username']) && isset($_GET['password'])) {
+            if (strcmp($_GET['username'], $flag)==0 && strcmp($_GET['password'], $flag)==0)
+                echo $flag;
+            else
+                echo "Invalid username or password";
+        }
+    } catch (Throwable $th) {
+        echo $flag;
+    }
+?>
+```
+
+可用`https://xxx.com/?username=aaa&password[0]=bbb`绕过。一般情况直接传数组就行，有的时候需要数组里赋值。
+
 - php[序列化字符串](https://www.neatstudio.com/show-161-1.shtml)利用引用符号R绕过`secret1 === secret2`。
 165. [Christmas Heist](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/web/ChristmasHeist/writeup.md)
 - 一个代表windows95的User-agent：`Opera/9.80 (Windows 95) Presto/2.12.388 Version/12.13`
