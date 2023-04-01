@@ -25,6 +25,7 @@
 - [Symmetric Tree](Easy/Symmetric%20Tree.md).Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).给出一棵二叉树，判断该树是否对称（镜像）。递归+遍历做法。
 - [Maximum Depth of Binary Tree](Easy/Maximum%20Depth%20of%20Binary%20Tree.md).Given the root of a binary tree, return its maximum depth. A binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node. 给定一棵二叉树，返回该二叉树的最大深度（根到最远叶子的距离）。
 - [Can Place Flowers](Easy/Can%20Place%20Flowers.md).You have a long flowerbed in which some of the plots are planted, and some are not. However, flowers cannot be planted in adjacent plots.Given an integer array flowerbed containing 0's and 1's, where 0 means empty and 1 means not empty, and an integer n, return if n new flowers can be planted in the flowerbed without violating the no-adjacent-flowers rule.给一个花田和要插花的数量n，要求插的花不能相邻。如果花田能插下n朵花，就返回True；否则返回False。花田用1表示有花，0表示空闲。
+- [Binary Search](Easy/Binary%20Search.md).
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
