@@ -196,6 +196,22 @@ print(plaintext)
 ```
 
 - 根据d和e构造出n:[Calculating RSA Public Modulus from Private Exponent and Public Exponent](https://crypto.stackexchange.com/questions/81615/calculating-rsa-public-modulus-from-private-exponent-and-public-exponent)
+- p高位泄露，可直接根据泄露的高位p，n和e求出p。需使用sagemath运行。
+
+```python
+def crack_high_p(high_p, n):
+    R.<x> = PolynomialRing(Zmod(n), implementation='NTL')
+    p = high_p + x
+    x0 = p.small_roots(X = 2^256, beta = 0.1)[0]
+    P = int(p(x0))
+    Q = n // P
+    print(P)
+    assert n == P*Q
+n = 0
+part_p=0
+e = 65537
+crack_high_p(part_p, n)
+````
 
 1. Crypto库根据已有信息构建私钥并解密
 
