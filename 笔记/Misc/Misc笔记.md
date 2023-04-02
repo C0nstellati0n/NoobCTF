@@ -96,7 +96,7 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
 3.   numpy.loadtxt读取坐标文件+基本matplotlib图像绘制。例题:[梅花香之苦寒来](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Misc/%E6%A2%85%E8%8A%B1%E9%A6%99%E4%B9%8B%E8%8B%A6%E5%AF%92%E6%9D%A5.md)
 4.   audacity打开文件发现有两个声道且其中一个声道没用时，可以在最左侧调节左右声道的音量，然后菜单栏->文件->导出。
 5.   morse2ascii工具可以解码音频摩斯电码。例题：[穿越时空的思念](https://www.cnblogs.com/tac2664/p/13861595.html)
-6.   [盲文解密](https://www.qqxiuzi.cn/bianma/wenbenjiami.php?s=mangwen)，形如`⡇⡓⡄⡖⠂⠀⠂⠀⡋⡉⠔⠀⠔⡅⡯⡖⠔⠁⠔⡞⠔⡔⠔⡯⡽⠔⡕⠔⡕⠔⡕⠔⡕⠔⡕⡍=`。
+6.   [盲文解密](https://www.dcode.fr/braille-alphabet)（Braille Alphabet），形如`⡇⡓⡄⡖⠂⠀⠂⠀⡋⡉⠔⠀⠔⡅⡯⡖⠔⠁⠔⡞⠔⡔⠔⡯⡽⠔⡕⠔⡕⠔⡕⠔⡕⠔⡕⡍=`。
 7.   当题目文件出现大量无特征、无规律字符时，考虑是不是字频统计。例题:[[GXYCTF2019]gakki](https://buuoj.cn/challenges#[GXYCTF2019]gakki)
 8.   010Editor可以更改阅读文本文件时的编码。菜单栏->视图->字符集。
 9.   福尔摩斯跳舞的小人密码。例题:[[SWPU2019]伟大的侦探](https://blog.csdn.net/mochu7777777/article/details/109387134)
@@ -433,3 +433,4 @@ Trim Trailing Bits:No
 - 根据svg图片数据写入svg图片文件
 - svg图片文件头+[<path>](https://www.w3school.com.cn/svg/svg_path.asp)标签的数据特征（hex颜色格式+路径数据MCZ等）。
 112. [UBI Reader](https://github.com/jrspruitt/ubi_reader)可用于提取UBIfs镜像数据内的文件。
+113. 终端的whois命令不仅可以查询domain，还可以查询ip地址。
