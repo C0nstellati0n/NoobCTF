@@ -414,12 +414,12 @@ Bit Plane Order:RGB
 Trim Trailing Bits:No
 ```
 
-106. linux img镜像挂载。
+106. linux 使用mount挂载img镜像。
 
 - [Linux挂载img磁盘镜像文件](https://zhou-yuxin.github.io/articles/2015/Linux%E6%8C%82%E8%BD%BDimg%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6/index.html)
 - [Linux如何挂载img镜像](https://blog.51cto.com/u_3823536/2501563)
-- 
-偏移可用`binwalk xxx.img`获得。挂载镜像后，输入`sudo su`来获取root权限。分析镜像时，`tree`命令可帮助查看目录的结构。挂载镜像后,`.ash_history`文件将不会存储原本镜像的命令，而是挂载者在镜像里输入的命令。因此挂载是无法获取命令历史的。
+
+偏移可用`binwalk xxx.img`(或者`fdisk -l disk.img`)获得。挂载镜像后，输入`sudo su`来获取root权限。分析镜像时，`tree`命令可帮助查看目录的结构。挂载镜像后,`.ash_history`文件将不会存储原本镜像的命令，而是挂载者在镜像里输入的命令。因此挂载是无法获取命令历史的。
 
 107. [Nuclearophine](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/Forensics/Nuclearophine/writeup.md)
 - 使用python Scapy库提取udp包数据
@@ -434,3 +434,97 @@ Trim Trailing Bits:No
 - svg图片文件头+[<path>](https://www.w3school.com.cn/svg/svg_path.asp)标签的数据特征（hex颜色格式+路径数据MCZ等）。
 112. [UBI Reader](https://github.com/jrspruitt/ubi_reader)可用于提取UBIfs镜像数据内的文件。
 113. 终端的whois命令不仅可以查询domain，还可以查询ip地址。
+114. [workman](https://workmanlayout.org/)键盘布局（layout）转常用键盘布局。
+
+```python
+layout_dict={"a":"a","s":"s",'h':'d','t':'f','g':'g','y':'h','n':'j','e':'k','o':'l','l':';','q':'q','d':'w','r':'e','w':'r','b':'t','j':'y','f':'u','u':'i','p':'o','z':'z','x':'x','m':'c','c':'v','v':'b','k':'n','l':'m',',':',','-':'-',"'":"'",'_':"_",' ':' ',';':'p','\n':'\n','•':'•','4':'4','0':'0','1':'1','3':'3','2':'2','5':'5','6':'6'}
+msg=""
+plain=''
+for i in msg:
+    if i.isupper():
+        plain+=layout_dict[i.lower()].upper()
+    else:
+        plain+=layout_dict[i]
+print(plain)
+```
+
+115. [UnforgottenBits](https://github.com/BlackAnon22/BlackAnon22.github.io/blob/main/posts/CTF%20Competitions/picoCTF_2023.md#unforgottenbits-500-points)
+- linux img镜像分析。
+- 使用mount命令挂载镜像，autospy(ui版tsk)获取被删除的邮件。因为邮件一定有“subject”，于是在“keyword search”处搜索subject，即可看到文件。
+- [golden ratio base](https://www.wikiwand.com/en/Golden_ratio_base)解码脚本。
+```python
+import math
+
+# Define the Base-Phi constant
+PHI = (1 + math.sqrt(5)) / 2
+
+# Define a function to perform Base-Phi decoding
+def base_phi_decode(encoded_string):
+    # Split the encoded string into segments separated by periods
+    segments = encoded_string.split('.')
+
+    # Initialize the result string
+    result = ''
+
+    # Iterate over each segment
+    for segment in segments:
+        # Initialize the decoded value for this segment to 0
+        print(len(segment))
+        value = 0
+
+        # Iterate over each character in the segment
+        for i in range(len(segment)):
+            # If the character is '1', add PHI to the decoded value
+            if segment[i] == '1':
+                value += PHI**(len(segment) - i - 1)
+
+        # Append the decoded character to the result string
+        result += str(int(value))
+
+    # Return the result string
+    return result
+
+# Test the function with the given encoded string
+encoded_string = "01010010100.01001001000100.01001010000100"
+
+
+eeee = encoded_string.split('.')
+out = []
+
+for i in range(len(eeee)-1):
+    if i ==0:
+        out.append(eeee[i]+'.'+eeee[i+1][:3])
+    else:
+        out.append(eeee[i][3:]+'.'+eeee[i+1][:3])
+
+# print(out)
+
+
+# decoded_string = base_phi_decode(encoded_string)
+
+# print(decoded_string)
+
+key = ''
+for p in out:
+
+    integer_part, fractional_part = p.split(".")
+
+
+    # Convert the integer part to decimal
+    decimal_value = 0
+    for i in range(len(integer_part)):
+        decimal_value += int(integer_part[i]) * (PHI ** (len(integer_part) - i - 1))
+
+    # Convert the fractional part to decimal
+    if len(fractional_part) > 0:
+        fractional_value = 0
+        for i in range(len(fractional_part)):
+            fractional_value += int(fractional_part[i]) * (2 ** -(i + 1))
+        decimal_value += fractional_value
+
+    key += chr(round(decimal_value))
+
+print(key)
+print(len(out))
+```
+- openssl解密aes密文。`openssl enc -aes-256-cbc -d -in flag.enc -out res -salt -iv xxx -K xxx`
