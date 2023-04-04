@@ -932,3 +932,10 @@ x = tmp * gmpy2.invert(r, q)
 x = gmpy2.f_mod(x, q)
 print('x =', x)
 ```
+33. 进制转换（base47解密脚本）。
+
+```python
+from Crypto.Util.number import long_to_bytes
+def base47(cipher,dic):
+    print(long_to_bytes(sum([dic.index(cipher[i]) * (len(dic) ** (len(cipher) - i - 1)) for i in range(len(cipher))])))
+```

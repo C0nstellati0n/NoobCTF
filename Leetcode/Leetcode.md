@@ -43,6 +43,9 @@
 - [Minimum Cost For Tickets](Medium/Minimum%20Cost%20For%20Tickets.md). The days of the year in which you will travel are given as an integer array days. Each day is an integer from 1 to 365. Train tickets are sold in three different ways: 1-day, 7-day and 30-day. Return the minimum number of dollars you need to travel every day in the given list of days. 返回最少需要的票价，dp。
 - [Successful Pairs of Spells and Potions](Medium/Successful%20Pairs%20of%20Spells%20and%20Potions.md). binary search.
 - [Boats to Save People](Medium/Boats%20to%20Save%20People.md).You are given an array people where people[i] is the weight of the ith person, and an infinite number of boats where each boat can carry a maximum weight of limit. Each boat carries at most two people at the same time, provided the sum of the weight of those people is at most limit. Return the minimum number of boats to carry every given person. 每艘船可坐两个人，且有重量限制limit。返回需要的船的数量。two pointers。
+- [Optimal Partition of String](Medium/Optimal%20Partition%20of%20String.md).Return the minimum number of substrings in such a partition. No duplicates.返回字符串可分组的数量，每个组内的字符不能重复。
+
+Return the minimum number of substrings in such a partition.
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
