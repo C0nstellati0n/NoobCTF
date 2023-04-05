@@ -82,7 +82,7 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
 - [F5隐写](https://github.com/matthewgao/F5-steganography)，例题：[刷新过的图片](https://blog.csdn.net/destiny1507/article/details/102079695)
 - stegsolve
 - NtfsStreamsEditor,用于处理NTFS流隐藏文件。例题：[[SWPU2019]我有一只马里奥](https://blog.csdn.net/mochu7777777/article/details/108934265)。当题目涉及到NTFS流时，题目文件都需要用Win RAR解压。
-- SilentEye（音频隐写工具）
+- [SilentEye](https://achorein.github.io/silenteye/)（音频隐写工具）
 - steghide（多类型文件隐写工具）
 > steghide有时需要密码，可以用[stegseek](https://github.com/RickdeJager/stegseek)破解。
 - [Stegosaurus](https://github.com/AngelKitty/stegosaurus)(pyc文件隐写工具)
@@ -90,8 +90,10 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
 - [stegolsb](https://github.com/ragibson/Steganography).
 > LSB隐写工具，音频图片都可以。
 - [Twitter Secret Messages](https://holloway.nz/steg/)。这个工具的密文很好辨认，例如`I hａtｅ tｈis flｙiｎｇ ｂⅰrｄ aｐp... Peοpｌe saｙ ｏnｅ thіngｂutyoｕ ａｌｗayｓ gοtta reａd bｅtｗeen thｅliｎeｓ ｔο interpret them right ://`。推特/蓝鸟是出题人的提示关键词。
+- [mp3stego](https://www.petitcolas.net/steganography/mp3stego/).mp3带密码的隐写工具。
+- [base100](https://github.com/AdamNiederer/base100)。将文字与emoji互相转换的编码工具。
 
-1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)，如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
+1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)。不同版本的zip加密位不一样,例如有些zip需要将第7个字节的09改成00。如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
 3.   numpy.loadtxt读取坐标文件+基本matplotlib图像绘制。例题:[梅花香之苦寒来](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Misc/%E6%A2%85%E8%8A%B1%E9%A6%99%E4%B9%8B%E8%8B%A6%E5%AF%92%E6%9D%A5.md)
 4.   audacity打开文件发现有两个声道且其中一个声道没用时，可以在最左侧调节左右声道的音量，然后菜单栏->文件->导出。
@@ -215,7 +217,7 @@ cs pu lt 90 fd 500 rt 90 pd fd 100 rt 90 repeat 18[fd 5 rt 10] lt 135 fd 50 lt 1
 
 可用[网站](https://tuzim.net/hxdecode/)解码。
 
-43. [snow隐写](https://lazzzaro.github.io/2020/06/20/misc-%E6%96%87%E4%BB%B6%E9%9A%90%E5%86%99/)，有[网页版](http://fog.misty.com/perry/ccs/snow/snow/snow.html)和[exe版](https://darkside.com.au/snow/)。例题:[看雪看雪看雪](https://blog.csdn.net/qq_53105813/article/details/127896201)
+43. [snow隐写](https://lazzzaro.github.io/2020/06/20/misc-%E6%96%87%E4%BB%B6%E9%9A%90%E5%86%99/)，有[网页版](http://fog.misty.com/perry/ccs/snow/snow/snow.html)和[exe版](https://darkside.com.au/snow/)。例题:[看雪看雪看雪](https://blog.csdn.net/qq_53105813/article/details/127896201)。如果不知道密码，还可以尝试爆破，使用工具:[SnowCracker](https://github.com/0xHasanM/SnowCracker)。例题:[Arctic Penguin](https://github.com/daffainfo/ctf-writeup/tree/main/GREP%20CTF%202023/Arctic%20Penguin)
 44. 图片隐写工具[stegpy](https://github.com/dhsdshdhk/stegpy)。
 45. ppt文档密码爆破工具。可用[Accent OFFICE Password Recovery](https://www.52pojie.cn/thread-82569-1-1.html)工具，也能用[ffice2john.py](https://fossies.org/linux/john/run/office2john.py)或者john。
 46. 电动车钥匙信号PT224X解码。例题:[打开电动车](../../CTF/攻防世界/3级/Misc/打开电动车.md)。类似的还有PT226x。例题:[[HDCTF2019]信号分析](https://www.onctf.com/posts/d228f8e5.html#%E4%B8%80%E7%99%BE%E5%9B%9B%E5%8D%81%E5%85%AD%E3%80%81-HDCTF2019-%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90)
@@ -434,20 +436,7 @@ Trim Trailing Bits:No
 - svg图片文件头+[<path>](https://www.w3school.com.cn/svg/svg_path.asp)标签的数据特征（hex颜色格式+路径数据MCZ等）。
 112. [UBI Reader](https://github.com/jrspruitt/ubi_reader)可用于提取UBIfs镜像数据内的文件。
 113. 终端的whois命令不仅可以查询domain，还可以查询ip地址。
-114. [workman](https://workmanlayout.org/)键盘布局（layout）转常用键盘布局。
-
-```python
-layout_dict={"a":"a","s":"s",'h':'d','t':'f','g':'g','y':'h','n':'j','e':'k','o':'l','l':';','q':'q','d':'w','r':'e','w':'r','b':'t','j':'y','f':'u','u':'i','p':'o','z':'z','x':'x','m':'c','c':'v','v':'b','k':'n','l':'m',',':',','-':'-',"'":"'",'_':"_",' ':' ',';':'p','\n':'\n','•':'•','4':'4','0':'0','1':'1','3':'3','2':'2','5':'5','6':'6'}
-msg=""
-plain=''
-for i in msg:
-    if i.isupper():
-        plain+=layout_dict[i.lower()].upper()
-    else:
-        plain+=layout_dict[i]
-print(plain)
-```
-
+114. [workman](https://workmanlayout.org/)等键盘布局（layout）相互转换[网站](https://awsm-tools.com/keyboard-layout)。
 115. [UnforgottenBits](https://github.com/BlackAnon22/BlackAnon22.github.io/blob/main/posts/CTF%20Competitions/picoCTF_2023.md#unforgottenbits-500-points)
 - linux img镜像分析。
 - 使用mount命令挂载镜像，autospy(ui版tsk)获取被删除的邮件。因为邮件一定有“subject”，于是在“keyword search”处搜索subject，即可看到文件。
@@ -528,3 +517,14 @@ print(key)
 print(len(out))
 ```
 - openssl解密aes密文。`openssl enc -aes-256-cbc -d -in flag.enc -out res -salt -iv xxx -K xxx`
+116. 盲水印。分两种，一种会给两张一样的图，另一种只给一张图。例题:[flag一分为二](https://ctf-show.feishu.cn/docx/UpC6dtDqgo7VuoxXlcvcLwzKnqh#Es84dUM2CoIAI4xGI8Ac6ugvncc)
+117. 010Editor菜单栏->工具->比较文件可以找到两个文件的不同点。另外，工具栏里还有很多其他工具，都可以试试。
+118. [QRazyBox](https://merricx.github.io/qrazybox/)可以扫描一些其他工具扫描不出来的内容。有的时候，将纠错区涂白还能看见额外内容。例题:[迅疾响应](https://ctf-show.feishu.cn/docx/UpC6dtDqgo7VuoxXlcvcLwzKnqh#ZaIsdcqYOoIEmExxqMEcVopaniv)
+119. [npiet](http://www.bertnase.de/npiet/npiet-execute.php)图片编程语言。程序大概长这样：
+
+![npiet](../images/npiet.png)
+
+120. [RX-SSTV](https://www.qsl.net/on6mu/rxsstv.htm)。sstv音频解密工具。
+121. [Royal Steg](https://github.com/daffainfo/ctf-writeup/tree/main/GREP%20CTF%202023/Royal%20Steg)
+- 使用John the Ripper（zip2john+john）[爆破](https://secnhack.in/crack-zip-files-password-using-john-the-ripper/)加密zip密码。
+- stegseek爆破steghide密码。
