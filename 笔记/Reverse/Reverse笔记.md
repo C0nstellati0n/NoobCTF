@@ -509,3 +509,17 @@ while True:
 73. [TEJ5M](https://github.com/jdabtieu/wxmctf-2023-public/blob/main/rev6/writeup.md)
 - 浮点数表示标准[IEEE 754](https://baike.baidu.com/item/IEEE%20754/3869922),更详细的例子在[此处](http://c.biancheng.net/view/314.html)。
 - 另一种解法使用angr。用`eval_upto`（参考这篇[帖子](https://www.cnblogs.com/Here-is-SG/p/15815136.html))得出全部可行解，hook防止路径爆炸。
+74. 可用strace命令跟踪程序的函数调用。
+75. 利用共享库（shared library）加载的优先级hook程序。假如程序多次调用库里的某个无用函数且耗时较长（如sleep），就可以将其patch掉（call改为nop）或者使用下方的脚本：
+
+```c
+#include <stdio.h>
+unsigned int sleep(unsigned int seconds) {//注意签名要一致
+  return 0;
+}
+__attribute__((constructor)) static void setup(void){
+  fprintf(stderr, "Hooked process,no sleeps!\n");
+}
+```
+
+然后编译为共享库：`gcc -shared -fPIC -ldl nosleep.c -o nosleep.so`。最后更改LD_PRELOAD路径并运行程序：`LD_PRELOAD="./nosleep.so" ./sleeper`。
