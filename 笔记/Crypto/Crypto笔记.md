@@ -199,18 +199,21 @@ print(plaintext)
 - p高位泄露，可直接根据泄露的高位p，n和e求出p。需使用sagemath运行。
 
 ```python
-def crack_high_p(high_p, n):
-    R.<x> = PolynomialRing(Zmod(n), implementation='NTL')
-    p = high_p + x
-    x0 = p.small_roots(X = 2^256, beta = 0.1)[0]
-    P = int(p(x0))
-    Q = n // P
-    print(P)
-    assert n == P*Q
 n = 0
-part_p=0
-e = 65537
-crack_high_p(part_p, n)
+p4=0 #泄露的高位
+e = 0x10001
+pbits = 128 #完整p的倍数
+kbits = pbits - p4.nbits()
+print(p4.nbits())
+p4 = p4 << kbits
+PR.<x> = PolynomialRing(Zmod(n))
+f = x + p4
+roots = f.small_roots(X=2^kbits, beta=0.4)
+if roots:        
+    p = p4+int(roots[0])
+    print ("n: ", n)   
+    print ("p: ", p)
+    print ("q: ", n/p)
 ````
 
 1. Crypto库根据已有信息构建私钥并解密
@@ -932,10 +935,63 @@ x = tmp * gmpy2.invert(r, q)
 x = gmpy2.f_mod(x, q)
 print('x =', x)
 ```
-33. 进制转换（base47解密脚本）。
+33. 进制转换。
 
+- base47（已知编码表）解码
 ```python
 from Crypto.Util.number import long_to_bytes
 def base47(cipher,dic):
     print(long_to_bytes(sum([dic.index(cipher[i]) * (len(dic) ** (len(cipher) - i - 1)) for i in range(len(cipher))])))
+```
+- base4爆破解码
+```python
+import itertools
+from Crypto.Util.number import *
+s=''
+t = []
+for k in itertools.permutations('0123'):
+    m = ''
+    for i in s:
+        if i == t[0]:
+            m += k[0]
+        elif i == t[1]:
+            m += k[1]
+        elif i == t[2]:
+            m += k[2]
+        elif i == t[3]:
+            m += k[3]
+    m = long_to_bytes(int(m, 4))
+    if b'flag' in m:
+        print(m)
+        break
+```
+- base64爆破解码
+  - 根据base64的原理，base64是一种把二进制值变成文本数据的方式。在输入是文本的情况下，3个原始字符对应的就是4个base64编码后的字符。所以可以对编码后的base64字符4个4个的进行爆破，只要还原出来的3个原始字符在可见字符范围内即可。出来的结果需要手动重组。
+```python
+import base64
+import itertools
+x=""
+def check_4(base64_part):
+    _temp=[]
+    results=[]
+    for i in range(4):
+        if base64_part[i].isalpha():
+            _temp.append((base64_part[i].upper(),base64_part[i].lower()))
+        else:
+            _temp.append((base64_part[i],base64_part[i]))
+    n=map(tuple, itertools.product(_temp[0],_temp[1],_temp[2],_temp[3]))
+    for i in set(n):
+        s='%s%s%s%s'%i
+        try:
+            result=base64.b64decode(s.encode()).decode()
+            if result.isprintable():
+                results.append(result)
+        except:
+            pass
+    return(results)
+l=[]
+for i in range(int(len(x)/4)):
+    l.append(check_4(x[i*4:i*4+4]))
+for i in l:
+    print(i)
 ```
