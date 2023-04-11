@@ -23,6 +23,8 @@ else:
     print(asm(shellcode))
 ```
 
+- 32位9字节read shellcode：`xor eax,eax;xor edi,edi;mov rdx,r10;syscall`,结果是`b'\x82QN".\x08\xc3e\x95'`。
+
 6. pwn 栈题模板
 
 ### 64位

@@ -196,7 +196,7 @@ print(plaintext)
 ```
 
 - 根据d和e构造出n:[Calculating RSA Public Modulus from Private Exponent and Public Exponent](https://crypto.stackexchange.com/questions/81615/calculating-rsa-public-modulus-from-private-exponent-and-public-exponent)
-- p高位泄露，可直接根据泄露的高位p，n和e求出p。需使用sagemath运行。
+- p高位泄露（coppersmith），可直接根据泄露的高位p，n和e求出p。需使用sagemath运行。
 
 ```python
 n = 0
@@ -215,6 +215,8 @@ if roots:
     print ("p: ", p)
     print ("q: ", n/p)
 ````
+
+coppersmith算法的作用是求解根较小的同余式方程。已知p高位攻击其实是求这么一个方程的根： $p_{high}+x=0\mod p$ 。特殊地，如果大小得当，可以在不知道模只知道模的倍数前提下，求解方程。即解 $p_{high}+x=0\mod n$ 。
 
 1. Crypto库根据已有信息构建私钥并解密
 
@@ -994,4 +996,101 @@ for i in range(int(len(x)/4)):
     l.append(check_4(x[i*4:i*4+4]))
 for i in l:
     print(i)
+```
+
+34. [shamir秘密共享](https://blog.sagiri.tech/index.php/archives/55/)（secret sharing）[解密脚本](https://github.com/adviksinghania/shamir-secret-sharing/blob/main/shamir_secret_galois.py)。以下是简略版，仅保留原脚本的解密功能。
+
+```python
+class ShamirSecret:
+    def __init__(self) -> None:
+        pass
+    def extended_gcd(self, a, b):
+        """Extended Euclidean Algorithm."""
+        x = 0
+        last_x = 1
+        y = 1
+        last_y = 0
+        while b != 0:
+            quot = a // b
+            a, b = b, a % b
+            x, last_x = last_x - quot * x, x
+            y, last_y = last_y - quot * y, y
+
+        return last_x, last_y
+
+    def galois_div(self, num, den, p):
+        """
+        Division in integers modulus p means finding the inverse of the
+        denominator modulo p and then multiplying the numerator by this
+        inverse.
+
+        Inverse of an integer can be found using the Extended Euclidean Algorithm.
+        (Note: inverse of A is B such that A*B % p == 1)
+
+        Compute num / den modulo prime p
+
+        To explain what this means, the return value will be such that the
+        following is true: den * galois_div(num, den, p) % p == num
+
+        Parameters
+        ----------
+        num: int
+            Numerator
+        den: int
+            Denominator
+        p: int
+            Prime Number
+
+        """
+        inv, _ = self.extended_gcd(den, p)
+        return num * inv
+
+    def reconstruct(self, rand_shares, prime) -> int:
+        """
+        Reconstruct the secret with random shares and a prime.
+
+        Parameters
+        ----------
+        rand_shares: tuple
+            Containing pairwise tuples of random shares.
+        prime: int
+            The prime number for the galois field.
+
+        Returns
+        -------
+        sigma: int
+            The reconstructed secret
+
+        Example
+        -------
+        >>> s.reconstruct(s.random_shares(), s.prime)
+        1234
+
+        """
+        l = len(rand_shares)  # length: number of random shares
+        x_s = tuple(map(lambda x: x[0], rand_shares))  # x values of shares
+        y_s = tuple(map(lambda x: x[1], rand_shares))  # y values of shares
+
+        def PI(vars):  # product of inputs (PI)
+            acc = 1
+            for v in vars:
+                acc *= v
+
+            return acc
+
+        nume = tuple()
+        deno = tuple()
+        for j in range(l):
+            nume += (PI(x_s[m] for m in range(l) if m != j), )
+            deno += (PI(x_s[m] - x_s[j] for m in range(l) if m != j), )
+
+        den = PI(deno)
+        num = sum(self.galois_div(nume[i] * den * y_s[i] % prime, deno[i], prime) for i in range(l))
+        sigma = (self.galois_div(num, den, prime) + prime) % prime
+
+        return sigma
+s = ShamirSecret()
+shares=[]
+prime=0
+print('\nReconstructed Secret:', s.reconstruct(shares,prime))
 ```
