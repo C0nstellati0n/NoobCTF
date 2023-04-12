@@ -528,3 +528,7 @@ print(len(out))
 121. [Royal Steg](https://github.com/daffainfo/ctf-writeup/tree/main/GREP%20CTF%202023/Royal%20Steg)
 - 使用John the Ripper（zip2john+john）[爆破](https://secnhack.in/crack-zip-files-password-using-john-the-ripper/)加密zip密码。
 - stegseek爆破steghide密码。
+122. [CrackingTheBadVault](https://github.com/CybercellVIIT/VishwaCTF-23_Official_Writeups/blob/main/Digital%20Forensics/DigitalForensics_CrackingTheBadVault.pdf)
+- dcfldd命令从veracrypt partition volume header中提取hashcat爆破所需的hash。一般在第一个sector，通常一个sector 512字节。`sudo dcfldd if=image.img of=header.tc bs=1 count=512`
+- hashcat爆破Veracrypt+sha512：`sudo hashcat -a 3 -m 13721 <hash-path> <word-list>`。爆破内部隐藏partition密码（已知pim和keyfiles）：`sudo hashcat -a 3 -m 13721 --veracrypt-keyfiles=key.png --veracrypt-pim-start=900 --veracrypt-pim-start=901 hidden-vol.tc <word-list>`
+- 可在veracrypt volume中隐藏partition。提取隐藏partition的volume header的命令:`sudo dcfldd if=image.img of=hidden-vol.tc bs=1 skip=65536 count=512`

@@ -523,3 +523,5 @@ __attribute__((constructor)) static void setup(void){
 ```
 
 然后编译为共享库：`gcc -shared -fPIC -ldl nosleep.c -o nosleep.so`。最后更改LD_PRELOAD路径并运行程序：`LD_PRELOAD="./nosleep.so" ./sleeper`。
+
+76. [pydumpck](https://github.com/serfend/pydumpck):反编译由python打包生成的exe，例如pygame模块编写的游戏。
