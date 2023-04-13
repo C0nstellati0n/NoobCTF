@@ -532,3 +532,4 @@ print(len(out))
 - dcfldd命令从veracrypt partition volume header中提取hashcat爆破所需的hash。一般在第一个sector，通常一个sector 512字节。`sudo dcfldd if=image.img of=header.tc bs=1 count=512`
 - hashcat爆破Veracrypt+sha512：`sudo hashcat -a 3 -m 13721 <hash-path> <word-list>`。爆破内部隐藏partition密码（已知pim和keyfiles）：`sudo hashcat -a 3 -m 13721 --veracrypt-keyfiles=key.png --veracrypt-pim-start=900 --veracrypt-pim-start=901 hidden-vol.tc <word-list>`
 - 可在veracrypt volume中隐藏partition。提取隐藏partition的volume header的命令:`sudo dcfldd if=image.img of=hidden-vol.tc bs=1 skip=65536 count=512`
+123. 电路模拟软件：[Proteus](https://www.labcenter.com/proteus_pcb/?gclid=EAIaIQobChMI14GMoc2l_gIV321vBB01rglHEAAYASAAEgLKaPD_BwE)。可以模拟Arduino，不过需要提供hex file，例如`code.ino.hex`。[I see wires everywhere](https://github.com/CybercellVIIT/VishwaCTF-23_Official_Writeups/blob/main/Stegnography/Steganography_I%20see%20wires%20everywhere.pdf)
