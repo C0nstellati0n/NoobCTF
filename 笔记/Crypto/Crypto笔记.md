@@ -1094,3 +1094,13 @@ shares=[]
 prime=0
 print('\nReconstructed Secret:', s.reconstruct(shares,prime))
 ```
+35. 以下的java aes加密是最基础的默认情况，只设置了key：
+
+```java
+SecretKeySpec secretKeySpec = new SecretKeySpec(KEY.getBytes(), "AES");
+Cipher cipher = Cipher.getInstance("AES");
+cipher.init(1, secretKeySpec);
+return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes()));
+```
+
+那么默认IV为`00000000000000000000000000000`，模式为`AES/ECB/PKCS5Padding`

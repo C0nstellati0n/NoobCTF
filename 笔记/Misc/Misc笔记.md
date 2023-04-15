@@ -387,13 +387,15 @@ function myFunction() {
 101. volatility3使用。关于volatility的教程大多都是volatility2的，记录一些平时看到的命令。注意镜像（如img后缀）和内存（如mem）后缀是不同的，工具不能混用。比如volatility就不能用来分析镜像。
 
 - python3 vol.py -f Memdump.raw windows.filescan.FileScan
-  > 搜寻Memdump.raw中的文件,会给出文件对应的偏移
+  - 搜寻Memdump.raw中的文件,会给出文件对应的偏移
 - python3 vol.py -f Memdump.raw windows.dumpfiles.DumpFiles --virtaddr 0xc88f21961af0
-  > 根据文件偏移提取文件
+  - 根据文件偏移提取文件
 - python3 vol.py -f mem.raw windows.cmdline.CmdLine
-  > cmd中运行的命令
+  - cmd中运行的命令
 - python3 vol.py -f mem.raw windows.info
-  > 显示windows镜像信息
+  - 显示windows镜像信息
+- python3 vol.py -f mem.raw windows.netstat
+  - 查看网络连接状况（可用于获取本机ip）
 
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
