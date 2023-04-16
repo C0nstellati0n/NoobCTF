@@ -396,6 +396,12 @@ function myFunction() {
   - 显示windows镜像信息
 - python3 vol.py -f mem.raw windows.netstat
   - 查看网络连接状况（可用于获取本机ip）
+- python3 vol.py -f mem.raw windows.registry.hivelist.HiveList
+  - 查看注册表
+- python3 vol.py -f mem.raw windows.registry.printkey.PrintKey --offset 0xf8a0000212d0
+  - 通过上一步获取到注册表后，根据获得的偏移进一步获取键名信息。
+- python3 vol.py -f mem.raw windows.registry.printkey.PrintKey --offset 0xf8a0000212d0 --key "ControlSet001\Control\ComputerName\ComputerName"  
+  - 可以一直沿着获取的键名走下去。上面的命令用于获取主机名。详情见[此处](https://www.bnessy.com/archives/%E7%94%B5%E5%AD%90%E6%95%B0%E6%8D%AE%E5%8F%96%E8%AF%81-volatility),内含基础例题。
 
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
