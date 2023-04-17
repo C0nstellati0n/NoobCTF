@@ -175,7 +175,7 @@ def smallEattack(c, e, n):
 ```
 
 - Franklin-Reiter相关信息攻击巧解给出d，phi密文，m非常大，e很小的题目。例题:[d-phi-enc](../../CTF/HackTM%20CTF/Crypto/d-phi-enc.md)
-- 获得d后可用Cryptodome库获取p和q。
+- 获得d和n后可用Cryptodome库获取p和q。
 
 ```python
 from Crypto.Util.number import *
@@ -196,6 +196,52 @@ print(plaintext)
 ```
 
 - 根据d和e构造出n:[Calculating RSA Public Modulus from Private Exponent and Public Exponent](https://crypto.stackexchange.com/questions/81615/calculating-rsa-public-modulus-from-private-exponent-and-public-exponent)
+- [已知d分解n](https://crypto.stackexchange.com/questions/6361/is-sharing-the-modulus-for-multiple-rsa-key-pairs-secure)。
+
+```python
+import random
+import math
+from Crypto.Util.number import long_to_bytes
+c = 0
+n = 0
+d = 0
+e = 0x10001
+def remove_even(n):
+    if n == 0:
+        return (0, 0)
+    r = n
+    t = 0
+    while (r & 1) == 0:
+        t = t + 1
+        r = r >> 1
+    return (r, t)
+def get_root_one(x, k, N):
+    (r, t) = remove_even(k)
+    oldi = None
+    i = pow(x, r, N)
+    while i != 1:
+        oldi = i
+        i = (i*i) % N
+    if oldi == N-1:
+        return None 
+    return oldi
+def factor_rsa(e, d, N):
+    k = e*d - 1
+    y = None
+    while not y:
+        x = random.randrange(2, N)
+        y = get_root_one(x, k, N)
+    p = math.gcd(y-1, N)
+    q = N // p
+    return (p, q)
+p, q = factor_rsa(e, d, n)
+print(p, q)
+assert p * q == n
+m = pow(c, d, n)
+flag = p - m
+print(long_to_bytes(flag))
+```
+
 - p高位泄露（coppersmith），可直接根据泄露的高位p，n和e求出p。需使用sagemath运行。
 
 ```python
@@ -217,6 +263,34 @@ if roots:
 ````
 
 coppersmith算法的作用是求解根较小的同余式方程。已知p高位攻击其实是求这么一个方程的根： $p_{high}+x=0\mod p$ 。特殊地，如果大小得当，可以在不知道模只知道模的倍数前提下，求解方程。即解 $p_{high}+x=0\mod n$ 。
+- 给出p+q（(p-2)(q-2)一个作用）和n时，构造多项式即可获取p或q。
+
+$f(x)=(x-p)(x-q)$<br>
+$f(x)=x^2-(p+q)x+pq$<br>
+$f(x)=x^2-(p+q)x+n$<Br>
+$p,q=\frac{s\pm\sqrt{s^2-4n}}{2}$
+
+```python
+from gmpy2 import isqrt
+from Crypto.Util.number import long_to_bytes
+n=0
+s = 0 #s为p+q
+c=0
+discrim = s**2 - 4*n
+assert isqrt(discrim)
+test = int(isqrt(discrim))
+test_p = (s + test) // 2
+if n % test_p != 0:
+    test_p = (s - test) // 2
+p = test_p
+q = n // p
+assert p * q == n
+e = 0x10001
+l = (p-1)*(q-1)
+d = pow(e, -1, l)
+m = pow(c, d, n)
+print(long_to_bytes(m))
+```
 
 1. Crypto库根据已有信息构建私钥并解密
 

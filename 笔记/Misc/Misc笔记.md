@@ -556,3 +556,6 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 126. [minecraft](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#minecraft---200---Easy)
 - .mcworld后缀的文件其实是zip，后缀改成zip即可解压
 - 更完整的grep命令：`strings 000003.log | grep bucket -A 2 -B 2`。解决grep出来的字符串不全的问题。
+127. [Secret Bucket](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#Secret-Bucket---492---Medium)
+- bmp中间通道（middle channel）隐写。
+- bmp的header有一个数据，指定像素从哪里开始。但隐写内容可能在像素开始处之前就有了，这时就需要自己写脚本来提取，不能依赖stegsolve。
