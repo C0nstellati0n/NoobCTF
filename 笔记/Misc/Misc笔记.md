@@ -316,7 +316,7 @@ for file_str in file_list:
 77. [TSPL/TSPL2 Programming Language](https://www.pos-shop.ru/upload/iblock/ebd/ebd9bed075d1b925be892b297590fc18.pdf)，用于打印机。例题:[[RCTF2019]printer](https://tobatu.gitee.io/blog/2020/10/06/BUUCTF-%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95-9/#RCTF2019-printer)
 78. [北约音标字母](https://zh.wikipedia.org/wiki/%E5%8C%97%E7%BA%A6%E9%9F%B3%E6%A0%87%E5%AD%97%E6%AF%8D)，Alfa，Bravo之类的，其实就是每个单词的首字母。
 79. pgp加密，使用[PGPTool](https://pgptool.github.io/)解密。例题:[[BSidesSF2019]bWF0cnlvc2hrYQ](https://blog.csdn.net/mochu7777777/article/details/115856882)
-80. 镜像FTK挂载仿真，使用[AccessData FTK Imager](https://accessdata-ftk-imager.software.informer.com/3.1/)。例题:[[NPUCTF2020]回收站](https://shimo.im/docs/6hyIjGkLoRc43JRs)
+80. 镜像FTK挂载仿真，使用[AccessData FTK Imager](https://iowin.net/en/ftk-imager/?download=true)。例题:[[NPUCTF2020]回收站](https://shimo.im/docs/6hyIjGkLoRc43JRs)
 81. 利用[dig](https://developer.aliyun.com/article/418787)命令分析dns shell。例题:[[UTCTF2020]dns-shell](https://meowmeowxw.gitlab.io/ctf/utctf-2020-do-not-stop/)
 82. 乐高ev3机器人分析（蓝牙协议）。基本的4个协议为HCI、L2CAP、SDP、RFCOMM。对比于英特网五层结构来说：HCI相当于与物理层打交道的协议，L2CAP协议则是链路层相关协议，SDP和RFCOMM则是运输层相关协议，当然其上也有对应的应用层相关的一些协议。SDP用来发现周围蓝牙服务，然后由L2CAP来建立信道链接，然后传输由上层RFCOMM给予的数据分组。如果只是提取数据的话，只需要关心：RFCOMM协议。例题:[[HITCON2018]ev3basic](https://www.youncyb.cn/?p=493)
 83. 使用[e2fsck](https://www.runoob.com/linux/linux-comm-e2fsck.html)命令修复超级块损坏的ext2文件。例题:[[BSidesSF2020]mpfrag](http://www.ga1axy.top/index.php/archives/17/)
@@ -542,3 +542,17 @@ print(len(out))
 - 可在veracrypt volume中隐藏partition。提取隐藏partition的volume header的命令:`sudo dcfldd if=image.img of=hidden-vol.tc bs=1 skip=65536 count=512`
 123. 电路模拟软件：[Proteus](https://www.labcenter.com/proteus_pcb/?gclid=EAIaIQobChMI14GMoc2l_gIV321vBB01rglHEAAYASAAEgLKaPD_BwE)。可以模拟Arduino，不过需要提供hex file，例如`code.ino.hex`。[I see wires everywhere](https://github.com/CybercellVIIT/VishwaCTF-23_Official_Writeups/blob/main/Stegnography/Steganography_I%20see%20wires%20everywhere.pdf)
 124. 当遇见带密码的pdf时，可以尝试用[pdfcrack](https://www.kali.org/tools/pdfcrack/)破解密码。`pdfcrack -f ctf.pdf -w rockyou.txt`
+125. dd命令配合binwalk提取文件。binwalk命令可能获取到这样的输出：
+
+```
+binwalk data2 
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+2191360       0x217000        JPEG image data, JFIF standard 1.01
+```
+
+但加上-e选项却提取不出来jpg。这时可以用`dd if=data2 skip=2191360 of=res.jpg`提取。
+126. [minecraft](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#minecraft---200---Easy)
+- .mcworld后缀的文件其实是zip，后缀改成zip即可解压
+- 更完整的grep命令：`strings 000003.log | grep bucket -A 2 -B 2`。解决grep出来的字符串不全的问题。
