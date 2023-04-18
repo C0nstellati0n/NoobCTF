@@ -291,6 +291,7 @@ d = pow(e, -1, l)
 m = pow(c, d, n)
 print(long_to_bytes(m))
 ```
+- rsa要求明文不能大于n。如果明文大于n了，解密的结果是m-k\*n。此时要么按照正常方式求出m后不断加上n的倍数尝试爆破，要么尝试获取多组密文解密后用crt还原完整明文。例题:[Search-3](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#Search-3---470---Hard)
 
 1. Crypto库根据已有信息构建私钥并解密
 
@@ -1178,3 +1179,57 @@ return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes()));
 ```
 
 那么默认IV为`00000000000000000000000000000`，模式为`AES/ECB/PKCS5Padding`
+36. [SCAlloped_potatoes](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#SCAlloped_potatoes---484---Medium)
+- rsa side-channel attack：通过分析power trace恢复私钥。如果用matplotlib将powertrace的波形图绘制出来，会发现波形图的起伏对应私钥的各个字节（需要放大才能看到）。大概约10个数据为一组，高峰为1，中间值为0。
+```python
+power = eval(open("data.txt").read())
+
+from matplotlib import pyplot as plt
+plt.plot(power)
+plt.show()
+
+byt = []
+msg = ""
+for i in range(len(power)):
+    if power[i] < 125: # low voltage seperator
+        if byt:
+            chunks = [] # condense groups of 10
+            for j in range(0, len(byt), 10):
+                chunks.append(sum(byt[j:j+10]) / 10)
+            
+            # walk chunks
+            j = 0
+            byt = "0"
+            while j < len(chunks):
+                if j < len(chunks) - 1 and chunks[j] < 175 and chunks[j + 1] > 175:
+                    byt += "1"
+                    j += 2
+                else:
+                    byt += "0"
+                    j += 1
+            msg += chr(int(byt, 2))
+            byt = []
+    else:
+        byt.append(power[i]) 
+print(msg)
+```
+37. enigma爆破。在知道大部分解密参数后可以尝试爆破完整参数。
+
+```python
+from enigma.machine import EnigmaMachine
+ciphertext = ""
+for a in range(1, 26):
+    for b in range(1, 26):
+       for c in range(1, 26):
+          machine = EnigmaMachine.from_key_sheet(
+              rotors="I II III",
+              reflector="B",
+              ring_settings=[a, b, c],
+              plugboard_settings="AT BS DE FM IR KN LZ OW PV XY"
+          )
+          plaintext = machine.process_text(ciphertext).lower()
+          print(f"Testing configuration: {[a, b, c]} Decrypted message: {plaintext}")
+          if "flag" in plaintext:
+              print(f"Decrypted message: {plaintext}")
+              exit()
+```

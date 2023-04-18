@@ -27,6 +27,7 @@
 - [Can Place Flowers](Easy/Can%20Place%20Flowers.md).You have a long flowerbed in which some of the plots are planted, and some are not. However, flowers cannot be planted in adjacent plots.Given an integer array flowerbed containing 0's and 1's, where 0 means empty and 1 means not empty, and an integer n, return if n new flowers can be planted in the flowerbed without violating the no-adjacent-flowers rule.给一个花田和要插花的数量n，要求插的花不能相邻。如果花田能插下n朵花，就返回True；否则返回False。花田用1表示有花，0表示空闲。
 - [Binary Search](Easy/Binary%20Search.md).
 - [Kids With the Greatest Number of Candies](Easy/Kids%20With%20the%20Greatest%20Number%20of%20Candi.md).
+- [Merge Strings Alternately](Easy/Merge%20Strings%20Alternately.md).two pointers.
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

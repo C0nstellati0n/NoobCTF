@@ -525,3 +525,52 @@ __attribute__((constructor)) static void setup(void){
 然后编译为共享库：`gcc -shared -fPIC -ldl nosleep.c -o nosleep.so`。最后更改LD_PRELOAD路径并运行程序：`LD_PRELOAD="./nosleep.so" ./sleeper`。
 
 76. [pydumpck](https://github.com/serfend/pydumpck):反编译由python打包生成的exe，例如pygame模块编写的游戏。
+77. [Maze](https://rinnnt.github.io/ctf/2023/04/10/bucketctf-2023-writeup.html#maze-478-points-hard)
+- [预测](https://franklinta.com/2014/08/31/predicting-the-next-math-random-in-java/)java random.nextInt（double）随机数。java的伪随机让我们可以在只获取到一个由random.nextDouble生成的数字后就能完整预测接下来的数字。额外地，我们还能通过double预测之前的种子，从而获取在所获取的double数字之前生成的随机数。预测代码的java版本：[github](https://github.com/fta2012/ReplicatedRandom)；python版本：
+
+```python
+multiplier = 0x5DEECE66D
+addend = 0xB
+mask = (1 << 48) - 1
+
+double = float(input("Input the float > "))
+
+num = int(double * (1 << 53))
+first_seed_top = num >> 27
+second_seed_top = num & ((1 << 27) - 1)
+
+for i in range(1 << 22):
+    global seed
+    first_seed = (first_seed_top << (48 - 26)) + i
+    if ((first_seed * multiplier + addend) & mask) >> (48 - 27) == second_seed_top:
+        seed = (first_seed * multiplier + addend) & mask
+        print(f"FOUND: {first_seed}")
+
+def next(n):
+    global seed
+    seed = (seed * multiplier + addend) & mask
+    return seed >> (48 - n)
+
+
+def nextDouble():
+    return ((next(26) << 27) + next(27)) / (1 << 53)
+
+def nextInt(bound):
+    r = next(31)
+    m = bound - 1
+    if (bound & m) == 0:    # if bound is a power of two
+        r = (bound * r) >> 31
+    else:
+        u = r
+        r = u % bound
+        # Some checks to see if random number becomes negative from overflow?
+        while u - r + m > (1 << 31) - 1:
+            u = next(31)
+            r = u % bound
+    return r
+def prev_seed():
+    global seed
+    seed = (((seed - addend) & mask) * inv) & mask
+```
+
+原理在wp和帖子里均已给出。
