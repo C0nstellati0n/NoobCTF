@@ -418,3 +418,7 @@ int main(int argc, char *argv[]) {
 ```
 
 56. [更换程序使用的libc](https://blog.csdn.net/yongbaoii/article/details/111938821)。如果题目提供了libc但本地运行程序默认使用的libc却不是题目的，可以更换掉。libc可以在[这里](https://github.com/matrix1001/glibc-all-in-one)找。
+57. [360chunqiu2017_smallest](https://www.anquanke.com/post/id/217081)
+- SROP。当无sigreturn gadget时，可以尝试将rax改为15（系统调用号），然后执行syscall是一样的结果。注意函数的返回值也是存在rax里，要是没有pop rax，可输入任意个字节的read函数也是不错的选择。
+- SROP的本质是：内核态返回用户态时的恢复栈帧。因此构造的payload sigframe各个参数的值对应恢复时想要让栈变成的样子。调用sigreturn是为了恢复构造的假sigframe。一旦sigreturn被调用，rsp紧跟着的数据就会被视为要恢复的sigframe。一般getshell就是sys_execve。
+- sigframe的前几个字节被覆盖不会影响SROP。

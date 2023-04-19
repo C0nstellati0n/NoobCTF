@@ -54,6 +54,7 @@
 - [Simplify Path](Medium/Simplify%20Path.md). Given a string path, which is an absolute path (starting with a slash '/') to a file or directory in a Unix-style file system, convert it to the simplified canonical path. unix系统绝对路径简化。栈。
 - [Validate Stack Sequences](Medium/Validate%20Stack%20Sequences.md). Given two integer arrays pushed and popped each with distinct values, return true if this could have been the result of a sequence of push and pop operations on an initially empty stack, or false otherwise. 判断参数poped数组是不是pushed数组的栈弹出序列。stack，two pointers。
 - [Longest Palindromic Subsequence](Medium/Longest%20Palindromic%20Subsequence.md). Given a string s, find the longest palindromic subsequence's length in s. 找出字符串内最长的子回文序列。dp。
+- [Longest ZigZag Path in a Binary Tree](Medium/Longest%20ZigZag%20Path%20in%20a%20Binary%20Tree.md).dfs/bfs遍历二叉树。
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
