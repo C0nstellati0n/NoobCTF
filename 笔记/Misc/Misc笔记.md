@@ -559,3 +559,4 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 127. [Secret Bucket](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#Secret-Bucket---492---Medium)
 - bmp中间通道（middle channel）隐写。
 - bmp的header有一个数据，指定像素从哪里开始。但隐写内容可能在像素开始处之前就有了，这时就需要自己写脚本来提取，不能依赖stegsolve。
+128. 软盘文件（DOS/MBR boot sector）可以用虚拟机挂载。[misc2](https://blog.csdn.net/m0_46607055/article/details/119424070)

