@@ -560,3 +560,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 - bmp中间通道（middle channel）隐写。
 - bmp的header有一个数据，指定像素从哪里开始。但隐写内容可能在像素开始处之前就有了，这时就需要自己写脚本来提取，不能依赖stegsolve。
 128. 软盘文件（DOS/MBR boot sector）可以用虚拟机挂载。[misc2](https://blog.csdn.net/m0_46607055/article/details/119424070)
+129. 来自动画片剧集“gravity falls“的bill cipher。形如：
+![bill-cipher](../images/bill_cipher.jpg)
+
+可用[dcode](https://www.dcode.fr/gravity-falls-bill-cipher)解码。

