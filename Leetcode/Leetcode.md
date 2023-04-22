@@ -65,3 +65,4 @@
 - [Largest Color Value in a Directed Graph](Medium/Largest%20Color%20Value%20in%20a%20Directed%20Grap.md). Directed acyclic graph (DAG)，有向无环图。[拓扑排序](https://zhuanlan.zhihu.com/p/135094687)(topological sorting)算法。
 - [Maximum Value of K Coins From Piles](Hard/Maximum%20Value%20of%20K%20Coins%20From%20Piles.md).Given a list piles, where piles[i] is a list of integers denoting the composition of the ith pile from top to bottom, and a positive integer k, return the maximum total value of coins you can have in your wallet if you choose exactly k coins optimally. 给出几堆硬币和可拿取的数量k。每次只能从硬币堆的最顶端取硬币，返回k步里可取到的硬币最大值。
 - [Number of Ways to Form a Target String Given a Dictionary](Hard/Number%20of%20Ways%20to%20Form%20a%20Target%20String.md).dp.
+- [Profitable Schemes](Hard/Profitable%20Schemes.md).dp,类knapsack问题。
