@@ -1255,3 +1255,31 @@ ErrorDocument 404 "wupco"
 </If>
 ```
 `~`用于开启“正则表达式”分析，正则表达式必须在双引号之间。如果匹配到flag就设置ErrorDocument 404为"wupco"。可以将中间的`flag{`一个字符一个字符地试错匹配，通过回显判断是否正确，即盲注。
+190. md5截断多线程爆破脚本。
+
+```python
+#substr(md5(captcha), -6, 6) == "5e1df8"
+import hashlib
+from multiprocessing.dummy import Pool as ThreadPool 
+def md5(s):  # 计算MD5字符串
+    return hashlib.md5(str(s).encode('utf-8')).hexdigest()
+keymd5 = '5e1df8'  # 已知的md5截断值
+md5start = -6  # 设置题目已知的截断位置
+def findmd5(sss):  # 输入范围 里面会进行md5测试
+    key = sss.split(':')
+    start = int(key[0])  # 开始位置
+    end = int(key[1])  # 结束位置
+    result = 0
+    for i in range(start, end):
+        if md5(i)[md5start:] == keymd5:
+            result = i
+            print(result)  # 打印
+            break
+list = []  # 参数列表
+for i in range(1):  # 多线程的数字列表 开始与结尾.range里的数字表示爆破范围的线程数量
+    list.append(str(10000000 * i) + ':' + str(10000000 * (i + 1)))
+pool = ThreadPool()  # 多线程任务
+pool.map(findmd5, list)  # 函数 与参数列表
+pool.close()
+pool.join()
+```
