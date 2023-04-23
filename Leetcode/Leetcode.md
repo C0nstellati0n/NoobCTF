@@ -67,3 +67,4 @@
 - [Number of Ways to Form a Target String Given a Dictionary](Hard/Number%20of%20Ways%20to%20Form%20a%20Target%20String.md).dp.
 - [Profitable Schemes](Hard/Profitable%20Schemes.md).dp,类knapsack问题。
 - [Minimum Insertion Steps to Make a String Palindrome](Hard/Minimum%20Insertion%20Steps%20to%20Make%20a%20Stri.md).dp+two pointers。
+- [Restore The Array](Hard/Restore%20The%20Array.md).递归/遍历dp。
