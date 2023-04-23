@@ -3,40 +3,7 @@
 ## RSA
 - 得到d和c，p和q为相邻质数。例题：[[NCTF2019]babyRSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BNCTF2019%5DbabyRSA.md)
 - 光滑数分解+威尔逊定理使用。例题1：[smooth](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/smooth.md)，例题2:[[RoarCTF2019]babyRSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BRoarCTF2019%5DbabyRSA.md)
-- 共模攻击。适用于相同明文用同样的n却用不同的e加密时。注意两个不同的e需要互质。[例题1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Crypto/best_rsa.md)搭配使用Crypto库读取公钥，[例题2](https://blog.csdn.net/weixin_44017838/article/details/104886290)搭配解密结果是ascii的情况。例题2脚本：
-
-```python
-from gmpy2 import invert
-def egcd(a, b):
-    if a == 0:
-        return (b, 0, 1)
-    else:
-        g, y, x = egcd(b % a, a)
-        return (g, x - (b // a) * y, y)
-n=6266565720726907265997241358331585417095726146341989755538017122981360742813498401533594757088796536341941659691259323065631249
-e1=773
-e2=839
-c1=3453520592723443935451151545245025864232388871721682326408915024349804062041976702364728660682912396903968193981131553111537349
-c2=5672818026816293344070119332536629619457163570036305296869053532293105379690793386019065754465292867769521736414170803238309535
-_,s1,s2=egcd(e1,e2)
-if s1<0:
-	s1 = -s1
-	c1 = invert(c1, n)
-elif s2<0:
-	s2 = -s2
-	c2 = invert(c2, n)
-m = str(pow(c1,s1,n)*pow(c2,s2,n) % n)
-i=0
-while i<len(m):
-  if m[i]=='1':
-    print(chr(int(m[i:i+3])),end='')
-    i+=3
-  else:
-    print(chr(int(m[i:i+2])),end='')
-    i+=2
-```
-
-为了整体好用，给出函数版本：
+- 共模攻击。适用于相同明文用同样的n却用不同的e加密时。注意两个不同的e需要互质。[例题1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Crypto/best_rsa.md)搭配使用Crypto库读取公钥，[例题2](https://blog.csdn.net/weixin_44017838/article/details/104886290)搭配解密结果是ascii的情况。
 
 ```python
 from Crypto.Util.number import *
@@ -58,16 +25,12 @@ def decrypt(e1,e2,n,c1,c2):
     m = pow(c1,s1,n)*pow(c2,s2,n) % n
     return long_to_bytes(m)
 n=0
-with open("HUB1",'r') as f:
-    c1=f.read().split('\n')[3:]
-with open("HUB2",'r') as f:
-    c2=f.read().split('\n')[3:]
-with open("result.txt",'w') as f:
-    for i,j in enumerate(c1):
-        f.write(decrypt(1697,599,n,int(j),int(c2[i])).decode())
+c1=0
+c2=0
+print(decrypt(1697,599,n,c1,c2).decode())
 ```
 
-- lcm问题+e与toitent不互质（gcd较小）。例题：[[NPUCTF2020]EzRSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BNPUCTF2020%5DEzRSA.md)
+- lcm问题+e与phi不互质（gcd较小）。例题：[[NPUCTF2020]EzRSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BNPUCTF2020%5DEzRSA.md)
 - dp泄露。例题：[0rsa0](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/0rsa0.md)
 - sagemath解二元方程组+e，d泄露后分解n。例题:[[MRCTF2020]Easy_RSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BMRCTF2020%5DEasy_RSA.md)
 - rsa衍生算法：[Rabin](https://co5mos.github.io/2018/09/14/rsa-rabin/)。[原理](https://zhuanlan.zhihu.com/p/533927542)及脚本：
@@ -95,7 +58,104 @@ print(bin((-y)%n))
 rabin算法可以解出来4个明文，一般末尾会有类似校验码的东西，帮助分辨哪个是真正的明文。[来源](https://www.jianshu.com/p/00a35ebd36fb)。
 - 当模数n过大， $m^e$ 次方没有n大时，就可以直接对c开e次方。例题:[[INSHack2017]rsa16m](https://blog.csdn.net/zippo1234/article/details/109268561)。
 - e和phi不互素+中国剩余定理解决多组c和n问题。例题1:[Weird_E_Revenge](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/Weird_E_Revenge.md)。例题2:[[De1CTF2019]babyrsa](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BDe1CTF2019%5Dbabyrsa.md)
-- 低解密指数攻击（wiener attack）。例题:[[羊城杯 2020]RRRRRRRSA](../../CTF/BUUCTF/Crypto/[羊城杯%202020]RRRRRRRSA.md)
+  - 如果给出两组n，c和e，且两组数据的phi和e gcd一致，解法与Weird_E_Revenge大致相同。
+```python
+from Crypto.Util.number import *
+import gmpy2
+from sympy.ntheory.modular import crt
+
+e1 = 0
+p1 = 0
+q1 = 0
+c1 = 0
+n1 = p1 * q1
+
+e2 = 0
+p2 = 0
+q2 = 0
+c2 = 0
+n2 = p2 * q2
+
+p = p1
+phi1 = (p - 1) * (q1 - 1)
+phi2 = (p - 1) * (q2 - 1)
+b = gmpy2.gcd(e1, phi1)
+a1 = e1 // b
+a2 = e2 // b
+bd1 = gmpy2.invert(a1, phi1)
+bd2 = gmpy2.invert(a2, phi2)
+
+mb1 = pow(c1, bd1, n1)
+mb2 = pow(c2, bd2, n2)
+c3 = mb1 * mb2 % p
+c2 = mb2 % q2
+c1 = mb1 % q1
+
+res = crt([q1, q2, p],[c1, c2, c3])[0]
+
+n = q1 * q2
+f = (q1 - 1) * (q2 - 1)
+m = res % n
+d2 = gmpy2.invert(7, f)
+m = pow(m, d2, n)
+msg = gmpy2.iroot(m, 2)[0]
+print(long_to_bytes(msg).decode())
+```
+- e非常大，相应的d就会很小。低解密指数攻击（wiener attack）。例题:[[羊城杯 2020]RRRRRRRSA](../../CTF/BUUCTF/Crypto/[羊城杯%202020]RRRRRRRSA.md)
+```python
+import gmpy2
+from Crypto.Util.number import long_to_bytes
+
+
+def continuedFra(x, y):
+    cF = []
+    while y:
+        cF += [x // y]
+        x, y = y, x % y
+    return cF
+
+
+def Simplify(ctnf):
+    numerator = 0
+    denominator = 1
+    for x in ctnf[::-1]:
+        numerator, denominator = denominator, x * denominator + numerator
+    return (numerator, denominator)
+
+
+def calculateFrac(x, y):
+    cF = continuedFra(x, y)
+    cF = list(map(Simplify, (cF[0:i] for i in range(1, len(cF)))))
+    return cF
+
+
+def solve_pq(a, b, c):
+    par = gmpy2.isqrt(b * b - 4 * a * c)
+    return (-b + par) // (2 * a), (-b - par) // (2 * a)
+
+
+def wienerAttack(e, n):
+    for (d, k) in calculateFrac(e, n):
+        if k == 0:
+            continue
+        if (e * d - 1) % k != 0:
+            continue
+        phi = (e * d - 1) // k
+        p, q = solve_pq(1, n - phi + 1, n)
+        if p * q == n:
+            return abs(int(p)), abs(int(q))
+    print('[!]not found!')
+e = 0
+n = 0
+c = 0
+p, q = wienerAttack(e, n)
+print('[+]Found!')
+print('[-]p =', p)
+print('[-]q =', q)
+d = gmpy2.invert(e, (p-1)*(q-1))
+flag = long_to_bytes(pow(c,d,n))
+print (flag)
+```
 - 多项式下的RSA(PolynomialRing)。例题:[[watevrCTF 2019]Swedish RSA](../../CTF/BUUCTF/Crypto/[watevrCTF%202019]Swedish%20RSA.md)
 - e与phi不互质且gcd很大，使用AMM开根法+CRT。例题:[[NCTF2019]easyRSA](https://blog.soreatu.com/posts/intended-solution-to-crypto-problems-in-nctf-2019/#easyrsa909pt-2solvers)。附AMM算法（sagemath）：
 
@@ -248,18 +308,16 @@ print(long_to_bytes(flag))
 n = 0
 p4=0 #泄露的高位
 e = 0x10001
-pbits = 128 #完整p的倍数
-kbits = pbits - p4.nbits()
-print(p4.nbits())
-p4 = p4 << kbits
+pbits = 1024 #完整p的位数
+kbits = 128 #泄露的位数
 PR.<x> = PolynomialRing(Zmod(n))
 f = x + p4
 roots = f.small_roots(X=2^kbits, beta=0.4)
 if roots:        
     p = p4+int(roots[0])
-    print ("n: ", n)   
-    print ("p: ", p)
-    print ("q: ", n/p)
+    print ("n=", n)   
+    print ("p=", p)
+    print ("q=", n/p)
 ````
 
 coppersmith算法的作用是求解根较小的同余式方程。已知p高位攻击其实是求这么一个方程的根： $p_{high}+x=0\mod p$ 。特殊地，如果大小得当，可以在不知道模只知道模的倍数前提下，求解方程。即解 $p_{high}+x=0\mod n$ 。
@@ -303,14 +361,14 @@ import gmpy2
 import base64
 from Crypto.Util.number import *
 from Crypto.Cipher import PKCS1_OAEP
-n=0
-e=65537
-p=3133337
+p=0
 q=0
+n=p*q
+e=65537
 phi=(p-1)*(q-1)
 d=gmpy2.invert(e,phi)
-text=''
-c_bytes = base64.b64decode(text)
+with open("flag.enc",'rb') as f:
+    c_bytes=f.read()
 rsa_components=(n,e,int(d),p,q)
 arsa=RSA.construct(rsa_components)
 rsakey=RSA.importKey(arsa.exportKey())

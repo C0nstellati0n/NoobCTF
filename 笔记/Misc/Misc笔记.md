@@ -74,9 +74,9 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
 说明这里有文件可以提取。记住开始的字符串，使用以下命令提取：
 
 - zsteg -E "extradata:0" ctf.png > res.zip
-
 - binwalk
-> binwalk xxx(支持任何类型，加上-e可以提取，不过有时候提取不出来，下方的foremost补充使用)
+  - binwalk xxx(支持任何类型，加上-e可以提取，不过有时候提取不出来，下方的foremost补充使用)
+  - binwalk可能会提取出一些Zlib compressed data，有时候flag会藏在里面。
 - foremost(有时候即使binwalk没有提示任何文件，foremost也能提取出东西。所以binwalk提示没有问题时，也不要忘记试foremost)
 - outguess，例题：[Avatar](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/4%E7%BA%A7/Misc/Avatar.md)。注意有时候outguess会需要密码，密码可能藏在exif里。例题:[[ACTF新生赛2020]outguess](https://blog.csdn.net/mochu7777777/article/details/108936734)
 - [F5隐写](https://github.com/matthewgao/F5-steganography)，例题：[刷新过的图片](https://blog.csdn.net/destiny1507/article/details/102079695)
@@ -568,3 +568,4 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 ![runes](../images/runes.jpeg)
 
 每个符号对应一个词语，每个词语的开头是其对应的字母。
+131. png图片的IDAT块会影响图片的显示。比如一张有多个IDAT块的图片，也许删除几个才能正常显示。可用[tweakpng](https://entropymine.com/jason/tweakpng/)修改。[misc11&12](https://blog.csdn.net/qq_46230755/article/details/115261625#t14)
