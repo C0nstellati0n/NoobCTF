@@ -318,9 +318,55 @@ if roots:
     print ("n=", n)   
     print ("p=", p)
     print ("q=", n/p)
-````
+```
 
 coppersmith算法的作用是求解根较小的同余式方程。已知p高位攻击其实是求这么一个方程的根： $p_{high}+x=0\mod p$ 。特殊地，如果大小得当，可以在不知道模只知道模的倍数前提下，求解方程。即解 $p_{high}+x=0\mod n$ 。
+- coppersmith(m高位泄露,已知明文高位)。假设加密了消息 m，如下：
+
+$C\equiv m^e\mod N$
+
+并且我们假设我们知道消息 m的很大的一部分 m0，即 m=m0+x，但是我们不知道 x。那么我们就有可能通过coppersmith恢复消息。这里我们不知道的 x其实就是多项式的根，需要满足 Coppersmith 的约束。当 e足够小，且部分明文泄露时，可以采用Coppersmith单变量模等式的攻击，如下：
+
+$c=m^e\mod n=(mbar+x_0)^e\mod n$
+
+其中 mbar=(m>>kbits)<<kbits
+```python
+def phase2(high_m, n, c):
+    R.<x> = PolynomialRing(Zmod(n), implementation='NTL')
+    m = high_m + x
+    M = m((m^3 - c).small_roots()[0])
+    print(hex(int(M))[2:])
+
+n = 
+c = 
+high_m = 
+
+phase2(high_m, n, c)
+```
+- coppersmith's short-pad attack& Related Message Attack(Franklin-Reiter，相关信息攻击)
+```python
+import binascii
+def attack(c1, c2 e):
+    PR.<x>=PolynomialRing(Zmod(n))
+    a=
+    b=
+    c=
+    d=
+    g1 = (a*x+b)^e - c1
+    g2 = (c*x+d)^e - c2
+
+    def gcd(g1, g2):
+        while g2:
+            g1, g2 = g2, g1 % g2
+        return g1.monic()
+    return -gcd(g1, g2)[0]
+c1 =
+c2 =
+e =
+m1 = attack(c1, c2 e)
+print(binascii.unhexlify("%x" % int(m1)))
+```
+相关信息攻击的关键点在于找出两条信息具有线性关系的方程。通常方程形如 $((a\*m)+b)^e\mod n$ 和 $((c\*m)+d)^e\mod n$ ，也是脚本中需要自己填写的a，b，c和d值的由来。[unusualrsa2](https://4xwi11.github.io/posts/80806ae5/#unusualrsa2)
 - 给出p+q（(p-2)(q-2)一个作用）和n时，构造多项式即可获取p或q。
 
 $f(x)=(x-p)(x-q)$<br>
@@ -387,22 +433,9 @@ print(f"n={key1.n}\ne={key1.e}")
 4. 离散对数问题。一般的对数 $a^b=c$ ，求得b可以直接用 $log_a(c)$ 。但是在加上模运算的情况下就要使用离散对数了。 $a^b=c\mod d$ ，使用sympy的离散对数函数。
 
 ```python
-""" #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from Crypto.Util.number import *
-import random
-
-n = 2 ** 512
-m = random.randint(2, n-1) | 1
-c = pow(m, bytes_to_long(flag), n)
-print 'm = ' + str(m)
-print 'c = ' + str(c)
-
-# m = 391190709124527428959489662565274039318305952172936859403855079581402770986890308469084735451207885386318986881041563704825943945069343345307381099559075
-# c = 6665851394203214245856789450723658632520816791621796775909766895233000234023642878786025644953797995373211308485605397024123180085924117610802485972584499 """
-m = 391190709124527428959489662565274039318305952172936859403855079581402770986890308469084735451207885386318986881041563704825943945069343345307381099559075
-c = 6665851394203214245856789450723658632520816791621796775909766895233000234023642878786025644953797995373211308485605397024123180085924117610802485972584499
-n=2**512
+m = 0
+c = 0
+n=0
 from Crypto.Util.number import *
 import sympy
 x=sympy.discrete_log(n,c,m)  #参数顺序：sympy.discrete_log(模数，结果，底数)
