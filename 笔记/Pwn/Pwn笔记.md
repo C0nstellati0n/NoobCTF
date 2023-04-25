@@ -429,3 +429,6 @@ int main(int argc, char *argv[]) {
   - 可覆盖top chunk的size
   - 已知想要分配处的地址和top chunk地址的偏移（或
 - 计算house of force需要申请的堆块大小。目标地址-top chunk地址-size_t-malloc_allign。32位的size_t=4,malloc_allign=7;64位size_t=8,malloc_allign=0xf.
+59. [whoami](../../CTF/攻防世界/5级/Pwn/whoami.md)
+- 64位连续多次栈迁移至bss段。
+- system函数执行时需要注意爆栈。如果一次栈迁移无法执行system，那就迁移多次，让栈环境满足调用system的条件。
