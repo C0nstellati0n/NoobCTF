@@ -610,7 +610,7 @@ array(2) {
 
 83. sqlmap使用[参考](https://www.freebuf.com/sectool/164608.html)。
 84. php引用赋值。例题:[BUU CODE REVIEW 1](https://blog.csdn.net/qq_45555226/article/details/110003144)
-85. 伪造ip的几种方式。
+85. 伪造内网ip的几种方式。
 
 ```
 X-Originating-IP: 127.0.0.1
@@ -1255,6 +1255,7 @@ ErrorDocument 404 "wupco"
 </If>
 ```
 `~`用于开启“正则表达式”分析，正则表达式必须在双引号之间。如果匹配到flag就设置ErrorDocument 404为"wupco"。可以将中间的`flag{`一个字符一个字符地试错匹配，通过回显判断是否正确，即盲注。
+
 190. md5截断多线程爆破脚本。
 
 ```python
