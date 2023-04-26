@@ -6,13 +6,13 @@
 
 附件下载下来发现是exe文件。我没法运行，不管了直接扔进Ghidra里。有一个Entry，但是可以判断不是我们想要的入口点。菜单栏->Window->Function Call Graph可以更好地判断出入口点。这里发现了一个函数内部有“right”等字符串，判断是我们的目标。
 
-![entry](https://github.com/C0nstellati0n/NoobCTF/blob/main/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/images/theEntry.png)
+![entry](../../images/theEntry.png)
 
 逆向了几道题后我发现在Ghidra里有的时候就别想完全明白代码在干啥了，只能靠经验去猜代码干了什么。比如这里按正常思路是要让uVar8等于0。但是你可以仔细看一下如何让uVar8等于0，过于复杂，各种代码交织在一起。这里提前告诉你其实整个判断逻辑只有3步。
 
 换个想法，找一下内存中有没有什么可疑的字符串。一般程序中可疑的字符串都是和flag的逆向有关的。（菜单栏->Window->Defined Strings可以查看定义的字符串）
 
-![fakeFlag](https://github.com/C0nstellati0n/NoobCTF/blob/main/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/images/fakeFlag.png)
+![fakeFlag](../../images/fakeFlag.png)
 
 发现了一个flag，但是提交后发现不对。不过下面还有一个可疑的数组，追踪一下这个数组看看在哪里被使用了。（右键目标数组->Reference->Show Reference To Address)
 
@@ -34,5 +34,5 @@ print(''.join(s[::-1]))
 
 事实证明我们是对的。看了别人的使用ida的writeup后才发现逻辑其实非常简单，这个难度完全是被Ghidra自己提升上去了。
 
-- ### Flag
-- > flag{xNqU4otPq3ys9wkDsN}
+## Flag
+> flag{xNqU4otPq3ys9wkDsN}

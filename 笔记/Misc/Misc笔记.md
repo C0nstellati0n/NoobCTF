@@ -569,3 +569,43 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 
 每个符号对应一个词语，每个词语的开头是其对应的字母。
 131. png图片的IDAT块会影响图片的显示。比如一张有多个IDAT块的图片，也许删除几个才能正常显示。可用[tweakpng](https://entropymine.com/jason/tweakpng/)修改。[misc11&12](https://blog.csdn.net/qq_46230755/article/details/115261625#t14)
+
+132. 解密smb2流量需要两个值：
+- Session ID
+- Random Session Key
+
+如何获取：
+- 选择带有“Session Setup Request”字样的报文然后查看` SMB2 (Server Message Block Protocol version 2) `
+- session id:SMB2 (Server Message Block Protocol version 2) >> SMB2 Header >> Session Id。选中值并右键>> Copy >> as Printable Text for ascii 或者 as a Hex Stream，如果需要16进制的值。假如报文显示的session id为`0x0000980000000001`,那么真正的session id要按照8个bit为一组并反过来：`0100000000980000`
+- Random Session Key：需要用5个值计算，Username, Domain name, Password, NTLM Response 和 Session Key（不是刚才获取的那个）。通过SMB2 (Server Message Block Protocol version 2) >> Session Setup Request (0x01) >> Security Blob >> GSS-API Generic Security Service Application Program Interface >> Simple Protected Negotiation >> negTokenTarg >> NTLM Secure Service Provider可获取。要注意的是，假设在报文里看见`NTLM Response: 6a84617ec549a8b50a95af41b65a04330101xxxxxxx`,用于计算的NTLM Response值为`: 6a84617ec549a8b50a95af41b65a0433`，只取0101前面的部分。Password需要结合题目获得。例如题目里还有RDP等协议有着相同的用户名且密码可知，就能把密码作为Password的值。最后用脚本计算。
+```python
+import hashlib
+import hmac
+from Cryptodome.Cipher import ARC4
+def generateEncryptedSessionKey(keyExchangeKey, exportedSessionKey):
+    cipher = ARC4.new(keyExchangeKey)
+    cipher_encrypt = cipher.encrypt
+    sessionKey = cipher_encrypt(exportedSessionKey)
+    return sessionKey
+user = "".upper().encode('utf-16le') #Username
+domain = "".upper().encode('utf-16le') #Domain name
+passw = "".encode('utf-16le') #Password
+hash1 = hashlib.new("md4", passw)
+password = hash1.digest()
+h = hmac.new(password, digestmod=hashlib.md5)
+h.update(user + domain)
+respNTKey = h.digest()
+NTproofStr = bytes.fromhex("") #NTLM Response
+h = hmac.new(respNTKey, digestmod=hashlib.md5)
+h.update(NTproofStr)
+KeyExchKey = h.digest()
+RsessKey = generateEncryptedSessionKey(KeyExchKey, bytes.fromhex("")) #Session Key
+print("USER WORK: " + user.decode() + "" + domain.decode())
+print("PASS HASH: " + password.hex())
+print("RESP NT: " + respNTKey.hex())
+print("NT PROOF: " + NTproofStr.hex())
+print("KeyExKey: " + KeyExchKey.hex())
+print("Random SK: " + RsessKey.hex())
+```
+- 使用Random Session Key解密smb2流量。Menu>> Edit >> Preferences >> Protocols >> SMB2 >> Edit。在弹出的窗口中点击+号添加Session ID，Session Key，Server-to-Client:`(zero length)`,Client=to=Server:`(zeron length)`.如果只看见前两项，需要安装最新版的wireshark。解密后就能导出smb2流量里的文件了。Menu>>File >> Export Objects >> SMB
+133. 分析HTTPS流量前需要证书解密。若有证书（如server_key.pem），去到菜单栏>>Edit >> preferences >> protocol >> TLS >> RSA keys list,选择pem文件后解密。就能用`http`过滤出解密的流量包了。

