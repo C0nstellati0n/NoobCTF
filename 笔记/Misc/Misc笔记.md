@@ -25,15 +25,13 @@ for i in range(2000):
 也可以考虑下面这个脚本自动改宽高并生成文件(仅限png):
 
 ```python
-#coding=utf-8
 import zlib
 import struct
-#读文件
-file = 'ctf.png'
+file = '/Users/constellation/Downloads/misc26.png'
 fr = open(file,'rb').read()
 data = bytearray(fr[12:29])
 #crc32key = str(fr[29:33]).replace('\\x','').replace("b'",'0x').replace("'",'')
-crc32key = 0x1670BAE6 #补上0x，copy hex value
+crc32key = 0xEC9CCBC6 #补上0x，copy hex value
 #data = bytearray(b'\x49\x48\x44\x52\x00\x00\x01\xF4\x00\x00\x01\xF1\x08\x06\x00\x00\x00')  #hex下copy grep hex
 n = 4095 #理论上0xffffffff,但考虑到屏幕实际，0x0fff就差不多了
 for w in range(n):#高和宽一起爆破
@@ -46,15 +44,15 @@ for w in range(n):#高和宽一起爆破
             #print(data)
         crc32result = zlib.crc32(data)
         if crc32result == crc32key:
-            print(width,height)
-            #写文件
+            print(f"width:{width.hex()}\nheight:{height.hex()}")
             newpic = bytearray(fr)
             for x in range(4):
                 newpic[x+16] = width[x]
                 newpic[x+20] = height[x]
-            fw = open(f"{file}.png",'wb')#保存副本
+            fw = open(f"{file}.png",'wb')
             fw.write(newpic)
-            fw.close
+            fw.close()
+            exit()
 ```
 
 5. 遇见webshell查杀题直接用D盾扫。例题:[webshell后门](https://buuoj.cn/challenges#webshell%E5%90%8E%E9%97%A8)
@@ -609,3 +607,5 @@ print("Random SK: " + RsessKey.hex())
 ```
 - 使用Random Session Key解密smb2流量。Menu>> Edit >> Preferences >> Protocols >> SMB2 >> Edit。在弹出的窗口中点击+号添加Session ID，Session Key，Server-to-Client:`(zero length)`,Client=to=Server:`(zeron length)`.如果只看见前两项，需要安装最新版的wireshark。解密后就能导出smb2流量里的文件了。Menu>>File >> Export Objects >> SMB
 133. 分析HTTPS流量前需要证书解密。若有证书（如server_key.pem），去到菜单栏>>Edit >> preferences >> protocol >> TLS >> RSA keys list,选择pem文件后解密。就能用`http`过滤出解密的流量包了。
+134. bmp图片文件格式[详解](https://www.cnblogs.com/Matrix_Yao/archive/2009/12/02/1615295.html)。bmp图片可以通过改宽高来隐写的。宽和高各占4个字节，在16进制编辑器里正好是第二行开始的前8个字节。
+135. jpg改宽高[隐写](https://blog.csdn.net/u010391191/article/details/80811813)。
