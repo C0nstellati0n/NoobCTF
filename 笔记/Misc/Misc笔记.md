@@ -609,3 +609,26 @@ print("Random SK: " + RsessKey.hex())
 133. 分析HTTPS流量前需要证书解密。若有证书（如server_key.pem），去到菜单栏>>Edit >> preferences >> protocol >> TLS >> RSA keys list,选择pem文件后解密。就能用`http`过滤出解密的流量包了。
 134. bmp图片文件格式[详解](https://www.cnblogs.com/Matrix_Yao/archive/2009/12/02/1615295.html)。bmp图片可以通过改宽高来隐写的。宽和高各占4个字节，在16进制编辑器里正好是第二行开始的前8个字节。
 135. jpg改宽高[隐写](https://blog.csdn.net/u010391191/article/details/80811813)。
+136. [隐信道数据安全分析](https://blog.csdn.net/mochu7777777/article/details/120279188)
+- mp3文件private bit隐写。使用010 Editor查看文件结构，在每个MPEG_FRAME mf下的4字节MPEG_HEADER mpeg_hdr中的第24个bit是private bit。此处可以隐写内容。
+```python
+from binascii import *
+with open('flag.mp3', 'rb') as f:
+	init_mpeg_hdr = 0x1c1b8 #010 Editor中查看MPEG_FRAME mf[0] 的偏移
+	mpeg_data_block = 0x0
+	flag = ''
+	while True:
+		next_mpeg_hdr = init_mpeg_hdr + mpeg_data_block
+		f.seek(next_mpeg_hdr)
+		bin_data = bin(int(hexlify(f.read(4)), 16))[2:]
+		flag += bin_data[23]
+		mpeg_data_block += 0x414 #一个MPEG_FRAME mf的大小
+		if int(str(next_mpeg_hdr), 16) > len(f.read()):
+			break
+	for i in range(0, len(flag), 8):
+		try:
+			res_flag = chr(int(flag[i:i+8], 2))
+			print(res_flag,end="")
+		except:
+			pass
+```

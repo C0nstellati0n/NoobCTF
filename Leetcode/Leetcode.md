@@ -72,3 +72,4 @@
 - [Profitable Schemes](Hard/Profitable%20Schemes.md).dp,类knapsack问题。
 - [Minimum Insertion Steps to Make a String Palindrome](Hard/Minimum%20Insertion%20Steps%20to%20Make%20a%20Stri.md).dp+two pointers。
 - [Restore The Array](Hard/Restore%20The%20Array.md).递归/遍历dp。
+- [Similar String Groups](Hard/Similar%20String%20Groups.md).dfs/bfs/union find.

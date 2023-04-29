@@ -432,3 +432,10 @@ int main(int argc, char *argv[]) {
 59. [whoami](../../CTF/攻防世界/5级/Pwn/whoami.md)
 - 64位连续多次栈迁移至bss段。
 - system函数执行时需要注意爆栈。如果一次栈迁移无法执行system，那就迁移多次，让栈环境满足调用system的条件。
+60. [npuctf_2020_bad_guy](https://blog.csdn.net/csdn546229768/article/details/123717993)
+- 无show堆题[使用IO_FILE（_IO_2_1_stdout_）泄露libc](https://www.jianshu.com/p/27152c14e2e7).通常需要满足：
+  - 将_flags设置为0xfbad18**。目的是为了设置_IO_CURRENTLY_PUTTING=0x800，_IO_IS_APPENDING=0x1000，IO_MAGIC=0xFBAD0000 （这里关系到puts的实现）
+  - 设置_IO_write_base指向想要泄露的地方；_IO_write_ptr指向泄露结束的地址。
+  - 之后遇到puts或printf，就会将_IO_write_base指向的内容打印出来。
+  - 常见payload:`p64(0xfbad1800)+p64(0x0)*3+'\x00'`。其中`0xfbad1800`为_flags的值，不同版本的libc会有变化。似乎无需改动_IO_write_base的值。
+- 为了设置stdout为想要的值，一般利用unsorted bin中chunk的fd字段的main_arena相关值，覆盖最后两个字节为到__IO_2_1_stdout的正上方处（满足fakechunk的size，如0x7f的地方即可）。从左往右数的第一个数字需要爆破需要爆破。可以看出需要堆溢出漏洞。

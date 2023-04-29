@@ -1356,3 +1356,6 @@ for i in code:
     w+=chr(int(k))
 print(w)
 ```
+
+40. [[NPUCTF2020]Mersenne twister](https://blog.csdn.net/weixin_44110537/article/details/108436309)
+- 梅森旋转算法（Mersenne twister,mt73991伪随机）的爆破。若攻击者能获取624个寄存器状态，可以直接逆向。若不足则需要[爆破](https://liam.page/2018/01/12/Mersenne-twister/) 。

