@@ -73,3 +73,4 @@
 - [Minimum Insertion Steps to Make a String Palindrome](Hard/Minimum%20Insertion%20Steps%20to%20Make%20a%20Stri.md).dp+two pointers。
 - [Restore The Array](Hard/Restore%20The%20Array.md).递归/遍历dp。
 - [Similar String Groups](Hard/Similar%20String%20Groups.md).dfs/bfs/union find.
+- [Checking Existence of Edge Length Limited Paths](Hard/Checking%20Existence%20of%20Edge%20Length%20Limi.md).[并查集](https://zhuanlan.zhihu.com/p/93647900)（DSU）,内部为union find。
