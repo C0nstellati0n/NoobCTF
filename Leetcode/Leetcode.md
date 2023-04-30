@@ -74,3 +74,4 @@
 - [Restore The Array](Hard/Restore%20The%20Array.md).递归/遍历dp。
 - [Similar String Groups](Hard/Similar%20String%20Groups.md).dfs/bfs/union find.
 - [Checking Existence of Edge Length Limited Paths](Hard/Checking%20Existence%20of%20Edge%20Length%20Limi.md).[并查集](https://zhuanlan.zhihu.com/p/93647900)（DSU）,内部为union find。
+- [Remove Max Number of Edges to Keep Graph Fully Traversable](Hard/Remove%20Max%20Number%20of%20Edges%20to%20Keep%20Gra.md).DSU(union find)
