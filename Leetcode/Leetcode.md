@@ -30,6 +30,7 @@
 - [Merge Strings Alternately](Easy/Merge%20Strings%20Alternately.md).two pointers.
 - [Last Stone Weight](Easy/Last%20Stone%20Weight.md).[堆](https://www.jianshu.com/p/6b526aa481b1)（heap，也叫优先队列（priority queue））数据结构。
 - [Add Digits](Easy/Add%20Digits.md)
+- [Average Salary Excluding the Minimum and Maximum Salary](Easy/Average%20Salary%20Excluding%20the%20Minimum%20a.md).
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
