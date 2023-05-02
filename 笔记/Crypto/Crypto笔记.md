@@ -1359,3 +1359,67 @@ print(w)
 
 40. [[NPUCTF2020]Mersenne twister](https://blog.csdn.net/weixin_44110537/article/details/108436309)
 - 梅森旋转算法（Mersenne twister,mt73991伪随机）的爆破。若攻击者能获取624个寄存器状态，可以直接逆向。若不足则需要[爆破](https://liam.page/2018/01/12/Mersenne-twister/) 。
+41. [PRNG](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/prng)
+- 针对[linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator)的预测攻击：给出prng的前十个数字（种子未知）。找出接下来的10个数字。使用[脚本](https://github.com/jvdsn/crypto-attacks/blob/master/attacks/lcg/parameter_recovery.py)恢复初始参数，或者直接交互：
+```python
+#https://ctftime.org/writeup/12046
+from pwn import *
+class Rand:
+    def __init__(self, seed,m,a,c):
+        self.m = m
+        self.a = a
+        self.c = c
+        self.seed = seed
+        if seed % 2 == 0: # initial state must be odd
+            self.seed += 1
+
+    def rand(self):
+        self.seed = (self.a * self.seed + self.c) % self.m
+        return self.seed
+
+r = remote("", 443)
+r.recvline()
+
+numbers = [int(r.recvline().rstrip()) for _ in range(10)]
+
+from functools import reduce
+from math import gcd
+
+def egcd(a, b):
+    lastremainder, remainder = abs(a), abs(b)
+    x, lastx, y, lasty = 0, 1, 1, 0
+    while remainder:
+        lastremainder, (quotient, remainder) = remainder, divmod(lastremainder, remainder)
+        x, lastx = lastx - quotient*x, x
+        y, lasty = lasty - quotient*y, y
+    return lastremainder, lastx * (-1 if a < 0 else 1), lasty * (-1 if b < 0 else 1)
+
+
+def modinv(a, m):
+    g, x, y = egcd(a, m)
+    if g != 1:
+        raise ValueError('modinv for {} does not exist'.format(a))
+    return x % m
+
+def crack_unknown_increment(states, modulus, multiplier):
+    increment = (states[1] - states[0]*multiplier) % modulus
+    return modulus, multiplier, increment
+
+def crack_unknown_multiplier(states, modulus):
+    multiplier = (states[2] - states[1]) * modinv(states[1] - states[0], modulus) % modulus
+    return crack_unknown_increment(states, modulus, multiplier)
+
+
+def crack_unknown_modulus(states):
+    diffs = [s1 - s0 for s0, s1 in zip(states, states[1:])]
+    zeroes = [t2*t0 - t1*t1 for t0, t1, t2 in zip(diffs, diffs[1:], diffs[2:])]
+    modulus = abs(reduce(gcd, zeroes))
+    return crack_unknown_multiplier(states, modulus)
+
+m, a, c = crack_unknown_modulus(numbers)
+rand = Rand(numbers[-1], m, a, c)
+
+for i in range(10):
+    r.sendline(str(rand.rand()))
+r.interactive()
+```

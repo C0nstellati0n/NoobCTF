@@ -632,3 +632,77 @@ with open('flag.mp3', 'rb') as f:
 		except:
 			pass
 ```
+137. [discordance](https://github.com/tamuctf/tamuctf-2023/tree/master/forensics/discordance)
+- 从[discord data package](https://support.discord.com/hc/en-us/articles/360004957991-Your-Discord-Data-Package)中恢复被删除的文件。discord cdn会保留所有文件一周，包括已经被用户删除的。访问文件的url：`https://cdn.discordapp.com/attachments/<channel id>/<attachment id>/<file name>`。channel id可在package中找到，但attachment id和file name只能从用户聊天内容中泄露。
+- 可用命令`cat messages/c109*/* | grep -Eo "[0-9]{7,}" | sort | uniq`提取出package中所有的id并使用脚本组合所有的可能性。
+```python
+from itertools import product
+import requests, sys
+name = 'file'
+ids = """
+"""
+ids = ids.strip().split('\n')
+for id1, id2 in product(ids, repeat=2):
+    print(id1, id2)
+    url = f'https://cdn.discordapp.com/attachments/{id1}/{id2}/'
+    # for extension in ['png', 'jpg', 'jpeg', 'bmp']:
+    for extension in ['png']:
+        url_attempt = url + name + '.' + extension
+        r = requests.get(url_attempt)
+        if r.ok:
+            print(url_attempt)
+            sys.exit()
+```
+138. wav文件振幅分析脚本。
+```python
+import wave
+import numpy
+wav = wave.open('ctf.wav','rb')
+
+params = wav.getparams()
+nchannels, sampwidth, framerate, nframes = params[:4]
+
+strData = wav.readframes(nframes) #读取音频，字符串格式
+waveData = numpy.frombuffer(strData, dtype=numpy.int16) #上述字符串转int
+waveData = waveData*1.0/(max(abs(waveData))) #wave幅值归一化，与Cool edit的norm纵轴数值一致
+#将音频转化为01串
+string = ''
+norm = 0
+for i in range(len(waveData)):
+    norm = norm+abs(waveData[i])
+    if (i+1) % 64 == 0: #64是wav中震动一次周期的点数
+        if norm > 10: #10是分界线，用于区别低振幅和高振幅
+            string += '1'
+        else:
+            string += '0'
+        norm = 0
+with open('output.txt','w') as output:
+    output.writelines(string)
+```
+139. 曼彻斯特解码为byte。
+```python
+with open('output.txt', 'r') as f:
+    data = f.readline()
+    count = 0
+    res = 0
+    ans = b''
+    while data != '':
+        pac = data[:2]
+        if pac != '':
+            if pac[0] == '0' and pac[1] == '1':
+                res = (res<<1)|0
+                count += 1
+            if pac[0] == '1' and pac[1] == '0':
+                res = (res<<1)|1
+                count += 1
+            if count == 8:
+                ans += res.to_bytes(1,'big')
+                count = 0
+                res = 0
+        else:
+            break
+        data = data[2:]
+
+with open('out', 'wb') as f2:
+    f2.write(ans)
+```
