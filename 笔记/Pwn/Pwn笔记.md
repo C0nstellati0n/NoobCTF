@@ -429,23 +429,23 @@ patchelf --replace-needed libc.so.6 ~/glibc-all-in-one-master/libs/2.27-3ubuntu1
 - SROP。当无sigreturn gadget时，可以尝试将rax改为15（系统调用号），然后执行syscall是一样的结果。注意函数的返回值也是存在rax里，要是没有pop rax，可输入任意个字节的read函数也是不错的选择。
 - SROP的本质是：内核态返回用户态时的恢复栈帧。因此构造的payload sigframe各个参数的值对应恢复时想要让栈变成的样子。调用sigreturn是为了恢复构造的假sigframe。一旦sigreturn被调用，rsp紧跟着的数据就会被视为要恢复的sigframe。一般getshell就是sys_execve。
 - sigframe的前几个字节被覆盖不会影响SROP。
-1.  [bctf2016_bcloud](https://ctf-wiki.org/en/pwn/linux/user-mode/heap/ptmalloc2/house-of-force/#2016-bctf-bcloud)
+58. [bctf2016_bcloud](https://ctf-wiki.org/en/pwn/linux/user-mode/heap/ptmalloc2/house-of-force/#2016-bctf-bcloud)
 - house of force利用。要求：
   - 可申请任意大小的堆块
   - 可覆盖top chunk的size
   - 已知想要分配处的地址和top chunk地址的偏移（或
 - 计算house of force需要申请的堆块大小。目标地址-top chunk地址-size_t-malloc_allign。32位的size_t=4,malloc_allign=7;64位size_t=8,malloc_allign=0xf.
-1.  [whoami](../../CTF/攻防世界/5级/Pwn/whoami.md)
+59. [whoami](../../CTF/攻防世界/5级/Pwn/whoami.md)
 - 64位连续多次栈迁移至bss段。
 - system函数执行时需要注意爆栈。如果一次栈迁移无法执行system，那就迁移多次，让栈环境满足调用system的条件。
-1.  [npuctf_2020_bad_guy](https://blog.csdn.net/csdn546229768/article/details/123717993)
+60. [npuctf_2020_bad_guy](https://blog.csdn.net/csdn546229768/article/details/123717993)
 - 无show堆题[使用IO_FILE（_IO_2_1_stdout_）泄露libc](https://www.jianshu.com/p/27152c14e2e7).通常需要满足：
   - 将_flags设置为0xfbad18**。目的是为了设置_IO_CURRENTLY_PUTTING=0x800，_IO_IS_APPENDING=0x1000，IO_MAGIC=0xFBAD0000 （这里关系到puts的实现）
   - 设置_IO_write_base指向想要泄露的地方；_IO_write_ptr指向泄露结束的地址。
   - 之后遇到puts或printf，就会将_IO_write_base指向的内容打印出来。
   - 常见payload:`p64(0xfbad1800)+p64(0x0)*3+'\x00'`。其中`0xfbad1800`为_flags的值，不同版本的libc会有变化。似乎无需改动_IO_write_base的值。
 - 为了设置stdout为想要的值，一般利用unsorted bin中chunk的fd字段的main_arena相关值，覆盖最后两个字节为到__IO_2_1_stdout的正上方处（满足fakechunk的size，如0x7f的地方即可）。从左往右数的第一个数字需要爆破需要爆破。可以看出需要堆溢出漏洞。
-1.  [wustctf2020_babyfmt](https://www.cnblogs.com/LynneHuan/p/15229706.html)
+61. [wustctf2020_babyfmt](https://www.cnblogs.com/LynneHuan/p/15229706.html)
 - 下面的代码：
 ```c
 __isoc99_scanf(&%ld,&local_18);
@@ -456,3 +456,33 @@ printf("ok! time is %ld\n",local_18);
 - c语言里的close(1)会关闭stdout，导致无法输出。此时配合格式化字符串漏洞，有两种办法解决：
   - 假如使用printf输出需要的内容。因为printf会使用stdout的指针，所以可以在printf执行前将stdout的指针改成stderr的。[这种方法](https://blog.csdn.net/weixin_44145820/article/details/105992952)需要获取stderr倒数第二个byte（倒数第一个通常是固定的），如果没有只能爆破。
   - 利用栈上的格式化字符串修改stdout的fileno为2。
+62. [shanghai2018_baby_arm](https://www.cnblogs.com/xshhc/p/16936894.html#tid-YG6XSx)
+- [arm](https://blog.csdn.net/qq_41028985/article/details/119407917) aarch64 架构的 ret2csu rop题目。程序开启了nx但没有开启pie。于是写入调用[mprotect](https://www.cnblogs.com/Max-hhg/articles/13939064.html)的gadget，将shellcode存放处改为可执行。mprotect各个枚举的对应的数字值：
+```
+PROT_READ: 1
+PROT_WRITE: 2
+PROT_EXEC: 4
+PROT_SEM: 8
+```
+
+可以使用位运算同时增加多种权限。例如可读可写可执行：PROT_READ | PROT_WRITE | PROT_EXEC=7 (1 + 2 + 4).
+- arm运行+调试环境[布置](https://blog.csdn.net/A951860555/article/details/116780827)。
+  - 安装qemu
+```
+sudo apt update
+sudo apt install qemu
+```
+  - 安装arm相关库。
+```
+sudo apt search "libc6" | grep arm
+sudo apt install libc6-arm64-cross
+```
+  - 运行
+```
+qemu-aarch64 -L /usr/aarch64-linux-gnu/ ./prog
+```
+  - 如果没有aarch64 的汇编器，pwntools里面制定context为aarch64会报错。
+```
+apt search binutils| grep aarch64
+sudo apt install bintuils-aarch64-linux-gnu-dbg
+```
