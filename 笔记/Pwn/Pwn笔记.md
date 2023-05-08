@@ -490,3 +490,20 @@ sudo apt install bintuils-aarch64-linux-gnu-dbg
 - 仅用0-15的字节构建shellcode。可在[此处](http://ref.x86asm.net/coder64.html#x77)参考哪些inst可以用。
 - [方法1](https://chovid99.github.io/posts/tamuctf-2023/#contrived-shellcode):因为允许的字节范围内包含大量add，or和syscall，但每个操作数只能是32位寄存器。于是将getshell分为3个syscall：chdir('/')；chdir('bin')；execve('sh')。
 - [方法2](https://github.com/tj-oconnor/ctf-writeups/tree/main/tamu_ctf_23/contrived-shellcode):构建read的syscall，将getshell的shellcode读取到read执行处的后面，进而绕过过滤。
+64. [Randomness](https://github.com/tamuctf/tamuctf-2023/tree/master/pwn/randomness)
+- 不同函数之间的局部变量栈帧公用。有两个函数：
+```c
+void foo() {
+    unsigned long seed;
+}
+
+void bar() {
+    unsigned long a;
+}
+int main() {
+    foo();
+    bar();
+}
+```
+main函数调用foo返回后调用bar，这时栈帧会残留着seed的值，于是a默认就带着seed的值。
+- scanf的错误使用。`scanf("%lu", a);`是错误的，会往a的值而不是a的地址里存值。正确写法是`scanf("%lu", &a);`
