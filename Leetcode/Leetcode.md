@@ -33,6 +33,7 @@
 - [Average Salary Excluding the Minimum and Maximum Salary](Easy/Average%20Salary%20Excluding%20the%20Minimum%20a.md).
 - [Sign of the Product of an Array](./Easy/Sign%20of%20the%20Product%20of%20an%20Array.md).
 - [Find the Difference of Two Arrays](./Easy/Find%20the%20Difference%20of%20Two%20Arrays.md).set.
+- [Matrix Diagonal Sum](./Easy/Matrix%20Diagonal%20Sum.md).
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
@@ -81,3 +82,4 @@
 - [Similar String Groups](Hard/Similar%20String%20Groups.md).dfs/bfs/union find.
 - [Checking Existence of Edge Length Limited Paths](Hard/Checking%20Existence%20of%20Edge%20Length%20Limi.md).[并查集](https://zhuanlan.zhihu.com/p/93647900)（DSU）,内部为union find。
 - [Remove Max Number of Edges to Keep Graph Fully Traversable](Hard/Remove%20Max%20Number%20of%20Edges%20to%20Keep%20Gra.md).DSU(union find)
+- [Find the Longest Valid Obstacle Course at Each Position](./Hard/Find%20the%20Longest%20Valid%20Obstacle%20Course.md). dp+binary search，寻找最长的单调递增子序列
