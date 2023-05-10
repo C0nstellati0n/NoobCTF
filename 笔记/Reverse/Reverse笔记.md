@@ -577,3 +577,4 @@ def prev_seed():
 
 78. adb使用[文档](https://github.com/mzlogin/awesome-adb) 。可用于调试android apk。
 79. tea加密算法：[ezTea](../../CTF/moectf/Reverse/ezTea.md)
+80. wasm反编译ghidra[插件](https://github.com/nneonneo/ghidra-wasm-plugin).

