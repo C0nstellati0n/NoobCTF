@@ -1688,3 +1688,22 @@ response = client.get_function(FunctionName="wani_function")
 pprint(response)
 ```
 官方[wp](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/lambda)给的是命令行的解法。
+207. [screenshot](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/screenshot)
+- SSRF常出现于服务器访问用户提供的url时。此时可用file://协议读取本地文件。
+- js里的req.query.url在名为url的参数有两个时，会返回列表。此处隐藏着parameter type confusion。下面的代码：
+```js
+if (!req.query.url.includes("http") || req.query.url.includes("file")) {
+  res.status(400).send("Bad Request");
+  return; 
+}
+```
+
+要求url参数里包含http且不包含file。可以用`?url=file%3A%2F%2F%2Fflag.txt&url=http`绕过。
+- `URLSearchParams.prototype.get()`特性：当多个相同参数被传入url时，会返回第一个。也就是说：
+```js
+//?url=file%3A%2F%2F%2Fflag.txt&url=http
+const params = new URLSearchParams(req.url.slice(req.url.indexOf("?")));
+await page.goto(params.get("url"));
+//会返回file:///flag.txt
+```
+- file协议不是大小写敏感的。上面的过滤也可以用`filE:///http/../flag.txt`绕过。

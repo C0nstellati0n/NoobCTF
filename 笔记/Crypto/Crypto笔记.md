@@ -255,7 +255,7 @@ plaintext = xor(bytes.fromhex(ciphertext), key).decode()
 print(plaintext)
 ```
 
-- 根据d和e构造出n:[Calculating RSA Public Modulus from Private Exponent and Public Exponent](https://crypto.stackexchange.com/questions/81615/calculating-rsa-public-modulus-from-private-exponent-and-public-exponent)
+- 根据d和e构造出n:[Calculating RSA Public Modulus from Private Exponent and Public Exponent](https://crypto.stackexchange.com/questions/81615/calculating-rsa-public-modulus-from-private-exponent-and-public-exponent)。更详细的方法：https://stackoverflow.com/questions/2921406/calculate-primes-p-and-q-from-private-exponent-d-public-exponent-e-and-the
 - [已知d分解n](https://crypto.stackexchange.com/questions/6361/is-sharing-the-modulus-for-multiple-rsa-key-pairs-secure)。
 
 ```python
@@ -414,6 +414,12 @@ m = c^d
 m = "".join([chr(c) for c in m.list()])
 print(m)
 ```
+- 程序允许输入任意数字（除了程序使用的e），跟phi计算模逆后返回。此时有下面几种方法恢复明文：
+  - 输入程序使用的e的负数：-e。程序返回的结果直接就是-d，加个符号转为d就能直接解密
+  - 发送-1，这样程序返回的就是phi-1。加上1得到真正的phi即可解密
+  - 使用公式:`phi = (e * d - 1) // gcd(e - 1, d - 1)`
+  - 向程序发送多个e，获取多个d。让 $x_i=d_i\*e_i$ ,那么对于每个 $x_i$ ,有某个k满足 $x_i\equiv 1\mod phi\Leftrightarrow x-1\equiv phi\*k$ 。于是取所有 $x_i-1$ 的gcd可能得到phi。注意不是每一次都一定成功。
+  - 另外提一点，似乎利用phi的倍数求出的d不会影响解密。
 
 1. Crypto库根据已有信息构建私钥并解密
 
@@ -1423,3 +1429,171 @@ for i in range(10):
     r.sendline(str(rand.rand()))
 r.interactive()
 ```
+42. 多种密码的python攻击脚本：https://github.com/jameslyons/python_cryptanalysis 。其中一个脚本可用于攻击变种维吉尼亚密码。
+```python
+from chall_patched import Vigenot as Vigenere
+from itertools import permutations
+from math import log10
+
+ctext = 
+ctext = ctext.upper()
+
+
+# from https://github.com/jameslyons/python_cryptanalysis/blob/master/ngram_score.py
+class ngram_score(object):
+    def __init__(self,ngramfile,sep=' '):
+        ''' load a file containing ngrams and counts, calculate log probabilities '''
+        self.ngrams = {}
+        for line in open(ngramfile):
+            key,count = line.split(sep) 
+            self.ngrams[key] = int(count)
+        self.L = len(key)
+        self.N = sum(self.ngrams.values())
+        #calculate log probabilities
+        for key in self.ngrams.keys():
+            self.ngrams[key] = log10(float(self.ngrams[key])/self.N)
+        self.floor = log10(0.01/self.N)
+
+    def score(self,text):
+        ''' compute the score of text '''
+        score = 0
+        ngrams = self.ngrams.__getitem__
+        for i in range(len(text)-self.L+1):
+            if text[i:i+self.L] in self.ngrams: score += ngrams(text[i:i+self.L])
+            else: score += self.floor          
+        return score
+
+# https://github.com/jameslyons/python_cryptanalysis/blob/master/quadgrams.txt
+qgram = ngram_score('quadgrams.txt')
+# https://github.com/jameslyons/python_cryptanalysis/blob/master/trigrams.txt
+trigram = ngram_score('trigrams.txt')
+
+
+# from https://github.com/jameslyons/python_cryptanalysis/blob/master/break_vigenere.py
+# keep a list of the N best things we have seen, discard anything else
+class nbest(object):
+    def __init__(self, N=1000):
+        self.store = []
+        self.N = N
+
+    def add(self, item):
+        self.store.append(item)
+        self.store.sort(reverse=True)
+        self.store = self.store[:self.N]
+
+    def __getitem__(self, k):
+        return self.store[k]
+
+    def __len__(self):
+        return len(self.store)
+
+
+# init
+N = 100
+for KLEN in range(3, 20):
+    rec = nbest(N)
+
+    for i in permutations('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 3):
+        key = ''.join(i) + 'A' * (KLEN - len(i))
+        pt = Vigenere(key).decipher(ctext)
+        score = 0
+        for j in range(0, len(ctext), KLEN):
+            score += trigram.score(pt[j:j + 3])
+        rec.add((score, ''.join(i), pt[:30]))
+
+    next_rec = nbest(N)
+    for i in range(0, KLEN - 3):
+        for k in range(N):
+            for c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+                key = rec[k][1] + c
+                fullkey = key + 'A' * (KLEN - len(key))
+                pt = Vigenere(fullkey).decipher(ctext)
+                score = 0
+                for j in range(0, len(ctext), KLEN):
+                    score += qgram.score(pt[j:j + len(key)])
+                next_rec.add((score, key, pt[:30]))
+        rec = next_rec
+        next_rec = nbest(N)
+    bestkey = rec[0][1]
+    pt = Vigenere(bestkey).decipher(ctext)
+    bestscore = qgram.score(pt)
+    for i in range(N):
+        pt = Vigenere(rec[i][1]).decipher(ctext)
+        score = qgram.score(pt)
+        if score > bestscore:
+            bestkey = rec[i][1]
+            bestscore = score
+    print(next_rec.store)
+    print(bestscore, 'Vigenere, klen', KLEN, ':"' + bestkey.lower() + '",', Vigenere(bestkey).decipher(ctext).lower())
+```
+其中chall_patched为题目的变种维吉尼亚密码的解密实现。[Vigenot](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/vigenot)
+43. AES-128省去mix_columns步骤时的攻击。mix_columns帮助AES打乱明文与密文之间的联系。如果省去这一步，会导致改动明文的1个字节也仅会改动密文的一个字节，那么就能通过与服务器交互获取每个位置明文对应的密文，从而破解密文。
+```python
+from pwn import *
+import binascii
+
+HOST = 
+PORT = 
+
+characters = string.ascii_letters + string.digits
+# array for knowning where to unshift all the bytes after the operations
+#注意改动一位明文对应着改动的密文不在同一个位置。下表记录了两者之间的对应关系，如改动1索引处的明文会导致索引9处的密文改变
+unshift = [0, 9, 2, 11, 4, 13, 6, 15, 8, 1, 10, 3, 12, 5, 14, 7]
+
+r = remote(HOST, PORT)
+
+r.recvuntil(b'flag:\n')
+ctxt = r.recvline().decode().strip()
+print("Here's the challenge to decrypt: %s" % ctxt)
+
+# create blocks of each alphanumeric character to encrypt
+ptxt = ""
+for letter in characters:
+	ptxt += letter * 16 
+ptxt = binascii.hexlify(ptxt.encode())
+
+# send the plaintext and receive the encrypted version
+r.recvuntil(b'hex:')
+r.sendline(ptxt)
+r.recvuntil(b'blocks:\n')
+enc = r.recvline().decode().strip()
+
+decrypted = [''] * 16
+response = ""
+for i in range(len(ctxt) // 2):
+	byte_c = ctxt[2 * i : 2 * (i+1)]
+
+	if i == 16:
+		response = "".join(decrypted)
+		
+	char_ind = i % 16
+	
+	# iterate through all letters and check to find the matching one
+	for j in range(len(characters)):
+		index = 32 * j + 2 * char_ind
+		byte_e = enc[index : index + 2]
+
+		# if we have a match add the character to the right spot
+		if byte_e == byte_c:
+			decrypted[unshift[char_ind]] = characters[j]
+
+response += "".join(decrypted)
+print("Decrypted version: %s" % response)
+r.recvuntil(b'answer?')
+r.sendline(response.encode())
+r.recvuntil(b'flag:\n')
+flag = r.recvline().decode().strip()
+
+r.close()
+
+print("The flag is: %s" % flag)
+```
+[Shmooving](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/shmooving)
+44. AES-128 ECB省去sub_bytes步骤时的攻击。S_BOX是AES中唯一不是线性的步骤，因此移去这一步等于可以用某个线性方程解出明文。此时AES就像仿射密码，可以用c=Ap+k表示（参考这篇[帖子](https://crypto.stackexchange.com/questions/20228/consequences-of-aes-without-any-one-of-its-operations)）。其中p是明文，c是密文，A需要自行计算。通过将征程AES移除add_round_key步骤然后加密128个输入，每个输入只有一位是1，其余是0。于是出来的128个密文就是A矩阵的列。接着用已知明文/密文对获取K，就能解出p了。完整脚本与例题:[Shmooving 2](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/shmooving-2)
+45. [Shmooving 3](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/shmooving-3)
+- 仅一轮的AES-128-ECB并省去mix_columns步骤。相关参考链接：
+  - [One round of AES-128(有mix_columns)](https://crypto.stackexchange.com/questions/80743/one-round-of-aes-128)
+  - [Low Data Complexity Attacks on AES](https://eprint.iacr.org/2010/633.pdf)
+  - [The Effects of the Omission of Last Round's MixColumns on AES](https://www.sciencedirect.com/science/article/pii/S0020019010000335)
+  - [On the security of inclusion or omission of MixColumns in AES cipher](https://www.semanticscholar.org/paper/On-the-security-of-inclusion-or-omission-of-in-AES-AlMarashda-Alsalami/e13e7d71861290e218b57307a09dda040978375f)
+46. [DSA签名算法](https://ctf-wiki.org/en/crypto/signature/dsa/)需要在每次签名时使用不同的明文或不同的公钥。如果一直使用相同的公钥签名相同的明文，仅让私钥x随机变化，会导致攻击者获取多个签名后相互减，并取gcd即可获取的明文。[DSA?](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/cry/dsa)

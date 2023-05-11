@@ -147,7 +147,9 @@ p.interactive()
 
 ```python
 from pwn import *
-libc=ELF("./16/libc-2.23.so.64")
+path="libc.so.6"
+libc=ELF(path)
+context.arch = libc.arch
 print(f"system:{libc.sym['system']}")
 print(f"write:{libc.sym['write']}")
 print(f"puts:{libc.sym['puts']}")
@@ -166,7 +168,12 @@ print(f"_IO_list_all: {libc.symbols['_IO_list_all']}")
 print(f"read: {libc.symbols['read']}")
 print(f"open: {libc.symbols['open']}")   
 print(f"malloc: {libc.symbols['malloc']}") 
-print(f"_IO_2_1_stdout_: {libc.sym['_IO_2_1_stdout_']}")                                                        
+print(f"_IO_2_1_stdout_: {libc.sym['_IO_2_1_stdout_']}")
+print()
+print("gadgets:")
+print(f"pop rdi;ret: {next(libc.search(asm('pop rdi; ret'), executable=True))}")
+print(f"pop rsi;ret: {next(libc.search(asm('pop rsi; ret'), executable=True))}")
+print(f"ret: {next(libc.search(asm('ret'), executable=True))}")                                                      
 ```
 
 8. pwn heap题模板
