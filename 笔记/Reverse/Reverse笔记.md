@@ -578,3 +578,5 @@ def prev_seed():
 78. adb使用[文档](https://github.com/mzlogin/awesome-adb) 。可用于调试android apk。
 79. tea加密算法：[ezTea](../../CTF/moectf/Reverse/ezTea.md)
 80. wasm反编译ghidra[插件](https://github.com/nneonneo/ghidra-wasm-plugin).
+81. [reverse_html](https://blog.csdn.net/weixin_43798872/article/details/127728365)
+- MS Windows HtmlHelp Data(后缀chm)相关逆向。使用hh命令反编译chm文件得到html。`hh.exe -decompile <结果存放路径> <chm文件>`
