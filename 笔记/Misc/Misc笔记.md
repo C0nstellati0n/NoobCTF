@@ -562,6 +562,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 ![bill-cipher](../images/bill_cipher.jpg)
 
 可用[dcode](https://www.dcode.fr/gravity-falls-bill-cipher)解码。
+
 130. Sketch celtic ancient letters,viking runes字母表。
 ![runes](../images/runes.jpeg)
 
