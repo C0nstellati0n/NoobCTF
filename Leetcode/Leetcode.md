@@ -88,3 +88,4 @@
 - [Checking Existence of Edge Length Limited Paths](Hard/Checking%20Existence%20of%20Edge%20Length%20Limi.md).[并查集](https://zhuanlan.zhihu.com/p/93647900)（DSU）,内部为union find。
 - [Remove Max Number of Edges to Keep Graph Fully Traversable](Hard/Remove%20Max%20Number%20of%20Edges%20to%20Keep%20Gra.md).DSU(union find)
 - [Find the Longest Valid Obstacle Course at Each Position](./Hard/Find%20the%20Longest%20Valid%20Obstacle%20Course.md). dp+binary search，寻找最长的单调递增子序列
+- [Maximize Score After N Operations](./Hard/Maximize%20Score%20After%20N%20Operations.md). bitmask dp.
