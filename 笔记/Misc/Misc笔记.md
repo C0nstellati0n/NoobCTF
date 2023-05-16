@@ -731,3 +731,9 @@ torch.save(Exploit(), 'solver_cat.ckpt')
 142. [HEAP](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Forensics/Heap)
 - java heap dump文件（后缀HPROF）分析。使用工具：[Eclipse Memory Analyze Tool](https://www.eclipse.org/mat/)
 - 如果题目给出的hprof文件不是通用格式（如Android Studio生成的就不是通用格式），需要用转换工具将其转为通用格式才能用工具分析。`hprof-conv heap.hprof heap-conv.hprof`
+143. [My Poor Webserver](https://pwnwithlove.com/fr/articles/wu1-heroctf/)
+- 利用[cub3](https://github.com/mempodippy/cub3)隐藏文件。
+  - 使用该方法隐藏的文件只能用`ls -lha filename`看到更详细的信息（直接`ls -lha`是不行的，必须跟上文件名）。而文件名需要到隐藏文件所存储的目录下执行`strace ls`获取（跟踪ls的执行，里面可能会包含可疑的文件名）
+  - 读取以这种方式隐藏的文件(平常的cat等会提示文件不存在)：
+    - `base64 filename | base64 -d`
+    - `more filename`

