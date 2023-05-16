@@ -1597,3 +1597,159 @@ print("The flag is: %s" % flag)
   - [The Effects of the Omission of Last Round's MixColumns on AES](https://www.sciencedirect.com/science/article/pii/S0020019010000335)
   - [On the security of inclusion or omission of MixColumns in AES cipher](https://www.semanticscholar.org/paper/On-the-security-of-inclusion-or-omission-of-in-AES-AlMarashda-Alsalami/e13e7d71861290e218b57307a09dda040978375f)
 46. [DSA签名算法](https://ctf-wiki.org/en/crypto/signature/dsa/)需要在每次签名时使用不同的明文或不同的公钥。如果一直使用相同的公钥签名相同的明文，仅让私钥x随机变化，会导致攻击者获取多个签名后相互减，并取gcd即可获取的明文。[DSA?](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/cry/dsa)
+47. [SHA256-CTR](https://github.com/AVDestroyer/CTF-Writeups/blob/main/sdctf/sha256-ctr.md)
+- 使用sha256作为AES-CTR模式下counter的加密函数：有出现[hash length extension attack](https://en.wikipedia.org/wiki/Length_extension_attack)的风险（很多hash类函数都有这个漏洞，包括md5）
+  - hash length extension attack简述：已知Hash(message1)和message1的长度（无需确切知道message1的内容），且可控制接下来的message2。那么就能获得Hash(message1||message2)的值，其中||表示拼接两条信息。
+  - 注意实施攻击时需要有特殊的padding。当计算Hash(secret)时，需要将secret的长度pad成56字节的倍数，接着再在后面加上8字节。遵循以下规则：
+    - 先在secret后加上字节`\x80`
+    - 然后使用`\x00`将secret的长度pad成56字节的倍数
+    - 最后将secret的bit的长度（不包括添加的`\x80`和`\x00`）以大端转为长度为8bytes。例如32字节的secret就是256 bit长，转为byte就是`(256).to_bytes(8,'big')=\x00\x00\x00\x00\x00\x00\x01\x00`
+  - 实现脚本：https://github.com/stephenbradshaw/hlextend
+- 小端里的拼接字节技巧。假设有counter的计数为0x12345678，小端存储结果为0x78 0x56 0x34 0x12。如果想在0x12后面填上任意字节但是counter的值未知，可以用以下公式计算：`byte*(1 << (numBytes*8))`。byte表示想拼接的字节，numBytes表示counter的字节长度，或者想要位移的字节数（想在多少字节后面拼接）。例如想在刚刚counter后添加0x9a，加上`0x9a*(1 << (4*8))`即可。
+48. [Forcing a file’s CRC to any value](https://www.nayuki.io/page/forcing-a-files-crc-to-any-value):该脚本可以将一个文件的crc改为任意值，通过在指定偏移处插入构造的字节（这些字节不一定可见）。用法：`python3 forcecrc32.py FileName ByteOffset NewCrc32Value`,表示将FileName对应文件的内容改为NewCrc32Value，构造用的字节插入在ByteOffset偏移处。
+49. [Uniform](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Crypto/Uniform)
+- Mersenne Twister随机数预测。题目给出来自`random.uniform(0, 2**32-1)`的624个数字，要求预测第625个数字。注意由于uniform的输出是float，不能直接套用接收int的预测器。改动的脚本使用z3，已经在wp里了。
+- uniform函数内部实现：`uniform(a, b)=a + (b - a)*random.random()`,那么可以经过简单的数学运算恢复random.random。有了random.random，就能恢复a>>5和b>>6了（下面给出的另一个版本脚本看得更清楚）。这两个数就是要提交进untwister的数。
+```python
+from pwn import *
+from z3 import *
+from random import Random
+from itertools import count
+from time import time
+import logging
+
+SYMBOLIC_COUNTER = count()
+
+def r_float(n1, n2):
+    """ https://github.com/deut-erium/RNGeesus
+        get the two 32-bit random generated numbers to get 1 float number in the range of [0,1]
+    """
+    a = n1>>5
+    b = n2>>6
+    # 2**53 = 9007199254740992.0
+    # 2**26 = 67108864
+    return (a*67108864.0+b)*(1.0/9007199254740992.0)
+
+def float_to_2_randnumber(f):
+    """ do the reverse here of r_float function above
+        converting float number back to the 2 random number (before bit shift)
+    """
+    n = int(f * 9007199254740992.0)
+    return n // 67108864, n % 67108864
+
+class Untwister:
+    """ https://github.com/icemonster/symbolic_mersenne_cracker/blob/main/main.py
+    """
+    def __init__(self):
+        name = next(SYMBOLIC_COUNTER)
+        self.MT = [BitVec(f'MT_{i}_{name}', 32) for i in range(624)]
+        self.index = 0
+        self.solver = Solver()
+
+    #This particular method was adapted from https://www.schutzwerk.com/en/43/posts/attacking_a_random_number_generator/
+    def symbolic_untamper(self, solver, y):
+        name = next(SYMBOLIC_COUNTER)
+
+        y1 = BitVec(f'y1_{name}', 32)
+        y2 = BitVec(f'y2_{name}' , 32)
+        y3 = BitVec(f'y3_{name}', 32)
+        y4 = BitVec(f'y4_{name}', 32)
+
+        equations = [
+            y2 == y1 ^ (LShR(y1, 11)),
+            y3 == y2 ^ ((y2 << 7) & 0x9D2C5680),
+            y4 == y3 ^ ((y3 << 15) & 0xEFC60000),
+            y == y4 ^ (LShR(y4, 18))
+        ]
+
+        solver.add(equations)
+        return y1
+
+    def symbolic_twist(self, MT, n=624, upper_mask=0x80000000, lower_mask=0x7FFFFFFF, a=0x9908B0DF, m=397):
+        '''
+            This method models MT19937 function as a Z3 program
+        '''
+        MT = [i for i in MT] #Just a shallow copy of the state
+
+        for i in range(n):
+            x = (MT[i] & upper_mask) + (MT[(i+1) % n] & lower_mask)
+            xA = LShR(x, 1)
+            xB = If(x & 1 == 0, xA, xA ^ a) #Possible Z3 optimization here by declaring auxiliary symbolic variables
+            MT[i] = MT[(i + m) % n] ^ xB
+
+        return MT
+
+    def get_symbolic(self, guess):
+        name = next(SYMBOLIC_COUNTER)
+        ERROR = 'Must pass a string like "?1100???1001000??0?100?10??10010" where ? represents an unknown bit'
+
+        assert type(guess) == str, ERROR
+        assert all(map(lambda x: x in '01?', guess)), ERROR
+        assert len(guess) <= 32, "One 32-bit number at a time please"
+        guess = guess.zfill(32)
+
+        self.symbolic_guess = BitVec(f'symbolic_guess_{name}', 32)
+        guess = guess[::-1]
+
+        for i, bit in enumerate(guess):
+            if bit != '?':
+                self.solver.add(Extract(i, i, self.symbolic_guess) == bit)
+
+        return self.symbolic_guess
+
+
+    def submit(self, guess):
+        '''
+            You need 624 numbers to completely clone the state.
+                You can input less than that though and this will give you the best guess for the state
+        '''
+        if self.index >= 624:
+            name = next(SYMBOLIC_COUNTER)
+            next_mt = self.symbolic_twist(self.MT)
+            self.MT = [BitVec(f'MT_{i}_{name}', 32) for i in range(624)]
+            for i in range(624):
+                self.solver.add(self.MT[i] == next_mt[i])
+            self.index = 0
+
+        symbolic_guess = self.get_symbolic(guess)
+        symbolic_guess = self.symbolic_untamper(self.solver, symbolic_guess)
+        self.solver.add(self.MT[self.index] == symbolic_guess)
+        self.index += 1
+
+    def get_random(self):
+        '''
+            This will give you a random.Random() instance with the cloned state.
+        '''
+        #logger.debug('Solving...')
+        start = time()
+        self.solver.check()
+        model = self.solver.model()
+        end = time()
+        #logger.debug(f'Solved! (in {round(end-start,3)}s)')
+
+        #Compute best guess for state
+        state = list(map(lambda x: model[x].as_long(), self.MT))
+        result_state = (3, tuple(state+[self.index]), None)
+        r = Random()
+        r.setstate(result_state)
+        return r
+
+
+ut = Untwister()
+io = remote('static-01.heroctf.fr', 9000)
+context.log_level = 'DEBUG'
+
+for i in range(624):
+    a = float(io.recvline().strip().decode())
+    # uniform(a, b) is calculated by a + (b-a) * rand_number, rand_number is in [0,1]
+    # https://github.com/python/cpython/blob/main/Lib/random.py
+    # now a = 0, b = 2 ** 32 - 1
+    n1, n2 = float_to_2_randnumber(a / (2**32-1))
+    ut.submit((bin(n1)[2:]).rjust(27, '0') + '?????')
+    ut.submit((bin(n2)[2:]).rjust(26, '0') + '??????')
+
+r1 = ut.get_random()
+nn1 = r1.getrandbits(32)
+nn2 = r1.getrandbits(32)
+ans = r_float(nn1, nn2) * (2**32 - 1)
+```

@@ -584,3 +584,24 @@ def demangle(val, is_heap_base=False):
 def mangle(heap_addr, val):
     return (heap_addr >> 12) ^ val
 ```
+69. pwntools ROP工具生成orw ropchain。
+```python
+from pwn import *
+file=ELF("pwn")
+chain=ROP(file)
+chain.read(0,file.bss(),0x100) #将文件名读取到bss段
+chain.open(file.bss(),0,0) #打开文件名对应的文件
+chain.read(3,file.bss(),0x100) #一般情况下（之前没有额外打开的文件）第一个打开的文件的fd是3，将内容读到bss段
+chain.puts(file.bss()) #puts输出内容
+```
+也可以替换类似功能的函数，注意调用时file需要包含调用的函数且无PIE。
+70. [money-printer2](https://www.youtube.com/watch?v=5miWo7IBnHI&t=603s)
+- 仅执行一次的格式化字符串漏洞利用。题目背景：
+  - 无法写fini_array获取main的第二次调用（似乎不是所有程序退出时都会调用fini_array）
+  - NX+canary+Partial RELRO，无PIE。
+- 开启了canary的程序的函数在返回时会调用__stack_chk_fail，这个函数也是在got表上的。那么可以使用格式化字符串漏洞将其got写为main函数地址，同时破坏canary，即可获取第二次调用。
+  - 对于改canary，不是所有时候栈上都有一个指针直接指向canary可供我们修改。这时需要借用指针链间接修改。在栈上找到这样一个指针，其指向另一个指针且该指针也可以在栈上找到（A->B,A，B都在栈上可用格式化字符串控制）。用格式化字符串修改A其实是在修改B（格式化字符串的特性，没法直接修改指针，修改的都是指针指向的东西，这也是为什么要找指针链而不是直接修改指针），于是尝试修改B指向canary（实际情况可能完全不知道B究竟该指向的确切地址，那就需要根据调试情况爆破了。像这道题的成功概率就只有1/4096）。接着再通过修改后的B更改canary就行了。
+  - 指针链的修改注意不要用数字参数（`%X$n`）。因为格式化字符串有个特点：只要使用了数字参数，printf就会把那个地方的值记住了。大概就是，假如我们用数字参数通过A->B修改了B，但是继续去调用B时，B却是修改前的值。解决办法是用%c一个字符一个字符地填过去。类似%p，每次%p都会打印出栈上一个指针，然后接着偏移往下读。%c的不同点在于读的是字符。以往`%x$n`修改，这里就用x个%c替代。
+- pwntools自带多线程爆破用的函数。[mbruteforce](https://docs.pwntools.com/en/stable/util/iters.html#pwnlib.util.iters.mbruteforce):`mbruteforce(pwn, string.digits, 5, threads=64)`，其中第一个参数是要多线程爆破的函数，返回值为bool，只要返回值为True函数就会停止调用。第二个和第三个参数用来指定调用函数时用的参数。如果没有参数直接随便填然后调用的函数不用参数就行了。
+- 对于爆破的题目，可能很难找到切interactive的时机。保险起见，可以直接在pwntools里发送cat flag之类的命令，然后接收就好了
+- 格式化字符串漏洞题基本两次printf就够了。一次泄露地址，一次将one gadget写入返回地址。做法很多，改got表也行，但第一次漏洞的泄露地址是必须的。

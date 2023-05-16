@@ -722,3 +722,12 @@ class Exploit(object):
 # torch.save(Exploit(), 'solver_ls.ckpt')
 torch.save(Exploit(), 'solver_cat.ckpt')
 ```
+140. [PDF-Mess](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Steganography/PDF-Mess)
+- pdf隐写：pdf里以树状存储内部的文件，自然可以藏一些额外的。可使用[peepdf](https://github.com/jesparza/peepdf)列出pdf里所有的文件。
+141. [EMD](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Steganography/EMD)
+- 包含EMD隐写写入data/提取data的脚本。原理在wp和提供的论文里有介绍。使用方法：
+    - 隐藏data：`hideDataWithEMD(message,pixelGroupCount,outputPng)`
+    - 提取data：`retrieveDataWithEMD(openImage("outputPng"),pixelGroupCount,messageLength)`
+142. [HEAP](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Forensics/Heap)
+- java heap dump文件（后缀HPROF）分析。使用工具：[Eclipse Memory Analyze Tool](https://www.eclipse.org/mat/)
+- 如果题目给出的hprof文件不是通用格式（如Android Studio生成的就不是通用格式），需要用转换工具将其转为通用格式才能用工具分析。`hprof-conv heap.hprof heap-conv.hprof`
