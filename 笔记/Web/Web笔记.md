@@ -1757,7 +1757,7 @@ web3.eth.getCode(contractAddress, (error, bytecode) => {
 获取的bytecode可以[反编译](https://library.dedaub.com/decompile?md5=911ae673dd624b6cf4924a9acdeef8b0)。
 - 调用指定地址的contract的函数。
   - `cast send <addr> <func,exa:0x3c5269d8> --rpc-url $RPC_URL --private-key $PRIVATE_KEY --legacy`.private_key可以通过在另一个窗口运行anvil获取，不过我运行的时候提示gas超了，把gas改高了又有新问题。
-  - 使用solidity。我尝试用remix运行，不过因为remix默认的环境跟题目不在一个chain上，给的rpc url也设置不了，就不了了之了。
+  - 使用solidity。用remix释放的话需要有metamask，然后选项里的environment选injected provider,连上自己的provider即可（如metamask）。参考：https://avan.sh/posts/hero-ctf-v5/
 ```solidity
 contract hero2300_pwn
 {
@@ -1875,3 +1875,52 @@ def profile():
 ```
 
 该段代码检查访问时是否已有缓存，如果有就直接返回缓存。但`current_user.username.lower()`将任意username全部转为小写。如果注册时不要求统一小写，缓存时却要求，可能导致缓存被投毒。攻击者可注册诸如`ADMIN`的账户，在缓存里存入恶意payload。由于大小写不敏感，真正的admin用户访问自己的缓存时也会出现恶意payload，有xss的风险。
+215. [Simple Notes](https://mizu.re/post/simple-notes)
+- CORS misconfiguration
+```
+access-control-allow-credentials: true
+access-control-allow-origin: null
+
+Access-Control-Allow-Credentials header value is set to true if the server permits the use of credentials, such as cookies or HTTP authentication, in cross-origin requests. This header is sent as part of the server's response to a preflight request.
+
+Access-Control-Allow-Origin header indicates whether the response can be shared with requesting code from the given origin. If the value of this header is set to * (wildcard), it means any origin can access the resource. If a specific origin is set, only that origin can access the resource. If the value is set to null, it can cause security issues and should be avoided
+```
+这两个搭在一起容易出现安全问题。第一条允许请求里面包含一些登录时的凭证（credentials，如cookie和这题的authorization）。第二条根据[文档](https://docs.w3cub.com/http/headers/access-control-allow-origin)看似安全，毕竟只允许response与origin为null的网站共享。然而有个问题：`the serialization of the Origin of any resource that uses a non-hierarchical scheme (such as data: or file:) and sandboxed documents is defined to be "null".`。所以可以像下面这样利用iframe获取网站的内容（a sandboxed iframe has a null origin）
+```js
+var host = "https://example.com"
+var ifr  = document.createElement("iframe");
+ifr.sandbox = "allow-scripts allow-top-navigation";
+ifr.srcdoc  = `<script>
+    fetch("${host}/api/me").then(d => d.text()).then((d) => {
+        alert(d);
+    })
+<\x2fscript>`;
+document.body.appendChild(ifr);
+```
+- fetch的重定向特性（仅限chromium浏览器）。假如request字段属于developer-controlled（用户不可控制，例如自己在浏览器里设置等是不行的，必须要开发者用代码设置），重定向时会带着上一次的请求中的这类request。参考：https://github.com/whatwg/fetch/issues/944 。举个例子：现在有个用户，他在A.com下有请求头`Authorization: Bearer xxx`，这个请求头属于developer-controlled。现在将他从A.com重定向的B.com。正常情况下发送给B.com的请求是不会带着`Authorization: Bearer xxx`的，然而如果重定向时用的是fetch，发往B.com的请求就会带着了。注意这个“携带”是拷贝的关系，和当前状态下是否还有这个header没关系。比如假设这个header从localStorage取值，而重定向之前有清空localStorage的逻辑。只要用的是fetch来重定向，这个header的值就会有。
+  - 假如要用这个特性泄露header里的内容的话，注意重定向的目标网址要返回有效的CORS。可以用flask搭一个。意味着这类题要有公网ip，而且还要是HTTPS。
+```py
+from flask import Flask, request
+from flask_cors import CORS
+
+app = Flask(__name__)
+cors = CORS(app, resources={
+    r"/*": {
+        "origins": "*"
+    }
+}, allow_headers=[
+    "Authorization",
+    "Content-Type"
+], supports_credentials=True)
+
+@app.route("/")
+def index():
+    print(request.headers)
+    return ""
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5555, ssl_context=("cert/cert.pem", "cert/key.pem")) #cert和key这题源码有给，不确定是不是一定要从题目获取
+```
+216. [YouWatch](https://mizu.re/post/youwatch)
+- `<span dangerouslySetInnerHTML={{ __html: `${msg}` }}></span>`允许以html的形式直接插入msg的内容。就算过滤十分严格可能无法直接xss，也可以考虑dom clobbering。
+- NextJS DOM Clobbering。似乎是作者自己发现的一个漏洞，详细内容在wp里，尚且不确定是否仅适用于这道题
