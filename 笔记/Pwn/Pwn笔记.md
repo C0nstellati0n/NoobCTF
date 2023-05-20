@@ -342,7 +342,7 @@ print(<func>.__code__.co_varnames) #函数内定义的变量
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 
 ```python
-p=remote("trellixhax-free-yo-radicals-part-i.chals.io",443,ssl=True)
+p=remote("",443,ssl=True)
 ```
 
 41. 算libc的偏移不一定要用有libc.sym能查到的符号偏移。可以开启gdb，随便选一个libc中的地址，然后查看libc基址。地址-基址就是固定偏移，就算泄露出来的地址不是libc中的一个符号，再次启动获取地址并减去之前算好的偏移仍然可以算出基址。

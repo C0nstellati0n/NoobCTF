@@ -747,4 +747,53 @@ torch.save(Exploit(), 'solver_cat.ckpt')
 hello() ->
     io:format("hello world~n")
 ```
-个人测试了一下，如果只写`-include("/flag.txt").`，/flag.txt的内容也会被泄露。
+个人测试了一下，如果只写`-include("/flag.txt").`，/flag.txt的内容也会被泄露。'
+145. [Chm0d](https://github.com/HeroCTF/HeroCTF_v5/tree/main/System/Chm0d)
+- 无法使用chmod命令时更改文件权限的替代方法。（用户无/bin/chmod权限)
+    - 使用perl。`perl -e "chmod 0755,'/flag.txt'"`
+    - 找到题目机器的版本，去docker上下载一份一模一样的/bin/chmod，然后用scp命令远程拷贝到题目机器上。
+    ```
+    # get a copy of the "chmod" binary from a debian:11 docker image
+    # (version info found in /etc/os-release)
+    docker run --rm -it -v $PWD:/app debian:11 cp /bin/chmod /app
+    # upload it to the server and use it to change the perms
+    scp -P XXXX chmod user@AAA.BBB.CCC.DDD:
+    ```
+    - 利用c语言的chmod函数。
+    ```c
+    #include <sys/stat.h>
+    void main(int argc, char* argv) {
+    chmod("/flag.txt", 777);
+    }
+    ```
+    - 汇编调用chmod syscall。
+    ```
+    ; nasm -felf64 chm0d.asm && ld chm0d.o
+        global _start
+        section .text
+    _start:
+        push 0x74
+        mov rax, 0x78742e67616c662f
+        push rax
+        mov rdi, rsp
+        xor esi, esi
+        mov si, 0x1ff
+        push 0x5a
+        pop rax
+        syscall
+        mov rax, 60
+        xor rdi, rdi
+        syscall
+    ```
+    - 一些相关链接。https://unix.stackexchange.com/questions/83862/how-to-chmod-without-usr-bin-chmod ， https://www.reddit.com/r/sysadmin/comments/pei1d/change_file_permissions_without_chmod/
+146. [Bug Hunting](https://v0lk3n.github.io/writeup/HeroCTFv5/HeroCTFv5-SystemCollection#lfm1)
+- ssh命令实现端口转发（forwarding）。`ssh -L 1337:localhost:8080 bob@dyn-02.heroctf.fr -p 11232`,将本地机器1337端口转发到远程服务器的8080端口（远程服务器的localhost:8080有服务）。连接使用bob用户，端口11232，服务器为dyn-02.heroctf.fr。转发途中保留这个ssh窗口持续运行。
+- [chisel](https://github.com/jpillora/chisel)+ngrok端口转发。
+```
+scp -P 11386 -r /opt/chisel/chiselx64 bob@dyn-01.heroctf.fr:/tmp/chisel //将chisel文件远程拷贝到题目机器上
+ngrok tcp 4444 //本地机器转发tcp 4444端口
+./chiselx64 server -p 4444 --reverse //本地机 setup a reverse port forwarding server
+client 0.tcp.ap.ngrok.io:16442 R:5001:0.0.0.0:8080& //远程机server通过ngrok连接client
+
+https://siunam321.github.io/ctf/HeroCTF-v5/System/IMF0-1/#imf1-bug-hunting
+```

