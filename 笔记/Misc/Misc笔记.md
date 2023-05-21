@@ -787,7 +787,7 @@ hello() ->
     ```
     - 一些相关链接。https://unix.stackexchange.com/questions/83862/how-to-chmod-without-usr-bin-chmod ， https://www.reddit.com/r/sysadmin/comments/pei1d/change_file_permissions_without_chmod/
 146. [Bug Hunting](https://v0lk3n.github.io/writeup/HeroCTFv5/HeroCTFv5-SystemCollection#lfm1)
-- ssh命令实现端口转发（forwarding）。`ssh -L 1337:localhost:8080 bob@dyn-02.heroctf.fr -p 11232`,将本地机器1337端口转发到远程服务器的8080端口（远程服务器的localhost:8080有服务）。连接使用bob用户，端口11232，服务器为dyn-02.heroctf.fr。转发途中保留这个ssh窗口持续运行。
+- ssh命令实现端口转发（forwarding）。`ssh -L 1337:localhost:8080 bob@dyn-02.heroctf.fr -p 11232`,将本地机器1337端口转发到远程服务器的8080端口（远程服务器的localhost:8080有服务）。连接使用bob用户，端口11232，服务器为dyn-02.heroctf.fr。转发途中保留这个ssh窗口持续运行。或者用`ssh -p 14036 bob@dyn-04.heroctf.fr -D 1080`,使用bob用户身份连接dyn-04.heroctf.fr，-D创建SOCKS代理，监听在1080端口。
 - [chisel](https://github.com/jpillora/chisel)+ngrok端口转发。
 ```
 scp -P 11386 -r /opt/chisel/chiselx64 bob@dyn-01.heroctf.fr:/tmp/chisel //将chisel文件远程拷贝到题目机器上

