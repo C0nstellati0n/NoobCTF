@@ -797,3 +797,12 @@ client 0.tcp.ap.ngrok.io:16442 R:5001:0.0.0.0:8080& //远程机server通过ngrok
 
 https://siunam321.github.io/ctf/HeroCTF-v5/System/IMF0-1/#imf1-bug-hunting
 ```
+147. [Windows Stands for Loser](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Forensics/Windows_Stands_For_Loser)
+- 根据 https://www.sciencedirect.com/science/article/pii/S1742287618301944 ，Microsoft seems to have leveraged the same code, or at least the same data structures, as the familiar Linux bash console. This allows use of the existing bash history recovery algorithm for WSL processes。所以volatility2用于bash process的linux_bash插件内部的步骤也能用于windows。
+  - Scan the heap。
+  - Look for # characters in heap segments.
+  - With each potential timestamp, we subtract x bits to find the base address of the _hist_entry
+  - parse the _hist_entry structures founded
+- volshell基本使用+cheatsheet
+148. [OpenPirate](https://github.com/HeroCTF/HeroCTF_v5/tree/main/OSINT/OpenPirate)
+- 使用[OpenNIC proxy](http://proxy.opennicproject.org/)访问网站。能访问的网站使用了OpenNIC的DNS服务器（可用nslookup查看）

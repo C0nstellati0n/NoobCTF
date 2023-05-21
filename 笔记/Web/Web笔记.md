@@ -1968,3 +1968,12 @@ flaskdev addition。此位为开发者设置，无固定要求
 <#assign ec=classloader.loadClass("freemarker.template.utility.Execute")>
 ${dwf.newInstance(ec,null)("cmd")}
 ```
+220. [I use ZSH btw](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Misc/I_Use_Zsh_Btw)
+- 利用`.git`文件夹内的config文件的fsmonitor实现RCE。 https://www.youtube.com/watch?v=kjIGfOgh3UI&t=18708s 。适用于zsh，fish等使用git module的shell。这些类型的shell内部使用git module执行以下操作：
+  - git status
+  - parse `.git/config`文件
+  - 在config里寻找fsmonitor选项并执行.fsmonitor用于更改获取两个git版本区别的diff可执行文件，问题在于可以随便改，自然就能RCE了
+- shell将具有以下内容的文件夹看作有效的`.git`文件夹：
+  - HEAD文件
+  - config文件（也是插入payload的地方）
+  - objects和refs文件夹。这两个文件夹可以是空的，但是必须要有

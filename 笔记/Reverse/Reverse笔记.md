@@ -580,3 +580,12 @@ def prev_seed():
 80. wasm反编译ghidra[插件](https://github.com/nneonneo/ghidra-wasm-plugin).
 81. [reverse_html](https://blog.csdn.net/weixin_43798872/article/details/127728365)
 - MS Windows HtmlHelp Data(后缀chm)相关逆向。使用hh命令反编译chm文件得到html。`hh.exe -decompile <结果存放路径> <chm文件>`
+82. [Give My Money Back](https://siunam321.github.io/ctf/HeroCTF-v5/Reverse/Give-My-Money-Back/)
+- Microsoft Cabinet archive data(.cab后缀)可用cabextract，7z或WinRAR解压
+- 简单vbs deobfuscation
+83. [Hero Ransom](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Reverse/HeroRansom)
+- [hollows_hunter](https://github.com/hasherezade/hollows_hunter)使用:扫描进程memory并自动dump+fix memory中的可疑PE。使用之前可以参考[PE format documentation](https://www.aldeid.com/wiki/PE-Portable-executable)查看内存中是否藏着PE头结构。
+- IDA console中运行get_processes()可得到程序的PID.PID可用于hollows_hunter：`.\hollows_hunter64.exe /pid <pid>`
+84. [InfeXion 3](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Reverse/InfeXion_3)
+- .NET deobfuscation工具：[de4dot](https://github.com/de4dot/de4dot)
+- [Process Hollowing](https://attack.mitre.org/techniques/T1055/012/)鉴别。
