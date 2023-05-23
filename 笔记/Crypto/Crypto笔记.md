@@ -420,7 +420,21 @@ print(m)
   - 使用公式:`phi = (e * d - 1) // gcd(e - 1, d - 1)`
   - 向程序发送多个e，获取多个d。让 $x_i=d_i\*e_i$ ,那么对于每个 $x_i$ ,有某个k满足 $x_i\equiv 1\mod phi\Leftrightarrow x-1\equiv phi\*k$ 。于是取所有 $x_i-1$ 的gcd可能得到phi。注意不是每一次都一定成功。
   - 另外提一点，似乎利用phi的倍数求出的d不会影响解密。
-
+- 低加密指数广播攻击（[Hastad's broadcast attack](https://en.wikipedia.org/wiki/Coppersmith%27s_attack#H%C3%A5stad's_broadcast_attack)）使用相同的e加密相同的m至少e次，即可用CRT还原 $m^e$ 。攻击者可以通过开e次方获取m。这种攻击方式下的e很小，例如3.
+```py
+from sympy.ntheory.modular import crt
+from gmpy2 import iroot
+e=3
+n1=
+n2=
+n3=
+c1=
+c2=
+c3=
+flag_cubed=crt([n1,n2,n3],[c1,c2,c3])[0]
+flag=iroot(flag_cubed,3)
+print(bytes.fromhex(hex(flag[0])[2:]))
+```
 1. Crypto库根据已有信息构建私钥并解密
 
 如果给出的是flag.enc和public.key这种形式的题目，平时的方法可能会解出乱码，需要利用私钥文件来解密。
@@ -1753,3 +1767,4 @@ nn1 = r1.getrandbits(32)
 nn2 = r1.getrandbits(32)
 ans = r_float(nn1, nn2) * (2**32 - 1)
 ```
+50. [Deseret Alphabet](https://www.2deseret.com/):形如`𐐒𐐀 𐐎𐐌 𐐏𐐅 𐐝𐐀 𐐓𐐀 𐐇𐐙 𐐔𐐇𐐝𐐀𐐡𐐇𐐓 𐐣𐐀𐐤𐐞 𐐐𐐊𐐤𐐆 𐐒`

