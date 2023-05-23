@@ -79,6 +79,7 @@
 - [Is Graph Bipartite?](./Medium/Is%20Graph%20Bipartite%3F.md). dfs/bfs,graph coloring
 - [Evaluate Division](./Medium/Evaluate%20Division.md). dfs/union find/bfs/Floyd Warshall
 - [Shortest Bridge](./Medium/Shortest%20Bridge.md).flood fill/dfs+multi-source bfs（多源bfs）
+- [Top K Frequent Elements](./Medium/Top%20K%20Frequent%20Elements.md).bucket sort.
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。

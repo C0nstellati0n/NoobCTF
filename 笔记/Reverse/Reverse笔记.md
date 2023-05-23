@@ -589,3 +589,54 @@ def prev_seed():
 84. [InfeXion 3](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Reverse/InfeXion_3)
 - .NET deobfuscation工具：[de4dot](https://github.com/de4dot/de4dot)
 - [Process Hollowing](https://attack.mitre.org/techniques/T1055/012/)鉴别。
+85. [sELF control v3](https://0xswitch.fr/CTF/heroctf-v5-self-control)
+- ELF文件结构详解：https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+- shared object (ET_DYN)一定有PIE，executable file (ET_EXEC)不一定有
+- 使用[Hellf](https://github.com/0xswitch/Hellf/tree/master) patch文件+readelf使用。[xelfviewer,](https://github.com/horsicq/XELFViewer)也不错
+  - 更改文件segment的权限。根据[此处](https://docs.oracle.com/cd/E19683-01/816-1386/chapter6-83432/index.html)，RX对应5
+  ```py 	
+  from Hellf import ELF
+  e = ELF("./patched")
+  e.Elf64_Phdr[3]
+  #ELF Program header struct
+  #  p_type:       0x1
+  #  p_flags:      0x4
+  #  p_offset:     0x1000
+  #  p_vaddr:      0x401000
+  #  p_paddr:      0x401000
+  #  p_filesz:     0x305
+  #  p_memsz:      0x305
+  #  p_align:      0x1000
+  e.Elf64_Phdr[3].p_flags = 5
+  e.save("patched_perm")
+  ```
+  - 查看`.dynstr`
+  ```py
+  from Hellf import ELF
+  e = ELF("./patched")
+  e.get_section_by_name('.dynstr').data.split(b"\0")
+  ```
+  - `.dynsym`相关
+  ```py
+  from switch import nsplit
+  e=ELF("")
+  len(e.get_section_by_name('.dynsym').data)
+  # 240
+  # 240 / 10 entries = 24 Elf64_Sym，下面for循环24的由来
+  # typedef struct {
+  #        Elf64_Word      st_name; <--- this is the offset to .dynstr
+  #        unsigned char   st_info;
+  #        unsigned char   st_other;
+  #        Elf64_Half      st_shndx;
+  #        Elf64_Addr      st_value;
+  #        Elf64_Xword     st_size;
+  # } Elf64_Sym;
+  for i in nsplit(e.get_section_by_name('.dynsym').data, 24):
+      print(hex(i[0]))
+  e.get_section_by_name('.dynstr').data[0x31:].split(b"\0")[0] #0x31来自上方print出来的hex
+  hex(e.get_section_by_name('.dynstr').data.index(b"getc")) #获取某个函数（这里是getc）在.dynstr中的偏移
+  # '0x13'
+  ```
+- `.dynstr`中存储的symbol的ascii名称用于在library里查找对应的symbol。意味着更改`.dynstr`里的名称就可以调用libc里另外的函数
+- When IDA found 2 entries in the import table that point to the same function. IDA will label the second with `_0`.
+- 此题的[非预期解](https://xarkes.com/b/advent-2019-Genetic-Mutation-First-Blood.html)（不同题但是方法可以继续用）介绍了一个patch elf文件的magic bytes来执行RCE的方法。shell默认一个可执行binary的magic bytes中不含`\n`或null。所以如果我们把elf的开头三个字节patch成`sh\n`，shell就会认为这是一个文本文件，那么就会执行第一条命令，即sh。
