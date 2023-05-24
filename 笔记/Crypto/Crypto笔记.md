@@ -435,6 +435,26 @@ flag_cubed=crt([n1,n2,n3],[c1,c2,c3])[0]
 flag=iroot(flag_cubed,3)
 print(bytes.fromhex(hex(flag[0])[2:]))
 ```
+- [unusualrsa4](https://lazzzaro.github.io/2020/09/01/other-CTFshow%E4%BE%9B%E9%A2%98-unusualrsa%E7%B3%BB%E5%88%97/index.html#unusualrsa4).已知q对p的模逆元(`inverse(q,p)`)，d，c和e，求m。
+```py
+from Crypto.Util.number import *
+inv=
+d=
+c=
+e=65537
+for i in range(1,e):
+    kphi=e*d-1
+    if kphi%i==0:
+        phi=kphi//i
+        x=1+inv*phi-inv
+        mod1=pow(3,phi,x)-1
+        mod2=pow(5,phi,x)-1
+        p=GCD(mod1,mod2)
+        if p.bit_length()==1024:
+            q=inverse(inv,p)
+            print(long_to_bytes(pow(c,d,p*q)))
+            break
+```
 1. Crypto库根据已有信息构建私钥并解密
 
 如果给出的是flag.enc和public.key这种形式的题目，平时的方法可能会解出乱码，需要利用私钥文件来解密。

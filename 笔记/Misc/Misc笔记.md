@@ -806,3 +806,68 @@ https://siunam321.github.io/ctf/HeroCTF-v5/System/IMF0-1/#imf1-bug-hunting
 - volshell基本使用+cheatsheet
 148. [OpenPirate](https://github.com/HeroCTF/HeroCTF_v5/tree/main/OSINT/OpenPirate)
 - 使用[OpenNIC proxy](http://proxy.opennicproject.org/)访问网站。能访问的网站使用了OpenNIC的DNS服务器（可用nslookup查看）
+149. [happy_puzzle](https://blog.csdn.net/qq_47875210/article/details/127814226)
+- 根据png的[文件格式](https://www.ffutop.com/posts/2019-05-10-png-structure/)，一张png图片由PNG文件头+IHDR+IDAT+IEND组成。其中IDAT又由`IDAT_DATA的长度 + IDAT + IDAT_DATA + CRC32`（CRC32 = IDAT + IDAT_DATA）组成。那么只要给出全部的IDAT_DATA块和一些信息（png的宽和高，颜色模式，如RGB），就能自行还原png。文件头+IHDR结构：`89 50 4E 47 0D 0A 1A 0A + 00 00 00 0D + IHDR + IM_WIDTH + IM_HEIGHT + Bits + color_type + compr_method + filter_method + interlace_method + CRC32`(CRC32 = IHDR + IM_WIDTH + IM_HEIGHT + Bits + color_type + compr_method + filter_method + interlace_method);IEND结构：`00 00 00 00 49 45 4E 44 AE 42 60 82`
+- 多个IDAT层之间是有顺序的，辨别方法是：如果拼对了一层，png就会显示出来一层。
+```py
+import os
+import sys
+import binascii
+import zlib
+OUTPUT = ''
+def bin2hex(data):
+    return binascii.b2a_hex(data)
+
+def hex2bin(data):
+    return binascii.a2b_hex(data)
+
+def dec2bin(data, l=1):
+    l = l / 2
+    if l == 4:
+        return hex2bin("%08x" % int(data))
+    else:
+        return hex2bin("%02x" % int(data))
+
+def bin2dec(data):
+    return int(bin2hex(data), 16)
+
+def crc32(chunkType, chunkData):
+    return dec2bin(binascii.crc32(chunkType + chunkData), 8)
+
+def genIHDR(w, h):
+    width = dec2bin(w, 8)
+    height = dec2bin(h, 8)
+    bits = dec2bin(8)
+    color_type = dec2bin(2)
+    compr_method = filter_method = interlace_method = dec2bin(0)
+    chunkData = width+height+bits+color_type + \
+        compr_method+filter_method+interlace_method
+    res = dec2bin(len(chunkData), 8)+b'IHDR' + \
+        chunkData+crc32(b'IHDR', chunkData)
+    return res
+
+def genIDAT(data):
+    _c = zlib.crc32(b'IDAT'+data)
+    if _c < 0:
+        _c = ~_c ^ 0xffffffff
+    _crc = dec2bin(_c, 8)
+    return dec2bin(len(data), 8) + b'IDAT' + data + _crc
+
+def merge_png(width, height, names, output="tmp.png"):
+    header = hex2bin("89504E470D0A1A0A")
+    ihdr = genIHDR(width, height)
+    idat = []
+    for name in names:
+        f=open("%s/%s" % (OUTPUT, name),'rb')
+        data = f.read()
+        idat.append(genIDAT(data))
+        f.close()
+    idat = b''.join(idat)
+    iend = hex2bin("00000000" + "49454E44" + "AE426082")
+    with open(output, 'wb') as f:
+        f.write(header+ihdr+idat+iend)
+width=
+height=
+if __name__ == '__main__':
+    merge_png(width, height, [], "flag.png")
+```
