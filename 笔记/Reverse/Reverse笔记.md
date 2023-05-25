@@ -404,7 +404,7 @@ for i in res:
 	print(chr(i),end='')
 ```
 
-64. 利用侧信道攻击（Side-channel attacks）巧解vm逆向题。例题:[More Control](https://gynvael.coldwind.pl/?lang=en&id=763),以下是学习到的一些技巧
+64. 利用侧信道攻击（Side-channel attacks）巧解vm逆向题。例题:[More Control](https://gynvael.coldwind.pl/?en&id=763),以下是学习到的一些技巧
 
 - 缺少按位或字节码，因为大部分固定用时比较算法都会用上按位或。当然也有少部分会用按位与和ADD，这些都没有就要注意是否有侧信道攻击。
 - 对于去除符号的文件，确定虚拟机主循环通常是比较困难的事。可以用gdb打开文件，在输入处按ctrl+c强制退出，到gdb调试界面后用where就能知道自己在哪了。
@@ -637,6 +637,64 @@ def prev_seed():
   hex(e.get_section_by_name('.dynstr').data.index(b"getc")) #获取某个函数（这里是getc）在.dynstr中的偏移
   # '0x13'
   ```
-- `.dynstr`中存储的symbol的ascii名称用于在library里查找对应的symbol。意味着更改`.dynstr`里的名称就可以调用libc里另外的函数
+- `.dynstr`中存储的symbol的ascii名称用于在library里查找对应的symbol。意味着更改`.dynstr`里的名称就LAN可以调用libc里另外的函数
 - When IDA found 2 entries in the import table that point to the same function. IDA will label the second with `_0`.
 - 此题的[非预期解](https://xarkes.com/b/advent-2019-Genetic-Mutation-First-Blood.html)（不同题但是方法可以继续用）介绍了一个patch elf文件的magic bytes来执行RCE的方法。shell默认一个可执行binary的magic bytes中不含`\n`或null。所以如果我们把elf的开头三个字节patch成`sh\n`，shell就会认为这是一个文本文件，那么就会执行第一条命令，即sh。
+86. [Ducky2](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/ducky2)
+- [USB Rubber Ducky](https://shop.hak5.org/products/usb-rubber-ducky)和其DUCKYSCRIPT逆向。可用[在线工具](https://ducktoolkit.com/decode#)或者[DuckToolkit](https://github.com/kevthehermit/DuckToolkit).由DUCKYSCRIPT创建的文件为bin后缀，file命令无法识别。
+- 可以选择DUCKYSCRIPT的键盘布局。不同的键盘布局会导致解密出不同的结果。所有布局：https://github.com/hak5/usbrubberducky-payloads/tree/master/languages ，爆破命令：
+```sh
+for i in `cat langs.txt` 
+  do
+  echo $i     
+  python3 ducktools.py -l $i -d ../inject.bin /dev/stdout | grep "flag{"
+  done
+ch
+de
+fi
+mx
+sk
+us
+gb
+pt
+be
+it
+cz
+hr
+dk
+fr
+br
+ca
+si
+se
+es-la
+ca-fr
+no
+es
+```
+87. [Ducky 3](https://meashiri.github.io/ctf-writeups/posts/202305-byuctf/#ducky-3)
+- 根据给出的payload还原自定义字符/键盘映射
+```py
+chars = "" #来自payload
+with open('nject.bin', 'rb') as F:
+    duckbin = F.read()
+    ducks = hexlify(duckbin)
+    lookup = {}   # lookup table
+    i = 0
+    # build the lookup table: key = hex code; value = character
+    for c in chars:
+        lookup[ducks[i:i+4]]=c
+        i+=4
+    s = ""
+    while(i<len(ducks)):
+        try:
+            print(f"{ducks[i:i+4]} --> {lookup[ducks[i:i+4]]}")
+            s += lookup[ducks[i:i+4]]
+        except Exception as e:
+            print (e)   # print and ignore if a character appears in the flag, but not in the lookup table. This happens for { and }
+            #continue
+        i+=4    
+    print(s)
+```
+88. [Chicken Again](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/chicken-again)
+- chicken esoteric programming language.工具:[chickenpy](https://github.com/kosayoda/chickenpy).命令：`chickenpy -f chicken`

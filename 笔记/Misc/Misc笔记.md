@@ -871,3 +871,16 @@ height=
 if __name__ == '__main__':
     merge_png(width, height, [], "flag.png")
 ```
+150. [kcpassword](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/kcpassword)
+- 当在mac上启用自动登录时，系统会将密码与一个固定的密钥异或，并将结果存入`kcpassword`文件中。那么解密只需要再与密钥异或一次即可。https://github.com/Heisenberk/decode-kcpassword
+151. [CRConfusion](https://github.com/BYU-CSA/BYUCTF-2023/tree/14c5b349b69bf485de979e370b0125569d8ba67d/CRConfusion)
+- 利用CRC-8的poly隐藏信息。根据[代码](https://gist.github.com/Lauszus/6c787a3bc26fea6e842dfb8296ebd630)，标准的crc-8的poly是0x07。但我们也可以将这个poly改为要隐藏信息的ascii值。Cyclic Redundancy Checks use a specific pattern to calculate a fixed-length checksum based on a polynomial. This polynomial has to be the same length as the actual checksum (aka, 8-bit checksum means 8-bit polynomial), and is represented as hex. 
+- crc多项式的记录方式。According to that Wikipedia page, the "normal" version of the polynomial is 0x07, and it's supposed to represent x^8 + x^2 + x + 1. According to how Wikipedia describes polynomials being created, that x^8 + x^2 + x + 1 SHOULD be properly encoded in binary as 100000111, or 0x0107. However, the "normal" representation is just 0x07. So my guess is that the hex representation for the polynomial leaves out the most significant bit (since it's ALWAYS present, it's just assumed and doesn't need to be communicated). That means that the hex representation for the polynomial 0x62 (which is b), although only 8-bits in length, stands for the binary polynomial 101100010 (9 bits), or x^8 + x^6 + x^5 + x
+152. [Paleontology](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/paleontology)
+- [ICEOWS archive](http://www.iceows.com/HomePageUS.html)文件提取。注意这个软件比较老，官方只支持到windows xp，可能要用虚拟机运行较老的机型才能使用该软件。
+- cyberchef中有个Extract Files功能，有时可以提取出binwalk找不到的东西。
+- PackIt archive可用[extract.me](https://extract.me/)提取。
+153. [PBKDF2](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/PBKDF2)
+- zip文件可以有2个密码：https://www.bleepingcomputer.com/news/security/an-encrypted-zip-file-can-have-two-correct-passwords-heres-why/ 。当zip的密码超过64个字符时，zip会使用密码的sha1 hash的ascii作为密码。`ZIP uses PBKDF2, which hashes the input if it's too big. That hash (as raw bytes) becomes the actual password. Try to hash the first password with SHA1 and decode the hexdigest to ASCII`
+154. [Collision](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/collision)
+- https://github.com/corkami/collisions ：使两个文件有相同的hash值。此题使用了其中的一个功能：使两张png拥有相同的md5值。用法：`png.py pic1.png pic2.png`, https://github.com/corkami/collisions/blob/master/scripts/png.py ,需要下载同目录下的`png1.bin`和`png2.bing`文件。
