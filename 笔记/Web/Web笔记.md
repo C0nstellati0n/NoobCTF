@@ -1996,3 +1996,7 @@ ${dwf.newInstance(ec,null)("cmd")}
 </html>
 ```
 提交给admin bot的url为部署以上代码的公网url。
+222. [urmombotnetdotnet.com 4](https://github.com/BYU-CSA/BYUCTF-2023/blob/main/urmombotnetdotnet.com/Chall4.md)
+- sql的数据库会忽略类似`\u0000`的unicode，但python不会。意味着当注册一个用户名`\u0000\u0000\u0000a`时，python使用len函数的结果是4。后续可以用用户名`a`查询出来这个用户。
+223. [urmombotnetdotnet.com 5](https://github.com/BYU-CSA/BYUCTF-2023/blob/main/urmombotnetdotnet.com/Chall5.md)
+- IPv6 have a scope field that is an arbitrary string using the % delimiter. For example, the following IPv6 address is valid:2001:db8::1000%random`

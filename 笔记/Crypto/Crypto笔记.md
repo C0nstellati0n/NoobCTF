@@ -227,11 +227,11 @@ def Fermat(num):
 from Crypto.Util.number import *
 from gmpy2 import iroot
 def smallEattack(c, e, n):
-        for i in range(10 ** 10):
-            res = iroot(n * i + c, e)
-            if res[1]:
-                print(long_to_bytes(res[0]))
-                break
+    for i in range(10 ** 10):
+        res = iroot(n * i + c, e)
+        if res[1]:
+            print(long_to_bytes(res[0]))
+            break
 ```
 
 - Franklin-Reiter相关信息攻击巧解给出d，phi密文，m非常大，e很小的题目。例题:[d-phi-enc](../../CTF/HackTM%20CTF/Crypto/d-phi-enc.md)
@@ -1561,6 +1561,7 @@ for KLEN in range(3, 20):
     print(bestscore, 'Vigenere, klen', KLEN, ':"' + bestkey.lower() + '",', Vigenere(bestkey).decipher(ctext).lower())
 ```
 其中chall_patched为题目的变种维吉尼亚密码的解密实现。[Vigenot](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/vigenot)
+
 43. AES-128省去mix_columns步骤时的攻击。mix_columns帮助AES打乱明文与密文之间的联系。如果省去这一步，会导致改动明文的1个字节也仅会改动密文的一个字节，那么就能通过与服务器交互获取每个位置明文对应的密文，从而破解密文。
 ```python
 from pwn import *
@@ -1623,7 +1624,9 @@ r.close()
 print("The flag is: %s" % flag)
 ```
 [Shmooving](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/shmooving)
+
 44. AES-128 ECB省去sub_bytes步骤时的攻击。S_BOX是AES中唯一不是线性的步骤，因此移去这一步等于可以用某个线性方程解出明文。此时AES就像仿射密码，可以用c=Ap+k表示（参考这篇[帖子](https://crypto.stackexchange.com/questions/20228/consequences-of-aes-without-any-one-of-its-operations)）。其中p是明文，c是密文，A需要自行计算。通过将征程AES移除add_round_key步骤然后加密128个输入，每个输入只有一位是1，其余是0。于是出来的128个密文就是A矩阵的列。接着用已知明文/密文对获取K，就能解出p了。完整脚本与例题:[Shmooving 2](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/shmooving-2)
+
 45. [Shmooving 3](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/shmooving-3)
 - 仅一轮的AES-128-ECB并省去mix_columns步骤。相关参考链接：
   - [One round of AES-128(有mix_columns)](https://crypto.stackexchange.com/questions/80743/one-round-of-aes-128)

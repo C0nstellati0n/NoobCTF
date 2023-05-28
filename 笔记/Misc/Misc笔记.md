@@ -884,3 +884,5 @@ if __name__ == '__main__':
 - zip文件可以有2个密码：https://www.bleepingcomputer.com/news/security/an-encrypted-zip-file-can-have-two-correct-passwords-heres-why/ 。当zip的密码超过64个字符时，zip会使用密码的sha1 hash的ascii作为密码。`ZIP uses PBKDF2, which hashes the input if it's too big. That hash (as raw bytes) becomes the actual password. Try to hash the first password with SHA1 and decode the hexdigest to ASCII`
 154. [Collision](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/collision)
 - https://github.com/corkami/collisions ：使两个文件有相同的hash值。此题使用了其中的一个功能：使两张png拥有相同的md5值。用法：`png.py pic1.png pic2.png`, https://github.com/corkami/collisions/blob/master/scripts/png.py ,需要下载同目录下的`png1.bin`和`png2.bing`文件。
+155. [TOR](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/tor)
+- 可用此[网站](https://onionite.net/)根据fingerprint搜索其对应的OR地址。（OR address）

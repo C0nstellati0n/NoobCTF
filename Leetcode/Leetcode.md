@@ -16,7 +16,7 @@
 - [Plus One](Easy/Plus%20One.md).You are given a large integer represented as an integer array digits, where each digits[i] is the ith digit of the integer. The digits are ordered from most significant to least significant in left-to-right order.Increment the large integer by one and return the resulting array of digits.给定一个数组表示的数字，从左至右为高位到低位，返回加一后的数字的数组表达形式。
 - [Add Binary](Easy/Add%20Binary.md).Given two binary strings a and b, return their sum as a binary string.给出两个数组表示的二进制字符串，返回两者相加的二进制结果的数组形式。
 - [Sqrt(x)](Easy/Sqrt(x).md).Given a non-negative integer x, return the square root of x rounded down to the nearest integer. The returned integer should be non-negative as well. You must not use any built-in exponent function or operator.自己实现一个开方算法，不能使用语言自带的函数。binary search。
-- [Climbing Stairs](Easy/Climbing%20Stairs.md).You are climbing a staircase. It takes n steps to reach the top.Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?爬n阶楼梯，1次可以走2步或者1步，问有多少种爬法？记忆递归，动态规划（Dynamic Programming）以及dp的空间优化形式。
+- [Climbing Stairs](Easy/Climbing%20Stairs.md).You are climbing a staircase. It takes n steps to reach the top.Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?爬n阶楼梯，1次可以走2步或者1步，问有多少种爬法？记忆递归，[动态规划](https://www.zhihu.com/question/23995189)（Dynamic Programming）以及dp的空间优化形式。
 - [Remove Duplicates from Sorted List](Easy/Remove%20Duplicates%20from%20Sorted%20List.md).Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well.从已排序的单向链表中移除重复元素.
 - [Merge Sorted Array](Easy/Merge%20Sorted%20Array.md).You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively. Merge nums1 and nums2 into a single array sorted in non-decreasing order.合并两个已排序数组，第一个数组的长度是两个数组合并后的总长度。
 - [Binary Tree Inorder Traversal](Easy/Binary%20Tree%20Inorder%20Traversal.md).Given the root of a binary tree, return the inorder traversal of its nodes' values.以中序遍历（左根右）输出二叉树的值。递归，遍历两种做法。
@@ -101,3 +101,4 @@
 - [Remove Max Number of Edges to Keep Graph Fully Traversable](Hard/Remove%20Max%20Number%20of%20Edges%20to%20Keep%20Gra.md).DSU(union find)
 - [Find the Longest Valid Obstacle Course at Each Position](./Hard/Find%20the%20Longest%20Valid%20Obstacle%20Course.md). dp+binary search，寻找最长的单调递增子序列
 - [Maximize Score After N Operations](./Hard/Maximize%20Score%20After%20N%20Operations.md). bitmask dp.
+- [Stone Game III](./Hard/Stone%20Game%20III.md). dp/[minimax](https://en.wikipedia.org/wiki/Minimax)
