@@ -904,3 +904,10 @@ run
 you can use the command show options to display the different configuration settings of the loaded module and check what they are set to.配置完成后，目标机器运行reverseshell文件即可在本地机器上获取到反弹的shell。The command shell will tell Metasploit to search the target machine for a program that will provide a more presentable interface
 - 利用具有suid的apt-get提权：https://gtfobins.github.io/gtfobins/apt-get/ 。
 - 此题的虚拟机由我们自己设置，对于能接触到物理机器的情况。在虚拟机启动时按住shift，进入bootloader menu。然后选择recovery mode，在弹出的选项中选择drop to root shell prompt，即可获取root权限。或者参考[Unintend Solution to MI6Config](https://themj0ln1r.github.io/posts/byuctf23)
+157. [VMception](https://iloveforensics.com/posts/byuctf/)
+- 可以将vdi后缀文件（虚拟机文件）转为平时的disk raw文件。`qemu-img convert -f vdi -O raw ctf.vdi output.raw`
+- tsk+autospy使用。
+  - `mmls disk.raw`:查看磁盘分区
+  - `fls -o offset disk.raw <inode>`:查看disk在offset偏移处的inode文件（偏移从mml获得,inode可选）
+  - `icat -o offset disk.raw inode > res.txt`:将disk在offset偏移处的inode文件内容导出到res.txt
+- 使用virtual box的命令vboximg-mount挂载虚拟disk：https://github.com/BYU-CSA/BYUCTF-2023/tree/main/vmception 。

@@ -35,6 +35,7 @@
 - [Find the Difference of Two Arrays](./Easy/Find%20the%20Difference%20of%20Two%20Arrays.md).set.
 - [Matrix Diagonal Sum](./Easy/Matrix%20Diagonal%20Sum.md).
 - [Kth Largest Element in a Stream](./Easy/Kth%20Largest%20Element%20in%20a%20Stream.md). heap.
+- [Design Parking System](./Easy/Design%20Parking%20System.md).
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
