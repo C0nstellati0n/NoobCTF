@@ -2000,3 +2000,29 @@ ${dwf.newInstance(ec,null)("cmd")}
 - sql的数据库会忽略类似`\u0000`的unicode，但python不会。意味着当注册一个用户名`\u0000\u0000\u0000a`时，python使用len函数的结果是4。后续可以用用户名`a`查询出来这个用户。
 223. [urmombotnetdotnet.com 5](https://github.com/BYU-CSA/BYUCTF-2023/blob/main/urmombotnetdotnet.com/Chall5.md)
 - IPv6 have a scope field that is an arbitrary string using the % delimiter. For example, the following IPv6 address is valid:2001:db8::1000%random`
+224. [Notes](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/notes)
+- 使用python+ngrok搭建临时公网ip网站。对于没有限制提交给admin bot的url的xss/csrf题目，可以将bot引到自己搭建的网站上执行任意恶意payload（所以大部分题目都会限制提交给bot的url必须是同一个域名）。
+  - 将solve.html保存在一个文件夹内，并在相同文件夹下运行`python3 -m http.server`
+  - 运行`ngrok http 8000`（python开启的server默认端口8000，如果是其他端口就换成对应的端口号），Forwarding处有ngrok给出的子域名（subdomain）。
+  - 现在即可使用subdomain+/solve.html访问。即文件保存在的文件夹是网站的根目录。
+- Chrome 80+ 默认将cookie设为SameSite Lax（除非服务器自己设置为别的），意味着cookie “will be sent only in GET request in top window navigations such as `<a>` tag, window.open()..”。但是有个例外，如果一个cookie是新设置的或者被改动过，两分钟内cookie会被设为SameSite None，两分钟后才会恢复成Lax。在这两分钟的期限内可以随意cross origin，例如利用forms。https://medium.com/@renwa/bypass-samesite-cookies-default-to-lax-and-get-csrf-343ba09b9f2b
+225. [HUUP](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/HUUP)
+- 使用python socket库建立udp连接（udp传输http request）。
+```py
+import socket
+UDP_IP = 
+UDP_PORT = 
+def req(path):
+    http_get = f"GET /{path} HTTP/1.1" + "\x0d\x0a"
+    http_get += "Host: xxx" + "\x0d\x0a"
+    http_get += "Connection: close" + "\x0d\x0a"
+    http_get += "\x0d\x0a"
+    MESSAGE = http_get
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
+    s.connect((UDP_IP, UDP_PORT))
+    s.send(bytes(MESSAGE, "utf-8"))
+    res = s.recv(1024)
+    return res.decode()
+```
+用udp传输http request需要多次执行，一次不一定能得到结果（服务器会返回200，但是没有实际body内容）。因为udp有很高的概率只传header但不传content body，导致request格式不对得不到返回结果。
+- 像这道题的情况也可以尝试发送一个`GET / HTTP/0.9`请求。HTTP/0.9是http的第一个版本，“It's a one-line protocol with no headers”。这个协议就不用担心udp不传body了，它只有一行，无需多次执行。

