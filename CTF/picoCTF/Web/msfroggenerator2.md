@@ -1,5 +1,7 @@
 # msfroggenerator2
 
+[题目](https://play.picoctf.org/practice/challenge/360)
+
 照着[wp](https://rorical.blue/2023/03/picoCTF%202023%20msfroggenerator2%20writeup/)复现都复现不出来，我是废物。这道题让我再次深刻地意识到我的web基础过于薄弱。大家做不出来这道题是因为想不到payload，我做不出来这道题是因为题没看懂。这里只记录基础内容的补充。
 
 首先是docker-compose.yml。以前从来没认真看过这个文件，一度以为用处不大。我tm是怎么走到今天的？

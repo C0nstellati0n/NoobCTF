@@ -596,7 +596,7 @@ private boolean checkBounds(Long index) {
   - 利用exit hook
   - 泄露environ变量后计算栈地址，将rop链写入栈
   - FSOP，参考解法：https://chovid99.github.io/posts/wanictf-2023/#copy--paste 。
-- glibc 2.35的加密fd字段（[safe linking](https://medium.com/@b3rm1nG/%E8%81%8A%E8%81%8Aglibc-2-32-malloc%E6%96%B0%E5%A2%9E%E7%9A%84%E4%BF%9D%E8%AD%B7%E6%A9%9F%E5%88%B6-safe-linking-9fb763466773)）。在高版本中的libc里，直接写fd字段无效，需要泄露heap基址（unsorted bin泄露出来的地址最常用）后自行计算加密结果再写入。
+- glibc 2.35的加密fd字段（[safe linking](https://medium.com/@b3rm1nG/%E8%81%8A%E8%81%8Aglibc-2-32-malloc%E6%96%B0%E5%A2%9E%E7%9A%84%E4%BF%9D%E8%AD%B7%E6%A9%9F%E5%88%B6-safe-linking-9fb763466773)）。在高版本中的libc里，直接写fd字段无效，需要泄露heap的aslr地址（unsorted bin泄露出来的地址最常用,不过任何一个chunk demangle出来的真实fd地址都能用）后自行计算加密结果再写入。
 ```python
 def demangle(val, is_heap_base=False):
     if not is_heap_base:
@@ -609,6 +609,7 @@ def demangle(val, is_heap_base=False):
     return val << 12
 
 def mangle(heap_addr, val):
+    #如果直接获得了aslr的部分就不用>>12了，右移就是为了从heap基址中取出aslr的部分
     return (heap_addr >> 12) ^ val
 ```
 69. pwntools ROP工具生成orw ropchain。
@@ -707,3 +708,8 @@ int pthread_cond_signal (pthread_cond_t * cond);
 - 在不同线程malloc的chunk会有不同的arena。每个线程各自对应一个arena，各个arena之间由一个单向链表串起来。意味着不在main_arena里的unsorted bin chunk泄露出来的就不是main_arena的地址了。但是仍然可以通过当前arena泄露出来的地址加上动调得到的与main_arena的偏移，获取main_arena的地址，从而在当前thread中获取到main_arena里的chunk。因此在另外一个线程也能泄露libc基址，尝试用tcache poisoning等方法malloc到main_arena里的chunk即可
 75. [Shellcode](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/shellcode)
 - 汇编里jmp指令的使用。jmp其中一个用法为`jmp short $+0x19`，表示跳到执行jmp时的eip+0x17处。多了2是因为jmp执行本身还有两个字节，而`$`指向jmp的开始而不是jmp后一个指令的地址。详情见https://stackoverflow.com/questions/20730731/syntax-of-short-jmp-instruction
+76. [Horsetrack](../../CTF/picoCTF/Pwn/Horsetrack.md).
+- glibc 2.33 [safe linking](https://cloud.tencent.com/developer/article/1643954):fd在存储前会被加密。假设要存储fd的堆块的地址为A，为加密的fd地址为B。那么加密后的fd为 (A>>12)^B。A>>12表示取出aslr随机值，所以如果已经泄露出aslr随机值就不用右移12了（当tcache里只有一个堆块时，那个堆块的fd就是aslr值）。似乎任何堆块的地址>>12都是aslr值。
+- safe linking下的tcache poisoning要将fd mangle加密，且目标地址要与16对齐（地址末尾一定是0）
+- plt与got表深入理解：https://zhuanlan.zhihu.com/p/130271689 。一个函数的plt表是3条指令：jmp addr;push num;jmp addr。
+- 可利用`setbuf(stderr,(char *)0x0);`getshell。stderr在bss段，因此只要能泄露地址/没有PIE+partial relro，就能尝试将setbuf的got表改成system，再往stderr里写入sh。甚至可以再找个方便控制调用的函数，将其got改为改动后的setbuf。如果system在改之前已经加载过，got表里填写的system plt地址就能往下写一条（从第一条jmp addr的地址写到push num）
