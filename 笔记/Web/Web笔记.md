@@ -1159,9 +1159,10 @@ nc -lv 7777
 - [docker-compose.yml](https://docs.docker.com/compose/compose-file/compose-file-v3/)，[nginx配置文件](https://www.cnblogs.com/54chensongxia/p/12938929.html)和[traefik](https://doc.traefik.io/traefik/routing/overview/)了解。
 - js里的searchParams.get可以遍历，有可能存在列表参数，也就是多个 value 一个 key 。而Object.fromEntries 会把多个压缩成一个，并且总是取得最后面的那个。即连续给相同参数附不同值时，只会取到最后面的那个。
 - nginx里的&是保留词，如果放在开头就会被nginx 当作另一个参数对待，不会读取。且无法用其url编码形式绕过，因为此题使用ngx.var.arg_xx读取请求的参数，而ngx.var.arg_xx在获取的时候不会进行 urldecode。
-- Traefik会自动将url里的`;`替换为`&`。
+- Traefik 2.7.2+会自动将url里的`;`替换为`&`，可能有query参数覆盖。
 - chrome puppteer不仅可以访问普通的url，还可以访问`javascript:代码`,`file:///`等协议。并且还可以使用正常浏览器的保存文件等功能。
 - chrome对于file scheme有严格的保护机制。对于 fetch 等直接获取信息的东西，无法跨域。并且 file 处于特殊的地方，它和 data 一样都是以 null 作为 origin 并且不能互相访问。如果外部访问 file 的内容会被 chrome 阻止。也就是说，不能用任何 file 之外的东西直接获取 file 的内容，连 open 和 iframe 都不能访问到 file。但file 访问 file 的时候是不受这个限制的。需要注意的是从 file 访问 file 的时候，不能用跨域直接获取信息的方法，例如 fetch 和 open 的返回对象。但是 open 和 iframe 是可以正常用的。
+- chrome似乎允许puppeteer的`page.goto`(等于用户在浏览器输入url)执行xss，不管csp。
 177. [web签到](https://ctf-show.feishu.cn/docx/UpC6dtDqgo7VuoxXlcvcLwzKnqh#BEM2dgiACoGmg4x4jKXcJ6kGnQf)
 - php中的数组可以直接赋值：
 ```php

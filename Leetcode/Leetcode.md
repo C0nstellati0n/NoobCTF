@@ -86,6 +86,7 @@
 - [Maximum Subsequence Score](./Medium/Maximum%20Subsequence%20Score.md). heap.
 - [New 21 Game](./Medium/New%2021%20Game.md). dp.
 - [Stone Game II](./Medium/Stone%20Game%20II.md). dp+dfs.
+- [Design Underground System](./Medium/Design%20Underground%20System.md).
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
