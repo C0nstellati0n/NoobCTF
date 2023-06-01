@@ -707,13 +707,25 @@ index()
 123. 在phpsession里如果在php.ini中设置session.auto_start=On，那么PHP每次处理PHP文件的时候都会自动执行session_start()，但是session.auto_start默认为Off。与Session相关的另一个设置叫[session.upload_progress.enabled](https://xz.aliyun.com/t/9545)，默认为On，在这个选项被打开后，在multipart POST时传入PHP_SESSION_UPLOAD_PROGRESS，PHP会执行session_start()。借此可以绕过一些需要session才能访问的文件的限制，甚至RCE。例题:[[PwnThyBytes 2019]Baby_SQL](https://blog.csdn.net/SopRomeo/article/details/108967248)。
 124. node.js早期版本（<8.0)中，沙箱vm2有个特性：当 Buffer 的构造函数传入数字时, 会得到与数字长度一致的一个 Buffer，并且这个 Buffer 是未清零的。8.0 之后的版本可以通过另一个函数 Buffer.allocUnsafe(size) 来获得未清空的内存。一个调用过的变量，一定会存在内存中，也就是说，我们可以使用Buffer函数读取沙箱之外的变量内容，实现沙箱逃逸。例题:[[HITCON 2016]Leaking](https://blog.csdn.net/weixin_44037296/article/details/112387663)
 125. 对于SSRF，127.0.0.1无法使用的情况下，可以考虑0.0.0.0。
-126. [redis](https://blog.csdn.net/like98k/article/details/106417214) [主从复制](https://www.cnblogs.com/karsa/p/14123957.html) [SSRF](https://xz.aliyun.com/t/5665)（RCE）。主要利用[Redis Rogue Server](https://github.com/n0b0dyCN/redis-rogue-server)和[redis-ssrf](https://github.com/xmsec/redis-ssrf)两个工具。例题:[[网鼎杯 2020 玄武组]SSRFMe](https://blog.csdn.net/rfrder/article/details/113651337)
-127. [[NPUCTF2020]验证🐎](https://blog.csdn.net/hiahiachang/article/details/105756697)。本题的知识点有：
-
+126. [[网鼎杯 2020 玄武组]SSRFMe](https://liotree.github.io/2020/07/10/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E7%8E%84%E6%AD%A6%E7%BB%84-SSRFMe/)
+- [redis](https://blog.csdn.net/like98k/article/details/106417214) [主从复制](https://www.cnblogs.com/karsa/p/14123957.html) [SSRF](https://xz.aliyun.com/t/5665)（RCE）。主要利用[Redis Rogue Server](https://github.com/n0b0dyCN/redis-rogue-server)和[redis-ssrf](https://github.com/xmsec/redis-ssrf)两个工具。
+- 绕过ssrf内网ip检测(php libcurl相关)。
+  - 利用0.0.0.0:`http://0.0.0.0/`
+  - 利用curl和其他库解析url的差异性(已在curl的较新版本被修复)：`http://foo@127.0.0.1:80@www.google.com/` ，https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf
+  - `http://127.1/hint.php`:ip2long('127.1')会返回false,不过gethostbyname在linux下会返回127.0.0.1，无法绕过。windows下的gethostbyname倒是会返回127.1，可以绕过
+  - ip进制绕过。`?url=gopher://0177.0.0x0001:80/_%2547%2545%2554%2520%252f%2568...`
+  - `http://127。0。0。1/`：有些curl版本可以
+  - ipv6，需要环境支持ipv6
+    ```
+    http://[::1]/ >>> http://127.0.0.1/
+    http://[::]/  >>>  http://0.0.0.0/
+    ```
+  - `http:///127.0.0.1/`:并不是只有浏览器才会解析这样host为空的畸形url，curl和git也会按照浏览器的方式解析。单纯curl不行，但是php的lib curl行。parse_url解析这样的畸形url会返回false，`$hostname=$url_parse['host'];`会返回null。最后，windows下`gethostbyname(null);`会返回本机ip，导致后面无法绕过ip检测。然而linux下并没有这样的特性，gethostbyname会返回null，绕过ip检测
+1.   [[NPUCTF2020]验证🐎](https://blog.csdn.net/hiahiachang/article/details/105756697)。本题的知识点有：
 - js中列表，对象等与字符串相加会导致强制类型转换，结果为字符串。可用这个特点绕过一些md5加盐。以及，绕过md5时如果程序启用了json，可以利用json构造对象绕过大部分限制。
 - js利用__proto__可从原型链上引出Function和String，Function用于构造函数，String用于得到fromCharCode绕过强制过滤。利用`process.mainModule.require('child_process').execSync('cat /flag')`进行rce，同时还利用了箭头函数。
 
-128. 可以使用以下内容来绕过php的getmagesize()函数获得的图片长宽。
+1.   可以使用以下内容来绕过php的getmagesize()函数获得的图片长宽。
 
 ```
 #define width 1

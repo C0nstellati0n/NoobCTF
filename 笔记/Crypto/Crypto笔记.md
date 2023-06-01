@@ -57,7 +57,7 @@ print(bin((-y)%n))
 
 rabin算法可以解出来4个明文，一般末尾会有类似校验码的东西，帮助分辨哪个是真正的明文。[来源](https://www.jianshu.com/p/00a35ebd36fb)。
 - 当模数n过大， $m^e$ 次方没有n大时，就可以直接对c开e次方。例题:[[INSHack2017]rsa16m](https://blog.csdn.net/zippo1234/article/details/109268561)。
-- e和phi不互素+中国剩余定理解决多组c和n问题。例题1:[Weird_E_Revenge](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/Weird_E_Revenge.md)。例题2:[[De1CTF2019]babyrsa](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BDe1CTF2019%5Dbabyrsa.md)
+- e和phi不互素+中国剩余定理解决多组c和n问题。例题1:[Weird_E_Revenge](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/Weird_E_Revenge.md)。例题2:[[De1CTF2019]babyrsa](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BDe1CTF2019%5Dbabyrsa.md)。[simpleRSA](https://blog.csdn.net/weixin_52640415/article/details/127817186)
   - 如果给出两组n，c和e，且两组数据的phi和e gcd一致，解法与Weird_E_Revenge大致相同。
 ```python
 from Crypto.Util.number import *
@@ -343,6 +343,18 @@ high_m =
 
 phase2(high_m, n, c)
 ```
+```py
+c = 
+n = 
+e = 
+K.<x> = PolynomialRing(Zmod(n))
+secret_len =  #原m的长度,有时候需要猜测
+known_high = #已知的m高位
+polynomial = (x + 2^(secret_len)*(known_high))^e - c
+polynomial = polynomial.monic()
+roots = polynomial.small_roots(X=2^secret_len)
+print(roots)
+```
 - coppersmith's short-pad attack& Related Message Attack(Franklin-Reiter，相关信息攻击)
 ```python
 import binascii
@@ -499,7 +511,20 @@ import sympy
 x=sympy.discrete_log(n,c,m)  #参数顺序：sympy.discrete_log(模数，结果，底数)
 print(long_to_bytes(x))
 ```
-也可用[网站](https://www.alpertron.com.ar/DILOG.HTM)计算. https://github.com/hollowcrust/TJCTF-2023/blob/main/crypto.md#2-ezdlp 
+也可用[网站](https://www.alpertron.com.ar/DILOG.HTM)计算. https://github.com/hollowcrust/TJCTF-2023/blob/main/crypto.md#2-ezdlp
+
+或者sagemath脚本。
+```py
+#g^x = s mod p, find x
+g =
+s =
+p =
+Fp = IntegerModRing(p) 
+g_modp = Fp(g) 
+s_modp = Fp(s)
+x = discrete_log(s_modp, g_modp)
+print(x)
+```
 
 5. 海明码（汉明码）问题。例题：[H■m■i■g](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Misc/H%E2%96%A0m%E2%96%A0i%E2%96%A0g.md)。今天又遇见一道题：[鸡藕椒盐味](https://buuoj.cn/challenges#%E9%B8%A1%E8%97%95%E6%A4%92%E7%9B%90%E5%91%B3)，也是海明码，没想到直接用当时写的脚本就能出答案。
 
