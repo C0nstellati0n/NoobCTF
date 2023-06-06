@@ -990,3 +990,11 @@ git pre-commit //运行触发hook
     List the contents of the flag file :)
     git show <hash>
     ```
+159. [New Website](https://github.com/daffainfo/ctf-writeup/tree/main/BxMCTF%202023/New%20Website)
+- 使用[dig](https://cloud.tencent.com/developer/article/1618605)命令解析dns记录.如`dig domain TXT`只输出TXT相关记录。当访问网站出现`DNS_PROBE_FINISHED_NXDOMAIN`时，可以用该命令收集网站运行时的信息。
+- 也可以使用该[网站](https://dnschecker.org/all-dns-records-of-domain.php)搜索dns记录
+160. [miniscule](https://gist.github.com/hanasuru/44f59fab5fd4f434cbae20a98a9f4a1a)
+- png数据压缩方式分析。使用pngcheck命令，在png文件头的IHDR块（偏移0xc+13处）记录着png数据的压缩方式。默认为0（Deflate），如果是其他值会报错。命令修复：`printf '\x00' | dd of=ctf.png.bak conv=notrunc bs=1 seek=26`
+- 提取IDAT的内容。IDAT在0x25偏移处，不过还有个chunk头，所以真正的数据开始于41处。`dd if=ctf.png bs=1 skip=41 count=<num> of=data`,num值可在pngcheck得到。
+- zst（zstandard compress）类型数据的开头为`28 B5 2F FD`。可用命令解压：`zstd -d data.zst`。获取原始数据后，有以下几种方法恢复原始png。
+    - 将原始数据放入[GIMP](https://www.gimp.org/)，参数设置为要复原的图片的参数

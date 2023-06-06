@@ -408,7 +408,7 @@ m = pow(c, d, n)
 print(long_to_bytes(m))
 ```
 - rsa要求明文不能大于n。如果明文大于n了，解密的结果是m-k\*n。此时要么按照正常方式求出m后不断加上n的倍数尝试爆破，要么尝试获取多组密文解密后用crt还原完整明文。例题:[Search-3](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#Search-3---470---Hard)
-- 基于多项式的RSA。在有限域上选取两个不可约多项式 g(p),g(q)，g(n)=g(p)⋅g(q)。计算出 g(n)的欧拉函数 φ(g(n))=φ。再选取一个整数 e作为公钥，e与 φ是互素的，那么对于明文 g(m)，加密过程为 $g(m)^e$ ≡g(c)(mod g(n))。解密则计算私钥 d满足 ed≡1(mod φ)，则 $g(c)^d$ ≡ $(g(m)^e)^d$ ≡ $g(m)^{ed}$ ≡ $g(m)^{φ+1}$ (mod g(n))。同样考虑 g(n)与 g(m)互素，欧拉定理对于多项式亦成立。得到 $g(m)^{φ+1}$ ≡g(m)(mod g(n))，所以 $g(c)^d$ ≡g(m)(mod g(n))。即整数上的rsa可以推广到多项式上。对于不可约多项式 g(x)，φ(g(x))= $p^n−1$ 。p为 GF(p)的模，n为该多项式最高项次数。
+- 基于多项式的RSA。在有限域上选取两个不可约多项式 g(p),g(q)，g(n)=g(p)⋅g(q)。计算出 g(n)的欧拉函数 φ(g(n))=φ。再选取一个整数 e作为公钥，e与 φ是互素的，那么对于明文 g(m)，加密过程为 $g(m)^e$ ≡g(c)(mod g(n))。解密则计算私钥 d满足 ed≡1(mod φ)，则 $g(c)^d$ ≡ $(g(m)^e)^d$ ≡ $g(m)^{ed}$ ≡ $g(m)^{φ+1}$ (mod g(n))。同样考虑 g(n)与 g(m)互素，欧拉定理对于多项式亦成立。得到 $g(m)^{φ+1}$ ≡g(m)(mod g(n))，所以 $g(c)^d$ ≡g(m)(mod g(n))。即整数上的rsa可以推广到多项式上。对于不可约多项式 g(x)，φ(g(x))= $p^n−1$ 。p为 GF(p)的模，n为该多项式最高项次数。[unusualrsa3](https://lazzzaro.github.io/2020/09/01/other-CTFshow%E4%BE%9B%E9%A2%98-unusualrsa%E7%B3%BB%E5%88%97/index.html#unusualrsa3)
 
 ```python
 #sage
