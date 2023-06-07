@@ -1354,6 +1354,7 @@ return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes()));
 ```
 
 那么默认IV为`00000000000000000000000000000`，模式为`AES/ECB/PKCS5Padding`
+
 36. [SCAlloped_potatoes](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#SCAlloped_potatoes---484---Medium)
 - rsa side-channel attack：通过分析power trace恢复私钥。如果用matplotlib将powertrace的波形图绘制出来，会发现波形图的起伏对应私钥的各个字节（需要放大才能看到）。大概约10个数据为一组，高峰为1，中间值为0。
 ```python
@@ -1822,3 +1823,9 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
     - 选取 $m_1\not ={m}$ ,利用交互获取其签名 $s_1=m_1^d\mod n$
     - 计算 $m_2=m\*m_1^{-1}$ ,获取其签名 $s_2=m_2^d\mod n=(m\*m_1^{-1})^d\mod n$
     - 计算 $s=s_1\*s_2=(m_1^d\*m\*m_1^{-1})^d\mod n=m^d\mod n$ ，即为m的签名
+52. java(java.util.Random)随机数预测工具。获取两个int随机数（nextInt()）或一个double（nextDouble()）或一个long（nextLong()）的情况下即可预测接下来所有由Random输出的随机数。[ReplicatedRandom](https://github.com/fta2012/ReplicatedRandom/tree/master).提交long数字时记得在数字后加个`L`,表示是long。
+53. [e](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/e)
+- coppersmith:m高位泄露。此题完整m的位数未知，需要爆破。wp里的脚本比一般的coppersmith实现复杂，参考：https://www.cryptologie.net/article/222/implementation-of-coppersmith-attack-rsa-attack-using-lattice-reductions/
+54. [keysmith](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/keysmith)
+- 给出m和 $c=m^e\mod n$ ，在加密时使用的公钥(n,e)未知的情况下构建另一组公钥 $(n_1,e_1)$ （可与原公钥相同），使得 $c=m^{e_1}\mod n_1$ 且 $m=c^{d_1}\mod n_1$ 。 https://crypto.stackexchange.com/questions/8902/given-a-message-and-signature-find-a-public-key-that-makes-the-signature-valid 。大致步骤如下（根据wp里的脚本改动）：
+    - 选取p和q，p-1和q-1均为光滑数且p（p-1）与q

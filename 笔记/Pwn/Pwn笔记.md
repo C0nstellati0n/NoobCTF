@@ -634,6 +634,7 @@ chain.read(3,file.bss(),0x100) #一般情况下（之前没有额外打开的文
 chain.puts(file.bss()) #puts输出内容
 ```
 也可以替换类似功能的函数，注意调用时file需要包含调用的函数且无PIE。
+
 70. [money-printer2](https://www.youtube.com/watch?v=5miWo7IBnHI&t=603s)
 - 仅执行一次的格式化字符串漏洞利用。题目背景：
   - 无法写fini_array获取main的第二次调用（似乎不是所有程序退出时都会调用fini_array）

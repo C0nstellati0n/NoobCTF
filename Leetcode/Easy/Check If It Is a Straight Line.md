@@ -77,8 +77,8 @@ Beats
 把基础款公式变形一下就行了。
 
 $y-y_1=m(x-x_1)$<br>
-$y-y_1=(\frac{\delta y}{\delta x})(x-x_1)$<br>
-$\delta x(y-y_1)=\delta y(x-x_1)$
+$y-y_1=(\frac{\Delta y}{\Delta x})(x-x_1)$<br>
+$\Delta x(y-y_1)=\Delta y(x-x_1)$
 
 在程序一开始获取前两个点的dy和dx以及其中一个点的x和y坐标作为参考，剩下的就是一个一个算比较了。最后是升级版：一次检查3个点。平面上，如果3个点形成一条直线，则这3个点形成的三角形面积为0。
 ```c#
