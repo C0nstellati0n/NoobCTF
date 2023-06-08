@@ -39,6 +39,7 @@
 - [Design HashSet](./Easy/Design%20HashSet.md)
 - [Check If It Is a Straight Line](./Easy/Check%20If%20It%20Is%20a%20Straight%20Line.md)
 - [Can Make Arithmetic Progression From Sequence](./Easy/Can%20Make%20Arithmetic%20Progression%20From%20S.md).
+- [Count Negative Numbers in a Sorted Matrix](./Easy/Count%20Negative%20Numbers%20in%20a%20Sorted%20Mat.md). two pointers/binary search
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
