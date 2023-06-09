@@ -1668,7 +1668,13 @@ print("The flag is: %s" % flag)
     - 先在secret后加上字节`\x80`
     - 然后使用`\x00`将secret的长度pad成56字节的倍数
     - 最后将secret的bit的长度（不包括添加的`\x80`和`\x00`）以大端转为长度为8bytes。例如32字节的secret就是256 bit长，转为byte就是`(256).to_bytes(8,'big')=\x00\x00\x00\x00\x00\x00\x01\x00`
-  - 实现脚本：https://github.com/stephenbradshaw/hlextend
+  - 实现脚本：https://github.com/stephenbradshaw/hlextend .使用方法如下：
+```py
+sha = hlextend.new('sha256')
+new_meta = sha.extend(b'content', b'known', length, hash)
+#已知SHA256(secret)的结果hash，想要在secret+known的后面添上content并在secret的值未知的情况下获取SHA256(secret+known+content)，length为secret的长度。运行函数可得到一串值value，SHA256(secret+value)=SHA256(secret+known+content)
+#脚本里有解释，另一道类似的例题：https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/drm-1
+```
 - 小端里的拼接字节技巧。假设有counter的计数为0x12345678，小端存储结果为0x78 0x56 0x34 0x12。如果想在0x12后面填上任意字节但是counter的值未知，可以用以下公式计算：`byte*(1 << (numBytes*8))`。byte表示想拼接的字节，numBytes表示counter的字节长度，或者想要位移的字节数（想在多少字节后面拼接）。例如想在刚刚counter后添加0x9a，加上`0x9a*(1 << (4*8))`即可。
 48. [Forcing a file’s CRC to any value](https://www.nayuki.io/page/forcing-a-files-crc-to-any-value):该脚本可以将一个文件的crc改为任意值，通过在指定偏移处插入构造的字节（这些字节不一定可见）。用法：`python3 forcecrc32.py FileName ByteOffset NewCrc32Value`,表示将FileName对应文件的内容改为NewCrc32Value，构造用的字节插入在ByteOffset偏移处。
 49. [Uniform](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Crypto/Uniform)
@@ -1827,5 +1833,7 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
 53. [e](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/e)
 - coppersmith:m高位泄露。此题完整m的位数未知，需要爆破。wp里的脚本比一般的coppersmith实现复杂，参考：https://www.cryptologie.net/article/222/implementation-of-coppersmith-attack-rsa-attack-using-lattice-reductions/
 54. [keysmith](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/keysmith)
-- 给出m和 $c=m^e\mod n$ ，在加密时使用的公钥(n,e)未知的情况下构建另一组公钥 $(n_1,e_1)$ （可与原公钥相同），使得 $c=m^{e_1}\mod n_1$ 且 $m=c^{d_1}\mod n_1$ 。 https://crypto.stackexchange.com/questions/8902/given-a-message-and-signature-find-a-public-key-that-makes-the-signature-valid 。大致步骤如下（根据wp里的脚本改动）：
-    - 选取p和q，p-1和q-1均为光滑数且p（p-1）与q
+- 给出m和 $c\equiv m^e\mod n$ ，在加密时使用的公钥(n,e)未知的情况下构建另一组公钥 $(n_1,e_1)$ （可与原公钥相同），使得 $c=\equiv m^{e_1}\mod n_1$ 且 $m\equiv c^{d_1}\mod n_1$ 。 https://crypto.stackexchange.com/questions/8902/given-a-message-and-signature-find-a-public-key-that-makes-the-signature-valid 。大致步骤如下（根据wp里的脚本改动）：
+    - 选取p和q，p-1和q-1均为光滑数且p（p-1的分解结果）与q（q-1的分解结果）都是m的二次剩余。选取的p和q应该满足 $m\equiv c^{d_p}\mod p,m\equiv c^{d_q}\mod q$
+    - 利用离散对数找到上一步提到的 $d_p$ 和 $d_q$ 。应存在d满足 $d\equiv d_p\mod p-1,e\equiv d_q\mod q-1$ 。那么利用crt即可恢复这样的d。
+    - `(p-1)*(q-1)`即为phi，`p*q`即为n，d对phi求逆元即为e。公钥+私钥生成完成。

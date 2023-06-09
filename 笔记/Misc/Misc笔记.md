@@ -990,6 +990,7 @@ git pre-commit //运行触发hook
     List the contents of the flag file :)
     git show <hash>
     ```
+- 本地运行一个host服务器，然后把payload传给题目：https://github.com/TJCSec/tjctf-2023-challenges/tree/main/misc/gish
 159. [New Website](https://github.com/daffainfo/ctf-writeup/tree/main/BxMCTF%202023/New%20Website)
 - 使用[dig](https://cloud.tencent.com/developer/article/1618605)命令解析dns记录.如`dig domain TXT`只输出TXT相关记录。当访问网站出现`DNS_PROBE_FINISHED_NXDOMAIN`时，可以用该命令收集网站运行时的信息。
 - 也可以使用该[网站](https://dnschecker.org/all-dns-records-of-domain.php)搜索dns记录
