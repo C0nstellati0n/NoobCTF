@@ -97,6 +97,7 @@
 - [Number of Provinces](./Medium/Number%20of%20Provinces.md). dfs/union find,计算有多少组连接起来的node
 - [Minimum Flips to Make a OR b Equal to c](./Medium/Minimum%20Flips%20to%20Make%20a%20OR%20b%20Equal%20to%20.md). c# BitArray/位运算/PopCount函数（用于计算数字二进制中1的数量，参考 https://stackoverflow.com/questions/109023/count-the-number-of-set-bits-in-a-32-bit-integer）
 - [Maximum Value at a Given Index in a Bounded Array](./Medium/Maximum%20Value%20at%20a%20Given%20Index%20in%20a%20Bo.md). binary search/two pointers
+- [Snapshot Array](./Medium/Snapshot%20Array.md). binary search+自定义KeyValuePair list
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
