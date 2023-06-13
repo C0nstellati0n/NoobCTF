@@ -770,3 +770,15 @@ undefined8 main(void)
 两种差不多的方法：
   - 在正常的shellcode前加个`\x00`让程序提前停止检查，然后返回addr+1
   - payload构造成`jump $+1;\x00;payload`，然后返回addr
+79. [formatter](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/pwn/formatter),[wp](https://www.youtube.com/watch?v=AqV3YUtcKGU&t=1999s)
+- 格式化字符串漏洞在指针间的赋值。
+```c
+xd = calloc(1, sizeof(int));
+char str[N];
+fgets(str, N, stdin);
+printf(str);
+if(*xd==1234){
+    win();
+}
+```
+xd在程序开始时会被calloc/malloc的指针覆盖，即使程序没有PIE也无法直接往里面写值。可以在程序里任意选择一处可读可写地址a，将a的值写为1234，然后将xd写为a。`fmtstr_payload(offset,{a:1234,xd:a})`,`*xd=*(xd->a)=1234`
