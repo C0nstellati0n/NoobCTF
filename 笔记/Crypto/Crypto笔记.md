@@ -355,6 +355,20 @@ polynomial = polynomial.monic()
 roots = polynomial.small_roots(X=2^secret_len)
 print(roots)
 ```
+有时候可以尝试用`\x00`尝试提高已知明文，然后用small_roots开根。[Small Inscription](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#small-inscription)。这题的e是3，flag长度小于30。方程确实是我理解的那个方程，就是补`\x00`才能解出来可能是因为这样small_root要求的根相对比较小，而且不会影响出来的结果。
+```py
+from Cryptodome.Util.number import long_to_bytes, bytes_to_long
+ct=
+N=
+R.<x> = PolynomialRing(Zmod(N))
+prefix=b'' #已知的明文部分
+for i in range(30):
+    m1 = bytes_to_long(prefix+b'\x00'*i)
+    poly= (m1+x)**3 - ct
+    root=poly.small_roots()
+    if root:
+        print(long_to_bytes(m1+int(root[0])))
+```
 - coppersmith's short-pad attack& Related Message Attack(Franklin-Reiter，相关信息攻击)
 ```python
 import binascii
@@ -1837,3 +1851,39 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
     - 选取p和q，p-1和q-1均为光滑数且p（p-1的分解结果）与q（q-1的分解结果）都是m的二次剩余。选取的p和q应该满足 $m\equiv c^{d_p}\mod p,m\equiv c^{d_q}\mod q$
     - 利用离散对数找到上一步提到的 $d_p$ 和 $d_q$ 。应存在d满足 $d\equiv d_p\mod p-1,e\equiv d_q\mod q-1$ 。那么利用crt即可恢复这样的d。
     - `(p-1)*(q-1)`即为phi，`p*q`即为n，d对phi求逆元即为e。公钥+私钥生成完成。
+55. [AdventurersKnapsack](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#adventurers-knapsack),[wp2](https://meashiri.github.io/ctf-writeups/posts/202306-dantectf/#adventurers-knapsack)
+- 背包加密问题（knapsack）的攻击：
+  - [Lenstra–Lenstra–Lovász (LLL) lattice basis reduction](https://en.wikipedia.org/wiki/Lenstra%E2%80%93Lenstra%E2%80%93Lov%C3%A1sz_lattice_basis_reduction_algorithm)
+  - [Low Density attack on low-density knapsacks](https://static.aminer.org/pdf/PDF/000/119/853/solving_low_density_knapsacks.pdf)
+- low density attack: For a given set of positive integers $A = \{a_1,..., a_n\} (a_i\not ={a_j})$ and a given positive integer s, determining whether there exists a subset of A with its sum being s, or finding a vector $e = (e_1, . . . , e_n) ∈ \{0, 1\}^n$ satisfying $Σ_{i=1}^n a_i·e_i = s$ , is called the subset sum problem (or the knapsack problem), and is known as an NP-hard problem in general. Low-density attack is a method which works effectively against subset sum problems with low density. The density of the subset sum problem d is defined by $d=\frac{n}{log_2[max(pubk)]}$ 。pubk是背包加密的公钥，或者说上面指定的集合A。max(pubk)=max( $a_i$ )。有以下两种针对此种情况的方法：
+  - Lagarias and Odlyzko (LO) algorithm (works on d < 0.6463)
+  - [Coster, Joux, LaMacchia, Odlyzko, Schnorr, and Stern (CJLOSS)](https://www.di.ens.fr/~fouque/ens-rennes/sac-LLL.pdf) algorithm(works on d < 0.9408)。创建一个`M*M`的单位矩阵（M为公钥长度+1），其矩阵的最后一行换为0.5，最后一列除最后一项填写N\*公钥(N大于公钥长度的平方根)，而最后一项填上密文。然后使用LLL算法进行格基规约。结果矩阵中的一个向量就是明文的bit。
+  - [脚本](https://github.com/hyunsikjeong/LLL)
+  - ```py
+    from Cryptodome.Util.number import *
+    ct=
+    pubk=
+
+    def rotate(l):
+        return [l[-1]]+l[:-1]
+
+    # one of the papers describing the attack (there are many), "Bi, Jingguo, Xianmeng Meng, and Lidong Han. "Cryptanalysis of two knapsack public-key cryptosystems." Cryptology ePrint Archive (2009)."
+
+    base = [1]+[0]*179
+    M=[]
+    N=15 # >sqrt(180)，大于公钥长度平方根
+
+    # creating lattice matrix
+    for i in range(180):
+        M.append(base+[N*pubk[i]])
+        base=rotate(base)
+    M.append([0.5]*180+[N*ct])
+
+    B=matrix(QQ,M).LLL()
+    for row in B:
+        if all(abs(k) == 0.5 for k in row[:-1]):
+            sol = row
+    sol = ''.join(['0' if j==1/2 else '1' for j in sol[:-5]])
+    print(long_to_bytes(int(sol,2)))
+  ```
+- 似乎不同密度的knapsack构造矩阵进行格基规约时，构造的矩阵内部的数字不同，而且会影响结果。例如[knapsack](/CTF/moectf/Crypto/knapsack.md)这题的方法放在这题就解不出来。

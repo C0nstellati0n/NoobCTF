@@ -1002,3 +1002,10 @@ git pre-commit //运行触发hook
     - 与GIMP方法类似，但使用python PIL（Image.frombytes）
     - 使用[PNG-Decoder](https://pyokagan.name/blog/2019-10-14-png/)
     - 保留zstd数据，使用Zlib解压数据后重新放入IDAT.data
+161. [Almost Perfect Remote Signing](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#almost-perfect-remote-signing)
+- [AFSK (Audio frequency-shift keying)](https://en.wikipedia.org/wiki/Frequency-shift_keying#Audio_frequency-shift_keying) modulated signal:[APRS](https://en.wikipedia.org/wiki/Automatic_Packet_Reporting_System)(Automatic Packet Reporting System is a packet system for real time data communications. Used by hams for location reporting, weather stations etc。本题用来记录GPS坐标)音频信号解码。可用[direwolf](https://github.com/wb2osz/direwolf)或[multimon-ng](https://www.kali.org/tools/multimon-ng/).使用multimon-ng解码时要先把wav文件转为raw：`sox -t wav ctf.wav -esigned-integer -b16 -r 22050 -t raw out.raw`(频率调22050Hz是因为这是APRS的标准),然后解码：`multimon-ng -t raw -a AFSK1200 out.raw > res`. 见另外的wp: https://github.com/suvoni/CTF_Writeups/tree/main/danteCTF_2023#2-almost-perfect-remote-signing , https://meashiri.github.io/ctf-writeups/posts/202306-dantectf/#almost-perfect-remote-signing
+  - [APRS protocol specs](http://www.aprs.org/doc/APRS101./PDF),其中第42页为经纬度坐标标准。这些坐标为[DMS Coords](https://en.wikipedia.org/wiki/Decimal_degrees#Example)
+162. [Do You Know GIF?](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#do-you-know-gif)
+- [GIF file format specification](https://www.w3.org/Graphics/GIF/spec-gif89a.txt). In sections 12 to 16 you can learn how a GIF is actually made out of different blocks of data, and in section 24 you can learn about a special type of block called “Comment Extension”. 可用wp里的脚本提取comment的内容，当然exiftool也可以。`exiftool -a ctf.gif | grep Comment`
+163. [Imago Qualitatis](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#imago-qualitatis)
+- 使用[Gqrx SDR](https://gqrx.dk/)解码[IQ raw data](https://www.pe0sat.vgnet.nl/sdr/iq-data-explained/)。教程：https://hamsci.org/resource/how-play-rri-raw-iq-file-gqrx
