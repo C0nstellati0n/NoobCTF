@@ -782,3 +782,7 @@ if(*xd==1234){
 }
 ```
 xd在程序开始时会被calloc/malloc的指针覆盖，即使程序没有PIE也无法直接往里面写值。可以在程序里任意选择一处可读可写地址a，将a的值写为1234，然后将xd写为a。`fmtstr_payload(offset,{a:1234,xd:a})`,`*xd=*(xd->a)=1234`
+80. [painter](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/pwn/painter),[wp](https://gist.github.com/awt-256/8e6bdad37116308bd070d5e0aa7a2ebd)
+- wasm binary pwn。wasm可用不同高级语言写成，比如C/C++。字节溢出等问题也会在wasm里出现。
+- `$global0` is LLVM's RSP in wasm
+- [diswasm](https://github.com/wasmkit/diswasm),此工具擅长处理unminified style of wasm

