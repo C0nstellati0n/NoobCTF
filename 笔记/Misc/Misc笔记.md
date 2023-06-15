@@ -1009,3 +1009,10 @@ git pre-commit //运行触发hook
 - [GIF file format specification](https://www.w3.org/Graphics/GIF/spec-gif89a.txt). In sections 12 to 16 you can learn how a GIF is actually made out of different blocks of data, and in section 24 you can learn about a special type of block called “Comment Extension”. 可用wp里的脚本提取comment的内容，当然exiftool也可以。`exiftool -a ctf.gif | grep Comment`
 163. [Imago Qualitatis](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#imago-qualitatis)
 - 使用[Gqrx SDR](https://gqrx.dk/)解码[IQ raw data](https://www.pe0sat.vgnet.nl/sdr/iq-data-explained/)。教程：https://hamsci.org/resource/how-play-rri-raw-iq-file-gqrx
+164. [Flag Fabber](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#flag-fabber)
+- [KiCad’s gerbview](https://www.kicad.org/discover/gerber-viewer/):用于打开Gerber files（a format usually related to the manufacturing process of printed circuit boards，PCB）的工具
+165. [Demonic Navigation Skills](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#demonic-navigation-skills)
+- dig命令使用：
+  - `+noall +answer`选项省略了dig较为复杂的输出，且比nslookup要详细。`dig @CHALLENGE_ADDR -p CHALLENGE_PORT +noall +answer <子域名>`
+  - `dig @CHALLENGE_ADDR -p CHALLENGE_PORT +noall +answer <子域名> SOA`。访问域名的[SOA记录](https://www.nslookup.io/learning/dns-record-types/soa/)
+  - `dig @CHALLENGE_ADDR -p CHALLENGE_PORT +noall +answer -c CLASS9 <子域名> SOA`：访问指定[class field](https://www.rfc-editor.org/rfc/rfc2929#section-3.2)下的dns记录

