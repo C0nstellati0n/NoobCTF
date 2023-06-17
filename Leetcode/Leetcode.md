@@ -121,3 +121,4 @@
 - [Maximize Score After N Operations](./Hard/Maximize%20Score%20After%20N%20Operations.md). bitmask dp.
 - [Stone Game III](./Hard/Stone%20Game%20III.md). dp/[minimax](https://en.wikipedia.org/wiki/Minimax)
 - [Minimum Cost to Cut a Stick](./Hard/Minimum%20Cost%20to%20Cut%20a%20Stick.md). dp+HOW TO MEMOIZE (almost) ANY RECURSIVE SOLUTION
+- [Number of Ways to Reorder Array to Get Same BST](./Hard/Number%20of%20Ways%20to%20Reorder%20Array%20to%20Get.md). BST,利用杨辉三角/帕斯卡三角（Pascal's Triangle）计算permutations
