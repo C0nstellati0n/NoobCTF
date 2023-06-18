@@ -810,6 +810,37 @@ xd在程序开始时会被calloc/malloc的指针覆盖，即使程序没有PIE�
   - Stack address（程序记录返回地址的地方。如何获取函数的返回地址：在ret指令处下个断点，rsp处的stack地址即为返回地址存储的地方。同一个函数执行多次，每次的地址都不一样）
   - code base（ghidra或ida里看到的指令加载时的基址，想要使用程序里的gadget或想挑战到程序里的指令段时泄露）
   - libc address（使用libc里的函数或gadget（one gadget））
+  - rltd_global address(可选，见下方解释)
+- 在这篇[wp](https://github.com/nobodyisnobody/write-ups/tree/main/DanteCTF.2023/pwn/Sentence.To.Hell)里看到了更多思路：
+  - 泄露栈地址后覆盖main函数在栈上的返回地址
+  - 泄露libc地址后覆盖strlen的got表为one_gadget。程序在执行puts时内部会调用strlen，于是getshell
+  - 泄露ld.so地址后构造一个假的fini_array表，内含one_gadget。当程序退出调用run_exit_handlers()时，会被内部调用的_dl_fini执行。_dl_fini函数内部关键代码如下：
+  ```c
+         /* Is there a destructor function?  */
+          if (l->l_info[DT_FINI_ARRAY] != NULL || (ELF_INITFINI && l->l_info[DT_FINI] != NULL))
+            {
+              /* When debugging print a message first.  */
+              if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
+                _dl_debug_printf ("\ncalling fini: %s [%lu]\n\n", DSO_FILENAME (l->l_name), ns);
+
+              /* First see whether an array is given.  */
+              if (l->l_info[DT_FINI_ARRAY] != NULL)
+              {
+                ElfW(Addr) *array = (ElfW(Addr) *) (l->l_addr + l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
+                unsigned int i = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr)));
+                while (i-- > 0)
+                  ((fini_t) array[i]) ();
+              }
+  ```
+  可覆盖`l->l_info[DT_FINI_ARRAY]`指针（0x13b0 bytes after _rtld_global in ld.so）为构造的假fini_array entry的地址。紧接着array的地址由`l->l_addr`加上`l->l_info[DT_FINI_ARRAY]->d_un.d_ptr`得来，即为构造的假fini_array entry中的第二个指针。可以看出`((fini_t) array[i]) ()`调用了array。既然`d_un`结构声明如下：
+  ```c
+  ptype l->l_info[DT_FINI_ARRAY]->d_un
+  type = union {
+      Elf64_Xword d_val;				// address of function that will be called, we put our onegadget here
+      Elf64_Addr d_ptr;				// offset from l->l_addr of our structure.似乎就是伪造的fini_array entry的地址在程序里的偏移。例如这题伪造到your_name这个bss段上的变量，其偏移为0x4050。于是这里就填0x4050
+  }
+  ```
+  因为one_gadget直接用条件不满足，于是采用第三种方法使其条件满足。
 - 除了将返回地址填为main函数可以获得第二次执行，也可以填为`_start`的。https://github.com/R3dSh3rl0ck/CTF-Competitions-Writeups/tree/main/DanteCTF_2023/sentence
 83. [Soulcode](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#soulcode)
 - 构造polymorphic open+read+write shellcode绕过seccomp沙盒+过滤。polymorphic shellcode的基本思路在于，先写出一段能满足要求的正常的shellcode，然后找到一个key使之前的shellcode与其异或后均不在blacklist里。发送给题目的shellcode为解码器，真正的shellcode藏在传给解码器的数据里
@@ -854,6 +885,7 @@ xd在程序开始时会被calloc/malloc的指针覆盖，即使程序没有PIE�
   """
   payload = asm(shellcode)
   ```
+  - 类似思路:https://dothidden.xyz/dantectf_2023/soulcode/ ([Writing Custom Shellcode Encoders and Decoders](https://www.ired.team/offensive-security/code-injection-process-injection/writing-custom-shellcode-encoders-and-decoders))
 - 由于程序使用strpbrk函数检查输入是否含有黑名单byte，而该函数会在第一个null字节处停止。所以只需要保证shellcode中null字节之前的字节不在黑名单里就好了，后面的正常写。https://github.com/dmur1/ctf-writeups/blob/main/2023_06_03_dantectf_pwn_soulcode_writeup.md
     - 在真正的shellcode面前铺垫多个null字节，然后直接jmp过去。
 ```py

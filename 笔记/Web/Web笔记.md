@@ -2144,5 +2144,25 @@ SELECT * FROM table WHERE column LIKE '%${name}%';
 232. [Dumb Admin](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#dumb-admin)
 - php文件上传基础绕过：https://book.hacktricks.xyz/pentesting-web/file-upload 。当shell.php的后缀不允许时，尝试用shell.png.php绕过（随便在前面加个符合上传要求的后缀）
 - php exif_imagetype函数绕过：
-     - 在shell文件前加上jpg文件头ffd8ffee
+     - 在shell文件前加上jpg文件头ffd8ffee(或者GIF89A)
      - 将shell使用exiftool插入图片的comment中：`exiftool -Comment="<?php system(\$_GET['cmd']) ?>" image.jpg` https://m44lr0m.vercel.app/writeups/dantectf-2023-web-challenges
+234. [FlagShop](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#flagshop)
+- js Object.assign函数不会导致严格意义上的[原型链污染](https://www.freebuf.com/articles/web/275619.html)。它确实会影响被assign的实例，但不会影响到对象本身。
+```js
+function A(){}
+let a=new A();
+let b={"__proto__":{"x":1}}; //let b={"x":1};
+Object.assign(a,b);
+//a实例会有x这个属性，但是A对象的__proto__并未被污染，还是Object。当然后面像那种不要__proto__也可以让a有x属性
+```
+- [integrity](https://www.w3.org/TR/SRI/)属性。在程序导入例如jQuery的外部库时，可能会使用integrity属性来保证引入的库是官方的而没有被修改过。jQuery的官方intergrity值可在[这里](https://releases.jquery.com/jquery/)找到。当程序标注的integrity与官方不同或者导入路径奇怪时（例如从本地而不是云端导入库），就要查看源码，里面与官方不同的地方可能就是漏洞的入手点。
+- js寻找document中active的元素，并利用jQuery设置其内部html
+    ```js
+    if (document.activeElement.id === add.getAttribute('id')){
+        message.html(getRoleText); //jQuery里直接设置html容易导致xss，append(),after()等同理。 
+    }
+    //By design, any jQuery constructor or method that accepts an HTML string — jQuery(), .append(), .after(), etc. — can potentially execute code. This can occur by injection of script tags or use of HTML attributes that execute code (for example, <img onload="">). Do not use these methods to insert strings obtained from untrusted sources such as URL query parameters, cookies, or form inputs.
+    ```
+    想要进入这个if分支要保证add的id为document中活跃元素的id，或者说add为活跃元素。xss里有两种方法解决：
+    - 任意找一个类似`<div>`的tag，设置其id为空。`<div id=""></div>`
+    - 找focusable的tag，如`<a>`,上种方法的`<div>`就不行。在url的最后加上anchor或autofocus指向`<a>`标签的id。`http://<a href='url' id='foo'>#foo`
