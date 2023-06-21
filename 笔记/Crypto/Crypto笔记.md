@@ -1843,7 +1843,8 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
     - 选取 $m_1\not ={m}$ ,利用交互获取其签名 $s_1=m_1^d\mod n$
     - 计算 $m_2=m\*m_1^{-1}$ ,获取其签名 $s_2=m_2^d\mod n=(m\*m_1^{-1})^d\mod n$
     - 计算 $s=s_1\*s_2=(m_1^d\*m\*m_1^{-1})^d\mod n=m^d\mod n$ ，即为m的签名
-52. java(java.util.Random)随机数预测工具。获取两个int随机数（nextInt()）或一个double（nextDouble()）或一个long（nextLong()）的情况下即可预测接下来所有由Random输出的随机数。[ReplicatedRandom](https://github.com/fta2012/ReplicatedRandom/tree/master).提交long数字时记得在数字后加个`L`,表示是long。
+52. [spring](https://medium.com/@laithxl_79681/hsctf-2023-spring-challenge-823d78d41fc2)
+- java(java.util.Random)随机数预测工具[ReplicatedRandom](https://github.com/fta2012/ReplicatedRandom/tree/master)使用。获取两个int随机数（nextInt()）或一个double（nextDouble()）或一个long（nextLong()）的情况下即可预测接下来所有由Random输出的随机数。提交long数字时记得在数字后加个`L`,表示是long。
 53. [e](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/e)
 - coppersmith:m高位泄露。此题完整m的位数未知，需要爆破。wp里的脚本比一般的coppersmith实现复杂，参考：https://www.cryptologie.net/article/222/implementation-of-coppersmith-attack-rsa-attack-using-lattice-reductions/
 54. [keysmith](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/keysmith)

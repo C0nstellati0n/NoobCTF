@@ -698,3 +698,11 @@ with open('nject.bin', 'rb') as F:
 ```
 88. [Chicken Again](https://github.com/BYU-CSA/BYUCTF-2023/tree/main/chicken-again)
 - chicken esoteric programming language.工具:[chickenpy](https://github.com/kosayoda/chickenpy).命令：`chickenpy -f chicken`
+89. [spring](https://medium.com/@laithxl_79681/hsctf-2023-spring-challenge-823d78d41fc2)
+- java里的左移在溢出发生时不保留原数字的符号。比如一个8-bit数字左移56位后，最左的数字会被看成符号位，于是结果就是个负数。例如137(10001001)左移56就是`1000100100000000000000000000000000000000000000000000000000000000`。因为最左的bit为1，这个数字为负数，表示的值为其补码。如果想在python里表示这个过程，需要将137左移后减去其补码1<<64（比上面的数多一位）。在python里逆向java的左移也很简单，将左移结果右移相同的位数，然后按位和0xff只保留其最右8位就行了（保留多少位取决于原数字有多少位）
+90. [re-cursed](https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/reverse-engineering#re-cursed-4-solves)
+- 一般GHC编译的由haskell语言写成的程序可用[hsdecomp](https://github.com/gereeter/hsdecomp)反编译。此题的情况无法使用，介绍了另一种解题的思路（甚至绕过了原本的虚拟机考点，直接解）：枚举所有和用户输入相关的指令
+  - 确定输入内容所在的内存，在内存地址处下内存断点。（如果无法确切知道其地址，可以在附近下个普通断点然后再内存里搜寻刚才输入的字符串。也可以用这种方法跳过某些和输入相关但是和加密逻辑无关的指令）
+  - 不断更换内存断点。在每个mov指令或是相关指令处理的地址处下断点。重复此步骤直到发现可疑内容（逻辑，函数名等）。
+  - 使用脚本记录可疑指令处理的参数及结果（异或，加减，比较等）。
+  - 根据获取的记录逆向，或者直接z3

