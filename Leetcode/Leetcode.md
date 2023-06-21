@@ -126,3 +126,4 @@
 - [Number of Ways to Reorder Array to Get Same BST](./Hard/Number%20of%20Ways%20to%20Reorder%20Array%20to%20Get.md). BST,利用杨辉三角/帕斯卡三角（Pascal's Triangle）计算permutations
 - [Make Array Strictly Increasing](./Hard/Make%20Array%20Strictly%20Increasing.md). dp
 - [Number of Increasing Paths in a Grid](./Hard/Number%20of%20Increasing%20Paths%20in%20a%20Grid.md).dfs/bfs+dp
+- [Minimum Cost to Make Array Equal](./Hard/Minimum%20Cost%20to%20Make%20Array%20Equal.md). binary search/dp/weighted-median

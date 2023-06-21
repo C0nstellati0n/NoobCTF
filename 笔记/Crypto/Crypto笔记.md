@@ -1845,6 +1845,7 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
     - 计算 $s=s_1\*s_2=(m_1^d\*m\*m_1^{-1})^d\mod n=m^d\mod n$ ，即为m的签名
 52. [spring](https://medium.com/@laithxl_79681/hsctf-2023-spring-challenge-823d78d41fc2)
 - java(java.util.Random)随机数预测工具[ReplicatedRandom](https://github.com/fta2012/ReplicatedRandom/tree/master)使用。获取两个int随机数（nextInt()）或一个double（nextDouble()）或一个long（nextLong()）的情况下即可预测接下来所有由Random输出的随机数。提交long数字时记得在数字后加个`L`,表示是long。
+- python版本的预测java long随机数输出的脚本：https://github.com/Cr4ckC4t/crack-java-prng/blob/main/crack-nextLong.py .参考wp2:https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/cryptography#spring-48-solves
 53. [e](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/e)
 - coppersmith:m高位泄露。此题完整m的位数未知，需要爆破。wp里的脚本比一般的coppersmith实现复杂，参考：https://www.cryptologie.net/article/222/implementation-of-coppersmith-attack-rsa-attack-using-lattice-reductions/
 54. [keysmith](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/keysmith)
@@ -1860,7 +1861,7 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
   - Lagarias and Odlyzko (LO) algorithm (works on d < 0.6463)
   - [Coster, Joux, LaMacchia, Odlyzko, Schnorr, and Stern (CJLOSS)](https://www.di.ens.fr/~fouque/ens-rennes/sac-LLL.pdf) algorithm(works on d < 0.9408)。创建一个`M*M`的单位矩阵（M为公钥长度+1），其矩阵的最后一行换为0.5，最后一列除最后一项填写N\*公钥(N大于公钥长度的平方根)，而最后一项填上密文。然后使用LLL算法进行格基规约。结果矩阵中的一个向量就是明文的bit。
   - [脚本](https://github.com/hyunsikjeong/LLL)
-  - ```py
+  ```py
     from Cryptodome.Util.number import *
     ct=
     pubk=
@@ -1888,3 +1889,16 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
     print(long_to_bytes(int(sol,2)))
   ```
 - 似乎不同密度的knapsack构造矩阵进行格基规约时，构造的矩阵内部的数字不同，而且会影响结果。例如[knapsack](/CTF/moectf/Crypto/knapsack.md)这题的方法放在这题就解不出来。
+56. [Casino](https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/cryptography#casino-101-solves)
+- AES CTR已知明文攻击(AES CTR bitflipping)。假设明文有n字节且已知，那么获取其密文后可以将密文修改成指定结果，使其解密时输出想要的明文。只需将密文与明文和期望输出明文异或即可（字节的位置不能错）
+```py
+pt='abc'
+expect='def'
+ct=AES.Encrypt("CTR",pt,key,nonce)
+ct[0]^='a'^'d'
+ct[1]^='b'^'e'
+ct[2]^='c'^'f'
+print(AES.Decrypt("CTR",ct,key,nonce))
+#def
+```
+- python可用科学计数法用较少的字节数表示大数。如`1e9`.或者`float("nan")`，也是三字节。

