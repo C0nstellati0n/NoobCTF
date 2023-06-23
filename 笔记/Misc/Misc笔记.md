@@ -351,7 +351,25 @@ function myFunction() {
 ```
 
 88. 智能汽车协议分析+arm可执行文件逆向。例题:[[网鼎杯 2020 青龙组]Teslaaaaa](https://blog.csdn.net/Breeze_CAT/article/details/106156567)
-89. 利用相位抵消分离特殊信号。例题:[[QCTF2018]Noise](https://blog.csdn.net/u011297466/article/details/81059248)
+89. [ow](https://github.com/BCACTF/bcactf-4.0/tree/main/ow) & [[QCTF2018]Noise](https://blog.csdn.net/u011297466/article/details/81059248)
+- 利用相位抵消分离特殊信号。具体步骤如下：
+    - 将想要分离的噪音与有用的音频分开。有些题会给出噪音的原音频（不包含有用信息，这样可以直接相位反转后抵消），有的题则是分声道：噪音与音频分别为左右声道。audacity如何分离声道：在切换频谱图同样的菜单栏里有“分割立体声轨道选项”，点击后即能看到左右声道
+    - 左右两声道的的平移滑块都滑到“置中”
+    - 选中噪音声道，菜单栏效果->Special->倒转（上下）即可翻转噪音相位
+    - 将反转后的噪音声道与混合噪音的音频声道同时播放，即可获取原音频
+- 不用audacity而是使用[pydub](https://github.com/jiaaro/pydub)模块：
+```py
+from pydub import AudioSegment
+song = AudioSegment.from_mp3("./ow.mp3")
+# Extract left and right channels from stereo mp3
+left_channel = song.split_to_mono()[0]
+right_channel = song.split_to_mono()[1]
+# Invert phase of the Right channel
+inverted_right_channel = right_channel.invert_phase()
+# Merge left and inverted right channels
+flag = left_channel.overlay(inverted_right_channel)
+flag.export("./flag.mp3", format="mp3")
+```
 90. Wireshark菜单栏->Statistics->Conversations可以看到抓到的包的所有通信的ip和端口号，有时候是流量题找ip的捷径。
 91. [WHITESPACES LANGUAGE](https://en.wikipedia.org/wiki/Whitespace_(programming_language))，由空格，tab键等字符组成，不可见。
 92. [hexahue cipher](https://www.dcode.fr/hexahue-cipher)，形如：
@@ -401,7 +419,7 @@ function myFunction() {
 - python3 vol.py -f mem.raw windows.registry.printkey.PrintKey --offset 0xf8a0000212d0 --key "ControlSet001\Control\ComputerName\ComputerName"  
   - 可以一直沿着获取的键名走下去。上面的命令用于获取主机名。详情见[此处](https://www.bnessy.com/archives/%E7%94%B5%E5%AD%90%E6%95%B0%E6%8D%AE%E5%8F%96%E8%AF%81-volatility),内含基础例题。
 
-102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。
+102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。动图解释：https://zhuanlan.zhihu.com/p/63362804
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
 
 - 分析end to end（e2e）加密（HTTPS，TLS）pcapng

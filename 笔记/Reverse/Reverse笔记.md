@@ -706,3 +706,12 @@ with open('nject.bin', 'rb') as F:
   - 不断更换内存断点。在每个mov指令或是相关指令处理的地址处下断点。重复此步骤直到发现可疑内容（逻辑，函数名等）。
   - 使用脚本记录可疑指令处理的参数及结果（异或，加减，比较等）。
   - 根据获取的记录逆向，或者直接z3
+91. [interpreted-arduino](https://ayusshh.medium.com/bcactf-4-0-writeup-interpreted-arduino-i-rev-1997c885d640)
+- Arduino内置函数setup在程序启动时会被自动调用一次。每次按RESET按钮重启时也会被调用。以下是更多信息：
+```
+The setup() function is automatically called by the Arduino framework, so you don't need to explicitly call it in your code.
+The setup() function is called before the loop() function, which is the main entry point for the program's execution.
+The setup() function is called only once when the Arduino board is powered on or reset.
+The setup() function is used to configure the initial state of the program, such as setting pin modes, initializing libraries, and configuring communication interfaces.
+Any code that needs to be executed only once at the beginning of the program should be placed inside the setup() function.
+```
