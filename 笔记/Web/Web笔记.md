@@ -2342,3 +2342,12 @@ python:false
 mariadb:true
 ```
 json由处理差异导致的漏洞可参考 https://bishopfox.com/blog/json-interoperability-vulnerabilities ，从这里面提到的内容入手
+241. [RESTful swap](https://xhacka.github.io/posts/RESTful-swap/)
+- 使用vim编辑文件后会额外出现[swap](https://www.baeldung.com/linux/vim-swap-files#:~:text=While%20editing%20a%20file%20with,copy%20of%20the%20edited%20file.)文件，为被编辑文件的拷贝，也就是说里面有被编辑文件的内容。swap文件命名遵循以下规律：
+```sh
+ls -a
+. .. file1
+vim file1
+ls -a
+. .. file1 .file1.swp
+```
