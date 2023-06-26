@@ -129,3 +129,5 @@
 - [Make Array Strictly Increasing](./Hard/Make%20Array%20Strictly%20Increasing.md). dp
 - [Number of Increasing Paths in a Grid](./Hard/Number%20of%20Increasing%20Paths%20in%20a%20Grid.md).dfs/bfs+dp
 - [Minimum Cost to Make Array Equal](./Hard/Minimum%20Cost%20to%20Make%20Array%20Equal.md). binary search/dp/weighted-median
+- [Tallest Billboard](./Hard/Tallest%20Billboard.md). dp/knapsack
+- [Count All Possible Routes](./Hard/Count%20All%20Possible%20Routes.md). dp+dfs/bfs
