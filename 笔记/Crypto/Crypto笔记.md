@@ -422,6 +422,45 @@ m = pow(c, d, n)
 print(long_to_bytes(m))
 ```
 - rsa要求明文不能大于n。如果明文大于n了，解密的结果是m-k\*n。此时要么按照正常方式求出m后不断加上n的倍数尝试爆破，要么尝试获取多组密文解密后用crt还原完整明文。例题:[Search-3](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#Search-3---470---Hard)
+  - 爆破做法也是有技巧的，参考[rsa-is-broken](https://github.com/BCACTF/bcactf-4.0/tree/main/rsa-is-broken).大部分flag的结尾均为`}`,那么flag模256一定为125(`ord('}')`)。那么可以从模256=125的m出发开始爆破，每次加上n*256而不是1。至于为什么是256，个人猜测是因为0-255代表了所有可能的字符。同一道题还有以下脚本:
+  ```py
+    from Crypto.Util.number import *
+    import math
+
+    # Given
+    p = 892582974910679288224965877067
+    q = 809674535888980601722190167357
+    n = p * q
+    e = 65537
+    d = pow(e, -1, math.lcm(p-1, q-1))
+    c = 36750775360709769054416477187492778112181529855266342655304
+    newm = pow(c, d, n)
+
+    flag_len = 35   # Figured out experimentally lol
+
+    minimum_byte_string = b'bcactf{' + b',' * (flag_len - 6)
+
+    multiple = bytes_to_long(minimum_byte_string) // n              # Minimum multiple of N added to get `bcactf{`
+    while (newm + n * multiple) & 0xFF != ord("}"): multiple += 1      # Increment until it will end with `}`
+
+    start = multiple    # Minimum multiple of N starting with `bcactf{` and ending with `}`
+    end = 2 ** 100      # Really big number that doesn't matter
+    step = 256          # 256 is coprime to N, so v + i * N (mod 256) has a period of 256
+
+
+    for i in range(start, end, 256):
+        # Test byte string
+        byte_str = long_to_bytes(newm + n * i)
+
+        # Stop once we're past the `bcactf{` part
+        if not byte_str.startswith(b'bcactf{'):
+            break
+
+        # If the whole byte string is in-flag-range ASCII, print and exit
+        if all(0x2C < byte < 0x7f for byte in byte_str):
+            print(byte_str)
+            break
+    ```   
 - 基于多项式的RSA。在有限域上选取两个不可约多项式 g(p),g(q)，g(n)=g(p)⋅g(q)。计算出 g(n)的欧拉函数 φ(g(n))=φ。再选取一个整数 e作为公钥，e与 φ是互素的，那么对于明文 g(m)，加密过程为 $g(m)^e$ ≡g(c)(mod g(n))。解密则计算私钥 d满足 ed≡1(mod φ)，则 $g(c)^d$ ≡ $(g(m)^e)^d$ ≡ $g(m)^{ed}$ ≡ $g(m)^{φ+1}$ (mod g(n))。同样考虑 g(n)与 g(m)互素，欧拉定理对于多项式亦成立。得到 $g(m)^{φ+1}$ ≡g(m)(mod g(n))，所以 $g(c)^d$ ≡g(m)(mod g(n))。即整数上的rsa可以推广到多项式上。对于不可约多项式 g(x)，φ(g(x))= $p^n−1$ 。p为 GF(p)的模，n为该多项式最高项次数。[unusualrsa3](https://lazzzaro.github.io/2020/09/01/other-CTFshow%E4%BE%9B%E9%A2%98-unusualrsa%E7%B3%BB%E5%88%97/index.html#unusualrsa3)
 
 ```python
@@ -1902,3 +1941,13 @@ print(AES.Decrypt("CTR",ct,key,nonce))
 #def
 ```
 - python可用科学计数法用较少的字节数表示大数。如`1e9`.或者`float("nan")`，也是三字节。
+57. [signature-i](https://github.com/BCACTF/bcactf-4.0/tree/main/signature-i)
+- rsa签名伪造：[Bleichenbacher's RSA signature forgery based on implementation error](https://mailarchive.ietf.org/arch/msg/openpgp/5rnE9ZRN1AokBVj3VqblGlP63QE/). 此攻击基于PKCS-1 padding的错误实现+e为3。
+  - PKCS-1 padding格式如下：`00 01 FF FF FF ... FF 00  ASN.1  HASH`，在按照正常RSA解出m后移走前面的padding即可获取hash。假如不检查hash后是否有多余字节就直接比对，如：`00 01 FF FF ... FF 00  ASN.1  HASH  GARBAGE`，那么攻击者就能构造一个立方数，其立方根即为构造的signature。
+58. [signature-ii](https://github.com/BCACTF/bcactf-4.0/tree/main/signature-ii)
+- 椭圆曲线签名（elliptic curve digital signature）算法及验签：https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
+- 签名参数k共用攻击：签名算法里的k应该是随机且每次签名都不同的。若相同，攻击者在获取两对签名(r,s)和(r,s')以及其对应的明文后即可获取第三个使用相同k的签名(r,s'')所对应的明文。操作如下：
+  - $k=\frac{m-m'}{s-s'}$
+  - $d_A=\frac{sk-m}{r}$ ( $d_A$ 为私钥)
+  - $s''\*k=m''+rd_A$
+  - $m=s''\*k-rd_A$

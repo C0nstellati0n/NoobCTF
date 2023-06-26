@@ -370,6 +370,7 @@ inverted_right_channel = right_channel.invert_phase()
 flag = left_channel.overlay(inverted_right_channel)
 flag.export("./flag.mp3", format="mp3")
 ```
+- 直接用audacity自带的除噪功能（效果没有前两个好，但是能听到）：https://github.com/m4karoni/CTF/tree/main/BCACTF/2023/Forensics#owvolume-warning
 90. Wireshark菜单栏->Statistics->Conversations可以看到抓到的包的所有通信的ip和端口号，有时候是流量题找ip的捷径。
 91. [WHITESPACES LANGUAGE](https://en.wikipedia.org/wiki/Whitespace_(programming_language))，由空格，tab键等字符组成，不可见。
 92. [hexahue cipher](https://www.dcode.fr/hexahue-cipher)，形如：
@@ -1034,3 +1035,12 @@ git pre-commit //运行触发hook
   - `+noall +answer`选项省略了dig较为复杂的输出，且比nslookup要详细。`dig @CHALLENGE_ADDR -p CHALLENGE_PORT +noall +answer <子域名>`
   - `dig @CHALLENGE_ADDR -p CHALLENGE_PORT +noall +answer <子域名> SOA`。访问域名的[SOA记录](https://www.nslookup.io/learning/dns-record-types/soa/)
   - `dig @CHALLENGE_ADDR -p CHALLENGE_PORT +noall +answer -c CLASS9 <子域名> SOA`：访问指定[class field](https://www.rfc-editor.org/rfc/rfc2929#section-3.2)下的dns记录
+166. [studious_notetaking](https://github.com/BCACTF/bcactf-4.0/tree/main/studious_notetaking)
+- git命令并不会自动获取仓库的notes，需要手动获取。 https://stackoverflow.com/questions/37941650/fetch-git-notes-when-cloning
+- 方法1:
+  - `git clone <repo>`
+  - `git fetch origin refs/notes/*:refs/notes/*`。若使用zsh（mac），运行`noglob git fetch origin refs/notes/*:refs/notes/*`
+  - `git log`或`git notes show`即可获取到内容
+- 方法2:
+  - `git clone <repo> --mirror`
+  - `git log`或`git notes show`
