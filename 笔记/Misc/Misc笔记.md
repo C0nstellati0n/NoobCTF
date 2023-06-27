@@ -1044,3 +1044,93 @@ git pre-commit //运行触发hook
 - 方法2:
   - `git clone <repo> --mirror`
   - `git log`或`git notes show`
+107. [Suzanne](https://github.com/BCACTF/bcactf-4.0/tree/main/suzanne)
+- Blender中使用Blender Python script（bpy模块）处理模型顶点（vertices）
+- 其他做法：
+  - blender+git diff
+    - 在blender里将fbx转为obj，参考 https://graphicdesign.stackexchange.com/questions/155033/how-can-i-convert-an-fbx-animation-into-a-sequance-of-obj-files-for-every-frame
+    - 用diff命令查看两个obj之间的差别。`git diff --no-index 1.obj 2.obj > diff.txt`
+  - 使用js以及npm package fbx-parser
+  ```js
+    import * as FBXParser from 'fbx-parser'
+    import * as fs from 'fs'
+
+    let original = "original.fbx"
+    let diff = "different.fbx"
+
+    original = fs.readFileSync(original)
+    diff = fs.readFileSync(diff)
+
+    original = FBXParser.parseBinary(original)
+    diff = FBXParser.parseBinary(diff)
+
+    let file = 'original.json'
+    fs.writeFileSync(file, JSON.stringify(original, null, 2))
+    file = 'diff.json'
+    fs.writeFileSync(file, JSON.stringify(diff, null, 2))
+
+    function deepEqual(a, b) {
+        if (a === b) {
+            return true
+        }
+        for (let i in a) {
+            let ai = a[i]
+            let bi = b[i]
+            if (typeof ai == 'object' && typeof bi == 'object') {
+                if (!deepEqual(ai, bi)) {
+                    return false
+                }
+            } else if (ai != bi) {
+                return false
+            }
+        }
+        return true
+    }
+
+    function findDiff(a, b){
+        let diff = {}
+        for (let i in a) {
+            let ai = a[i]
+            let bi = b[i]
+            if (typeof ai == 'object' && typeof bi == 'object') {
+                if (!deepEqual(ai, bi)) {
+                    diff[i] = findDiff(ai, bi)
+                }
+            } else if (ai != bi) {
+                diff[i] = {'original': ai, 'different': bi}
+            }
+        }
+        return diff
+    }
+
+    function deepPrint(a, indent = 0) {
+        let str = ''
+        for (let i in a) {
+            let ai = a[i]
+            if (typeof ai == 'object') {
+                str += ' '.repeat(indent) + i + '\n'
+                str += deepPrint(ai, indent + 2)
+            } else {
+                str += ' '.repeat(indent) + i + ': ' + ai + '\n'
+            }
+        }
+        return str
+    }
+
+    let o_vert = original[8].nodes[0].nodes[2].props[0]
+    let d_vert = diff[8].nodes[0].nodes[2].props[0]
+
+    console.log(o_vert)
+    console.log(d_vert)
+
+    let diffs = {}
+
+    for (let i = 0; i < o_vert.length; i++) {
+        diffs[i] = d_vert[i] - o_vert[i]
+    }
+
+    console.log(diffs)
+
+    file = 'diffs.json'
+    fs.writeFileSync(file, JSON.stringify(diffs, null, 2))
+  ```

