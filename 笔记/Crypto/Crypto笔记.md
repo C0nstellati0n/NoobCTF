@@ -1952,3 +1952,13 @@ print(AES.Decrypt("CTR",ct,key,nonce))
   - $d_A=\frac{sk-m}{r}$ ( $d_A$ 为私钥)
   - $s''\*k=m''+rd_A$
   - $m=s''\*k-rd_A$
+59. [winterfactory](https://github.com/MathVerg/WriteUp/tree/master/GPN2023/winterfactory)
+- [Winternitz One-Time Signature](https://junhaideng.github.io/2021/12/24/cryptography/signature/wots/) scheme介绍。
+  - 该签名scheme签名m的过程简述如下：
+    - 使用某种哈希函数H获得H(m)，并选择数字w。接着将H(m)分成多块 ( $b_i$ )，每份 $log_2(w)$ bits。然后将每份 $b_i$ 转换为 $log_2(w)$ bit长度的unsigned整数，称为 $v_i$ 。计算校验和： $c=\sum_i(w-v_i)$ ,将其拼接到b后。
+    - 对每份 $b_i$ 都选择一个随机数 $p_i$ ，作为私钥。私钥的大小等同于之前选择的hash函数的输出大小。
+    - 将每个私钥 $p_i$ hash w次，得到的结果 $P_i$ 即为公钥。( $P_i = H^{(w)}(p_i)$ )
+    - 最后将每个私钥 $p_i$ hash $v_i$ 次： $s_i=H^{v_i}(p_i)$ 。 $s_i$ 拼接在一起即为签名结果。
+  - 验签步骤：
+    - 提供签名 $s_i$ ，将签名hash $w-v_i$ 次。若提供的签名正确，结果应等于公钥 $P_i$ 。 $H^{w-v_i}(s_i)=H^{w-v_i}(H^{v_i}(p_i))=H^w(p_i)=P_i$
+- 此题介绍了一种当私钥被使用多次的攻击。不过局限性较大，签名结果checksum的一半被泄露，且事先已获取一组明文与其签名。

