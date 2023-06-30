@@ -1962,3 +1962,12 @@ print(AES.Decrypt("CTR",ct,key,nonce))
   - 验签步骤：
     - 提供签名 $s_i$ ，将签名hash $w-v_i$ 次。若提供的签名正确，结果应等于公钥 $P_i$ 。 $H^{w-v_i}(s_i)=H^{w-v_i}(H^{v_i}(p_i))=H^w(p_i)=P_i$
 - 此题介绍了一种当私钥被使用多次的攻击。不过局限性较大，签名结果checksum的一半被泄露，且事先已获取一组明文与其签名。
+60. [number-lock](https://github.com/MathVerg/WriteUp/tree/master/GPN2023/number-lock)
+- Differential Fault Attack (DFA) on [AES](https://zhuanlan.zhihu.com/p/78913397)（128）
+  - 相关文章（原理）和工具：
+    - https://blog.quarkslab.com/differential-fault-analysis-on-white-box-aes-implementations.html
+    - https://github.com/Vozec/AES-DFA
+  - 题目特征点
+    - 允许攻击者在AES的某一轮加密处修改plain state为未知随机字节（fault）
+    - 允许交互。攻击者输入明文，服务器返回对应的密文
+    - 加密时的密钥固定。目标为利用有限的交互次数+fault破解使用的密钥

