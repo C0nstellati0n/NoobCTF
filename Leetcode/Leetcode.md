@@ -109,6 +109,7 @@
 - [Total Cost to Hire K Workers](./Medium/Total%20Cost%20to%20Hire%20K%20Workers.md). minHeap
 - [Find K Pairs with Smallest Sums](./Medium/Find%20K%20Pairs%20with%20Smallest%20Sums.md). minHeap
 - [Path with Maximum Probability](./Medium/Path%20with%20Maximum%20Probability.md). [Bellman-Ford算法](https://zhuanlan.zhihu.com/p/352724346)/[Shortest Path Faster Algorithm(SPFA)](https://baike.baidu.com/item/%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E5%BF%AB%E9%80%9F%E7%AE%97%E6%B3%95/22800208)/[Dijkstra's Algorithm](https://www.freecodecamp.org/chinese/news/dijkstras-shortest-path-algorithm-visual-introduction/)
+- [Fair Distribution of Cookies](./Medium/Fair%20Distribution%20of%20Cookies.md). [回溯算法](https://github.com/labuladong/fucking-algorithm/blob/master/%E7%AE%97%E6%B3%95%E6%80%9D%E7%BB%B4%E7%B3%BB%E5%88%97/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3%E4%BF%AE%E8%AE%A2%E7%89%88.md)（backtrack）/bitmask
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
