@@ -717,3 +717,4 @@ Any code that needs to be executed only once at the beginning of the program sho
 ```
 90. [golfers](https://github.com/BCACTF/bcactf-4.0/tree/main/golfers)
 - [Vyxal](https://github.com/Vyxal/Vyxal)语言逆向（文件后缀名.vyx）
+91. [Mima Flux Capacitor](https://github.com/mattulbrich/mimaflux): a debugger for Mima assembly code. 这种汇编码通常用于大学教学。

