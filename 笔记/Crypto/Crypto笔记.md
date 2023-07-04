@@ -1730,6 +1730,7 @@ new_meta = sha.extend(b'content', b'known', length, hash)
 #脚本里有解释，另一道类似的例题：https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/drm-1
 ```
 - 小端里的拼接字节技巧。假设有counter的计数为0x12345678，小端存储结果为0x78 0x56 0x34 0x12。如果想在0x12后面填上任意字节但是counter的值未知，可以用以下公式计算：`byte*(1 << (numBytes*8))`。byte表示想拼接的字节，numBytes表示counter的字节长度，或者想要位移的字节数（想在多少字节后面拼接）。例如想在刚刚counter后添加0x9a，加上`0x9a*(1 << (4*8))`即可。
+- 如何用python subprocess.run配合hlextend与oracle交互：[forgeme](https://github.com/An00bRektn/CTF/tree/main/live_events/nahamcon_23/crypto_forgeme)
 48. [Forcing a file’s CRC to any value](https://www.nayuki.io/page/forcing-a-files-crc-to-any-value):该脚本可以将一个文件的crc改为任意值，通过在指定偏移处插入构造的字节（这些字节不一定可见）。用法：`python3 forcecrc32.py FileName ByteOffset NewCrc32Value`,表示将FileName对应文件的内容改为NewCrc32Value，构造用的字节插入在ByteOffset偏移处。
 49. [Uniform](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Crypto/Uniform)
 - Mersenne Twister随机数预测。题目给出来自`random.uniform(0, 2**32-1)`的624个数字，要求预测第625个数字。注意由于uniform的输出是float，不能直接套用接收int的预测器。改动的脚本使用z3，已经在wp里了。
@@ -1946,7 +1947,7 @@ print(AES.Decrypt("CTR",ct,key,nonce))
 - rsa签名伪造：[Bleichenbacher's RSA signature forgery based on implementation error](https://mailarchive.ietf.org/arch/msg/openpgp/5rnE9ZRN1AokBVj3VqblGlP63QE/). 此攻击基于PKCS-1 padding的错误实现+e为3。
   - PKCS-1 padding格式如下：`00 01 FF FF FF ... FF 00  ASN.1  HASH`，在按照正常RSA解出m后移走前面的padding即可获取hash。假如不检查hash后是否有多余字节就直接比对，如：`00 01 FF FF ... FF 00  ASN.1  HASH  GARBAGE`，那么攻击者就能构造一个立方数，其立方根即为构造的signature。
 58. [signature-ii](https://github.com/BCACTF/bcactf-4.0/tree/main/signature-ii)
-- 椭圆曲线签名（elliptic curve digital signature）算法及验签：https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
+- 椭圆曲线签名（elliptic curve digital signature，ecc）算法及验签：https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
 - 签名参数k共用攻击：签名算法里的k应该是随机且每次签名都不同的。若相同，攻击者在获取两对签名(r,s)和(r,s')以及其对应的明文后即可获取第三个使用相同k的签名(r,s'')所对应的明文。操作如下：
   - $k=\frac{m-m'}{s-s'}$
   - $d_A=\frac{sk-m}{r}$ ( $d_A$ 为私钥)
@@ -1971,3 +1972,5 @@ print(AES.Decrypt("CTR",ct,key,nonce))
     - 允许攻击者在AES的某一轮加密处修改plain state为未知随机字节（fault）
     - 允许交互。攻击者输入明文，服务器返回对应的密文
     - 加密时的密钥固定。目标为利用有限的交互次数+fault破解使用的密钥
+61. [signed_jeopardy](https://github.com/An00bRektn/CTF/tree/main/live_events/nahamcon_23/crypto_signed_jeopardy)
+- ECDSA（椭圆曲线，ecc） nonce（k值）重用（reuse）导致的[签名伪造](https://billatnapier.medium.com/ecdsa-weakness-where-nonces-are-reused-2be63856a01a)。感觉和58条[signature-ii](https://github.com/BCACTF/bcactf-4.0/tree/main/signature-ii)类似，不过这题有不同的脚本。

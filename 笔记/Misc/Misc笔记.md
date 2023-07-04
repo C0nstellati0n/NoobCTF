@@ -1135,3 +1135,42 @@ git pre-commit //运行触发hook
     fs.writeFileSync(file, JSON.stringify(diffs, null, 2))
   ```
 108. Pixel phones的内置图片裁剪工具Markup有漏洞，允许用户恢复被裁减的图片内容。参考文章 https://arstechnica.com/gadgets/2023/03/google-pixel-bug-lets-you-uncrop-the-last-four-years-of-screenshots/ 。工具： https://acropalypse.app/
+109. [zombies](https://github.com/spencerja/NahamConCTF_2023_Writeup/blob/main/Misc/Zombie.md)
+- linux nohup命令：enables a program to run even after a terminal window is closed。其进程（process）仍在运行，可以使用`ps`命令获取PID
+- /proc/[PID]目录记录着运行中对应PID进程的活动。如/proc/[PID]/fd就记录着进程打开的文件的内容，即使对应的文件已经被删除了（感觉像是个临时的缓存吧，持续记录到进程停止运行那一刻）。
+- 其他解法：
+	- 直接在只读的文件系统（file system）里找
+	```bash
+	grep -iRn flag{ /dev/PID/
+	cat /dev/PID/fd/[fileFD]
+	```
+
+110. [wheres_my_water](https://github.com/An00bRektn/CTF/tree/main/live_events/nahamcon_23/misc_wheres_my_water)
+- [modbus](https://en.wikipedia.org/wiki/Modbus)协议（a protocol used in SCADA/ICS systems）连接，沟通与修改寄存器（registers）。wp使用Metasploit，也可以用[modbus-cli](https://github.com/favalex/modbus-cli)
+```bash
+modbus host:port {0..23} | awk '{print $2}' | perl -nE 'print map(chr, split)'
+#获取到registers字符串内容
+
+# 设置registers
+data=(116 114 117 101 17)
+for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
+#类似做法：https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/Where's%20My%20Water
+```
+111. [minbashmaxfun](https://medium.com/@orik_/34c3-ctf-minbashmaxfun-writeup-4470b596df60)
+- 仅用`$()#!{}<\’,`字符构造bash命令，且命令执行之前关闭stdin（防止构造类似python `eval(input)`的命令）。
+- 类似题目：[one_zero](https://github.com/An00bRektn/CTF/tree/main/live_events/nahamcon_23/misc_one_zero)。以下为one zero的其他解法
+	- 通配符调用/bin/base64:`/???/????64 *`
+	- `$0 -c 'cat flag.txt'`。因为题目脚本是用bash启动的，且能使用环境变量。在一个命令`A b c`里，`$0`表示A，这里即为bash。
+	- `$(<fla'\x67'.txt)`,`$(<*)`,`$(<{f..f}{l..l}{a..a}{g..g}.{t..t}{x..x}{t..t})`
+	- `$0<<<{$\'\\$(($((1<<1))#1$((1>>1))$((1>>1))$((1>>1))1111))\\$(($((1<<1))#1$((1>>1))$((1>>1))$((1>>1))11$((1>>1))1))\\$(($((1<<1))#1$((1>>1))1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))))\',$\'\\$(($((1<<1))#1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))1$((1>>1))))\\$(($((1<<1))#1$((1>>1))$((1>>1))11$((1>>1))1$((1>>1))))\\$(($((1<<1))#1$((1>>1))$((1>>1))$((1>>1))11$((1>>1))1))\\$(($((1<<1))#1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))11))\\$(($((1<<1))#111$((1>>1))$((1>>1))$((1>>1))))\\$(($((1<<1))#1$((1>>1))1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))))\\$(($((1<<1))#1$((1>>1))1$((1>>1))1$((1>>1))1$((1>>1))))\\$(($((1<<1))#1$((1>>1))1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))))\'}`
+
+112. [IR #3](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/IR%20%233)
+- powershell简单混淆手段：仅用符号编写脚本（ https://perl-users.jp/articles/advent-calendar/2010/sym/11 ）及反混淆（其实就是直接用个字典映射回去就好了）
+
+113. [IR #5](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/IR%20%235)
+- powershell script使用AES加密/解密文件
+
+114. [Wordle Bash](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/Wordle%20Bash)
+- date命令注入。在date命令参数可以控制的情况下，能实现任意文件读取。（参考 https://gtfobins.github.io/gtfobins/date/ ）
+- [gum](https://github.com/charmbracelet/gum)用法案例。注意`guess_date=$(gum input --placeholder $guess_date)`并不安全，用户仍然能随意控制guess_date的值。
+- root用户的ssh私钥：`/root/.ssh/id_rsa`。有了这个私钥，ssh时就能以root身份连接
