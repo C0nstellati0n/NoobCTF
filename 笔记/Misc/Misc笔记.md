@@ -743,6 +743,7 @@ torch.save(Exploit(), 'solver_cat.ckpt')
 ```
 140. [PDF-Mess](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Steganography/PDF-Mess)
 - pdf隐写：pdf里以树状存储内部的文件，自然可以藏一些额外的。可使用[peepdf](https://github.com/jesparza/peepdf)列出pdf里所有的文件。
+- 也可参考[Perfectly Disinfected](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Forensics/Perfectly_Disinfected.md)，使用[PDFStreamDumper](https://pdfstreamdumper.software.informer.com/)
 141. [EMD](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Steganography/EMD)
 - 包含EMD隐写写入data/提取data的脚本。原理在wp和提供的论文里有介绍。使用方法：
     - 隐藏data：`hideDataWithEMD(message,pixelGroupCount,outputPng)`
@@ -1156,6 +1157,8 @@ data=(116 114 117 101 17)
 for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 #类似做法：https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/Where's%20My%20Water
 ```
+或者python： https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Misc/Where's_my_Water.md
+
 111. [minbashmaxfun](https://medium.com/@orik_/34c3-ctf-minbashmaxfun-writeup-4470b596df60)
 - 仅用`$()#!{}<\’,`字符构造bash命令，且命令执行之前关闭stdin（防止构造类似python `eval(input)`的命令）。
 - 类似题目：[one_zero](https://github.com/An00bRektn/CTF/tree/main/live_events/nahamcon_23/misc_one_zero)。以下为one zero的其他解法
@@ -1166,6 +1169,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 
 112. [IR #3](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/IR%20%233)
 - powershell简单混淆手段：仅用符号编写脚本（ https://perl-users.jp/articles/advent-calendar/2010/sym/11 ）及反混淆（其实就是直接用个字典映射回去就好了）
+- 类似病毒的这类脚本可以尝试在 https://virustotal.com/ 扫一下，说不定能扫出来。 https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/IR.md#flag-3
+- 对付混淆脚本的统一手段：ScriptBlock Logging。命令`Get-WinEvent -LogName Microsoft-Windows-PowerShell/Operational | % Message > text.txt`启用powershell脚本的日志，可能给出反混淆后的脚本。 https://iloveforensics.com/posts/nahamcon/
 
 113. [IR #5](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/IR%20%235)
 - powershell script使用AES加密/解密文件
@@ -1174,3 +1179,11 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - date命令注入。在date命令参数可以控制的情况下，能实现任意文件读取。（参考 https://gtfobins.github.io/gtfobins/date/ ）
 - [gum](https://github.com/charmbracelet/gum)用法案例。注意`guess_date=$(gum input --placeholder $guess_date)`并不安全，用户仍然能随意控制guess_date的值。
 - root用户的ssh私钥：`/root/.ssh/id_rsa`。有了这个私钥，ssh时就能以root身份连接
+115. [Fetch](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Forensics/Fetch.md)
+- windows imaging image(WIM) forensic。使用wimtools（sudo apt-get install wimtools）挂载image后可能看到一些prefetch文件。参考这篇[文章](https://www.hackingarticles.in/forensic-investigation-prefetch-file/)，可用[WinPrefetch View](https://www.nirsoft.net/utils/win_prefetch_view.html)/FTK imager等工具。
+116. [Blobber](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Warmups/Blobber.md)
+- python sqlite模块处理SQLite database文件（连接数据库，执行查询）
+117. [Regina](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Warmups/Regina.md)
+- REXX-Regina(后缀`.rex`)编程语言执行系统命令：https://www.ibm.com/docs/en/zos/2.1.0?topic=eusc-run-shell-command-read-its-output-into-stem
+118. [Raided](https://medium.com/@0xs1rx58/nahamcon-ctf-2023-how-i-solved-raided-digital-forensics-without-volatility-377c93996f29)
+- [bulk_extractor](https://github.com/simsong/bulk_extractor) forensics tool使用。`bulk_extractor -o ./xxx ctf.vmem`

