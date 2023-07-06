@@ -1731,6 +1731,9 @@ new_meta = sha.extend(b'content', b'known', length, hash)
 ```
 - 小端里的拼接字节技巧。假设有counter的计数为0x12345678，小端存储结果为0x78 0x56 0x34 0x12。如果想在0x12后面填上任意字节但是counter的值未知，可以用以下公式计算：`byte*(1 << (numBytes*8))`。byte表示想拼接的字节，numBytes表示counter的字节长度，或者想要位移的字节数（想在多少字节后面拼接）。例如想在刚刚counter后添加0x9a，加上`0x9a*(1 << (4*8))`即可。
 - 如何用python subprocess.run配合hlextend与oracle交互：[forgeme](https://github.com/An00bRektn/CTF/tree/main/live_events/nahamcon_23/crypto_forgeme)
+- 其他学习资源：
+    - https://www.youtube.com/watch?v=6QQ4kgDWQ9w
+    - https://www.synopsys.com/blogs/software-security/forging-sha-1-mac-using-length-extension-attack-python/
 48. [Forcing a file’s CRC to any value](https://www.nayuki.io/page/forcing-a-files-crc-to-any-value):该脚本可以将一个文件的crc改为任意值，通过在指定偏移处插入构造的字节（这些字节不一定可见）。用法：`python3 forcecrc32.py FileName ByteOffset NewCrc32Value`,表示将FileName对应文件的内容改为NewCrc32Value，构造用的字节插入在ByteOffset偏移处。
 49. [Uniform](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Crypto/Uniform)
 - Mersenne Twister随机数预测。题目给出来自`random.uniform(0, 2**32-1)`的624个数字，要求预测第625个数字。注意由于uniform的输出是float，不能直接套用接收int的预测器。改动的脚本使用z3，已经在wp里了。

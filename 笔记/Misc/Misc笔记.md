@@ -1171,6 +1171,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - powershell简单混淆手段：仅用符号编写脚本（ https://perl-users.jp/articles/advent-calendar/2010/sym/11 ）及反混淆（其实就是直接用个字典映射回去就好了）
 - 类似病毒的这类脚本可以尝试在 https://virustotal.com/ 扫一下，说不定能扫出来。 https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/IR.md#flag-3
 - 对付混淆脚本的统一手段：ScriptBlock Logging。命令`Get-WinEvent -LogName Microsoft-Windows-PowerShell/Operational | % Message > text.txt`启用powershell脚本的日志，可能给出反混淆后的脚本。 https://iloveforensics.com/posts/nahamcon/
+- 补充：如何用powershell递归查找隐藏文件。`Get-ChildItem -Recurse -hidden -ErrorAction 'SilentlyContinue'`
 
 113. [IR #5](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/IR%20%235)
 - powershell script使用AES加密/解密文件
@@ -1180,10 +1181,18 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [gum](https://github.com/charmbracelet/gum)用法案例。注意`guess_date=$(gum input --placeholder $guess_date)`并不安全，用户仍然能随意控制guess_date的值。
 - root用户的ssh私钥：`/root/.ssh/id_rsa`。有了这个私钥，ssh时就能以root身份连接
 115. [Fetch](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Forensics/Fetch.md)
-- windows imaging image(WIM) forensic。使用wimtools（sudo apt-get install wimtools）挂载image后可能看到一些prefetch文件。参考这篇[文章](https://www.hackingarticles.in/forensic-investigation-prefetch-file/)，可用[WinPrefetch View](https://www.nirsoft.net/utils/win_prefetch_view.html)/FTK imager等工具。
+- windows imaging image(WIM) forensic。使用wimtools（sudo apt-get install wimtools）挂载image后可能看到一些prefetch文件。参考这篇[文章](https://www.hackingarticles.in/forensic-investigation-prefetch-file/)，可用[WinPrefetch View](https://www.nirsoft.net/utils/win_prefetch_view.html)/FTK imager，[PECmd](https://github.com/EricZimmerman/PECmd)(https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/forensics/fetch)等工具。
+- WIM文件用7z解压也能获取到prefetch文件
 116. [Blobber](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Warmups/Blobber.md)
 - python sqlite模块处理SQLite database文件（连接数据库，执行查询）
+- [online sqlite viewer](https://inloop.github.io/sqlite-viewer/)
 117. [Regina](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Warmups/Regina.md)
-- REXX-Regina(后缀`.rex`)编程语言执行系统命令：https://www.ibm.com/docs/en/zos/2.1.0?topic=eusc-run-shell-command-read-its-output-into-stem
+- [REXX-Regina](https://regina-rexx.sourceforge.io/)(后缀`.rex`)编程语言执行系统命令：https://www.ibm.com/docs/en/zos/2.1.0?topic=eusc-run-shell-command-read-its-output-into-stem
+    - 读取文件：
+    ```
+    flag = linein("flag.txt")
+    say flag
+    ```
+    - 执行命令：`'cmd'`输入进终端后，输入`Ctrl+D`。程序可能会在cmd带有`.`号时报错。 https://cynical-labs.net/ctf-writeups/2023/06/17/Nahamcon2023-Warmups/#regina
 118. [Raided](https://medium.com/@0xs1rx58/nahamcon-ctf-2023-how-i-solved-raided-digital-forensics-without-volatility-377c93996f29)
 - [bulk_extractor](https://github.com/simsong/bulk_extractor) forensics tool使用。`bulk_extractor -o ./xxx ctf.vmem`

@@ -718,3 +718,23 @@ Any code that needs to be executed only once at the beginning of the program sho
 90. [golfers](https://github.com/BCACTF/bcactf-4.0/tree/main/golfers)
 - [Vyxal](https://github.com/Vyxal/Vyxal)语言逆向（文件后缀名.vyx）
 91. [Mima Flux Capacitor](https://github.com/mattulbrich/mimaflux): a debugger for Mima assembly code. 这种汇编码通常用于大学教学。
+92. [writeright](https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/rev/writeright)
+- 使用VeSP simulator运行`.vsp`后缀文件（VeSP (VEry Simple Processor) program）
+- python版本： https://github.com/abhishekg999/NahamConCTF-2023/blob/main/Re/writeright.md
+92. [Mayhem](https://elvisblue.github.io/posts/nahamcon-mayhem-solution/)
+- Havoc [demon.exe](https://github.com/HavocFramework/Havoc/blob/main/payloads/Demon/Source/Demon.c)+sleep obfuscation technique：[Ekko](https://github.com/Cracked5pider/Ekko)，hide malware payload during runtime execution, it works by encrypt the malware payload while it is sleeping. Ekko使用RC4加密payload，且key为UString格式：
+```c
+typedef struct
+{
+    DWORD	Length;
+    DWORD	MaximumLength;
+    PVOID	Buffer;
+} USTRING ;
+```
+那么RC4的key开头一定为`10 00 00 00 10 00 00 00`。可根据此线索在dump文件中搜索key。
+- python Crypto.Cipher解密RC4密文。
+- windbg preview分析dump文件。
+  - `!address`:show the memory region
+  - `.writefile file start L?<length>`:从文件中dump the payload
+93. [Red Light Green Light](https://nirajkhatiwada.com.np/tutorials/2023/06/18/nahamcon-ctf-2023-mobile-challenges.html)
+- 使用frida script hook apk使其在runtime更改函数源码。
