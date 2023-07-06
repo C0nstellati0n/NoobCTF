@@ -113,6 +113,7 @@
 - [Fair Distribution of Cookies](./Medium/Fair%20Distribution%20of%20Cookies.md). [回溯算法](https://github.com/labuladong/fucking-algorithm/blob/master/%E7%AE%97%E6%B3%95%E6%80%9D%E7%BB%B4%E7%B3%BB%E5%88%97/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3%E4%BF%AE%E8%AE%A2%E7%89%88.md)（backtrack）/bitmask
 - [Single Number II](./Medium/Single%20Number%20II.md). bit manipulation(位运算)
 - [Longest Subarray of 1's After Deleting One Element](./Medium/Longest%20Subarray%20of%201's%20After%20Deleting.md). sliding window
+- [Minimum Size Subarray Sum](./Medium/Minimum%20Size%20Subarray%20Sum.md). sliding window/binary search
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。

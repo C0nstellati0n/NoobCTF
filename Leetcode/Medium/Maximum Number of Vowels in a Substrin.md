@@ -2,7 +2,7 @@
 
 [题目](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/description/)
 
-这题和一道叫“sliding window"的窗户有关系。好的我没做过。最开始想了一个two pointers的做法，一个i一个j，j领先i k个字符。然后循环时自增再substring判断就行了。不出所料TLE。
+这题和一道叫“sliding window"的题目有关系。好的我没做过。最开始想了一个two pointers的做法，一个i一个j，j领先i k个字符。然后循环时自增再substring判断就行了。不出所料TLE。
 
 ```c#
 //https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/solutions/3486567/easy-solutions-in-c-python-and-java/
