@@ -1166,11 +1166,13 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 	- `$0 -c 'cat flag.txt'`。因为题目脚本是用bash启动的，且能使用环境变量。在一个命令`A b c`里，`$0`表示A，这里即为bash。
 	- `$(<fla'\x67'.txt)`,`$(<*)`,`$(<{f..f}{l..l}{a..a}{g..g}.{t..t}{x..x}{t..t})`
 	- `$0<<<{$\'\\$(($((1<<1))#1$((1>>1))$((1>>1))$((1>>1))1111))\\$(($((1<<1))#1$((1>>1))$((1>>1))$((1>>1))11$((1>>1))1))\\$(($((1<<1))#1$((1>>1))1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))))\',$\'\\$(($((1<<1))#1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))1$((1>>1))))\\$(($((1<<1))#1$((1>>1))$((1>>1))11$((1>>1))1$((1>>1))))\\$(($((1<<1))#1$((1>>1))$((1>>1))$((1>>1))11$((1>>1))1))\\$(($((1<<1))#1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))11))\\$(($((1<<1))#111$((1>>1))$((1>>1))$((1>>1))))\\$(($((1<<1))#1$((1>>1))1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))))\\$(($((1<<1))#1$((1>>1))1$((1>>1))1$((1>>1))1$((1>>1))))\\$(($((1<<1))#1$((1>>1))1$((1>>1))$((1>>1))1$((1>>1))$((1>>1))))\'}`
+    - `% $0 < *`
 
 112. [IR #3](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/IR%20%233)
 - powershell简单混淆手段：仅用符号编写脚本（ https://perl-users.jp/articles/advent-calendar/2010/sym/11 ）及反混淆（其实就是直接用个字典映射回去就好了）
 - 类似病毒的这类脚本可以尝试在 https://virustotal.com/ 扫一下，说不定能扫出来。 https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/IR.md#flag-3
 - 对付混淆脚本的统一手段：ScriptBlock Logging。命令`Get-WinEvent -LogName Microsoft-Windows-PowerShell/Operational | % Message > text.txt`启用powershell脚本的日志，可能给出反混淆后的脚本。 https://iloveforensics.com/posts/nahamcon/
+    - powershell script block logging默认存在`C:\Windows\System32\winevt\Logs\Microsoft-Windows-PowerShell%4Operational.evtx`。拿到这个文件后，用eventId即可查询出对应event执行时的日志。`Get-WinEvent -Path "Microsoft-Windows-PowerShell%4Operational.evtx" -FilterXPath "*[System[EventID=4104]]" | ForEach-Object { $_.ToXml() }`. https://0xoffset.github.io/2023/06/18/NahamCon-CTF-2023-Forensics-Writeups.html#ir3-medium-151-solves
 - 补充：如何用powershell递归查找隐藏文件。`Get-ChildItem -Recurse -hidden -ErrorAction 'SilentlyContinue'`
 
 113. [IR #5](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/IR%20%235)
@@ -1181,8 +1183,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [gum](https://github.com/charmbracelet/gum)用法案例。注意`guess_date=$(gum input --placeholder $guess_date)`并不安全，用户仍然能随意控制guess_date的值。
 - root用户的ssh私钥：`/root/.ssh/id_rsa`。有了这个私钥，ssh时就能以root身份连接
 115. [Fetch](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Forensics/Fetch.md)
-- windows imaging image(WIM) forensic。使用wimtools（sudo apt-get install wimtools）挂载image后可能看到一些prefetch文件。参考这篇[文章](https://www.hackingarticles.in/forensic-investigation-prefetch-file/)，可用[WinPrefetch View](https://www.nirsoft.net/utils/win_prefetch_view.html)/FTK imager，[PECmd](https://github.com/EricZimmerman/PECmd)(https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/forensics/fetch)等工具。
-- WIM文件用7z解压也能获取到prefetch文件
+- windows imaging image(WIM) forensic。使用wimtools（sudo apt-get install wimtools）挂载image后可能看到一些prefetch文件。参考这篇[文章](https://www.hackingarticles.in/forensic-investigation-prefetch-file/)，可用[WinPrefetch View](https://www.nirsoft.net/utils/win_prefetch_view.html)/FTK imager，[PECmd](https://github.com/EricZimmerman/PECmd)(https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/forensics/fetch)(`PECmd.exe -d D:\CTF\nahamcon\fetch_output_dir | findstr /i "flag"`)等工具。
+- WIM文件用7z解压也能获取到prefetch文件。或者用dism( https://0xoffset.github.io/2023/06/18/NahamCon-CTF-2023-Forensics-Writeups.html#fetch-easy-166-solves )：
+    - `mkdir fetch_output_dir`
+    - `dism /mount-wim /wimfile:D:\CTF\nahamcon\fetch /index:1 /mountdir:D:\CTF\nahamcon\fetch_output_dir`
 116. [Blobber](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Warmups/Blobber.md)
 - python sqlite模块处理SQLite database文件（连接数据库，执行查询）
 - [online sqlite viewer](https://inloop.github.io/sqlite-viewer/)

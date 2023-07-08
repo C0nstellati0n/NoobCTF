@@ -534,8 +534,9 @@ int main(int argc, char *argv[]) {
 
 56. [更换程序使用的libc](https://bbs.kanxue.com/thread-271583.htm)。如果题目提供了libc但本地运行程序默认使用的libc却不是题目的，可以更换掉。libc可以在[这里](https://github.com/matrix1001/glibc-all-in-one)找。
 ```
-patchelf --set-interpreter ~/glibc-all-in-one-master/libs/2.27-3ubuntu1_amd64/ld-2.27.so pwn
-patchelf --replace-needed libc.so.6 ~/glibc-all-in-one-master/libs/2.27-3ubuntu1_amd64/libc-2.27.so pwn
+patchelf --set-interpreter ld-2.27.so pwn
+patchelf --replace-needed libc.so.6 libc-2.27.so pwn
+patchelf --set-rpath . pwn
 ```
 - 很多时候题目会给出libc但没有ld.so。此时可以使用[pwninit](https://github.com/io12/pwninit)自动下载对应版本的ld.so并patch
 57. [360chunqiu2017_smallest](https://www.anquanke.com/post/id/217081)
@@ -982,10 +983,19 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
     # rsi=r13
     # rdx=r14
     payload = b'a' * bof_offset
-    payload += p64(csu_end_addr) + p64(rbx) + p64(rbp) + p64(r12) + p64(
-        r13) + p64(r14) + p64(r15)
+    payload += p64(csu_end_addr) + p64(rbx) + p64(rbp) + p64(r12) + p64(r13) + p64(r14) + p64(r15)
     payload += p64(csu_front_addr)
     payload += b'a' * 0x38 #这个是固定的
     payload += p64(last)
     p.sendline(payload)
 ```
+- 此题的[另一种解法](https://hackmd.io/@KentangRenyah/BJ5Fiy2Dh#All-Patched-Up)使用了ld.so文件里的gadget。rop不一定要ret2libc，若实在无法泄露libc的地址，ld.so也是可以的。
+87. [Limitations](https://hackmd.io/@KentangRenyah/BJ5Fiy2Dh#Limitations)
+- 汇编调用ptrace函数+ptrace函数基础知识。ptrace函数可以让一个进程与另一个进程（如fork产生的子进程）沟通，前提是获取另一个进程的process ID。ptrace的PTRACE_POKEDATA选项可以让进程修改另一个进程的代码
+  - ptrace(PTRACE_ATTACH,child_id,0,0)
+  - ptrace(PTRACE_POKEDATA,chid_id, addr, data)
+  - ptrace(PTRACE_DETACH,child_id,0,0)
+- 一个进程的seccomp不会影响到另一个进程，fork出来的进程也一样（seccomp的调用在fork之后）
+88. [Web Application Firewall](https://hackmd.io/@KentangRenyah/BJ5Fiy2Dh#Web-Application-Firewall)
+- [tcache_perthread_struct](https://zafirr31.github.io/posts/imaginary-ctf-2022-zookeeper-writeup/)利用
+  - In short, tcache_perthread_struct contains a counter for the number of available (already freed) tcachebin chunks and stores the address entries for each tcachebin size. The address of the tcache_perthread_struct is kept at the second word of a freed tcache chunk. 其中address entries控制着tcache chunk从哪里取。如果我们能覆盖这个地址为free_hook，下次malloc就能直接获取到对应地址处的内存。

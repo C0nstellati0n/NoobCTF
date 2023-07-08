@@ -1734,6 +1734,8 @@ new_meta = sha.extend(b'content', b'known', length, hash)
 - 其他学习资源：
     - https://www.youtube.com/watch?v=6QQ4kgDWQ9w
     - https://www.synopsys.com/blogs/software-security/forging-sha-1-mac-using-length-extension-attack-python/
+    - [ForgeMe 1](https://github.com/mohnad-0b/programming/tree/main/CTF/NahamConCTF_2023%20Crypto/FrogeMe%201):使用工具[HashPump](https://github.com/bwall/HashPump)
+    - https://notateamserver.xyz/nahamcon-2023-crypto/#forgeme-1-and-2 :使用[hash_extender](https://github.com/iagox86/hash_extender)
 48. [Forcing a file’s CRC to any value](https://www.nayuki.io/page/forcing-a-files-crc-to-any-value):该脚本可以将一个文件的crc改为任意值，通过在指定偏移处插入构造的字节（这些字节不一定可见）。用法：`python3 forcecrc32.py FileName ByteOffset NewCrc32Value`,表示将FileName对应文件的内容改为NewCrc32Value，构造用的字节插入在ByteOffset偏移处。
 49. [Uniform](https://github.com/HeroCTF/HeroCTF_v5/tree/main/Crypto/Uniform)
 - Mersenne Twister随机数预测。题目给出来自`random.uniform(0, 2**32-1)`的624个数字，要求预测第625个数字。注意由于uniform的输出是float，不能直接套用接收int的预测器。改动的脚本使用z3，已经在wp里了。
@@ -1975,5 +1977,16 @@ print(AES.Decrypt("CTR",ct,key,nonce))
     - 允许攻击者在AES的某一轮加密处修改plain state为未知随机字节（fault）
     - 允许交互。攻击者输入明文，服务器返回对应的密文
     - 加密时的密钥固定。目标为利用有限的交互次数+fault破解使用的密钥
-61. [signed_jeopardy](https://github.com/An00bRektn/CTF/tree/main/live_events/nahamcon_23/crypto_signed_jeopardy)
+61. [signed_jeopardy](https://notateamserver.xyz/nahamcon-2023-crypto/#signed-jeopardy)
 - ECDSA（椭圆曲线，ecc） nonce（k值）重用（reuse）导致的[签名伪造](https://billatnapier.medium.com/ecdsa-weakness-where-nonces-are-reused-2be63856a01a)。感觉和58条[signature-ii](https://github.com/BCACTF/bcactf-4.0/tree/main/signature-ii)类似，不过这题有不同的脚本。
+62. [Just One More](https://notateamserver.xyz/nahamcon-2023-crypto/#just-one-more)
+- 利用矩阵与阶梯形矩阵解线性方程组。sagemath里构造出矩阵后，可用Matrix.rref()获取阶梯形矩阵。注意如果矩阵的阶数和未知数的数量不一样的话，结果的阶梯形矩阵会有差别。详情见wp。
+- 也可用sympy linsolve： https://github.com/nzec/ctf-notes/tree/master/NahamCon23/Just%20One%20More
+63. [RSA Outro](https://notateamserver.xyz/nahamcon-2023-crypto/#rsa-outro)
+- 使用sympy解方程。
+```py
+from sympy import *
+var('q')
+solutions = solve(2*q*(q-1)-phi, q) #这里的方程结果为0，即 2*q*(q-1)-phi==0
+q = solutions[1]
+```
