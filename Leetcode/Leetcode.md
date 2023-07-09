@@ -144,3 +144,4 @@
 - [Last Day Where You Can Still Cross](./Hard/Last%20Day%20Where%20You%20Can%20Still%20Cross.md). dfs/bfs+binary search,Disjoint Set Union(union–find data structure/merge–find set)
 - [Maximum Number of Achievable Transfer Requests](./Hard/Maximum%20Number%20of%20Achievable%20Transfer%20.md). backtrack/bitmask
 - [Put Marbles in Bags](./Hard/Put%20Marbles%20in%20Bags.md)
+- [Substring With Largest Variance](./Hard/Substring%20With%20Largest%20Variance.md). [Kadane's algorithm](https://medium.com/@rsinghal757/kadanes-algorithm-dynamic-programming-how-and-why-does-it-work-3fd8849ed73d)，dp的一种，专门用来解决Maximum Subarray这类问题。
