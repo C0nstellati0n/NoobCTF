@@ -44,6 +44,7 @@
 - [Minimum Absolute Difference in BST](./Easy/Minimum%20Absolute%20Difference%20in%20BST.md). 中序遍历（inorder）+binary search tree（BST）
 - [Find the Highest Altitude](./Easy/Find%20the%20Highest%20Altitude.md)
 - [Buddy Strings](./Easy/Buddy%20Strings.md)
+- [Minimum Depth of Binary Tree](./Easy/Minimum%20Depth%20of%20Binary%20Tree.md). dfs/bfs
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
