@@ -738,3 +738,13 @@ typedef struct
   - `.writefile file start L?<length>`:从文件中dump the payload
 93. [Red Light Green Light](https://nirajkhatiwada.com.np/tutorials/2023/06/18/nahamcon-ctf-2023-mobile-challenges.html)
 - 使用frida script hook apk使其在runtime更改函数源码。
+```java
+Java.perform(function () {
+  var MainActivity = Java.use('com.nahamcon2023.redlightgreenlight.MainActivity');
+
+  MainActivity.checkLight.implementation = function (view) {
+    this.checkLight(view);
+    this.red.value = false;
+  };
+});
+```

@@ -925,7 +925,7 @@ you can use the command show options to display the different configuration sett
 - 利用具有suid的apt-get提权：https://gtfobins.github.io/gtfobins/apt-get/ 。
 - 此题的虚拟机由我们自己设置，对于能接触到物理机器的情况。在虚拟机启动时按住shift，进入bootloader menu。然后选择recovery mode，在弹出的选项中选择drop to root shell prompt，即可获取root权限。或者参考[Unintend Solution to MI6Config](https://themj0ln1r.github.io/posts/byuctf23)
 157. [VMception](https://iloveforensics.com/posts/byuctf/)
-- 可以将vdi后缀文件（虚拟机文件）转为平时的disk raw文件。`qemu-img convert -f vdi -O raw ctf.vdi output.raw`
+- 可以将vdi后缀文件（虚拟机文件）转为平时的disk raw文件。`qemu-img convert -f vdi -O raw ctf.vdi output.raw`。vmdk后缀转raw后缀：`qemu-img convert -O raw -m 16 -p a.vmdk b.raw`.AutoSpy可以识别raw格式，但不能识别vdi，vmdk等格式
 - tsk+autospy使用。
   - `mmls disk.raw`:查看磁盘分区
   - `fls -o offset disk.raw <inode>`:查看disk在offset偏移处的inode文件（偏移从mml获得,inode可选）
@@ -1169,21 +1169,22 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - `% $0 < *`
 
 112. [IR #3](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/IR%20%233)
-- powershell简单混淆手段：仅用符号编写脚本（ https://perl-users.jp/articles/advent-calendar/2010/sym/11 ）及反混淆（其实就是直接用个字典映射回去就好了）
+- powershell简单混淆手段：仅用符号编写脚本（ https://perl-users.jp/articles/advent-calendar/2010/sym/11 ）及反混淆（其实就是直接用个字典映射回去就好了）。工具:[PowerDecode](https://github.com/Malandrone/PowerDecode)
 - 类似病毒的这类脚本可以尝试在 https://virustotal.com/ 扫一下，说不定能扫出来。 https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/IR.md#flag-3
-- 对付混淆脚本的统一手段：ScriptBlock Logging。命令`Get-WinEvent -LogName Microsoft-Windows-PowerShell/Operational | % Message > text.txt`启用powershell脚本的日志，可能给出反混淆后的脚本。 https://iloveforensics.com/posts/nahamcon/
+- 对付混淆脚本的统一手段：ScriptBlock Logging。命令`Get-WinEvent -LogName Microsoft-Windows-PowerShell/Operational | % Message > text.txt`启用powershell脚本的日志，可能给出反混淆后的脚本。 https://iloveforensics.com/posts/nahamcon/ 。或者使用Powershell ISE： https://securityliterate.com/malware-analysis-in-5-minutes-deobfuscating-powershell-scripts/
     - powershell script block logging默认存在`C:\Windows\System32\winevt\Logs\Microsoft-Windows-PowerShell%4Operational.evtx`。拿到这个文件后，用eventId即可查询出对应event执行时的日志。`Get-WinEvent -Path "Microsoft-Windows-PowerShell%4Operational.evtx" -FilterXPath "*[System[EventID=4104]]" | ForEach-Object { $_.ToXml() }`. https://0xoffset.github.io/2023/06/18/NahamCon-CTF-2023-Forensics-Writeups.html#ir3-medium-151-solves
 - 补充：如何用powershell递归查找隐藏文件。`Get-ChildItem -Recurse -hidden -ErrorAction 'SilentlyContinue'`
 
 113. [IR #5](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/IR%20%235)
 - powershell script使用AES加密/解密文件
+- 补充：ova后缀文件是VirtualBox VM file，可以继续解压，内部可能包含vmdk文件。 https://pjg1.netlify.app/nahamcon23-ir
 
 114. [Wordle Bash](https://github.com/daffainfo/ctf-writeup/tree/main/NahamCon%20CTF%202023/Wordle%20Bash)
 - date命令注入。在date命令参数可以控制的情况下，能实现任意文件读取。（参考 https://gtfobins.github.io/gtfobins/date/ ）
 - [gum](https://github.com/charmbracelet/gum)用法案例。注意`guess_date=$(gum input --placeholder $guess_date)`并不安全，用户仍然能随意控制guess_date的值。
 - root用户的ssh私钥：`/root/.ssh/id_rsa`。有了这个私钥，ssh时就能以root身份连接
 115. [Fetch](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Forensics/Fetch.md)
-- windows imaging image(WIM) forensic。使用wimtools（sudo apt-get install wimtools）挂载image后可能看到一些prefetch文件。参考这篇[文章](https://www.hackingarticles.in/forensic-investigation-prefetch-file/)，可用[WinPrefetch View](https://www.nirsoft.net/utils/win_prefetch_view.html)/FTK imager，[PECmd](https://github.com/EricZimmerman/PECmd)(https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/forensics/fetch)(`PECmd.exe -d D:\CTF\nahamcon\fetch_output_dir | findstr /i "flag"`)等工具。
+- windows imaging image(WIM) forensic。使用wimtools（sudo apt-get install wimtools）挂载image后可能看到一些prefetch文件（后缀.pf）。参考这篇[文章](https://www.hackingarticles.in/forensic-investigation-prefetch-file/)，可用[WinPrefetch View](https://www.nirsoft.net/utils/win_prefetch_view.html)/FTK imager，[PECmd](https://github.com/EricZimmerman/PECmd)(https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/forensics/fetch)(`PECmd.exe -d D:\CTF\nahamcon\fetch_output_dir | findstr /i "flag"`)等工具。
 - WIM文件用7z解压也能获取到prefetch文件。或者用dism( https://0xoffset.github.io/2023/06/18/NahamCon-CTF-2023-Forensics-Writeups.html#fetch-easy-166-solves )：
     - `mkdir fetch_output_dir`
     - `dism /mount-wim /wimfile:D:\CTF\nahamcon\fetch /index:1 /mountdir:D:\CTF\nahamcon\fetch_output_dir`
@@ -1198,5 +1199,14 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     say flag
     ```
     - 执行命令：`'cmd'`输入进终端后，输入`Ctrl+D`。程序可能会在cmd带有`.`号时报错。 https://cynical-labs.net/ctf-writeups/2023/06/17/Nahamcon2023-Warmups/#regina
+    - https://www.ibm.com/docs/en/zos/2.1.0?topic=eusc-run-shell-command-read-its-output-into-stem ： https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Warmups/Regina.md
 118. [Raided](https://medium.com/@0xs1rx58/nahamcon-ctf-2023-how-i-solved-raided-digital-forensics-without-volatility-377c93996f29)
 - [bulk_extractor](https://github.com/simsong/bulk_extractor) forensics tool使用。`bulk_extractor -o ./xxx ctf.vmem`
+- 使用volatility3的做法： https://pjg1.netlify.app/nahamcon23-raided
+    - `volatility3 -f ctf.vmem banners.Banners`:打印包含机器系统名，linux，gcc版本等信息
+    - volatility3需要symbol才能分析内存。wp里介绍了使用[dwarf2json](https://github.com/volatilityfoundation/dwarf2json)自行build symbol的方法。需要对应机器的虚拟机，感觉还是直接去官网下载完整的较好，参考 https://book.hacktricks.xyz/generic-methodologies-and-resources/basic-forensic-methodology/memory-dump-analysis/volatility-cheatsheet#os-profiles
+    - `volatility3 -f ctf.vmem linux.psaux.PsAux`:list of running processes
+- grep命令搜索ssh private key。`cat ctf.vmem | grep -A 20 -a 'BEGIN OPENSSH PRIVATE KEY'`
+119. [nobigdeal](https://github.com/CyberHeroRS/writeups/blob/main/NahamConCTF/2023/Networks/nobigdeal.md)
+- Network Block Device([NBD](https://github.com/NetworkBlockDevice/nbd/blob/master/doc/proto.md))协议通信工具：[nbd-client](https://sourceforge.net/projects/nbd/files/nbd/)。新旧版本nbd互相不兼容，按需下载对应版本。`sudo nbd-client server.com port /dev/nbd0`
+    - 或者使用python： https://gist.github.com/gabriel-samfira/499f7c1844b0948b5d40eef08b18c1f5 。参考 https://www.youtube.com/watch?v=o7q4ndTF_0o&list=PLldZ8EeOcu7fbu4tdAzVxVxJBr0RLnloa&index=4

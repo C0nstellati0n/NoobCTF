@@ -2456,16 +2456,17 @@ gambling_contract = web3.eth.contract(address='', abi=gambling_abi)
 - CVE-2022-28368 - [Dompdf RCE利用](https://www.optiv.com/insights/source-zero/blog/exploiting-rce-vulnerability-dompdf)。使用工具： https://github.com/rvizx/CVE-2022-28368/tree/main 。`python3 dompdf-rce.py --inject "将html转为pdf的url" --dompdf "http://vuln/dompdf/"`。该payload可以反弹shell。
 	- `Unable to stream pdf:headers already sent`为dompdf的错误提示。还有另一种方法判断：由dompdf生成出来的pdf的exif Producer字段会写dompdf的版本。
     - 使用php版本的[poc](https://github.com/positive-security/dompdf-rce)：https://github.com/spencerja/NahamConCTF_2023_Writeup/blob/main/Web/Stickers.md
-    - 详细步骤： https://meashiri.github.io/ctf-writeups/posts/202306-nahamcon/#stickers
+    - 详细步骤： https://meashiri.github.io/ctf-writeups/posts/202306-nahamcon/#stickers ， https://v3he.io/posts/nahamcon-ctf-2023-stickers/
+    - 视频讲解： https://www.youtube.com/watch?v=fUiHQS85vlQ&list=PLldZ8EeOcu7fbu4tdAzVxVxJBr0RLnloa&index=5
 246. [Marmalade 5](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Web/Marmalade_5.md)
 - jwt MD5_HMAC爆破
-    - 字典无第三方库爆破
+    - python字典无第三方库爆破。解析： https://github.com/Crypto-Cat/CTF/blob/main/ctf_events/nahamcon_23/web/marmalade_5.md
     - john 字典爆破jwt。 https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/web/marmalade5
     - c#脚本爆破： https://github.com/g0ttfrid/CTF-Writeups/tree/master/NahamCon%202023/Marmalade%205
 247. [Museum](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Web/Museum.md)
 - 本地文件包含（LFI）+ssrf。
 - fuzz工具[ffuf](https://github.com/ffuf/ffuf)+字典[SecLists](https://github.com/danielmiessler/SecLists/tree/master)（可用来测试文件包含）
-- 文件包含可以尝试在路径前添加`/./`。 https://github.com/SQLKinkjection/Writeups/blob/main/2023/nahamcon/Web/Museum/Museum.md
+- 文件包含可以尝试在路径前添加`/./`,或者`//etc/passwd`。总之多试一下这种奇怪的url。 https://github.com/SQLKinkjection/Writeups/blob/main/2023/nahamcon/Web/Museum/Museum.md
 248. [Transfer](https://github.com/okadir/CTF-s/tree/main/nahamCon-2023/Transfer)
 - python sqlite注意事项：
 ```py
