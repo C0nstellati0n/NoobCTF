@@ -2210,7 +2210,7 @@ results = db.flags.find(
 ```
 此时可以尝试闭合实现注入。可以用分号注入多个句子：`'); this.flag.includes('flag{`，不过只有最后一个有效的条件会被执行，等于数据库实际查找的条件是`this.flag.includes('flag{`，忽略前面的`this.challenge.includes('')`。同理，也可用`&&`:`') && this.challenge.includes('flag')`。或者`||`:`'); 1==1 || this.challenge.includes('`。除了使用includes，还可使用`startsWith`:`') && this.flag.startsWith('`
 
-237. [png-wizard-v3](https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/web-exploitation#png-wizard-v3-8-solves)
+237. [png-wizard-v3](https://github.com/hsncsclub/hsctf-10-challenges/tree/main/web/png-wizard-v3),[wp](https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/web-exploitation#png-wizard-v3-8-solves)
 - svg文件相关Error-based XXE. 以下处理svg data的逻辑具有xxe漏洞：
     ```py
     svg_root=etree.parse(filename,parser=etree.XMLParser()).getroot()
@@ -2481,3 +2481,5 @@ res = c.fetchone()
     - 使用自己机器上的msf自动加载payload。不过这样就要VPS了
 - [drone](https://ijayer.github.io/post/tech/devops/cicd/20180925-cicd-03-drone-01-basic/):drone.yml文件中的steps下的命令会在有push到main时被调用。devOps相关的挑战可以先看这个文件，了解pipeline是如何运作的。
 - Makefile内部执行系统命令，不要随便make来源不明的Makefile。同理，攻击者也可以通过修改Makefile达到执行命令的目的。
+250. [fancier-page](https://github.com/hsncsclub/hsctf-10-challenges/tree/main/web/fancier-page)
+- [arg.js](https://github.com/stretchr/arg.js/)导致的js原型链污染。arg.js功能十分强大，可以直接从url传参一个object或是list，关键是键名可以随意控制，于是易污染`__proto__`.

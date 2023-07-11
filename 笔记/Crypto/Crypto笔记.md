@@ -1936,7 +1936,7 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
   ```
 - 似乎不同密度的knapsack构造矩阵进行格基规约时，构造的矩阵内部的数字不同，而且会影响结果。例如[knapsack](/CTF/moectf/Crypto/knapsack.md)这题的方法放在这题就解不出来。
 56. [Casino](https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/cryptography#casino-101-solves)
-- AES CTR已知明文攻击(AES CTR bitflipping)。假设明文有n字节且已知，那么获取其密文后可以将密文修改成指定结果，使其解密时输出想要的明文。只需将密文与明文和期望输出明文异或即可（字节的位置不能错）
+- AES CTR已知明文翻转bit攻击(AES CTR bitflipping)。假设明文有n字节且已知，那么获取其密文后可以将密文修改成指定结果，使其解密时输出想要的明文。只需将密文与明文和期望输出明文异或即可（字节的位置不能错）
 ```py
 pt='abc'
 expect='def'
@@ -1990,3 +1990,33 @@ var('q')
 solutions = solve(2*q*(q-1)-phi, q) #这里的方程结果为0，即 2*q*(q-1)-phi==0
 q = solutions[1]
 ```
+64. [order](https://github.com/hsncsclub/hsctf-10-challenges/tree/main/crypto/order)
+- 数论寻找元素的阶（order， $a^x\equiv 1\mod p$ ,满足该条件最小的x）
+    - 通过phi的因子来找（欧拉定理告诉我们 $a^{phi}\equiv 1\mod p$ ,于是phi可能为阶的倍数）：https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/cryptography#order-46-solves
+    ```py
+    from sympy.ntheory import *
+    from Crypto.Util.number import long_to_bytes
+    M = 
+    sus = 
+    a = 
+    # sus**(t+1) == 1 (mod M)
+    # note gcd(sus, M) = 1
+    # order of sus (mod M) divides totient(M)
+    # let's try determining the order
+    order = -1
+    for i in divisors(totient(M)):
+        if pow(sus, i, M) == 1:
+            order = i
+            break
+    print(order)
+    # also, t == flag^-1 * a (mod M), and in particular t < M
+    # order of sus (mod M) divides t+1, so just test multiples of order - 1 less than M
+    # WOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+    # flag == a * t^-1 (mod M)
+    for t in range(order-1, M, order):
+        flag_long = a * pow(t, -1, M) % M
+        flag_bytes = long_to_bytes(flag_long)
+        if flag_bytes.startswith(b"flag{"):
+            print(flag_bytes.decode())
+            break
+    ```
