@@ -1481,7 +1481,7 @@ print(w)
 40. [[NPUCTF2020]Mersenne twister](https://blog.csdn.net/weixin_44110537/article/details/108436309)
 - 梅森旋转算法（Mersenne twister,mt73991伪随机）的爆破。若攻击者能获取624个寄存器状态，可以直接逆向。若不足则需要[爆破](https://liam.page/2018/01/12/Mersenne-twister/) 。
 41. [PRNG](https://github.com/tamuctf/tamuctf-2023/tree/master/crypto/prng)
-- 针对[linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator)的预测攻击：给出prng的前十个数字（种子未知）。找出接下来的10个数字。使用[脚本](https://github.com/jvdsn/crypto-attacks/blob/master/attacks/lcg/parameter_recovery.py)恢复初始参数，或者直接交互：
+- 针对[linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator)（LCG）的预测攻击：给出prng的前十个数字（种子未知）。找出接下来的10个数字。使用[脚本](https://github.com/jvdsn/crypto-attacks/blob/master/attacks/lcg/parameter_recovery.py)恢复初始参数，或者直接交互：
 ```python
 #https://ctftime.org/writeup/12046
 from pwn import *
@@ -1544,6 +1544,7 @@ for i in range(10):
     r.sendline(str(rand.rand()))
 r.interactive()
 ```
+- 类似题目：[LCG](https://github.com/google/google-ctf/tree/master/2023/crypto-lcg),详细解析文章： http://www.reteam.org/papers/e59.pdf
 42. 多种密码的python攻击脚本：https://github.com/jameslyons/python_cryptanalysis 。其中一个脚本可用于攻击变种维吉尼亚密码。
 ```python
 from chall_patched import Vigenot as Vigenere
@@ -2020,3 +2021,39 @@ q = solutions[1]
             print(flag_bytes.decode())
             break
     ```
+65. [Cursved](https://github.com/google/google-ctf/tree/master/2023/crypto-cursved)
+- Schnorr signature scheme(基于ecc，椭圆曲线)。关于这种电子签名法，详细解析参考： https://www.btcstudy.org/2021/11/20/introduction-to-schnorr-signatures-by-suredbits/ ，单纯讲定义的简洁版： https://www.cnblogs.com/lsgxeva/p/12021636.html 。关于椭圆曲线本身再补充两个链接：
+    - https://hackernoon.com/what-is-the-math-behind-elliptic-curve-cryptography-f61b25253da3
+    - https://zhuanlan.zhihu.com/p/36326221
+- [Pell conics over finite fields](https://arxiv.org/abs/2203.05290)：the points can form two different types of groups, depending on whether d is a square or a non-square in k, respectively。若d是模p的二次剩余，就有以下同构： $C(k)\simeq k^{\*}.C(k)\rightarrow k^{\*}(x,y)\mapsto x+sy$ ,where we fix a square root s of d in k. Hence, instead of solving a generically hard DLP over the Pell conic group law, we can solve it over $k^{\*}$ instead. 个人认为的关键点：ecc的安全性基于离散对数的计算难度，但如果像上面这样有Pell conic的存在且d是模p的二次剩余，就能将原本要计算的k域转为 $k^{\*}$ ,计算就能简单一点，从而破解私钥了。使用[cado-nfs](https://cado-nfs.gitlabpages.inria.fr/)计算。参考： https://discord.com/channels/984515980766109716/1120323829303083079/1122884985007898654
+```py
+p = 
+D = 
+F = GF(p)
+dd = F(D).sqrt()
+
+G = GX, GY = F(2), F(1)
+assert GX^2 - D*GY^2 == 1
+PUB = (F(), F())
+
+φ = lambda x, y: (x - dd*y, x + dd*y)
+ψ = lambda u, v: ((u + v)/2, (v - u)/(2*dd))
+
+uG = φ(*G)[0]
+uP = φ(*PUB)[0]
+ell = ZZ(p//2)
+assert is_prime(ell)
+print(f"G: {uG^2}\nP: {uP^2}")
+cadologG = 
+cadologP = 
+dlog1 = ZZ(GF(ell)(cadologP) / (cadologG))
+dlog2 = ZZ(discrete_log_rho(uP^ell, uG^ell, operation='*', ord=2))
+dlog = CRT(ZZ(dlog1), ZZ(dlog2), p//2, 2)
+print(f"PRIVATE = {dlog}")
+print(uG^dlog == uP)
+#cadologG 和 cadologP计算方法： ./cado-nfs.py -dlp target=<value_G>,<value_P> ell=<p//2> <p>
+```
+66. [mhk2](https://github.com/google/google-ctf/tree/master/2023/crypto-mhk2)，[wp](https://mystiz.hk/posts/2023/2023-06-26-google-ctf-mhk2/)
+- 修改版MHK2 cryptosystem攻击。此题与完整MHK2 cryptosystem实现方式的不同点在于：In MHK2 cryptosystem, the prime numbers $p_1$ and $p_2$ are randomly generated such that $\frac{p_i}{2}$ < $\sum _js_{ij}$ < $p_i$ . This is not our case – we fix it to $p_i=\sum _js_{ij}+2$ 。所以这道题提供的解法无法破解标准的MHK2 cryptosystem。
+67. [myTLS](https://github.com/google/google-ctf/tree/master/2023/crypto-mytls)
+- [Key Compromise Impersonation attacks (KCI)](https://www.cryptologie.net/article/372/key-compromise-impersonation-attacks-kci/):当攻击者可以获取client或server的private key后，即可实施中间人攻击，篡改加密的通信。根据不同的实现，篡改的方式不同。wp里列出了一种方式。
