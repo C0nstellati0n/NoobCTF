@@ -72,7 +72,7 @@ If there is no path from the node that enters a cycle, we will always be able to
 The problem is reduced to finding the nodes that do not have any paths that lead to a cycle.
 ```
 
-所以要判环。那这又有拓扑什么事？假如一个node的所有路径都导向一个terminal或safe node，它应该是类似a->b->c->d这样的。意味着，它所有path的出度都是很清晰的一条，可以从一个有限的终点倒着推回去。假如node在一个环里，那么环里的node都是头尾相接的，没法从任何一个node那里盗者推回去。这里用的拓扑为[Topological Sort Using Kahn's Algorithm](https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/)，从入度（出度）为零的node出发，慢慢削减，环里的node因为入度与环里的node密切相关，而环里的node永远没法入队列，故拓扑算法永远不会走到它们上面。走到的node一定是safe或者terminal node。
+所以要判环。那这又有拓扑什么事？假如一个node的所有路径都导向一个terminal或safe node，它应该是类似a->b->c->d这样的。意味着，它所有path的出度都是很清晰的一条，可以从一个有限的终点倒着推回去。假如node在一个环里，那么环里的node都是头尾相接的，没法从任何一个node那里倒着推回去。这里用的拓扑为[Topological Sort Using Kahn's Algorithm](https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/)，从入度（出度）为零的node出发，慢慢削减，环里的node因为入度与环里的node密切相关，而环里的node永远没法入队列，故拓扑算法永远不会走到它们上面。走到的node一定是safe或者terminal node。
 
 当然dfs也能做啊。
 ```c#

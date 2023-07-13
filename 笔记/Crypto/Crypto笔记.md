@@ -2057,3 +2057,7 @@ print(uG^dlog == uP)
 - 修改版MHK2 cryptosystem攻击。此题与完整MHK2 cryptosystem实现方式的不同点在于：In MHK2 cryptosystem, the prime numbers $p_1$ and $p_2$ are randomly generated such that $\frac{p_i}{2}$ < $\sum _js_{ij}$ < $p_i$ . This is not our case – we fix it to $p_i=\sum _js_{ij}+2$ 。所以这道题提供的解法无法破解标准的MHK2 cryptosystem。
 67. [myTLS](https://github.com/google/google-ctf/tree/master/2023/crypto-mytls)
 - [Key Compromise Impersonation attacks (KCI)](https://www.cryptologie.net/article/372/key-compromise-impersonation-attacks-kci/):当攻击者可以获取client或server的private key后，即可实施中间人攻击，篡改加密的通信。根据不同的实现，篡改的方式不同。wp里列出了一种方式。
+68. [ZIP](https://github.com/google/google-ctf/tree/master/2023/crypto-ziphard)
+- 微型ZIP archiver python实现，或者也能称为PKZIP Stream Cipher。这种密码有[ZIP 明文攻击](https://flandre-scarlet.moe/blog/1685/)，可用[bkcrack](https://github.com/kimci86/bkcrack/tree/master)工具进行攻击。该工具要求至少知道12个字节的明文以及其对应密文（或者说明文对应密文的偏移），其中至少有8个字节是连续的。此题知道的12字节分布在两个不同的文件，前8个已知字节在flag.txt里，而另外5个在另一个文件。不过根据明文攻击的原理，前8个字节才是真正用于破解密钥的，后面的字节只是为了验证得到的密钥是否正确。所以可以将工具自行patch以下，参照wp里的做法。
+- python里，若将字符串以`utf-8-sig`编码，除了字符串正常UTF-8编码，还会在结果前面加上Unicode byte order marker。Utf-8里这个marker为`ef bb bf`
+- C语言爆破CRC脚本
