@@ -1215,3 +1215,18 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [Tampermonkey Firefox userscript storage location](https://stackoverflow.com/questions/67246384/tampermonkey-firefox-user-scripts-storage-location):`storage/default/<url>^userContextId=4294967295/idb/3647222921wleabcEoxlt-eengsairo.sqlite`，其中url为moz-extension:// url，不同人不一样。这个文件是可以修改的，参考 https://stackoverflow.com/questions/54920939/parsing-fb-puritys-firefox-idb-indexed-database-api-object-data-blob-from-lin ，工具：[moz-idb-edit](https://gitlab.com/ntninja/moz-idb-edit/-/tree/main/)
 121. [packet-hero](https://github.com/hsncsclub/hsctf-10-challenges/tree/main/misc/packet-hero)
 - 使用scapy replay server packets to [rsync](https://www.ruanyifeng.com/blog/2020/08/rsync.html) client.
+122. [papapa](https://github.com/google/google-ctf/tree/master/2023/misc-papapapa)
+- 任何JPEG的图片数据边长一定是8的倍数（image data in every JPEG file is present up to side lengths that are a multiple of 8）。在此之上，还与sampling factors有关。In case subsampling is used, the minimum unit of pixel data present changes from 8x8 to "8x8 for an hypothetical channel with factors 1x1". So, for a "2x2,1x1,1x1" JPEG, pixel data is padded to multiples of 16x16. 简单来说，8x8是最小的单元，然后找到sampling factors最大的值（比如"2x2,1x1,1x1"是2x2），乘上最小单元，得到16x16。那么这个jpeg的宽和高应该都是16的倍数）
+- [Chroma subsampling and JPEG sampling factors](https://zpl.fi/chroma-subsampling-and-jpeg-sampling-factors/)相关知识。如何查看一张jpeg的sampling factors：在hex editor里打开jpeg图片，0x9e偏移处有个SOF (start of frame) segment（开始标记为`ffc0`），整个frame结构如下：
+```
+    0000009e: ffc0          // SOF0 segment
+    000000a0: 0011          // length of segment depends on #components
+    000000a2: 08            // bits per pixel
+    000000a3: 0200          // image height
+    000000a5: 0200          // image width
+    000000a7: 03            // number of components (should be 1 or 3)
+    000000a8: 013100        // 0x01=Y component, 0x31=sampling factor, quantization table number
+    000000ab: 023101        // 0x02=Cb component, 0x02后的一个字节就是sampling factor，下面也类似
+    000000ae: 033101        // 0x03=Cr component
+```
+上面那个frame的sampling factor是"3x1,3x1,3x1",所以对应的jpeg宽高应该是24和8的倍数。
