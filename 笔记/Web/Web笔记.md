@@ -2481,5 +2481,5 @@ res = c.fetchone()
     - 使用自己机器上的msf自动加载payload。不过这样就要VPS了
 - [drone](https://ijayer.github.io/post/tech/devops/cicd/20180925-cicd-03-drone-01-basic/):drone.yml文件中的steps下的命令会在有push到main时被调用。devOps相关的挑战可以先看这个文件，了解pipeline是如何运作的。
 - Makefile内部执行系统命令，不要随便make来源不明的Makefile。同理，攻击者也可以通过修改Makefile达到执行命令的目的。
-250. [fancier-page](https://github.com/hsncsclub/hsctf-10-challenges/tree/main/web/fancier-page)
+250. [fancier-page](https://github.com/hsncsclub/hsctf-10-challenges/tree/main/web/fancier-page),[wp](https://sm-optimizes.amateurs-team.pages.dev/writeups/HSCTF-2023/fancier-page)
 - [arg.js](https://github.com/stretchr/arg.js/)导致的js原型链污染。arg.js功能十分强大，可以直接从url传参一个object或是list，关键是键名可以随意控制，于是易污染`__proto__`.

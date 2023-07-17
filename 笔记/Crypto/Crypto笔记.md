@@ -33,6 +33,14 @@ print(decrypt(1697,599,n,c1,c2).decode())
 - lcm问题+e与phi不互质（gcd较小）。例题：[[NPUCTF2020]EzRSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BNPUCTF2020%5DEzRSA.md)
 - dp泄露。例题：[0rsa0](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/0rsa0.md)
 - sagemath解二元方程组+e，d泄露后分解n。例题:[[MRCTF2020]Easy_RSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BMRCTF2020%5DEasy_RSA.md)
+```py
+P_n = 
+P_F_n =
+var("p q")
+eq1=P_n==p*q
+eq2=P_F_n==(p-1)*(q-1)
+solve([eq1,eq2],p,q)
+```
 - rsa衍生算法：[Rabin](https://co5mos.github.io/2018/09/14/rsa-rabin/)。[原理](https://zhuanlan.zhihu.com/p/533927542)及脚本：
 
 ```python
