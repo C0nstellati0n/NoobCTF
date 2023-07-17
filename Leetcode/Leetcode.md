@@ -120,6 +120,7 @@
 - [Find Eventual Safe States](./Medium/Find%20Eventual%20Safe%20States.md). [Topological Sort Using Kahn's Algorithm](https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/), dfs detect cycle
 - [Course Schedule](./Medium/Course%20Schedule.md). 拓扑排序，Topological Sort Using Kahn's Algorithm(bfs)/dfs(detect/finding cycle)
 - [Longest Arithmetic Subsequence of Given Difference](./Medium/Longest%20Arithmetic%20Subsequence%20of%20Give.md). dp
+- [Add Two Numbers II](./Medium/Add%20Two%20Numbers%20II.md). stack/linked list
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
@@ -150,3 +151,5 @@
 - [Maximum Number of Achievable Transfer Requests](./Hard/Maximum%20Number%20of%20Achievable%20Transfer%20.md). backtrack/bitmask
 - [Put Marbles in Bags](./Hard/Put%20Marbles%20in%20Bags.md)
 - [Substring With Largest Variance](./Hard/Substring%20With%20Largest%20Variance.md). [Kadane's algorithm](https://medium.com/@rsinghal757/kadanes-algorithm-dynamic-programming-how-and-why-does-it-work-3fd8849ed73d)，dp的一种，专门用来解决Maximum Subarray这类问题。
+- [Maximum Number of Events That Can Be Attended II](./Hard/Maximum%20Number%20of%20Events%20That%20Can%20Be%20A.md). binary search+dp
+- [Smallest Sufficient Team](./Hard/Smallest%20Sufficient%20Team.md). bitmask+dp
