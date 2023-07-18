@@ -49,7 +49,7 @@ for k in range(3):
     for m in range(100):
         PR = PolynomialRing(ZZ, names=["p_q"]) #创建一个整数（ZZ）上的多项式环（PolynomialRing），变量名为p_q
         p_q = PR.gens()[0] #这里不太清楚，感觉是获取多项式环上的变量参与运算
-        f = (k^3 * enc_phi + 3 * k^2 * (1 - p_q)^2 + 3 * k * (1 - p_q) + 1) - enc_d * e^3 - m * n #
+        f = (k^3 * enc_phi + 3 * k^2 * (1 - p_q)^2 + 3 * k * (1 - p_q) + 1) - enc_d * e^3 - m * n
         roots = f.roots()
         if len(roots) > 0:
             print(k, m, roots)
