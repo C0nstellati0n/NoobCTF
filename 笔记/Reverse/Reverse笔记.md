@@ -489,6 +489,13 @@ while True:
 - code object（CodeType）可用dis.dis反编译
 - 可重写常用函数（例如print）插入pdb断点。进入pdb调试界面后，可用inspect模块检查当前栈帧，返回上一栈帧，获取当前栈帧的code object等
 - 可将code object类型写为pyc文件后使用反编译器反编译（python3.10）
+- 如何安装[pycdc](https://github.com/zrax/pycdc)：https://www.youtube.com/watch?v=J_vzY2P_ALE
+  ```
+  git clone https://github.com/zrax/pycdc.git
+  cd pycdc
+  cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}"
+  sudo make && sudo make install
+  ```
 66. [Symbolic Victory](http://itsvipul.com/writeups/Trellix_Hax_2023/SymbolicVictory.html)
 - claripy.BVS模拟要求解的符号量并放置在内存中
 - angr.Project可添加base_addr(`angr.Project("./decode",main_opts={'base_addr': 0x100000})`)以及entry_state的参数(`p.factory.entry_state(args=["./decode",key,data])`)

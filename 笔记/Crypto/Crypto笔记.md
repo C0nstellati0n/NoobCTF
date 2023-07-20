@@ -168,6 +168,8 @@ print (flag)
 - e与phi不互质且gcd很大，使用AMM开根法+CRT。例题:[[NCTF2019]easyRSA](https://blog.soreatu.com/posts/intended-solution-to-crypto-problems-in-nctf-2019/#easyrsa909pt-2solvers)。附AMM算法（sagemath）：
 
 ```python
+import time
+import random
 def AMM(o, r, q):
     start = time.time()
     print('\n----------------------------------------------------------------------------------')
@@ -317,7 +319,7 @@ n = 0
 p4=0 #泄露的高位
 e = 0x10001
 pbits = 1024 #完整p的位数
-kbits = 128 #泄露的位数
+kbits = 128 #要爆破（求解）的位数（不是已泄露的位数，为pbits-已泄露位数）
 PR.<x> = PolynomialRing(Zmod(n))
 f = x + p4
 roots = f.small_roots(X=2^kbits, beta=0.4)
