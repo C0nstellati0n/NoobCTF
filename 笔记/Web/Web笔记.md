@@ -2483,3 +2483,38 @@ res = c.fetchone()
 - Makefile内部执行系统命令，不要随便make来源不明的Makefile。同理，攻击者也可以通过修改Makefile达到执行命令的目的。
 250. [fancier-page](https://github.com/hsncsclub/hsctf-10-challenges/tree/main/web/fancier-page),[wp](https://sm-optimizes.amateurs-team.pages.dev/writeups/HSCTF-2023/fancier-page)
 - [arg.js](https://github.com/stretchr/arg.js/)导致的js原型链污染。arg.js功能十分强大，可以直接从url传参一个object或是list，关键是键名可以随意控制，于是易污染`__proto__`.
+251. [Biohazard](https://github.com/google/google-ctf/tree/master/2023/web-biohazard)
+- [strict CSP](https://www.w3.org/TR/CSP3/#strict-csp)（满足特定条件的CSP才能被称为strict）+[Trusted Types](https://juejin.cn/post/6978694516840595487)(也是CSP的一部分，是个header，禁止一些危险的API被浏览器调用)不一定能完全防止xss。[Dom clobbering](https://portswigger.net/web-security/dom-based/dom-clobbering)+[prototype pollution](https://portswigger.net/web-security/prototype-pollution)/外部库的错误使用通常是入手点
+- 接着第234点提过的，Object.assign通常没有原型链污染
+```js
+Object.assign({}, JSON.parse('{"__proto__":{"polluted": true}}'));
+console.log(Object.prototype.polluted); // undefined
+```
+但是也有例外。若assign的第一个参数是Object.prototype，污染就成立了。
+```js
+Object.assign(({})['__proto__'], JSON.parse('{"polluted": true}'));
+console.log(Object.prototype.polluted); // true
+```
+- [closure sanitizer](https://google.github.io/closure-library/api/goog.html.sanitizer.HtmlSanitizer.html)可利用原型链污染绕过：https://research.securitum.com/prototype-pollution-and-bypassing-client-side-html-sanitizers/#:~:text=my%20challenge.-,Closure,-Closure%20Sanitizer%20has 。此时一般已经有xss了，除非像这题一样开了Strict CSP 和 Trusted Types，没法直接写payload，只能利用原型链污染使用网页本来就有的内容实现xss
+- `bootstrap.js`里的内容可自定义，通常为调试所用，不为题目的一部分。但也不能完全排除这种可能性，因为这题的漏洞就从`bootstrap.js`里开始。
+- iframe标签有个csp属性，设置被引用内容的csp。违反csp的内容将不会正常加载。可以利用这个特点故意阻止目标网页某些资源的加载。
+- 这题还有个既不用原型链污染也不用dom clobbering的[非预期解](https://gist.github.com/arkark/340ffadc009a4dd07be6696e0dec4553).查看题目使用的closure库的[源码](https://github.com/shhnjk/closure-library/blob/master/closure/goog/demos/xpc/minimal/index.html)，发现这个index.html是个demo page，作用是在两个不同的网站之间发消息。里面有个log函数：
+```js
+function log(msg) {
+  logEl || (logEl = goog.dom.getElement('log'));
+
+  var msgEl = goog.dom.createDom(goog.dom.TagName.DIV);
+  msgEl.innerHTML = msg;
+  logEl.insertBefore(msgEl, logEl.firstChild);
+}
+```
+这个函数使用了innerHTML。接着又在下面发现了一个调用log函数的地方。
+```html
+<p>
+<input type="text" id="msgInput" value="Hello from the container page."
+    style="width:250px">
+<input type="button" value="Send" onclick="
+    channel.send('log', goog.dom.getElement('msgInput').value)">
+</p>
+```
+index.html又有个peerdomain参数，用于设置交流的网页的域名。所以这个网页是会被打开的，里面的payload也会被执行。那么按照非预期解里的做法，直接往这里面注入xss就行了，完全不需要预期解里那么麻烦。
