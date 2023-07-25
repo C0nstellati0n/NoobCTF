@@ -2518,3 +2518,7 @@ function log(msg) {
 </p>
 ```
 index.html又有个peerdomain参数，用于设置交流的网页的域名。所以这个网页是会被打开的，里面的payload也会被执行。那么按照非预期解里的做法，直接往这里面注入xss就行了，完全不需要预期解里那么麻烦。
+252. [Postviewer v2](../../CTF/GoogleCTF/Web/Postviewer%20v2.md).
+- In js, a regular expression with a global flag cannot be used indefinitely. It's due to the behavior that after a first successful match, the lastIndex will increase and consecutive searches will yield no matches https://stackoverflow.com/questions/1520800/why-does-a-regexp-with-global-flag-give-wrong-results
+- CSP bypass: https://terjanq.medium.com/arbitrary-parentheses-less-xss-e4a1cf37c13d . The idea is to find a subpage without a CSP and execute the payload there. A trick that usually works is to open a page with a very long url that will be blocked on the intermediate proxy side because of the overlong headers. Embedding sbx-anything.postviewer2-web.2023.ctfcompetition.com/AAAAA....AAA would work fine for a long sequence of A's.
+-  A window can redirect another window if they are in openee-opener relationship. The trick is to call open('URL', 'iframe') that will create such a relationship with an iframe named iframe (e.g. `<iframe name='iframe'>`). This allows the iframe to redirect its opener without user-interaction.
