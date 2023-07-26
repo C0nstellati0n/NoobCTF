@@ -2524,3 +2524,13 @@ index.html又有个peerdomain参数，用于设置交流的网页的域名。所
 -  A window can redirect another window if they are in openee-opener relationship. The trick is to call open('URL', 'iframe') that will create such a relationship with an iframe named iframe (e.g. `<iframe name='iframe'>`). This allows the iframe to redirect its opener without user-interaction.
 253. [Under Construction](https://github.com/google/google-ctf/tree/master/2023/web-under-construction)
 - HTTP parameter pollution. A HTTP query like a=1&a=2 will be interpreted differently by Flask and PHP running on an Apache HTTP Server. In Flask, the parameter will be 1 (first occurence) while in PHP it will be 2 (last occurence).
+254. [Veggie Soda](https://github.com/google/google-ctf/tree/master/2023/web-vegsoda)
+- 在[Oak](https://github.com/oakserver/oak/tree/main)应用程序中，HEAD请求会被看作GET请求。
+- typescript反序列化链（[SuperSerial](https://github.com/denostack/superserial)）利用。类似php的反序列化链，在程序中现成的类中找相同函数名但内容截然不同的类组合在一起。
+```
+It's worth noting that the other classes actually share function names. They perform different things, but they have similar names - and this typically wouldn't be a problem for a type-cautious language, which has generics to assert types... except that all classes in there aren't generic, so generic constructors can't be used, and therefore the program can't assert types in certain situations when dealing with the serializer. This isn't a problem with the serializer, but rather an oversight into the use of generics and type assertions in TypeScript.
+```
+SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
+
+255. [peanut-xss](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/web/peanut-xss),[wp](https://hackmd.io/@Solderet/UIUCTF-2023-peanut-xss)
+- [nutshell](https://github.com/ncase/nutshell/tree/f49c4fc2da746e8d416dd67db3fd47458067fd25)(< 1.0.7) xss漏洞。

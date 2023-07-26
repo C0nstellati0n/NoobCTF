@@ -2071,3 +2071,5 @@ print(uG^dlog == uP)
 - 微型ZIP archiver python实现，或者也能称为PKZIP Stream Cipher。这种密码有[ZIP 明文攻击](https://flandre-scarlet.moe/blog/1685/)，可用[bkcrack](https://github.com/kimci86/bkcrack/tree/master)工具进行攻击。该工具要求至少知道12个字节的明文以及其对应密文（或者说明文对应密文的偏移），其中至少有8个字节是连续的。此题知道的12字节分布在两个不同的文件，前8个已知字节在flag.txt里，而另外5个在另一个文件。不过根据明文攻击的原理，前8个字节才是真正用于破解密钥的，后面的字节只是为了验证得到的密钥是否正确。所以可以将工具自行patch以下，参照wp里的做法。
 - python里，若将字符串以`utf-8-sig`编码，除了字符串正常UTF-8编码，还会在结果前面加上Unicode byte order marker。Utf-8里这个marker为`ef bb bf`
 - C语言爆破CRC脚本
+69. [Three-Time Pad](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/three_time),[wp](https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/Three-Time%20Pad)
+- 同样的密钥用于加密多个消息且密文已知，可直接用wp里的脚本恢复明文+key。不过这题其实没那么麻烦，只是记录一下脚本：https://github.com/Jwomers/many-time-pad-attack/tree/master

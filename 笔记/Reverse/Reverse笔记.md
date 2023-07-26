@@ -755,3 +755,5 @@ Java.perform(function () {
   };
 });
 ```
+93. [geoguesser](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/rev/geoguesser)
+- janet编程语言逆向。这种不熟悉的语言逆向题可以用ChatGPT快速上手，参考： https://chat.openai.com/share/43339f5a-158d-4aac-8b95-58fe59f8bfbb
