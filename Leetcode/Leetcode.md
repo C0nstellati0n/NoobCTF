@@ -162,3 +162,4 @@
 - [Substring With Largest Variance](./Hard/Substring%20With%20Largest%20Variance.md). [Kadane's algorithm](https://medium.com/@rsinghal757/kadanes-algorithm-dynamic-programming-how-and-why-does-it-work-3fd8849ed73d)，dp的一种，专门用来解决Maximum Subarray这类问题。
 - [Maximum Number of Events That Can Be Attended II](./Hard/Maximum%20Number%20of%20Events%20That%20Can%20Be%20A.md). binary search+dp
 - [Smallest Sufficient Team](./Hard/Smallest%20Sufficient%20Team.md). bitmask+dp
+- [Maximum Running Time of N Computers](./Hard/Maximum%20Running%20Time%20of%20N%20Computers.md). binary search
