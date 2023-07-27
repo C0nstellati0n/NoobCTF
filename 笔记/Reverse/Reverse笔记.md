@@ -755,5 +755,14 @@ Java.perform(function () {
   };
 });
 ```
-93. [geoguesser](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/rev/geoguesser)
+93. [geoguesser](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/rev/geoguesser),[wp](https://github.com/abhishekg999/UIUCTF-2023/tree/main/geoguesser)
 - janet编程语言逆向。这种不熟悉的语言逆向题可以用ChatGPT快速上手，参考： https://chat.openai.com/share/43339f5a-158d-4aac-8b95-58fe59f8bfbb
+94. [vmwhere](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/rev)，[wp](https://github.com/abhishekg999/UIUCTF-2023/tree/main/vmwhere-suite)
+- wm虚拟机逆向。除了一些特殊情况外，这类型题的标准逆向方法还是在反编译器里获取各类opcode然后自己写虚拟机的disassembler。可参考wp的disassembler改出一个
+  - 或者改动反编译出的源码，直接在程序里TRACE：https://github.com/D13David/ctf-writeups/tree/main/uiuctf23/rev/vmwhere1
+  - https://github.com/P3qch/ctfs/tree/main/uiuctf2023/vmwhere1 有个更简单的反编译器脚本
+95. [pwnykey](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/rev/pwnykey),[wp](https://github.com/D13David/ctf-writeups/tree/main/uiuctf23/rev/pwnykey)
+- [devicescript](https://microsoft.github.io/devicescript/intro) bytecode逆向。文档：https://microsoft.github.io/devicescript/language/bytecode ，源码：https://github.com/microsoft/devicescript 。
+  - 其内置一个反编译器：`devs disasm ctf.devs`。不过这个反编译器无法应对某些混淆技巧，如：https://breakdev.org/x86-shellcode-obfuscation-part-3/ ，https://github.com/defuse/gas-obfuscation 。需要自己手动patch掉混淆指令后再反编译，或者用wp里的一个[自动化脚本](https://github.com/D13David/ctf-writeups/blob/main/uiuctf23/rev/pwnykey/patch_binary.cpp)。
+  - https://ctftime.org/writeup/37386 ：自己手写一个简易的反编译器同时避免官方反编译器的问题
+- [xorwow](https://en.wikipedia.org/wiki/Xorshift#xorwow) PRNG识别。

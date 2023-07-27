@@ -2073,3 +2073,8 @@ print(uG^dlog == uP)
 - C语言爆破CRC脚本
 69. [Three-Time Pad](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/three_time),[wp](https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/Three-Time%20Pad)
 - 同样的密钥用于加密多个消息且密文已知，可直接用wp里的脚本恢复明文+key。不过这题其实没那么麻烦，只是记录一下脚本：https://github.com/Jwomers/many-time-pad-attack/tree/master
+70. [Morphing Time](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/morphing),[wp](https://tsumiiiiiiii.github.io/uiu-crypto/#morphing-time)
+- [Elgamal Cryptosystem](https://en.wikipedia.org/wiki/ElGamal_encryption)：homomorphic under multiplication。
+- 利用[tonelli shanks algorithm](https://en.wikipedia.org/wiki/Tonelli%E2%80%93Shanks_algorithm)解方程 $x^2\equiv a\mod p$
+71. [At Home](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/at_home),[wp](https://github.com/P3qch/ctfs/tree/main/uiuctf2023/at_home)
+- wp提供了一种利用z3求解 $ax\equiv b\mod p$ 的方法

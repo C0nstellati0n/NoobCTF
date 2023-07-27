@@ -1236,3 +1236,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 一个有关禁用一些键和限制权限后在vim里尝试读当前目录下的文件的挑战系列。以下是我收集的其他解法
     - https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/vimjail1
     - https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/vimjail2 ：对`Ctrl+r=`然后tab键解法的补充。按下`Ctrl+r=`后可以使用vim的[builtin](https://vimhelp.org/builtin.txt.html)，tab键使用vim的自动补全功能就能选择要执行的函数了
+126. [First Class Mail](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/osint/explorer-5),[wp](https://medium.com/@thisiskaung/uiuctf-2023-osints-fab1e8fa6d79)
+- 解码[POSTNET code](https://en.wikipedia.org/wiki/POSTNET)
+127. [tornado_warning](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/misc/tornado_warning),[wp](https://blog.nathanhigley.com/posts/uiuctf23-tornado/)
+- [Specific Area Message Encoding(SAME)](https://en.wikipedia.org/wiki/Specific_Area_Message_Encoding)解码。大部分的decoder会自动修正error，如果想要获取完整的包括error的解码结果，可以这么做：
+    - 使用[sameold](https://github.com/cbs228/sameold)+sox(apt install sox):`sox ctf.wav -t raw -r 22.5k -e signed -b 16 -c 1 - | ./samedec-x86_64-unknown-linux-gnu -r 22050 -v`
+    - 参考官方wp的脚本使用[nwsrx](http://www.kk5jy.net/nwsrx-v1/)
+    - ultimon-ng:`/multimon-ng/build/multimon-ng -v 2 -t wav -a EAS ./ctf.wav 2>/dev/null | grep 'EAS (part)'`
