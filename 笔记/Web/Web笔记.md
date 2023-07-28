@@ -2534,3 +2534,8 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 
 255. [peanut-xss](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/web/peanut-xss),[wp](https://hackmd.io/@Solderet/UIUCTF-2023-peanut-xss)
 - [nutshell](https://github.com/ncase/nutshell/tree/f49c4fc2da746e8d416dd67db3fd47458067fd25)(< 1.0.7) xss漏洞。
+- https://github.com/H31s3n-b3rg/CTF_Write-ups/tree/main/UIUCTF_2023/WEB/Peanut-XSS :innerText property decodes the escaped HTML into real HTML
+256. [Adminplz](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/web/adminplz),[wp](https://github.com/H31s3n-b3rg/CTF_Write-ups/tree/main/UIUCTF_2023/WEB/Adminplz)
+- log injection:当日志文件可被当成html渲染且对用户可控的记录内容（如用户名）无过滤时，可以多行注入html代码。比如注册一个用户叫`<head>`，再注册另一个用户叫`</head>`，那么中间的日志内容就会被渲染成head标签的内容，换为其他标签即可实现想要的功能。
+- 利用`<meta>`标签的重定向提取admin cookie。`<meta http-equiv="refresh" content='0; url=xxx'>`：访问这个meta tag的用户会被立刻重定向到xxx，可以类似xss那样往外带信息。
+- java的app.getResource()函数支持多个协议，如`file://`和`http://`等。参考 https://hackmd.io/@Solderet/UIUCTF2023-adminplz

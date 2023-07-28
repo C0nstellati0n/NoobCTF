@@ -765,4 +765,4 @@ Java.perform(function () {
 - [devicescript](https://microsoft.github.io/devicescript/intro) bytecode逆向。文档：https://microsoft.github.io/devicescript/language/bytecode ，源码：https://github.com/microsoft/devicescript 。
   - 其内置一个反编译器：`devs disasm ctf.devs`。不过这个反编译器无法应对某些混淆技巧，如：https://breakdev.org/x86-shellcode-obfuscation-part-3/ ，https://github.com/defuse/gas-obfuscation 。需要自己手动patch掉混淆指令后再反编译，或者用wp里的一个[自动化脚本](https://github.com/D13David/ctf-writeups/blob/main/uiuctf23/rev/pwnykey/patch_binary.cpp)。
   - https://ctftime.org/writeup/37386 ：自己手写一个简易的反编译器同时避免官方反编译器的问题
-- [xorwow](https://en.wikipedia.org/wiki/Xorshift#xorwow) PRNG识别。
+- [xorwow](https://en.wikipedia.org/wiki/Xorshift#xorwow) PRNG识别+c++实现。这还有个C实现： https://gist.github.com/RubenBrocke/248e80151e2ff4d4ea67a5af792ec4d6

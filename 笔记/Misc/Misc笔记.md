@@ -1236,10 +1236,31 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 一个有关禁用一些键和限制权限后在vim里尝试读当前目录下的文件的挑战系列。以下是我收集的其他解法
     - https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/vimjail1
     - https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/vimjail2 ：对`Ctrl+r=`然后tab键解法的补充。按下`Ctrl+r=`后可以使用vim的[builtin](https://vimhelp.org/builtin.txt.html)，tab键使用vim的自动补全功能就能选择要执行的函数了
-126. [First Class Mail](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/osint/explorer-5),[wp](https://medium.com/@thisiskaung/uiuctf-2023-osints-fab1e8fa6d79)
-- 解码[POSTNET code](https://en.wikipedia.org/wiki/POSTNET)
+    - https://flocto.github.io/writeups/2023/uiuctf/uiuctf-writeups/#vimjail-2-and-25 ：对`eval(readfile(glob('flag.t*t'))[0])`解法的解析
+126. [First Class Mail](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/osint/explorer-5),[wp](https://fuzzingfairy.com/posts/ctfs/uiuctf2023/)
+- 解码[barcode POSTNET code](https://en.wikipedia.org/wiki/POSTNET)
 127. [tornado_warning](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/misc/tornado_warning),[wp](https://blog.nathanhigley.com/posts/uiuctf23-tornado/)
 - [Specific Area Message Encoding(SAME)](https://en.wikipedia.org/wiki/Specific_Area_Message_Encoding)解码。大部分的decoder会自动修正error，如果想要获取完整的包括error的解码结果，可以这么做：
     - 使用[sameold](https://github.com/cbs228/sameold)+sox(apt install sox):`sox ctf.wav -t raw -r 22.5k -e signed -b 16 -c 1 - | ./samedec-x86_64-unknown-linux-gnu -r 22050 -v`
     - 参考官方wp的脚本使用[nwsrx](http://www.kk5jy.net/nwsrx-v1/)
     - ultimon-ng:`/multimon-ng/build/multimon-ng -v 2 -t wav -a EAS ./ctf.wav 2>/dev/null | grep 'EAS (part)'`
+128. [Schrodinger’s Cat](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/misc/schrodingers-cat),[wp](https://flocto.github.io/writeups/2023/uiuctf/uiuctf-writeups/#schr%C3%B6dingers-cat)
+- python quantum computing qiskit入门
+    - 概念/定义
+        - qubit：和平时的bit差不多，有0和1两种状态。但其独特的地方在于它不一定非得是0和1，可处于两者的叠加态
+        - statevector：记录测量qubit时qubit分别坍塌成两种状态的概率。可以将其看成一个有两个分量的列向量，第一个分量是坍塌成1的概率，第二个分量是坍塌成0的概率。因此，记录n个qubits的statevector需要 $2^n$ 个分量
+        - normalization：statevectors中的值的平方和必须等于1
+        - normalization constant：当将statevector除以这个常数后，statevector将满足normalization的要求
+        - X gate：also known as the bit-flip gate, is a fundamental gate in quantum computing that flips the state of a qubit from 0 to 1 or from 1 to 0.
+        - H gate：also known as the Hadamard gate, is a fundamental gate in quantum computing. It is used to create superposition states by transforming the basis states |0⟩ and |1⟩ into equal superpositions of both states.
+    - qiskit函数
+        - from_qasm_str：populates a Qiskit QuantumCircuit object from a specified OpenQASM string
+        - remove_final_measurements：removes any measurements from the circuit. measurements（测量）会使量子坍塌，从而statevector无用
+        - qasm：generate the OpenQASM string representation of the circuit
+        - x/h：add an X/H gate to the circuit
+    - 知识点
+        - quantum logic gates are representable as [unitary matrices](https://en.wikipedia.org/wiki/Unitary_matrix). A gate that acts on n qubits is represented by a $2^n\times 2^n$ matrix. To apply a gate to a qubit, we simply multiply the gate matrix with the qubit’s statevector.
+        - quantum circuits are always reversible, as long as they do not collapse or measure any qubits.
+        - multiple gates together just combine into one larger matrix, usually through tensor products.
+        - 如何获取QuantumCircuit transpile后的qasmString
+- amplitude encoding:a way to encode information in the probability amplitudes of discrete quantum states.

