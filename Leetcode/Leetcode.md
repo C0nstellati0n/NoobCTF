@@ -165,3 +165,4 @@
 - [Maximum Number of Events That Can Be Attended II](./Hard/Maximum%20Number%20of%20Events%20That%20Can%20Be%20A.md). binary search+dp
 - [Smallest Sufficient Team](./Hard/Smallest%20Sufficient%20Team.md). bitmask+dp
 - [Maximum Running Time of N Computers](./Hard/Maximum%20Running%20Time%20of%20N%20Computers.md). binary search
+- [Strange Printer](./Hard/Strange%20Printer.md). dp
