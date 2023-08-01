@@ -767,3 +767,32 @@ Java.perform(function () {
   - 其内置一个反编译器：`devs disasm ctf.devs`。不过这个反编译器无法应对某些混淆技巧，如：https://breakdev.org/x86-shellcode-obfuscation-part-3/ ，https://github.com/defuse/gas-obfuscation 。需要自己手动patch掉混淆指令后再反编译，或者用wp里的一个[自动化脚本](https://github.com/D13David/ctf-writeups/blob/main/uiuctf23/rev/pwnykey/patch_binary.cpp)。
   - https://ctftime.org/writeup/37386 ：自己手写一个简易的反编译器同时避免官方反编译器的问题
 - [xorwow](https://en.wikipedia.org/wiki/Xorshift#xorwow) PRNG识别+c++实现。这还有个C实现： https://gist.github.com/RubenBrocke/248e80151e2ff4d4ea67a5af792ec4d6
+96. [Fast Calculator](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/rev/fastcalc),[wp](https://bronson113.github.io/2023/07/03/uiuctf-2023-writeups.html#fast-calculator)
+- 编译源码如果加上`-ffast-math`，会导致程序的数学计算加快，代价是精度变低。参考 https://simonbyrne.github.io/notes/fastmath/ 。更致命的影响是，编译后的程序默认不含有NaN，infinity等数字，因此检查这些数字的函数都会统一返回0。需要自行patch程序使其恢复正常功能。比如使用gdbscript hook函数：
+```py
+gdb.execute("file ./calc")
+gdb.execute("b *0x4021ae")
+gdb.execute("b *0x4022af")
+gdb.execute("b *0x4022FA")
+x=open("input","w+")
+x.write("8573.8567*1")
+x.close()
+gdb.execute("r < input")
+gdb.execute("c")
+# def is_inf(result):
+ops_list=[]
+for i in range(46*8):
+    op=int(gdb.execute("x/gx $rsp+32",to_string=True).split(":")[1],16)
+    first=int(gdb.execute("x/gx $rsp+40",to_string=True).split(":")[1],16)
+    second=int(gdb.execute("x/gx $rsp+48",to_string=True).split(":")[1],16)
+    gdb.execute("c")
+    # print(gdb.execute("info reg xmm0",to_string=True).splitlines()[-2].)
+    result=int(gdb.execute("info reg xmm0",to_string=True).splitlines()[-2].split("=")[1],16)
+    gdb.execute("c")
+    ret=int(gdb.execute("p/x $rax",to_string=True).split("=")[1],16)
+    if(hex(result)=='0x8000000000000000' or hex(result)=='0xfff8000000000000'):
+        gdb.execute("set $rax=1")
+    # ops_list.append((hex(first),chr(op),hex(second),hex(result),hex(ret)))
+    gdb.execute("c")
+print(ops_list)
+```
