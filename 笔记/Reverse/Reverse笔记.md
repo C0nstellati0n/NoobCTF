@@ -761,6 +761,7 @@ Java.perform(function () {
 - wm虚拟机逆向。除了一些特殊情况外，这类型题的标准逆向方法还是在反编译器里获取各类opcode然后自己写虚拟机的disassembler。可参考wp的disassembler改出一个
   - 或者改动反编译出的源码，直接在程序里TRACE：https://github.com/D13David/ctf-writeups/tree/main/uiuctf23/rev/vmwhere1
   - https://github.com/P3qch/ctfs/tree/main/uiuctf2023/vmwhere1 有个更简单的反编译器脚本
+  - 某些初级的虚拟机验证flag时，执行的指令数与flag正确的字符成正比（正确的字符越多，执行的指令数越多）。可以利用这点进行测信道攻击，爆破flag。 https://www.youtube.com/watch?v=bmV0EL_cDpA ,利用[valgrind](https://linux.die.net/man/1/valgrind):`valgrind --trace-children=yes --tool=callgrind ./chal vm_program < flag.txt`
 95. [pwnykey](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/rev/pwnykey),[wp](https://github.com/D13David/ctf-writeups/tree/main/uiuctf23/rev/pwnykey)
 - [devicescript](https://microsoft.github.io/devicescript/intro) bytecode逆向。文档：https://microsoft.github.io/devicescript/language/bytecode ，源码：https://github.com/microsoft/devicescript 。
   - 其内置一个反编译器：`devs disasm ctf.devs`。不过这个反编译器无法应对某些混淆技巧，如：https://breakdev.org/x86-shellcode-obfuscation-part-3/ ，https://github.com/defuse/gas-obfuscation 。需要自己手动patch掉混淆指令后再反编译，或者用wp里的一个[自动化脚本](https://github.com/D13David/ctf-writeups/blob/main/uiuctf23/rev/pwnykey/patch_binary.cpp)。

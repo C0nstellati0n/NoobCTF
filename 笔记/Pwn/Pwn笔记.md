@@ -228,6 +228,7 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 例题:[xman_2019_format](https://blog.csdn.net/Y_peak/article/details/115327826)
 
 24. ubuntu18中需要[栈平衡](https://blog.csdn.net/qq_41560595/article/details/112161243)（按照16字节对齐）才能正常调用system。例题:[suctf_2018_stack](https://buuoj.cn/challenges#suctf_2018_stack)
+- 补充：后来发现read等函数也需要栈对齐（rsp以0结尾），也不仅仅是ubuntu18。可能是从这里往上的libc版本和所有的系统调用都要对齐？
 25. 程序在推出是会调用fini_array，因此可以通过改fini_array获取一次循环。需要注意的是，这个数组的内容在再次从start开始执行后又会被修改，由此无法获得无限循环。例题:[ciscn_2019_sw_1](https://blog.csdn.net/wuyvle/article/details/116310454)
 26. strcpy 在复制字符串时会拷贝结束符 '\x00'，比如原字符串长8，strcpy会连着末尾的\x00一起拷贝到目标地址，也就是9个字符，易发生off-by-null。
 27. 拟态入门。该类题型会给出两个功能完全相同的程序，还有一个裁决程序，fork出这两个程序，并监听着它们的输出。如果两者输出不一样或者一方崩溃，则裁决程序就会kill掉它们两个，要求我们写出两个程序都共用的exp。例题:[强网杯2019 拟态 STKOF](https://blog.csdn.net/seaaseesa/article/details/105407007)
@@ -1012,3 +1013,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   - In short, tcache_perthread_struct contains a counter for the number of available (already freed) tcachebin chunks and stores the address entries for each tcachebin size. The address of the tcache_perthread_struct is kept at the second word of a freed tcache chunk. 其中address entries控制着tcache chunk从哪里取。如果我们能覆盖这个地址为free_hook，下次malloc就能直接获取到对应地址处的内存。
 89. [storygen](https://github.com/google/google-ctf/tree/master/2023/pwn-storygen)
 - linux shebang利用。shebang在bash脚本的第一行，由`#!`开头，用于选择脚本的解释器。也可以用来注入执行任意命令，类似`#!/usr/bin/python3 -c print(123)`。或者利用env的-S参数，将剩下的部分全部拆分成shell命令（默认最多只能拆分一个参数）:`#!/usr/bin/env -S bash -c ls -fl`
+90. [Virophage](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/pwn/virophage),[wp](https://github.com/nikosChalk/ctf-writeups/tree/master/uiuctf23/pwn/virophage)
+- 32位的可执行文件（binary）中，栈的权限是`rwx`；而64位的可执行文件的栈权限只有`rw-`。
+- 32位elf header结构。其中`e_entry`表示进入elf后第一个执行的地址（变相等于控制eip）。使用`execve("file", argv, envp)`调用名为file的elf时，argv会被置于栈上。也就是说，当我们可以控制一个32bit的elf的`e_entry`和argv时，即使那个elf里并没有任何代码，也可以通过栈上的argv getshell。
+- 32位纯字母数字（alphanumeric） shellcode编写： http://phrack.org/issues/57/15.html
