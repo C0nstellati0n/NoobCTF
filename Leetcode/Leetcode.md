@@ -134,6 +134,7 @@
 - [Soup Servings](./Medium/Soup%20Servings.md). dp(概率/probability)
 - [Minimum ASCII Delete Sum for Two Strings](./Medium/Minimum%20ASCII%20Delete%20Sum%20for%20Two%20Strin.md). dp/类Longest Common Subsequence
 - [Combinations](./Medium/Combinations.md). backtrack
+- [Permutations](./Medium/Permutations.md). backtrack
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
@@ -161,7 +162,7 @@
 - [Count All Possible Routes](./Hard/Count%20All%20Possible%20Routes.md). dp+dfs/bfs
 - [Shortest Path to Get All Keys](./Hard/Shortest%20Path%20to%20Get%20All%20Keys.md). 多维状态（state）多源bfs（寻找最短路径，find shortest path）+bit mask
 - [Last Day Where You Can Still Cross](./Hard/Last%20Day%20Where%20You%20Can%20Still%20Cross.md). dfs/bfs+binary search,Disjoint Set Union(union–find data structure/merge–find set)
-- [Maximum Number of Achievable Transfer Requests](./Hard/Maximum%20Number%20of%20Achievable%20Transfer%20.md). backtrack/bitmask
+- [Maximum Number of Achievable Transfer Requests](./Hard/Maximum%20Number%20of%20Achievable%20Transfer.md). backtrack/bitmask
 - [Put Marbles in Bags](./Hard/Put%20Marbles%20in%20Bags.md)
 - [Substring With Largest Variance](./Hard/Substring%20With%20Largest%20Variance.md). [Kadane's algorithm](https://medium.com/@rsinghal757/kadanes-algorithm-dynamic-programming-how-and-why-does-it-work-3fd8849ed73d)，dp的一种，专门用来解决Maximum Subarray这类问题。
 - [Maximum Number of Events That Can Be Attended II](./Hard/Maximum%20Number%20of%20Events%20That%20Can%20Be%20A.md). binary search+dp
