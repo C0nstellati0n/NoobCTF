@@ -1237,6 +1237,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/vimjail1
     - https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/vimjail2 ：对`Ctrl+r=`然后tab键解法的补充。按下`Ctrl+r=`后可以使用vim的[builtin](https://vimhelp.org/builtin.txt.html)，tab键使用vim的自动补全功能就能选择要执行的函数了
     - https://flocto.github.io/writeups/2023/uiuctf/uiuctf-writeups/#vimjail-2-and-25 ：对`eval(readfile(glob('flag.t*t'))[0])`解法的解析
+    - https://github.com/Norske-Nokkelsnikere/writeups/blob/main/2023/uiuctf-2023/misc-vimjail.md
 126. [First Class Mail](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/osint/explorer-5),[wp](https://fuzzingfairy.com/posts/ctfs/uiuctf2023/)
 - 解码[barcode POSTNET code](https://en.wikipedia.org/wiki/POSTNET)
 127. [tornado_warning](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/misc/tornado_warning),[wp](https://blog.nathanhigley.com/posts/uiuctf23-tornado/)
@@ -1244,6 +1245,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - 使用[sameold](https://github.com/cbs228/sameold)+sox(apt install sox):`sox ctf.wav -t raw -r 22.5k -e signed -b 16 -c 1 - | ./samedec-x86_64-unknown-linux-gnu -r 22050 -v`
     - 参考官方wp的脚本使用[nwsrx](http://www.kk5jy.net/nwsrx-v1/)
     - ultimon-ng:`/multimon-ng/build/multimon-ng -v 2 -t wav -a EAS ./ctf.wav 2>/dev/null | grep 'EAS (part)'`
+    - https://github.com/ctfguy/My_CTF_Writeups/tree/main/UIUCTF%202023/misc/Tornado%20Warning :[SeaTTY](https://www.dxsoft.com/en/products/seatty/)
 128. [Schrodinger’s Cat](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/misc/schrodingers-cat),[wp](https://flocto.github.io/writeups/2023/uiuctf/uiuctf-writeups/#schr%C3%B6dingers-cat)
 - python quantum computing qiskit入门
     - 概念/定义

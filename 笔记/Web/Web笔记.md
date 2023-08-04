@@ -2539,7 +2539,7 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 - log injection:当日志文件可被当成html渲染且对用户可控的记录内容（如用户名）无过滤时，可以多行注入html代码。比如注册一个用户叫`<head>`，再注册另一个用户叫`</head>`，那么中间的日志内容就会被渲染成head标签的内容，换为其他标签即可实现想要的功能。
 - 利用`<meta>`标签的重定向提取admin cookie。`<meta http-equiv="refresh" content='0; url=xxx'>`：访问这个meta tag的用户会被立刻重定向到xxx，可以类似xss那样往外带信息。
 - java的app.getResource()函数支持多个协议，如`file://`和`http://`等。参考 https://hackmd.io/@Solderet/UIUCTF2023-adminplz
-257. [Future Disk](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/web/futuredisk),[wp](https://bronson113.github.io/2023/07/03/uiuctf-2023-writeups.html#future-disk-12-)
+257. [Future Disk](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/web/futuredisk),[wp](https://bronson113.github.io/2023/07/03/uiuctf-2023-writeups.html#future-disk-12-),[wp2](https://www.youtube.com/watch?v=Es2LzEQGwDc&t=724s)(视频)
 - gzip文件格式详解：https://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art053
 - curl命令有个`--continued-at`选项，其实本质上是使用了range头
 - 利用binary search在超大gzip文件中找到储存指定内容的block并使用zlib解码内容（或者使用这个[文章](https://pyokagan.name/blog/2019-10-18-zlibinflate/)里的deflate）。 Since the file is mostly zero, we can assume the first 9 blocks will follow a pretty regular sequence. then there will be one block of a irregular size to store the flag, and the rest of the block back to the regular format. This means that if we can find the block header at the location we expects it, we haven’t reach the block containing the flag. Conversely, if we can’t find the block header, we have passed the flag block. The only challenge now is to calculate where the header bytes are.

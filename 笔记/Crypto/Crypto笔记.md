@@ -2080,3 +2080,6 @@ print(uG^dlog == uP)
 - wp提供了一种利用z3求解 $ax\equiv b\mod p$ 的方法
 72. [Crack The Safe](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/crack_the_safe),[wp](https://bronson113.github.io/2023/07/03/uiuctf-2023-writeups.html#crack-the-safe)
 - Pohlig-Hellman discrete log Attack:对于离散对数 $g^x\equiv k\mod p$ （p为质数），若p-1（群的阶）为光滑数且最大的那个因子较小，则计算x的代价将降为那个最大的因子。需要使用[cado-nfs](https://github.com/cado-nfs/cado-nfs)计算模不同因子下的指数后再用crt组合出原本的x。
+- 另一种解法 https://github.com/Norske-Nokkelsnikere/writeups/tree/main/2023/uiuctf-2023/crack_the_safe 利用AES 128bit key的特点爆破出了key（cado-nfs无法安装，故只能利用sagemath算出前几个因子相关的对数，最后一个最大的算不出来）
+73. [Group Projection](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/group_projection),[wp](https://github.com/ctfguy/My_CTF_Writeups/blob/main/UIUCTF%202023/Crypto/Group%20Project%20and%20Projection/solution.md)
+- [Small subgroup confinement attack on Diffie-Hellman](https://crypto.stackexchange.com/questions/27584/small-subgroup-confinement-attack-on-diffie-hellman)
