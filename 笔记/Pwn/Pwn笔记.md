@@ -1026,3 +1026,20 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 - 此题的思路是，在家目录下对具有setuid的exe做hardlink。因为hardlink保留setuid且hardlink指向exe，现在就可以在家目录下创建恶意的ld-linux-x86-64.so.2并让exe加载，获取shell。
   - wp1使用orw shellcode读取flag
   - wp2使用setuid(0)+execve("/bin/sh")shellcode。对于shellcode.c，可以用`gcc shell.c -o ld-linux-x86-64.so.2 -e main`编译，比视频里的简单一点
+92. [Zapping a Setuid 2](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/pwn/zapping_setuid_2),[wp](https://nyancat0131.moe/post/ctf-writeups/uiu-ctf/2023/writeup/#zapping-a-setuid-2)
+- 题目与Zapping a Setuid 1类似，目标都是尝试劫持zapp应用的so程序。但是这题开启了`protected_hardlinks`因此无法创建hardlink。不过作者的内核做了一些patch，导致有漏洞：
+  - linux内核中的`check_mnt` is used to check if the path is in the same mount namespace as the current task’s mount namespace. By removing this check, the patch allows cross loopback mounting between different mount namespaces.
+  - allow unprivileged user to call SYS_open_tree with OPEN_TREE_CLONE flag.
+  - allow setuid binary behavior if the user namespace that is holding the current mount is the same as the current user namespace of the task.
+- wp里的名词解释
+  - [namespaces](https://man7.org/linux/man-pages/man7/namespaces.7.html): For a quick explanation, namespaces are used to create isolated environment. 有以下几种namespaces
+    - [User namespace](https://man7.org/linux/man-pages/man7/user_namespaces.7.html)
+    - [Mount namespace](https://man7.org/linux/man-pages/man7/mount_namespaces.7.html)
+    - [Network namespace](https://man7.org/linux/man-pages/man7/network_namespaces.7.html)
+    - [PID namespace](https://man7.org/linux/man-pages/man7/pid_namespaces.7.html)
+    - [Cgroup namespace](https://man7.org/linux/man-pages/man7/cgroup_namespaces.7.html)
+    - [IPC namespace](https://man7.org/linux/man-pages/man7/ipc_namespaces.7.html)
+    - [Time namespace](https://man7.org/linux/man-pages/man7/time_namespaces.7.html)
+    - [UTS namespace](https://man7.org/linux/man-pages/man7/uts_namespaces.7.html)
+  - cross loopback mount: refers to the process of mounting a loopback device in one mount namespace and making it accessible in another mount namespace.
+  - loopback device: In Linux, a loopback device is a virtual device that allows a file to be treated as a block device. It enables files to be mounted as filesystems, just like physical disks or partitions.
