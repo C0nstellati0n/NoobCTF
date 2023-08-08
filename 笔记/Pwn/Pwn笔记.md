@@ -1019,6 +1019,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 - 32位的可执行文件（binary）中，栈的权限是`rwx`；而64位的可执行文件的栈权限只有`rw-`。
 - 32位elf header结构。其中`e_entry`表示进入elf后第一个执行的地址（变相等于控制eip）。使用`execve("file", argv, envp)`调用名为file的elf时，argv会被置于栈上。也就是说，当我们可以控制一个32bit的elf的`e_entry`和argv时，即使那个elf里并没有任何代码，也可以通过栈上的argv getshell。
 - 32位纯字母数字（alphanumeric） shellcode编写： http://phrack.org/issues/57/15.html
+- https://nyancat0131.moe/post/ctf-writeups/uiu-ctf/2023/writeup/#virophage ：写shellcode时可以在shellcode前加上多个nop，不影响shellcode执行且方便找shellcode在stack上对齐后的位置。
 91. [Zapping a Setuid 1](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/pwn/zapping_setuid_1),[wp1](https://github.com/nikosChalk/ctf-writeups/tree/master/uiuctf23/pwn/zapping-a-suid1),[wp2](https://www.youtube.com/watch?v=bmV0EL_cDpA&t=885s)
 - [hardlink](https://en.wikipedia.org/wiki/Hard_link):对具有suid的binary做一个hardlink，出来的hardlink也具有suid
 - [zapps](https://zapps.app/technology/)初识。zapps也是elf，但是其不使用系统的libc，loader等文件，而是使用自己相对路径下自带的文件。因此这类型elf可以无视系统libc版本。

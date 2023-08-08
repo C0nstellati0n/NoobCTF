@@ -1266,3 +1266,16 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
         - multiple gates together just combine into one larger matrix, usually through tensor products.
         - 如何获取QuantumCircuit transpile后的qasmString
 - amplitude encoding:a way to encode information in the probability amplitudes of discrete quantum states.
+129. [Am I not root?](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/misc/am-i-not-root),[wp](https://nyancat0131.moe/post/ctf-writeups/uiu-ctf/2023/writeup/#am-i-not-root)
+- kctf docker container([nsjail](https://github.com/google/nsjail))不应该在root状态下释放。否则有以下两种方法进行提权（escape the jail）
+    - nsjail类似`sudo unshare -rmpf --mount-proc`的结果（creates the user, PID, and mount namespaces），且unprivileged docker containers running as root are very similar to root running without capabilities, which in turn is very similar to nsjail running as root. 那么可以利用`/proc/sys/kernel/core_pattern`或`proc/sys/kernel/modprobe`：https://book.hacktricks.xyz/linux-hardening/privilege-escalation/docker-security/docker-breakout-privilege-escalation/sensitive-mounts#proc-sys-kernel-core_pattern
+    - （若kernel module loading被禁用，以上方法无法使用，考虑这种）User mode helper (UMH)... it is what powers core_pattern and modprobe_path. It would make the kernel fork off a userspace process in the initial namespaces, outside any jails. 使用UMH的内核代码部分有`security/keys/request_key.c`，紧接着会调用`/sbin/request-key`.我们可以编辑这个文件的内容为想要执行的命令（`chmod +x`使其可执行），然后调用[SYS_request_key](https://man7.org/linux/man-pages/man2/request_key.2.html)syscall触发。
+        - 注意request_key的原型。
+            ```c
+            key_serial_t request_key(const char *type, const char *description,
+                            const char *_Nullable callout_info,
+                            key_serial_t dest_keyring);
+            syscall(SYS_request_key, "user", "xxx", "xxx", KEY_SPEC_THREAD_KEYRING);
+            ```
+            - type - must be a known type. I used the "user" type.
+            - dest_keyring - Certain keyrings will not be found. With minor trial and error, KEY_SPEC_THREAD_KEYRING worked.
