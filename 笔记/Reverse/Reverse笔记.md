@@ -757,6 +757,7 @@ Java.perform(function () {
 ```
 93. [geoguesser](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/rev/geoguesser),[wp](https://github.com/abhishekg999/UIUCTF-2023/tree/main/geoguesser)
 - janet编程语言逆向。这种不熟悉的语言逆向题可以用ChatGPT快速上手，参考： https://chat.openai.com/share/43339f5a-158d-4aac-8b95-58fe59f8bfbb
+- https://gitlab.com/shalaamum/ctf-writeups/-/tree/master/UIUCTF%202023/geoguesser ：让chatgpt patch janet编译器使其打印出变量的值而不是类型（janet_to_string_b）
 94. [vmwhere](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/rev)，[wp](https://github.com/abhishekg999/UIUCTF-2023/tree/main/vmwhere-suite)
 - wm虚拟机逆向。除了一些特殊情况外，这类型题的标准逆向方法还是在反编译器里获取各类opcode然后自己写虚拟机的disassembler。可参考wp的disassembler改出一个
   - 或者改动反编译出的源码，直接在程序里TRACE：https://github.com/D13David/ctf-writeups/tree/main/uiuctf23/rev/vmwhere1
@@ -796,3 +797,4 @@ for i in range(46*8):
     gdb.execute("c")
 print(ops_list)
 ```
+- https://gitlab.com/shalaamum/ctf-writeups/-/tree/master/UIUCTF%202023/Fast%20Calculator ：ghidra如何修改函数签名（functin signature），使其传入参数

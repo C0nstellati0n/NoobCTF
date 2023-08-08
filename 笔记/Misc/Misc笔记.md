@@ -1238,6 +1238,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/vimjail2 ：对`Ctrl+r=`然后tab键解法的补充。按下`Ctrl+r=`后可以使用vim的[builtin](https://vimhelp.org/builtin.txt.html)，tab键使用vim的自动补全功能就能选择要执行的函数了
     - https://flocto.github.io/writeups/2023/uiuctf/uiuctf-writeups/#vimjail-2-and-25 ：对`eval(readfile(glob('flag.t*t'))[0])`解法的解析
     - https://github.com/Norske-Nokkelsnikere/writeups/blob/main/2023/uiuctf-2023/misc-vimjail.md
+    - https://github.com/pjg11/CTF-Writeups/blob/main/2023-UIUCTF/vimjail.md
 126. [First Class Mail](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/osint/explorer-5),[wp](https://fuzzingfairy.com/posts/ctfs/uiuctf2023/)
 - 解码[barcode POSTNET code](https://en.wikipedia.org/wiki/POSTNET)
 127. [tornado_warning](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/misc/tornado_warning),[wp](https://blog.nathanhigley.com/posts/uiuctf23-tornado/)

@@ -2543,3 +2543,4 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 - gzip文件格式详解：https://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art053
 - curl命令有个`--continued-at`选项，其实本质上是使用了range头
 - 利用binary search在超大gzip文件中找到储存指定内容的block并使用zlib解码内容（或者使用这个[文章](https://pyokagan.name/blog/2019-10-18-zlibinflate/)里的deflate）。 Since the file is mostly zero, we can assume the first 9 blocks will follow a pretty regular sequence. then there will be one block of a irregular size to store the flag, and the rest of the block back to the regular format. This means that if we can find the block header at the location we expects it, we haven’t reach the block containing the flag. Conversely, if we can’t find the block header, we have passed the flag block. The only challenge now is to calculate where the header bytes are.
+- 其他wp： https://hackmd.io/@pilvar/ByznZMLF3

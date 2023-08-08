@@ -531,10 +531,10 @@ for i in range(1,e):
             break
 ```
 - [superstitious](https://github.com/BCACTF/bcactf-4.0/tree/main/superstitious):分解特殊的n。若 $n=pq=(a^m+r_p)(b^m+r_q)$ ，则有更快速的方式分解n。参考论文： https://einspem.upm.edu.my/journal/fullpaper/vol13saugust/8.pdf ，具体实现方式在第7页。
+- [Boneh-Durfee Attack](https://cryptohack.gitbook.io/cryptobook/untitled/low-private-component-attacks/boneh-durfee-attack):当d < $N^{0.292}$ 时，可利用该攻击方法恢复d。
 1. Crypto库根据已有信息构建私钥并解密
 
 如果给出的是flag.enc和public.key这种形式的题目，平时的方法可能会解出乱码，需要利用私钥文件来解密。
-
 ```python
 from Crypto.PublicKey import RSA
 import gmpy2
@@ -558,7 +558,6 @@ print(decrypted)
 ```
 
 3. python Crypto库读取公钥
-
 ```python
 from Crypto.PublicKey import RSA
 key1=RSA.importKey(open('public1.pub').read())
@@ -1905,11 +1904,13 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
 - python版本的预测java long随机数输出的脚本：https://github.com/Cr4ckC4t/crack-java-prng/blob/main/crack-nextLong.py .参考wp2:https://kos0ng.gitbook.io/ctfs/ctfs/write-up/2023/hsctf/cryptography#spring-48-solves
 53. [e](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/e)
 - coppersmith:m高位泄露。此题完整m的位数未知，需要爆破。wp里的脚本比一般的coppersmith实现复杂，参考：https://www.cryptologie.net/article/222/implementation-of-coppersmith-attack-rsa-attack-using-lattice-reductions/
+- 其他wp：https://pseudoleon.github.io/tjctf-23/#cryptoe
 54. [keysmith](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/crypto/keysmith)
 - 给出m和 $c\equiv m^e\mod n$ ，在加密时使用的公钥(n,e)未知的情况下构建另一组公钥 $(n_1,e_1)$ （可与原公钥相同），使得 $c=\equiv m^{e_1}\mod n_1$ 且 $m\equiv c^{d_1}\mod n_1$ 。 https://crypto.stackexchange.com/questions/8902/given-a-message-and-signature-find-a-public-key-that-makes-the-signature-valid 。大致步骤如下（根据wp里的脚本改动）：
     - 选取p和q，p-1和q-1均为光滑数且p（p-1的分解结果）与q（q-1的分解结果）都是m的二次剩余。选取的p和q应该满足 $m\equiv c^{d_p}\mod p,m\equiv c^{d_q}\mod q$
     - 利用离散对数找到上一步提到的 $d_p$ 和 $d_q$ 。应存在d满足 $d\equiv d_p\mod p-1,e\equiv d_q\mod q-1$ 。那么利用crt即可恢复这样的d。
     - `(p-1)*(q-1)`即为phi，`p*q`即为n，d对phi求逆元即为e。公钥+私钥生成完成。
+- 其他wp：https://pseudoleon.github.io/tjctf-23/#cryptokeysmith
 55. [AdventurersKnapsack](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#adventurers-knapsack),[wp2](https://meashiri.github.io/ctf-writeups/posts/202306-dantectf/#adventurers-knapsack)
 - 背包加密问题（knapsack）的攻击：
   - [Lenstra–Lenstra–Lovász (LLL) lattice basis reduction](https://en.wikipedia.org/wiki/Lenstra%E2%80%93Lenstra%E2%80%93Lov%C3%A1sz_lattice_basis_reduction_algorithm)
@@ -2079,7 +2080,15 @@ print(uG^dlog == uP)
 71. [At Home](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/at_home),[wp](https://github.com/P3qch/ctfs/tree/main/uiuctf2023/at_home)
 - wp提供了一种利用z3求解 $ax\equiv b\mod p$ 的方法
 72. [Crack The Safe](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/crack_the_safe),[wp](https://bronson113.github.io/2023/07/03/uiuctf-2023-writeups.html#crack-the-safe)
-- Pohlig-Hellman discrete log Attack:对于离散对数 $g^x\equiv k\mod p$ （p为质数），若p-1（群的阶）为光滑数且最大的那个因子较小，则计算x的代价将降为那个最大的因子。需要使用[cado-nfs](https://github.com/cado-nfs/cado-nfs)计算模不同因子下的指数后再用crt组合出原本的x。
+- Pohlig-Hellman discrete log Attack:对于离散对数 $g^x\equiv k\mod p$ （p为质数），若p-1（群的阶）为光滑数且最大的那个因子较小，则计算x的代价将降为那个最大的因子。需要使用[cado-nfs](https://github.com/cado-nfs/cado-nfs)（[gitlab](https://gitlab.inria.fr/cado-nfs/cado-nfs)）计算模不同因子下的指数后再用crt组合出原本的x。
 - 另一种解法 https://github.com/Norske-Nokkelsnikere/writeups/tree/main/2023/uiuctf-2023/crack_the_safe 利用AES 128bit key的特点爆破出了key（cado-nfs无法安装，故只能利用sagemath算出前几个因子相关的对数，最后一个最大的算不出来）
+    - 类似做法： https://pseudoleon.github.io/uiuctf-23/ 。两者都有Pohlig-Hellman的sagemath实现
 73. [Group Projection](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/group_projection),[wp](https://github.com/ctfguy/My_CTF_Writeups/blob/main/UIUCTF%202023/Crypto/Group%20Project%20and%20Projection/solution.md)
 - [Small subgroup confinement attack on Diffie-Hellman](https://crypto.stackexchange.com/questions/27584/small-subgroup-confinement-attack-on-diffie-hellman)
+74. 对于不定方程 $x^3+y^3+z^3=nxyz$ ,0 < n < 81的已知解： http://matwbn.icm.edu.pl/ksiazki/aa/aa73/aa7331.pdf
+75. [TPSD](https://meashiri.github.io/ctf-writeups/posts/202307-cryptoctf/#tpsd)
+- 求解不定方程（丢番图方程，diophantane equation） $x^3+y^3+z^3=1$ 的任意bit长度解。这个方程的解一定满足 $(9a^4)^3+(3a-9a^4)^3+(1-9a^3)^3=1$ (或者 $(9a^4)^3+(-3a-9a^4)^3+(1+9a^3)^3$ ，来源 https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/TPSD),且只有最后一个数字可能是质数。插入不同的a值即可获取不同的解。
+76. [Blobfish](https://meashiri.github.io/ctf-writeups/posts/202307-cryptoctf/#blobfish)
+- 使用[bkcrack](https://github.com/kimci86/bkcrack)实施zip明文攻击爆破加密zip密码。此题zip内部的文件为png（Image.new('RGB', (800, 50))），因为png的前16个字节已知且固定，故可以实施明文攻击。
+77. [Bertrand](https://github.com/abhishekg999/CTFWriteups/tree/main/CryptoCTF/Bertrand)
+- [Hilbert curve](https://en.wikipedia.org/wiki/Hilbert_curve):一种连续分形空间填充曲线，一条无限长的曲线可完全填充有限的二维空间。利用它可以将一个任意数字独特地映射到一个2d点（单射，可逆）
