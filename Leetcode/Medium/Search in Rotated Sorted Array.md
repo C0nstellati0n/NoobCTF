@@ -20,7 +20,7 @@ class Solution {
         }
 
         return shiftedBinarySearch(nums, left, target);
-    
+    }
     // Shift elements in a circular manner, with the pivot element at index 0.
     // Then perform a regular binary search
     private int shiftedBinarySearch(int[] nums, int pivot, int target) {
