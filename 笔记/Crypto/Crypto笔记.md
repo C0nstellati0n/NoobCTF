@@ -2085,10 +2085,32 @@ print(uG^dlog == uP)
     - 类似做法： https://pseudoleon.github.io/uiuctf-23/ 。两者都有Pohlig-Hellman的sagemath实现
 73. [Group Projection](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/group_projection),[wp](https://github.com/ctfguy/My_CTF_Writeups/blob/main/UIUCTF%202023/Crypto/Group%20Project%20and%20Projection/solution.md)
 - [Small subgroup confinement attack on Diffie-Hellman](https://crypto.stackexchange.com/questions/27584/small-subgroup-confinement-attack-on-diffie-hellman)
-74. 对于不定方程 $x^3+y^3+z^3=nxyz$ ,0 < n < 81的已知解： http://matwbn.icm.edu.pl/ksiazki/aa/aa73/aa7331.pdf
+74. [Derik](https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/Derik)
+- 对于不定方程 $x^3+y^3+z^3=nxyz$ ,0 < n < 81的已知解： http://matwbn.icm.edu.pl/ksiazki/aa/aa73/aa7331.pdf
+- 根据 https://zhuanlan.zhihu.com/p/642698403 ， 方程 $x^3+y^3+z^3=nxyz$ ，或者说任何三次齐次方程（cubic homogeneous equation），都与椭圆曲线等价（也不是说完全一样，两者之间有同态关系(不太确定是不是同态，birational isomorphism？)）。这样的方程利用sagemath的[EllipticCurve_from_cubic](https://doc.sagemath.org/html/en/reference/arithmetic_curves/sage/schemes/elliptic_curves/constructor.html#sage.schemes.elliptic_curves.constructor.EllipticCurve_from_cubic)即可做转换
+```py
+R.<x,y,z> = QQ[]
+cubic = x^3 + y^3 + z^3 - 73 * x * y * z #三次齐次方程
+P = [1,-1,0] #三次齐次方程的非零解，在上述方程所构成的curve C上defining a projective point
+E = EllipticCurve_from_cubic(cubic, P, morphism=False) #当morphism=False，返回C在birational isomorphism映射后的Weierstrass elliptic curve（E）像
+f = EllipticCurve_from_cubic(cubic, P, morphism=True) #若等于True，直接返回C到E的birational isomorphism
+finv = f.inverse() #获取f的逆映射。既然f是从cubic curve到elliptic curve，这个就是从elliptic curve到cubic curve
+R = E.gens()[0] #获取E上的生成元
+PP = f(P)
+print(finv(R)) #打印生成元映射到cubic curve的点
+```
 75. [TPSD](https://meashiri.github.io/ctf-writeups/posts/202307-cryptoctf/#tpsd)
 - 求解不定方程（丢番图方程，diophantane equation） $x^3+y^3+z^3=1$ 的任意bit长度解。这个方程的解一定满足 $(9a^4)^3+(3a-9a^4)^3+(1-9a^3)^3=1$ (或者 $(9a^4)^3+(-3a-9a^4)^3+(1+9a^3)^3$ ，来源 https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/TPSD),且只有最后一个数字可能是质数。插入不同的a值即可获取不同的解。
 76. [Blobfish](https://meashiri.github.io/ctf-writeups/posts/202307-cryptoctf/#blobfish)
 - 使用[bkcrack](https://github.com/kimci86/bkcrack)实施zip明文攻击爆破加密zip密码。此题zip内部的文件为png（Image.new('RGB', (800, 50))），因为png的前16个字节已知且固定，故可以实施明文攻击。
 77. [Bertrand](https://github.com/abhishekg999/CTFWriteups/tree/main/CryptoCTF/Bertrand)
 - [Hilbert curve](https://en.wikipedia.org/wiki/Hilbert_curve):一种连续分形空间填充曲线，一条无限长的曲线可完全填充有限的二维空间。利用它可以将一个任意数字独特地映射到一个2d点（单射，可逆）
+78. [ASlv1](https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/ASIv1)
+- 模上的矩阵与向量相乘。其实就是正常的矩阵操作然后把每个结果模制定的数就好了。对于Ax=b其中x和b都是向量，A是矩阵的方程，可以用sagemath自带的solve_right来解决(估计类似的xA=b就用solve_left)。wp里的解法尝试将矩阵行规约（elementary row reduction operation），应该是solve_right的本质。
+79. [Trex](https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/Trex)
+- 求解不定方程 $x^2 + y^2 - xy = a * z^3$ ， $z = 3a,y = 6a^2,x = -b/2 = y/2 = 3a^2$ 。这类方程的思路是可以把整个方程本身看作普通的基于x的一元二次方程，然后根据求根公式的判别式 $b^2=4ac$ ，我们可以让提供的x，y和z满足这一条件（根一样会比较简单），然后基于这一条件推出x，y和z与a的关系。
+80. [Roldy](https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/Roldy)
+- python pyope模块实现了order-preserving encryption，意味着如果a < b 那么 enc(a) < enc(b)。在给出密文和oracle后，可利用binary search解密密文。前提是oracle满足以下条件：
+    - oracle拥有无限次交互机会
+    - oracle会返回用户输入的任意明文的密文
+    - 明文按照单个字符一个一个加密
