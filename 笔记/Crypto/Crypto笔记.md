@@ -2087,7 +2087,7 @@ print(uG^dlog == uP)
 - [Small subgroup confinement attack on Diffie-Hellman](https://crypto.stackexchange.com/questions/27584/small-subgroup-confinement-attack-on-diffie-hellman)
 74. [Derik](https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/Derik)
 - 对于不定方程 $x^3+y^3+z^3=nxyz$ ,0 < n < 81的已知解： http://matwbn.icm.edu.pl/ksiazki/aa/aa73/aa7331.pdf
-- 根据 https://zhuanlan.zhihu.com/p/642698403 ， 方程 $x^3+y^3+z^3=nxyz$ ，或者说任何三次齐次方程（cubic homogeneous equation），都与椭圆曲线等价（也不是说完全一样，两者之间有同态关系(不太确定是不是同态，birational isomorphism？)）。这样的方程利用sagemath的[EllipticCurve_from_cubic](https://doc.sagemath.org/html/en/reference/arithmetic_curves/sage/schemes/elliptic_curves/constructor.html#sage.schemes.elliptic_curves.constructor.EllipticCurve_from_cubic)即可做转换
+- 根据 https://zhuanlan.zhihu.com/p/642698403 ， 方程 $x^3+y^3+z^3=nxyz$ ，或者说三次齐次方程（cubic homogeneous equation），都与椭圆曲线等价（也不是说完全一样，两者之间有同态关系(不太确定是不是同态，birational isomorphism？)）。a homogeneous cubic in three variables with rational coefficients利用sagemath的[EllipticCurve_from_cubic](https://doc.sagemath.org/html/en/reference/arithmetic_curves/sage/schemes/elliptic_curves/constructor.html#sage.schemes.elliptic_curves.constructor.EllipticCurve_from_cubic)即可做转换
 ```py
 R.<x,y,z> = QQ[]
 cubic = x^3 + y^3 + z^3 - 73 * x * y * z #三次齐次方程
@@ -2101,16 +2101,34 @@ print(finv(R)) #打印生成元映射到cubic curve的点
 ```
 75. [TPSD](https://meashiri.github.io/ctf-writeups/posts/202307-cryptoctf/#tpsd)
 - 求解不定方程（丢番图方程，diophantane equation） $x^3+y^3+z^3=1$ 的任意bit长度解。这个方程的解一定满足 $(9a^4)^3+(3a-9a^4)^3+(1-9a^3)^3=1$ (或者 $(9a^4)^3+(-3a-9a^4)^3+(1+9a^3)^3$ ，来源 https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/TPSD),且只有最后一个数字可能是质数。插入不同的a值即可获取不同的解。
+    - 论文：https://www.ams.org/journals/mcom/2007-76-259/S0025-5718-07-01947-3/S0025-5718-07-01947-3.pdf
 76. [Blobfish](https://meashiri.github.io/ctf-writeups/posts/202307-cryptoctf/#blobfish)
 - 使用[bkcrack](https://github.com/kimci86/bkcrack)实施zip明文攻击爆破加密zip密码。此题zip内部的文件为png（Image.new('RGB', (800, 50))），因为png的前16个字节已知且固定，故可以实施明文攻击。
+    - https://zhuanlan.zhihu.com/p/643106267 ：似乎前33（0x21）个都是一样的
 77. [Bertrand](https://github.com/abhishekg999/CTFWriteups/tree/main/CryptoCTF/Bertrand)
 - [Hilbert curve](https://en.wikipedia.org/wiki/Hilbert_curve):一种连续分形空间填充曲线，一条无限长的曲线可完全填充有限的二维空间。利用它可以将一个任意数字独特地映射到一个2d点（单射，可逆）
 78. [ASlv1](https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/ASIv1)
-- 模上的矩阵与向量相乘。其实就是正常的矩阵操作然后把每个结果模制定的数就好了。对于Ax=b其中x和b都是向量，A是矩阵的方程，可以用sagemath自带的solve_right来解决(估计类似的xA=b就用solve_left)。wp里的解法尝试将矩阵行规约（elementary row reduction operation），应该是solve_right的本质。
+- 模上的矩阵与向量相乘。其实就是正常的矩阵操作然后把每个结果模制定的数就好了。对于Ax=b其中x和b都是向量，A是矩阵的方程，可以用sagemath自带的solve_right来解决(估计类似的xA=b就用solve_left)。wp里的解法尝试将矩阵行规约（elementary row reduction operation），应该是solve_right的本质。不过solve_right要考虑矩阵是否满秩和线性系统的复杂度，参考 https://zhuanlan.zhihu.com/p/643106267 和 https://blog.maple3142.net/2023/07/09/cryptoctf-2023-writeups/#asiv1
 79. [Trex](https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/Trex)
 - 求解不定方程 $x^2 + y^2 - xy = a * z^3$ ， $z = 3a,y = 6a^2,x = -b/2 = y/2 = 3a^2$ 。这类方程的思路是可以把整个方程本身看作普通的基于x的一元二次方程，然后根据求根公式的判别式 $b^2=4ac$ ，我们可以让提供的x，y和z满足这一条件（根一样会比较简单），然后基于这一条件推出x，y和z与a的关系。
 80. [Roldy](https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/Roldy)
-- python pyope模块实现了order-preserving encryption，意味着如果a < b 那么 enc(a) < enc(b)。在给出密文和oracle后，可利用binary search解密密文。前提是oracle满足以下条件：
+- python pyope模块实现了order-preserving encryption，意味着如果a < b 那么 enc(a) < enc(b)，即加密函数单调递增。在给出密文和oracle后，可利用binary search解密密文。前提是oracle满足以下条件：
     - oracle拥有无限次交互机会
     - oracle会返回用户输入的任意明文的密文
     - 明文按照单个字符一个一个加密
+81. [Barak](https://blog.maple3142.net/2023/07/09/cryptoctf-2023-writeups/#barak),[wp](https://zhuanlan.zhihu.com/p/642698403)
+- 曲线方程 $x^3+y^3+c=dxy$ 同样可以利用sagemath里三次齐次方程转椭圆曲线的函数[EllipticCurve_from_cubic](https://doc.sagemath.org/html/en/reference/arithmetic_curves/sage/schemes/elliptic_curves/constructor.html#sage.schemes.elliptic_curves.constructor.EllipticCurve_from_cubic)转椭圆曲线，只需引入一个变量z来把它变成齐次式 $x^3+y^3+cz^3=dxyz$ ，当z=1时即为原方程。映射完成后原曲线方程上的离散对数问题Q=mP就可以在椭圆曲线上用discrete_log完成。
+    - 这个曲线方程其实是椭圆曲线的[Hessian形式](https://link.zhihu.com/?target=https%3A//en.wikipedia.org/wiki/Hessian_form_of_an_elliptic_curve),通过代数运算可以直接代回成Weierstrass形式。 https://ctfnote.leg.bzh/pad/s/SL4mIXF3b
+- sagemath里面可以检查曲线方程是什么类型的曲线
+```py
+x,y=ZZ['x,y'].gens()
+eq=
+Curve(eq).genus()
+#若输出1，说明曲线方程是椭圆曲线。可以去 https://www.hyperelliptic.org/EFD/ 查看它是椭圆曲线的什么形式
+```
+- 在椭圆曲线中，若Q=mP（over GF(p)）且m小于P的阶小于p，那么离散对数求出m后不一定是原来的m，真正的m类似模运算，为x+n|P|
+82. [Risk](https://blog.maple3142.net/2023/07/09/cryptoctf-2023-writeups/#risk)
+- [A New Attack on Special-Structured RSA Primes](https://einspem.upm.edu.my/journal/fullpaper/vol13saugust/8.pdf): 当RSA的p和q有特殊结构时，可以对其实施攻击。 $p=a^m+r,q=b^m+s$ . $n=pq=(a^m+r)(b^m+s)=a^mb^m+sa^m+rb^m+rs\equiv sa^m+rb^m+e(\mod a^mb^m)$
+- 如果已知两个数m和n的乘积与和，可构造 $f(x)=(x-m)(x-n)$ ，即一元二次方程，然后求根，两个根即为m和n。
+- RSA当e与phi不互素时，对p和q分别对c开e次根，然后利用crt组合出原本的m。在[NCTF2019]easyRSA那里提过，包括wp，这里再提供几种不同的做法
+    - https://zhuanlan.zhihu.com/p/642698403 ：开根+crt的不同脚本
