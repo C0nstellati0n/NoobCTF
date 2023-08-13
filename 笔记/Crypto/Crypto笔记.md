@@ -2086,7 +2086,7 @@ print(uG^dlog == uP)
 73. [Group Projection](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/group_projection),[wp](https://github.com/ctfguy/My_CTF_Writeups/blob/main/UIUCTF%202023/Crypto/Group%20Project%20and%20Projection/solution.md)
 - [Small subgroup confinement attack on Diffie-Hellman](https://crypto.stackexchange.com/questions/27584/small-subgroup-confinement-attack-on-diffie-hellman)
 74. [Derik](https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/Derik)
-- 对于不定方程 $x^3+y^3+z^3=nxyz$ ,0 < n < 81的已知解： http://matwbn.icm.edu.pl/ksiazki/aa/aa73/aa7331.pdf
+- 对于不定方程 $x^3+y^3+z^3=nxyz$ ,0 < n < 81的已知解： http://matwbn.icm.edu.pl/ksiazki/aa/aa73/aa7331.pdf ，（<= 197）: https://mathoverflow.net/questions/384565/status-of-x3y3z3-6xyz
 - 根据 https://zhuanlan.zhihu.com/p/642698403 ， 方程 $x^3+y^3+z^3=nxyz$ ，或者说三次齐次方程（cubic homogeneous equation），都与椭圆曲线等价（也不是说完全一样，两者之间有同态关系(不太确定是不是同态，birational isomorphism？)）。a homogeneous cubic in three variables with rational coefficients利用sagemath的[EllipticCurve_from_cubic](https://doc.sagemath.org/html/en/reference/arithmetic_curves/sage/schemes/elliptic_curves/constructor.html#sage.schemes.elliptic_curves.constructor.EllipticCurve_from_cubic)即可做转换
 ```py
 R.<x,y,z> = QQ[]
@@ -2102,6 +2102,7 @@ print(finv(R)) #打印生成元映射到cubic curve的点
 75. [TPSD](https://meashiri.github.io/ctf-writeups/posts/202307-cryptoctf/#tpsd)
 - 求解不定方程（丢番图方程，diophantane equation） $x^3+y^3+z^3=1$ 的任意bit长度解。这个方程的解一定满足 $(9a^4)^3+(3a-9a^4)^3+(1-9a^3)^3=1$ (或者 $(9a^4)^3+(-3a-9a^4)^3+(1+9a^3)^3$ ，来源 https://github.com/AKSLEGION/Crypto-Writeups/tree/master/Crypto_CTF_2023/TPSD),且只有最后一个数字可能是质数。插入不同的a值即可获取不同的解。
     - 论文：https://www.ams.org/journals/mcom/2007-76-259/S0025-5718-07-01947-3/S0025-5718-07-01947-3.pdf
+    - wiki： https://en.wikipedia.org/wiki/Sums_of_three_cubes
 76. [Blobfish](https://meashiri.github.io/ctf-writeups/posts/202307-cryptoctf/#blobfish)
 - 使用[bkcrack](https://github.com/kimci86/bkcrack)实施zip明文攻击爆破加密zip密码。此题zip内部的文件为png（Image.new('RGB', (800, 50))），因为png的前16个字节已知且固定，故可以实施明文攻击。
     - https://zhuanlan.zhihu.com/p/643106267 ：似乎前33（0x21）个都是一样的
@@ -2132,3 +2133,32 @@ Curve(eq).genus()
 - 如果已知两个数m和n的乘积与和，可构造 $f(x)=(x-m)(x-n)$ ，即一元二次方程，然后求根，两个根即为m和n。
 - RSA当e与phi不互素时，对p和q分别对c开e次根，然后利用crt组合出原本的m。在[NCTF2019]easyRSA那里提过，包括wp，这里再提供几种不同的做法
     - https://zhuanlan.zhihu.com/p/642698403 ：开根+crt的不同脚本
+83. [Keymoted](https://blog.maple3142.net/2023/07/09/cryptoctf-2023-writeups/#keymoted)
+- Z/nZ上ECC类似RSA的加密。思路与正常RSA差不多，必要的一步也是分解n,然后求逆元。
+```py
+Z = Zmod(n)
+E = EllipticCurve(Z, [a, b]) #定义椭圆曲线
+C = E(encx, ency) #C=me，encx和ency是结果密文C的x和y坐标
+Ep = EllipticCurve(GF(p), [a, b]) #定义p和q下的椭圆曲线
+Eq = EllipticCurve(GF(q), [a, b])
+od = Ep.order() * Eq.order() #获取phi
+d = pow(e, -1, od)
+M = d * C
+print(long_to_bytes(int(M.xy()[0])))
+```
+或者参考 https://zhuanlan.zhihu.com/p/643176962 ，在p和q下分别求离散对数，然后crt。
+84. [Big](https://zhuanlan.zhihu.com/p/643355092)
+- [Cocks IBE scheme](https://en.wikipedia.org/wiki/Cocks_IBE_scheme)：基于二次剩余（quadratic residuosity）的加密方式
+- [韦达定理](https://baike.baidu.com/item/%E9%9F%A6%E8%BE%BE%E5%AE%9A%E7%90%86/105027)+sagemath利用kronecker求二次剩余
+- n=pq，当q=int(str(p)[::-1])时，可以快速分解n
+- 其他wp
+    - https://hackmd.io/@taiyaki/BJbEomuF2#Big-169-pts-23-solves-Hard
+    - https://shiho-elliptic.tumblr.com/post/722391959624433664/crypto-ctf-2023-writeup-en
+85. [Marjan](https://blog.maple3142.net/2023/07/09/cryptoctf-2023-writeups/#marjan),[wp](https://zhuanlan.zhihu.com/p/643355092)
+- 基于ECC的类似ecdsa的签名算法。当k较小时，可以转化为NHP问题然后利用格和格基规约（如LLL）来解
+- 验签算法实现时要考虑签名参数的非平凡性，否则攻击者可能可以将某个参数置为0然后消除方程的未知数。
+86. [Shevid](https://blog.maple3142.net/2023/07/09/cryptoctf-2023-writeups/#shevid)
+- [Supersingular isogeny key exchange(SIDH)](https://en.wikipedia.org/wiki/Supersingular_isogeny_key_exchange)（论文介绍： https://eprint.iacr.org/2019/1321.pdf ）破解： https://eprint.iacr.org/2022/975 。针对该加密的Castryck-Decru攻击脚本： https://github.com/GiacomoPope/Castryck-Decru-SageMath
+    - 其他wp（用作脚本使用参考）
+        - https://zhuanlan.zhihu.com/p/643416297
+        - https://shiho-elliptic.tumblr.com/post/722391959624433664/crypto-ctf-2023-writeup-en
