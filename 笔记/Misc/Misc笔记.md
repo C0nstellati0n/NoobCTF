@@ -401,7 +401,7 @@ flag.export("./flag.mp3", format="mp3")
 98. 某些电子邮件的密码可能在[pastebin](https://pastebin.com/)泄露。
 99. [Fish](https://esolangs.org/wiki/Fish)编程语言+[解释器](https://gist.github.com/anonymous/6392418)。例题:[Flowers](https://github.com/ZorzalG/the-big-MHSCTF2023-writeups/blob/main/Flowers.md)
 100. Powershell命令历史存储于ConsoleHost_history.txt。
-101. volatility3使用。关于volatility的教程大多都是volatility2的，记录一些平时看到的命令。注意镜像（如img后缀）和内存（如mem）后缀是不同的，工具不能混用。比如volatility就不能用来分析镜像。
+101. volatility3使用。关于volatility的教程大多都是volatility2的，记录一些平时看到的命令。注意镜像（如img后缀）和内存（如mem）后缀是不同的，工具不能混用。比如volatility就不能用来分析镜像。(volatility3似乎没有找profile的插件，只能用volatility2找：`python2 vol.py -f ctf.raw imageinfo`)
 
 - python3 vol.py -f Memdump.raw windows.filescan.FileScan
   - 搜寻Memdump.raw中的文件,会给出文件对应的偏移
@@ -1280,3 +1280,33 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
             ```
             - type - must be a known type. I used the "user" type.
             - dest_keyring - Certain keyrings will not be found. With minor trial and error, KEY_SPEC_THREAD_KEYRING worked.
+130. volatility2命令及使用。发现volatility2有比3更多的功能。那就记一下吧。
+- cheatsheet(2和3都有)： https://book.hacktricks.xyz/generic-methodologies-and-resources/basic-forensic-methodology/memory-dump-analysis/volatility-cheatsheet
+- https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack2
+    - `vol.py -f ctf.raw --profile=profile pslist`
+        - list of process
+        - 例题还提供了linux命令wc的使用——计算行数
+- https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack3
+    - `vol.py -f ctf.raw --profile=profile clipboard`
+        - 获取剪贴板的内容
+    - `vol.py -f /ctf.raw --profile=profile memdump -p <pid> --dump-dir .`
+        - dump pid为`<pid>`的process的内存到当前目录
+        - 一般ctf的flag都类似于`this_is_random_text`，所以grep可以更有技巧：`strings -e l file | grep -E "(.*?)_(.*?)_"`
+- https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack5
+    - `vol.py -f ctf.raw --profile=profile pstree`
+        - 查看各process及其children
+- https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack6
+    - `vol.py -f ctf.raw --profile=profile filescan`
+        - 扫描image里的全部文件。配上grep可用于获取某个文件的完整路径名。
+        - 另外地，获取某个文件的完整路径还有以下方法
+        1. 使用dlllist插件
+        2. 将那个文件的process的memory dump出来，然后strings结果文件再grep文件名
+- https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Encrypt10n
+    - `vol.py -f ctf.raw imageinfo`
+        - 查看image的profile等信息
+    - `vol.py -f ctf.raw --profile=profile truecryptpassphrase`
+        - 寻找disk encryption软件[TrueCrypt](https://sourceforge.net/projects/truecrypt/)的密码。有了密码后下载该软件即可解密. https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Encrypt10n%20(2)
+131. [Attaaaaack4](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack4)
+- 时刻注意那些名字类似windows内置文件的文件，它们可能是伪装的恶意病毒。如`runddl.exe`。它的名字类似`rundll.exe`,但是后者用于run Dynamic Link Library (DLLs) on the Windows operating system，而前者是恶意文件。
+132. [Attaaaaack8](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack8)
+- 过滤domain+port number的正则：`strings file | grep -oP '.+\.\w+\:[1-9]\d+'`

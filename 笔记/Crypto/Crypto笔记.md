@@ -2162,3 +2162,13 @@ print(long_to_bytes(int(M.xy()[0])))
     - 其他wp（用作脚本使用参考）
         - https://zhuanlan.zhihu.com/p/643416297
         - https://shiho-elliptic.tumblr.com/post/722391959624433664/crypto-ctf-2023-writeup-en
+87. [Byeween](https://blog.maple3142.net/2023/07/09/cryptoctf-2023-writeups/#byeween)
+- 给定随机椭圆曲线E和E上一点Q，找到所有满足 $2P=Q,P\in E$ 的P。使用sagemath的division_points。
+    ```py
+    E = EllipticCurve()
+    Q = E(x,y,z)
+    for x in Q.division_points(2):
+        print(",".join(map(str, x.xy())))
+    #配合sage_eval和coefficient： https://shiho-elliptic.tumblr.com/post/722391959624433664/crypto-ctf-2023-writeup-en
+    ```
+    - 构造方程解法： https://zhuanlan.zhihu.com/p/643355092
