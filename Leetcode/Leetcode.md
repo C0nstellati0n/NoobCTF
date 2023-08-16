@@ -183,3 +183,4 @@
 - [Maximum Running Time of N Computers](./Hard/Maximum%20Running%20Time%20of%20N%20Computers.md). binary search
 - [Strange Printer](./Hard/Strange%20Printer.md). dp
 - [Number of Music Playlists](./Hard/Number%20of%20Music%20Playlists.md). dp/Combinatorics(组合学)
+- [Sliding Window Maximum](./Hard/Sliding%20Window%20Maximum.md). java deque(双端队列)/sliding window

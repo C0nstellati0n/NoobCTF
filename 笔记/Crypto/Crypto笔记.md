@@ -967,7 +967,7 @@ print(plaintext)
 23. [Schmidt-Samoa 密码体系](https://www.ruanx.net/schmidt-samoa/)。
 24. 求斐波那契数列大数取模值可利用[皮萨诺周期](https://blog.csdn.net/caozhk/article/details/53407845)。例题:[[INSHack2019]Crunchy](https://www.bilibili.com/read/cv13950329)
 25. [希尔密码](https://hstar.me/2020/08/hill-cipher-study/)（hill cipher，线性替换密码）。例题：[hill-hard](../../CTF/LA%20CTF/Crypto/hill-hard.md)
-26. [subgroup confinement attack on Diffie-Hellman](https://crypto.stackexchange.com/questions/27584/small-subgroup-confinement-attack-on-diffie-hellman)。链接证明里涉及的[定理](https://github.com/C0nstellati0n/NoobCTF/blob/main/%E7%AC%94%E8%AE%B0/Crypto/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0.md#7-1-2%E5%8D%8A%E7%BE%A4%E4%B8%8E%E7%BE%A43).
+26. [subgroup confinement attack on Diffie-Hellman](https://crypto.stackexchange.com/questions/27584/small-subgroup-confinement-attack-on-diffie-hellman)。链接证明里涉及的[定理](/笔记/Crypto/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0%EF%BC%881-29%EF%BC%89.md).
 
 [例题及来源](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/crypto/Compromised/writeup.md)
 
@@ -1553,7 +1553,7 @@ for i in range(10):
     r.sendline(str(rand.rand()))
 r.interactive()
 ```
-- 类似题目：[LCG](https://github.com/google/google-ctf/tree/master/2023/crypto-lcg),详细解析文章： http://www.reteam.org/papers/e59.pdf
+- 类似题目：[LCG](https://github.com/google/google-ctf/tree/master/2023/crypto-lcg).这题只用了6个。详细解析文章： http://www.reteam.org/papers/e59.pdf
 42. 多种密码的python攻击脚本：https://github.com/jameslyons/python_cryptanalysis 。其中一个脚本可用于攻击变种维吉尼亚密码。
 ```python
 from chall_patched import Vigenot as Vigenere
