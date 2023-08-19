@@ -1306,6 +1306,20 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
         - 查看image的profile等信息
     - `vol.py -f ctf.raw --profile=profile truecryptpassphrase`
         - 寻找disk encryption软件[TrueCrypt](https://sourceforge.net/projects/truecrypt/)的密码。有了密码后下载该软件即可解密. https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Encrypt10n%20(2)
+- https://siunam321.github.io/ctf/CrewCTF-2023/Forensics/Attaaaaack1-13/
+    - `vol.py --profile=profile -f ctf.raw cmdline`
+        - display process command-line arguments
+    - `vol.py --profile=profile -f ctf.raw procdump --pid=<pid_num> --dump-dir=dir_name`
+        - dump指定process的文件
+    - `vol.py --profile=profile -f ctf.raw dumpfiles --dump-dir=dir_name -Q start_addr`
+        - 从start_addr开始dump文件并保存至dir_name。似乎用这种方式dump的文件比procdump dump出来的要完整
+    - `vol.py --profile=profile -f ctf.raw printkey -K "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"`
+        - 打印注册表standard Run key中的内容
+    - `vol.py --profile=profile -f ctf.raw handles -p <pid_num> -t Mutant`
+        - 打印pid为pid_num的process的Mutant
+- https://siunam321.github.io/ctf/CrewCTF-2023/Forensics/Encrypt10n/
+    - `vol.py --profile=profile -f ctf.raw truecryptsummary`
+        - displays TrueCrypt summary information(包括密码)
 131. [Attaaaaack4](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack4)
 - 时刻注意那些名字类似windows内置文件的文件，它们可能是伪装的恶意病毒。如`runddl.exe`。它的名字类似`rundll.exe`,但是后者用于run Dynamic Link Library (DLLs) on the Windows operating system，而前者是恶意文件。
 132. [Attaaaaack8](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack8)
@@ -1324,3 +1338,16 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - 设置自定义密码（set our custom password）：`sudo cryptsetup luksAddKey --master-key-file=key.bin new_file`
     - 挂载LUKS文件：`sudo losetup /dev/loop8 new_file`
     - 打开LUKS文件：`sudo cryptsetup luksOpen /dev/loop8 new_file`
+135. [Attaaaaack](https://siunam321.github.io/ctf/CrewCTF-2023/Forensics/Attaaaaack1-13/)
+- online malware sandbox: https://any.run/ ，提供运行windows恶意软件的sandbox
+- https://www.virustotal.com/ ：恶意软件在线分析网站
+- DarkComet RAT (Remote Access Trojan)分析： http://www.tekdefense.com/news/2013/12/23/analyzing-darkcomet-in-memory.html ， https://notebook.community/adricnet/dfirnotes/examples/Rekall%20demo%20-%20DarkComet%20analysis%20by%20TekDefense%20-%20Jupyter%20slides 。
+    - 这种恶意软件的keylogger文件以`.dc`结尾。默认情况的路径\文件名为`dclogs\<Date>.dc`
+    - 使用更改注册表的方式实现持久（the persistence mechanism is modifying the registry key）。注册表的HKCU Run key为MicroUpdate。很多恶意软件都利用standard Run key进行持久化
+    - 使用的mutant格式为`DC_MUTEX-<7 alphanumeric characters>`。mutant is a way a program can let the OS know it is there so it doesn’t get launched again while it is already running
+- 可利用 https://www.talosintelligence.com/talos_file_reputation 搜索恶意软件的sha256查询它是属于哪一家族的
+- [Microsoft malware naming scheme](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/malware-naming?view=o365-worldwide)
+136. [Encrypt10n](https://siunam321.github.io/ctf/CrewCTF-2023/Forensics/Encrypt10n/)
+- volatility2识别+处理TrueCrypt加密后的内存
+- 使用john+truecrypt2john爆破truecrypt密码
+- 使用cryptsetup解密truecrypt加密文件： https://kenfavors.com/code/how-to-open-a-truecrypt-container-using-cryptsetup/

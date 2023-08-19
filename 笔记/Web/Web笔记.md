@@ -2547,3 +2547,7 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 - flask的flask_login以及`@login_required`装饰器依赖客户端的session cookie。只要获取到secret key后，即可伪造登录后的cookie。`{'_id': '733e330a7ec9ed6ea424339019f73647f4f22319da996eaf78681272ca26abade76c7a9a39a9d707694d6f8f6029c04482e187b5d984638a563f715026db9c96', '_user_id': '1'}`. `_id`和`_user_id`是必须的，用于标记已登录（或者说绕过`@login_required`保护的页面），除此之外还可以加其他题目需要的内容
 259. [Bad Waf No Donut](https://hackmd.io/@taiwhis/tenable_ctf_2023#Bad-Waf-No-Donut)
 - [unicode-normalization](https://hacktricks.boitatech.com.br/pentesting-web/unicode-normalization-vulnerability):字符串经过unicode标准化后，某些不一样的unicode字符最后会标准化成一个。可利用这个特点绕过一些waf和过滤。unicode参考： https://appcheck-ng.com/wp-content/uploads/unicode_normalization.html
+260. [sequence_gallery](https://siunam321.github.io/ctf/CrewCTF-2023/Web/sequence_gallery/)
+- linux dc命令参数注入导致的rce。`-e`选项可以执行一个表达式，但当表达式中出现`!`时，会将剩余的语句当作系统命令执行。
+    - `-e"!cat$IFS*.txt%0A`：第一个`"`用于分割命令（这种情况下不是必须的，详情见文档。本来标准是用空格的，这里绕过滤），`$IFS`表示空格也是绕过滤，`%0A`表示换行，不换行命令是不会执行的
+    - `-e!cat${IFS}fl*;#`
