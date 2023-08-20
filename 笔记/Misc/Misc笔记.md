@@ -1230,6 +1230,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     000000ae: 033101        // 0x03=Cr component
 ```
 上面那个frame的sampling factor是"3x1,3x1,3x1",所以对应的jpeg宽高应该是24和8的倍数。
+
 123. [Corny Kernel](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/misc/corny-kernel),[wp](https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/Corny%20Kernel)
 - how to load and unload a kernel module with the Linux kernel
 124. [vimjail](https://github.com/sigpwny/UIUCTF-2023-Public/blob/main/challenges/misc/vimjail2-5/SOLVE.md)

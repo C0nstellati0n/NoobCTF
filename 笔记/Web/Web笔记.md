@@ -2551,3 +2551,14 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 - linux dc命令参数注入导致的rce。`-e`选项可以执行一个表达式，但当表达式中出现`!`时，会将剩余的语句当作系统命令执行。
     - `-e"!cat$IFS*.txt%0A`：第一个`"`用于分割命令（这种情况下不是必须的，详情见文档。本来标准是用空格的，这里绕过滤），`$IFS`表示空格也是绕过滤，`%0A`表示换行，不换行命令是不会执行的
     - `-e!cat${IFS}fl*;#`
+261. [Positive](https://sh4dy.com/posts/crewCTF-web3-Writeups/#challenge-1--positive)
+- solidity中也有整形溢出
+- cast call和cast send的区分及使用
+    - `cast call` is used to perform a call on an account without publishing a transaction. Use `cast call` when you want to retrieve data from the blockchain or execute a function on a smart contract without making any changes to the blockchain state. This is useful for querying information or performing read-only operations. The `cast call` command requires the account address, the function name or signature to call, and the RPC URL of the blockchain network
+    - `cast send` is used to send arbitrary messages or transactions between accounts. Use `cast send` when you want to send transactions or messages that will modify the blockchain state. This is useful for executing functions that have side effects, such as updating contract variables or transferring tokens. The `cast send` command requires the private key of the sender account, the recipient account address, and the message or transaction data
+262. [Infinite](https://sh4dy.com/posts/crewCTF-web3-Writeups/#challenge-2-infinite)
+- [ERC-20 token](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/)使用案例
+    - approve(spender addr,amount)：允许addr处的contract使用amount这么多的token（所有者使用该函数后其他contract才能使用transferFrom将最多amount的token从所有者那里转走）
+    - allowance(spender,this)：返回spender（token所有者）允许被转走的token数量
+    - balanceOf(addr):返回addr拥有的token数量
+- 使用forge释放contract:`forge create file.sol:<contract_name> --private-key <your_private_key> --rpc-url <your_rpc_url>`
