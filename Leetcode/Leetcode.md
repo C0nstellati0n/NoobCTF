@@ -45,6 +45,7 @@
 - [Find the Highest Altitude](./Easy/Find%20the%20Highest%20Altitude.md)
 - [Buddy Strings](./Easy/Buddy%20Strings.md)
 - [Minimum Depth of Binary Tree](./Easy/Minimum%20Depth%20of%20Binary%20Tree.md). dfs/bfs
+- [Repeated Substring Pattern](./Easy/Repeated%20Substring%20Pattern.md).[KMP算法(Knuth–Morris–Pratt algorithm)](https://www.zhihu.com/question/21923021)/c# Span,[stackalloc](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/stackalloc)相关用法
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

