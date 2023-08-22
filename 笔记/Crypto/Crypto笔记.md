@@ -532,6 +532,18 @@ for i in range(1,e):
 ```
 - [superstitious](https://github.com/BCACTF/bcactf-4.0/tree/main/superstitious):分解特殊的n。若 $n=pq=(a^m+r_p)(b^m+r_q)$ ，则有更快速的方式分解n。参考论文： https://einspem.upm.edu.my/journal/fullpaper/vol13saugust/8.pdf ，具体实现方式在第7页。
 - [Boneh-Durfee Attack](https://cryptohack.gitbook.io/cryptobook/untitled/low-private-component-attacks/boneh-durfee-attack):当d < $N^{0.292}$ 时，可利用该攻击方法恢复d。
+## Sagemath
+
+感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
+
+- https://github.com/Neobeo/CrewCTF2023/blob/main/crypto_writeups.ipynb
+    - 实数域上的rsa。这里的p，q等数可能是分数
+    - [factor_trial_division(m, limit='LONG_MAX')](https://doc.sagemath.org/html/en/reference/rings_standard/sage/rings/factorint.html#sage.rings.factorint.factor_trial_division):拿所有小于等于limit的质数尝试去除m，并给出不完整的分解结果
+    - [nearby_rational(max_error=None, max_denominator=None)](https://doc.sagemath.org/html/en/reference/rings_numerical/sage/rings/real_mpfr.html#sage.rings.real_mpfr.RealNumber.nearby_rational)：必须指定max_error和max_denominator中的一个。若指定max_error，则返回[self-max_error .. self+max_error]最简的分数。若指定max_denominator，则返回最接近self的分数且分母不超过max_denominator
+        - 此题 $n=\frac{p}{q}$ ,所以还可以利用连分数得到p和q：`continued_fraction(n).convergents()`。似乎效果类似nearby_rational？
+
+## 其他
+
 1. Crypto库根据已有信息构建私钥并解密
 
 如果给出的是flag.enc和public.key这种形式的题目，平时的方法可能会解出乱码，需要利用私钥文件来解密。

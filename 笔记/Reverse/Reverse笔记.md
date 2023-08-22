@@ -798,3 +798,8 @@ for i in range(46*8):
 print(ops_list)
 ```
 - https://gitlab.com/shalaamum/ctf-writeups/-/tree/master/UIUCTF%202023/Fast%20Calculator ：ghidra如何修改函数签名（functin signature），使其传入参数
+97. [Brick Breaker](https://github.com/D13David/ctf-writeups/tree/main/tenablectf23/rev/brick_breaker)
+- Nintendo DS Slot-2 ROM image(`.nds`后缀文件)逆向
+  - 模拟器工具： https://www.nogba.com/no$gba-download.htm , [DeSmuME](http://desmume.org/)
+  - [GBA/NDS Technical Info](https://problemkaputt.de/gbatek.htm)
+  - [Reverse Engineering a DS Game](https://www.starcubelabs.com/reverse-engineering-ds/)

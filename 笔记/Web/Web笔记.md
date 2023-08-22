@@ -2551,7 +2551,7 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 - linux dc命令参数注入导致的rce。`-e`选项可以执行一个表达式，但当表达式中出现`!`时，会将剩余的语句当作系统命令执行。
     - `-e"!cat$IFS*.txt%0A`：第一个`"`用于分割命令（这种情况下不是必须的，详情见文档。本来标准是用空格的，这里绕过滤），`$IFS`表示空格也是绕过滤，`%0A`表示换行，不换行命令是不会执行的
     - `-e!cat${IFS}fl*;#`
-261. [Positive](https://sh4dy.com/posts/crewCTF-web3-Writeups/#challenge-1--positive)
+261. [Positive](https://sh4dy.com/posts/crewCTF-web3-Writeups/#challenge-1--positive),题目源码（包括下面的Infinite和Deception）： https://github.com/Kaiziron/crewctf2023-writeup/
 - solidity中也有整形溢出
 - cast call和cast send的区分及使用
     - `cast call` is used to perform a call on an account without publishing a transaction. Use `cast call` when you want to retrieve data from the blockchain or execute a function on a smart contract without making any changes to the blockchain state. This is useful for querying information or performing read-only operations. The `cast call` command requires the account address, the function name or signature to call, and the RPC URL of the blockchain network
