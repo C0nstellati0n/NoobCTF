@@ -2184,3 +2184,11 @@ print(long_to_bytes(int(M.xy()[0])))
     #配合sage_eval和coefficient： https://shiho-elliptic.tumblr.com/post/722391959624433664/crypto-ctf-2023-writeup-en
     ```
     - 构造方程解法： https://zhuanlan.zhihu.com/p/643355092
+88. ecc上的[Smart's Attack](https://ariana1729.github.io/2021/05/31/SmartAttack.html)。当一个椭圆曲线additive transfer时，则可以进行Smart's Attack，能够在线性时间内解决ecc上的dlp问题。
+    - additive transfer指the order of the elliptic curve group is equal to the order of the underlying prime field. 感觉用sagemath里的api比较好解释：
+    ```py
+    Ep = EllipticCurve(GF(p), [a, b]) #p-1: the order of the underlying prime field. 要是p不是质数的话可能会是别的数，质数的话就是p-1
+    Ep.order() #曲线加法群的阶（the order of the elliptic curve group）
+    ```
+    - 攻击脚本：https://github.com/jvdsn/crypto-attacks/blob/master/attacks/ecc/smart_attack.py
+    - 可以在这里查看什么样的曲线容易受到transfer相关的攻击： https://safecurves.cr.yp.to/transfer.html

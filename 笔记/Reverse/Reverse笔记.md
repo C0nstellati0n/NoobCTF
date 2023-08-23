@@ -803,3 +803,7 @@ print(ops_list)
   - 模拟器工具： https://www.nogba.com/no$gba-download.htm , [DeSmuME](http://desmume.org/)
   - [GBA/NDS Technical Info](https://problemkaputt.de/gbatek.htm)
   - [Reverse Engineering a DS Game](https://www.starcubelabs.com/reverse-engineering-ds/)
+    - https://github.com/ITSEC-ASIA-ID/Competitions/tree/main/CTF/2023/TenableCTF/Reversing%20-%20Pwns/Brick%20Breaker
+    - 里面介绍了如何用ghidra加载ROM，或者用[tinke](https://github.com/pleonex/tinke)
+  - [ARM programming for the Nintendo DS](https://www.chibialiens.com/arm/nds.php)
+  - 利用binaryNinja的静态分析： https://gitlab.com/9hozt/ctf-write-up/-/tree/main/2023-tenable/re/brickbreaker

