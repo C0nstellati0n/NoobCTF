@@ -191,3 +191,4 @@
 - [Sliding Window Maximum](./Hard/Sliding%20Window%20Maximum.md). java deque(双端队列)/sliding window
 - [Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree](./Hard/Find%20Critical%20and%20Pseudo-Critical%20Edge.md). [Kruskal's algorithm](https://en.wikipedia.org/wiki/Kruskal%27s_algorithm)+[Minimum spanning tree(MST,最小生成树)](https://en.wikipedia.org/wiki/Minimum_spanning_tree)+[Disjoint-set data structure(union-find data structure)](https://en.wikipedia.org/wiki/Disjoint-set_data_structure)
 - [Sort Items by Groups Respecting Dependencies](./Hard/Sort%20Items%20by%20Groups%20Respecting%20Depend.md). Topological Sorting(拓扑排序)
+- [Text Justification](./Hard/Text%20Justification.md)

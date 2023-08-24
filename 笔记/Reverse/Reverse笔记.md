@@ -807,3 +807,9 @@ print(ops_list)
     - 里面介绍了如何用ghidra加载ROM，或者用[tinke](https://github.com/pleonex/tinke)
   - [ARM programming for the Nintendo DS](https://www.chibialiens.com/arm/nds.php)
   - 利用binaryNinja的静态分析： https://gitlab.com/9hozt/ctf-write-up/-/tree/main/2023-tenable/re/brickbreaker
+98. [Exposed](https://ctftime.org/writeup/37442)
+- RISC-V架构逆向。此架构比较重要的几点：
+    - 函数调用类似ARM，返回地址可能不在stack上，而在ra（return address）寄存器里
+    - ecall用于执行系统调用，寄存器a7为系统调用号，从a0开始依次存参数，返回值也在a0里。附系统调用表：https://jborza.com/post/2021-05-11-riscv-linux-syscalls/
+    - 以`s*`开头的寄存器在不同的函数调用时会保留
+    - https://riscv.org/wp-content/uploads/2015/01/riscv-calling.pdf
