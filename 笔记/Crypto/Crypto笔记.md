@@ -541,6 +541,11 @@ for i in range(1,e):
     - [factor_trial_division(m, limit='LONG_MAX')](https://doc.sagemath.org/html/en/reference/rings_standard/sage/rings/factorint.html#sage.rings.factorint.factor_trial_division):拿所有小于等于limit的质数尝试去除m，并给出不完整的分解结果
     - [nearby_rational(max_error=None, max_denominator=None)](https://doc.sagemath.org/html/en/reference/rings_numerical/sage/rings/real_mpfr.html#sage.rings.real_mpfr.RealNumber.nearby_rational)：必须指定max_error和max_denominator中的一个。若指定max_error，则返回[self-max_error .. self+max_error]最简的分数。若指定max_denominator，则返回最接近self的分数且分母不超过max_denominator
         - 此题 $n=\frac{p}{q}$ ,所以还可以利用连分数得到p和q：`continued_fraction(n).convergents()`。似乎效果类似nearby_rational？
+- https://mitsu1119.github.io/blog/p/zer0pts-ctf-2023-writeup-english/#crypto-102pts-easy_factoring-95-solves
+    - 当 $N=p^2+q^2$ 时，可以借助[高斯整数](https://zh.wikipedia.org/zh-cn/%E9%AB%98%E6%96%AF%E6%95%B4%E6%95%B8)分解N。 $N=p^2+q^2=(p+qi)(p-qi)$ ，说明满足这一条件的整数p和q存在于N的高斯整数分解中（以p+qi的形式）。不过使用sagemath的factor会将其分解为高斯素数，所以尝试分解出来的高斯素数的所有combinations即可恢复p和q
+    - `ZZ[I](N)`表示将整数N转为高斯整数.ZZ[I]为高斯整数环
+    - 也可以使用[divisors](https://doc.sagemath.org/html/en/constructions/number_theory.html#divisors)，直接给出所有因子。这种方法恢复p和q就不用爆破组合了，p和q就在里面，直接遍历因子列表然后isPrime判断即可
+    - sagemath自带的[two_squares](https://doc.sagemath.org/html/en/reference/rings_standard/sage/arith/misc.html#sage.arith.misc.two_squares)确实可以很快把N写成两个平方的和，但是好像不一定是素数
 
 ## 其他
 
