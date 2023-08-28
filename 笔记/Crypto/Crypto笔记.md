@@ -2197,3 +2197,5 @@ print(long_to_bytes(int(M.xy()[0])))
     ```
     - 攻击脚本：https://github.com/jvdsn/crypto-attacks/blob/master/attacks/ecc/smart_attack.py
     - 可以在这里查看什么样的曲线容易受到transfer相关的攻击： https://safecurves.cr.yp.to/transfer.html
+89. [rsalcg2](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/crypto/rsalcg2),[wp](https://hackmd.io/@keymoon/S100q2xch)
+- [half GCD(hgcd)算法](https://www.cnblogs.com/whx1003/p/16217087.html)在特殊情况下的加速。hgcd用于计算多项式的gcd，比欧几里得算法要快。

