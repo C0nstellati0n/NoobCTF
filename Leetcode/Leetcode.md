@@ -48,6 +48,7 @@
 - [Repeated Substring Pattern](./Easy/Repeated%20Substring%20Pattern.md).[KMP算法(Knuth–Morris–Pratt algorithm)](https://www.zhihu.com/question/21923021)/c# Span,[stackalloc](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/stackalloc)相关用法
 - [Excel Sheet Column Title](./Easy/Excel%20Sheet%20Column%20Title.md). 进制转换（base 10转base 26）
 - [Implement Stack using Queues](./Easy/Implement%20Stack%20using%20Queues.md)
+- [Minimum Penalty for a Shop](./Medium/Minimum%20Penalty%20for%20a%20Shop.md)
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

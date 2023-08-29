@@ -192,6 +192,8 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 - [house of pig](https://www.anquanke.com/post/id/242640)
 - [House OF Kiwi](https://www.anquanke.com/post/id/235598)
 - [House _OF _Emma](https://www.anquanke.com/post/id/260614)
+- [kernel pwn](https://lkmidas.github.io/posts/20210123-linux-kernel-pwn-part-1/)
+  - 这个想学好久了，每次打CTF遇见这类题就寄，wp都看不懂
 
 ### 64位
 
@@ -1060,3 +1062,15 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   - cross loopback mount: refers to the process of mounting a loopback device in one mount namespace and making it accessible in another mount namespace.
   - loopback device: In Linux, a loopback device is a virtual device that allows a file to be treated as a block device. It enables files to be mounted as filesystems, just like physical disks or partitions.
 93. Headless Chrome exploit for 73.0.3683.86 (--no-sandbox) V8 version 6.9.0: https://github.com/timwr/CVE-2019-5825/tree/master
+94. [himitsu](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/pwn/himitsu),[wp](https://ptr-yudai.hatenablog.com/entry/2023/07/22/184044#Himitsu-Note)
+- 若将main函数的返回地址的最后一位设为0，就能泄露argv[0]指向的地址。且由于修改后的返回地址在`__libc_csu_init`里，后面又会重新调用main。使用步骤：
+  1. 在main函数保存的rbp处插入一个随机的heap地址。rbp->random heap address，不是把rbp改成heap address
+  2. 将main函数的返回地址的最后一位改为0
+  3. argv[0]在stack上，将其改为要泄露的地址
+  4. 接收地址。如何判断是否成功：地址会跟在`transferring control:`后输出
+95. [qjail](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/pwn/qjail),[wp](https://ptr-yudai.hatenablog.com/entry/2023/07/22/184044#qjail)
+- 使用qiling运行的程序即使标注了开启PIE和canary，在qiling运行时仍然可以绕过。因为qiling不支持ASLR，每次运行的地址都是一样的，且canary固定为`0x6161616161616100`
+96. [wise](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/pwn/wise),[wp](https://ptr-yudai.hatenablog.com/entry/2023/07/22/184044#WISE)
+- Crystal语言下的heap pwn。虽然crystal设计的时候是memory-safe的，但是它仍然提供了一些不安全的（unsafe）函数。例如`id_list.to_unsafe`,返回指向id_list的指针。这时候就要注意了，当我们往id_list这个数组里添加元素时，id_list逐渐变大，crystal会自动进行reallocation，原本的数据会被移到其他地方。id_list最开始的指针所指向的空间会被garbage collection回收掉。若不对记录id_list做检查，攻击者就有了一个指向已free区域的指针，从而uaf。
+- crystal的heap manager使用linked list管理freed areas，且整数和字符串都有较简单的结构：type/size/capacity/buffer
+- 利用environ泄露栈地址
