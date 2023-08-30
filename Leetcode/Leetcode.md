@@ -197,3 +197,4 @@
 - [Sort Items by Groups Respecting Dependencies](./Hard/Sort%20Items%20by%20Groups%20Respecting%20Depend.md). Topological Sorting(拓扑排序)
 - [Text Justification](./Hard/Text%20Justification.md)
 - [Frog Jump](./Hard/Frog%20Jump.md). dp/bfs/dfs
+- [Minimum Replacements to Sort the Array](./Hard/Minimum%20Replacements%20to%20Sort%20the%20Array.md)

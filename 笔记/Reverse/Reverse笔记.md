@@ -813,3 +813,68 @@ print(ops_list)
     - ecall用于执行系统调用，寄存器a7为系统调用号，从a0开始依次存参数，返回值也在a0里。附系统调用表：https://jborza.com/post/2021-05-11-riscv-linux-syscalls/
     - 以`s*`开头的寄存器在不同的函数调用时会保留
     - https://riscv.org/wp-content/uploads/2015/01/riscv-calling.pdf
+99. angr。虽然前面已经记过了，但还会继续记一些复杂的angr题的脚本。
+- [topology](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/rev/topology)
+    ```py
+    from tqdm import tqdm
+    from ptrlib import *
+    import archinfo
+    import angr
+    import re
+    path = "topology"
+    elf = ELF(path) #这块是ptrlib的： https://github.com/ptr-yudai/ptrlib/
+    counters, funcs = {}, {}
+    for symbol, address in elf.symbols().items(): #elf.symbols()返回elf文件里的symbols，比如函数之类的
+        if re.fullmatch(b"[a-zA-Z0-9]{8}\.\d+", symbol):
+            counters[symbol[:8].decode()] = address
+        if re.fullmatch(b"[a-zA-Z0-9]{8}", symbol):
+            funcs[symbol.decode()] = address
+    ANSWERS = {}
+    def hook_ret(state):
+        global ANSWERS
+        instr = state.memory.load(state.regs.rip, 1) #state.regs.rip表示当前状态下rip的值。从rip指向的地方加载一个字节
+        if state.solver.eval(instr) == 0xc3: #eval上面取出的字节，与期望值比对。似乎像上面那样load出来的只能这样eval
+            state.solver.add(state.regs.rax == 0) #给当前state的solver添加个新的约束。添加后，solver只会考虑那些rax为0的执行路径
+            ANSWERS[FUNCTION].append(state.solver.eval(FLAG, cast_to=bytes)) #使用eval将FLAG转为byte
+    p = angr.Project(path, auto_load_libs=False)
+    cfg = p.analyses.CFGFast() #performs a fast control flow graph (CFG) analysis on the project p。CFG是程序执行流的表示，显示了代码块和指令之间是怎么连接起来的
+    ADDR_STR = 0xdead0000
+    FUNCTION = None
+    for symbol in tqdm(funcs): #tqdm是个轻量级进度条 https://github.com/tqdm/tqdm
+        addr_start = 0x400000+funcs[symbol] #angr默认0x400000为基地址
+        FUNCTION = symbol
+        ANSWERS[FUNCTION] = []
+        print(symbol, hex(addr_start))
+        # Hook ret instruction
+        function = cfg.functions[addr_start] #获取在addr_start出的function object
+        for block in function.blocks: #函数内的基本代码块。基本代码块是指程序中一串无jump或分支的指令，且只有一个入口点和一个出口点
+            end_addr = block.addr + block.size - 1
+            p.hook(end_addr, hook_ret, length=0) #用上面定义的hook_ret hook住返回地址。hook后，angr会将end_addr出的指令换成hook_ret函数。length参数表示要hook的指令或函数长度的。0表示angr自动检测
+        for part in range(10):
+            state = p.factory.blank_state( #创建一个blank state。blank state是程序在addr_start处的初始状态
+                addr=addr_start,
+                add_options={angr.options.ZERO_FILL_UNCONSTRAINED_REGISTERS} \
+                | {angr.options.ZERO_FILL_UNCONSTRAINED_MEMORY}, #state的一些设置。这俩表示让angr initialize any unconstrained registers or memory locations with zero values
+            )
+            # Set initial state
+            state.regs.rdi = ADDR_STR
+            state.memory.store(0x400000+counters[symbol], #往0x400000+counters[symbol]存state.solver.BVV(part, 32)值。state.solver.BVV()用于创建一个bitvector，值为part，宽度为32
+                            state.solver.BVV(part, 32),
+                            endness=archinfo.Endness.LE)
+            FLAG = state.solver.BVS('v', 64) #创建一个symbolic bitvector。v是它的名字，64是它的bitwidth。
+            state.memory.store(state.regs.rdi, FLAG)
+            sim = p.factory.simgr(state)
+            sim.run()
+        print(ANSWERS[FUNCTION])
+    flag = b""
+    for i in range(10):
+        counts = {}
+        for func in funcs:
+            ans = ANSWERS[func][i]
+            if ans in counts:
+                counts[ans] += 1
+            else:
+                counts[ans] = 1
+        flag += sorted(counts.items(), key=lambda x: -x[1])[0][0]
+        print(flag)
+    ```
