@@ -198,3 +198,4 @@
 - [Text Justification](./Hard/Text%20Justification.md)
 - [Frog Jump](./Hard/Frog%20Jump.md). dp/bfs/dfs
 - [Minimum Replacements to Sort the Array](./Hard/Minimum%20Replacements%20to%20Sort%20the%20Array.md)
+- [Minimum Number of Taps to Open to Water a Garden](./Hard/Minimum%20Number%20of%20Taps%20to%20Open%20to%20Wate.md). greedy/dp

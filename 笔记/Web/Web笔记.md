@@ -2616,6 +2616,38 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
     ```
 266. 测试xss时，payload不要只用简单的`alert(1)`,建议用`alert(document.domain)`和`alert(window.origin)`，这些payload可以反馈payload被执行的位置。 https://liveoverflow.com/do-not-use-alert-1-in-xss/
 267. [jqi](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/web/jqi),[wp](https://nanimokangaeteinai.hateblo.jp/entry/2023/07/17/101119#Web-149-jqi-40-solves)
-- [node-jq](https://github.com/sanack/node-jq)（语法和[jq](https://jqlang.github.io/jq/manual/v1.6/)一样，是个个node js wrapper） error based（盲注）注入。引发的原因和sql注入一样，没有对用户的输入进行过滤就直接拼接上query语句。查询条件之间用`|`分割,可以用引号或者[string interpolation](https://jqlang.github.io/jq/manual/v1.6/#string-interpolation)或者`\`（要求插入的内容正好在引号的前面，从而转义引号）逃逸从而插入恶意的条件
+- [node-jq](https://github.com/sanack/node-jq)（语法和[jq](https://jqlang.github.io/jq/manual/v1.6/)一样，node-jq其实是个node js wrapper） error based（盲注）注入。引发的原因和sql注入一样，没有对用户的输入进行过滤就直接拼接上query语句。查询条件之间用`|`分割,可以用引号或者[string interpolation](https://jqlang.github.io/jq/manual/v1.6/#string-interpolation)或者`\`（要求插入的内容正好在引号的前面，从而转义引号）逃逸从而插入恶意的条件
     - error based注入基于无查询内容回显的题目。可以利用if-then-else语句构造1/0来引发错误，或者直接error函数。
     - 可以在jq里直接访问环境变量
+268. [neko-note](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/web/neko-note),[wp](https://nanimokangaeteinai.hateblo.jp/entry/2023/07/17/101119#Web-181-Neko-Note-26-solves)
+- go web应用下的xss。本题的xss基于attribute injection。程序将用户输入作为字符串插入a标签的属性，但属性没有加双引号，导致用户可以逃逸出当前属性，添加可触发xss的属性。如onanimationend+style属性：`onanimationend=alert(1) style=animation-name:wag;animation-duration:0s`(要求引入的css里有个名为wag的`@keyframes`),或者onmouseover：`onmouseover=alert(1)`(要求admin bot有点击a标签的操作)
+    - 若bot输入我们要泄露的敏感内容后又删除：
+        ```js
+        await page.focus('input');
+        for (let i = 0; i < len; i++) {
+            await page.keyboard.press('Backspace');
+        }
+        ```
+        可以用`document.execCommand('undo');`将刚才删除的内容恢复回来
+    - 带出敏感信息除了可以用location，fetch，还能用[navigator.sendBeacon](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon)
+269. [plain-blog](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/e9f71aeaab764d36ce9378b1f079af8fd4651bdc/web/plain-blog)
+- 后端ruby+前端js web应用。不对用户可控数据进行过滤导致的原型链污染。
+    ```js
+    let posts = {};
+    post = posts[id];
+    ```
+    这里用户若可随意控制id，可让id=`__proto__`，这样`posts[__proto__]`获取到的就是Object.prototype了。
+    - 一种利用方式是用在fetch。当我们污染了`Object.prototype.headers`，就算调用fetch函数时options里没有headers，被污染的headers仍然会一并发出去。一个好用的header是[X-HTTP-Method-Override](https://www.sidechannel.blog/en/http-method-override-what-it-is-and-how-a-pentester-can-use-it/)（参考 https://github.com/rack/rack/blob/54990d39446caf046b5cbf19fd030204f850b480/lib/rack/method_override.rb#L31-L40 ，ruby的web模块会用这个header），假设用户`POST xxx`,但是加上了`X-HTTP-Method-Override: PUT`，那么服务器那边最终收到的是PUT。
+- 每次请求数据都应刷新。
+    ```js
+    let posts = {}, data, post;
+    for (const id of ids) {
+        const res = await (await request('GET', `/api/post/${id}`)).json();
+        if (res.post) {
+            data = res.post;
+        }
+        //do something with data
+    }
+    ```
+    若用户构造不存在的id，data就不会被更新，而是继承了之前的值，属于逻辑错误。
+- ruby里的params['permission']包含请求参数，不仅仅是request body and path parameters
