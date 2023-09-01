@@ -543,6 +543,7 @@ for i in range(1,e):
         - 此题 $n=\frac{p}{q}$ ,所以还可以利用连分数得到p和q：`continued_fraction(n).convergents()`。似乎效果类似nearby_rational？
 - https://mitsu1119.github.io/blog/p/zer0pts-ctf-2023-writeup-english/#crypto-102pts-easy_factoring-95-solves
     - 当 $N=p^2+q^2$ 时，可以借助[高斯整数](https://zh.wikipedia.org/zh-cn/%E9%AB%98%E6%96%AF%E6%95%B4%E6%95%B8)分解N。 $N=p^2+q^2=(p+qi)(p-qi)$ ，说明满足这一条件的整数p和q存在于N的高斯整数分解中（以p+qi的形式）。不过使用sagemath的factor会将其分解为高斯素数，所以尝试分解出来的高斯素数的所有combinations即可恢复p和q
+    - 还可以用sympy的diop_quadratic方法： https://connor-mccartney.github.io/cryptography/other/easy-factoring-zer0pts-CTF-2023
     - `ZZ[I](N)`表示将整数N转为高斯整数.ZZ[I]为高斯整数环
     - 也可以使用[divisors](https://doc.sagemath.org/html/en/constructions/number_theory.html#divisors)，直接给出所有因子。这种方法恢复p和q就不用爆破组合了，p和q就在里面，直接遍历因子列表然后isPrime判断即可
     - sagemath自带的[two_squares](https://doc.sagemath.org/html/en/reference/rings_standard/sage/arith/misc.html#sage.arith.misc.two_squares)确实可以很快把N写成两个平方的和，但是好像不一定是素数

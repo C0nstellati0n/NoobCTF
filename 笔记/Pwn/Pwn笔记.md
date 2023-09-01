@@ -1074,3 +1074,5 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 - Crystal语言下的heap pwn。虽然crystal设计的时候是memory-safe的，但是它仍然提供了一些不安全的（unsafe）函数。例如`id_list.to_unsafe`,返回指向id_list的指针。这时候就要注意了，当我们往id_list这个数组里添加元素时，id_list逐渐变大，crystal会自动进行reallocation，原本的数据会被移到其他地方。id_list最开始的指针所指向的空间会被garbage collection回收掉。若不对记录id_list做检查，攻击者就有了一个指向已free区域的指针，从而uaf。
 - crystal的heap manager使用linked list管理freed areas，且整数和字符串都有较简单的结构：type/size/capacity/buffer
 - 利用environ泄露栈地址
+97. [brainjit](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/pwn/brainjit),[wp](https://github.com/nobodyisnobody/write-ups/tree/main/zer0pts.CTF.2023/pwn/brainjit)
+- x86_64架构下，syscall的返回地址存储在rcx里。 https://stackoverflow.com/questions/47983371/why-do-x86-64-linux-system-calls-modify-rcx-and-what-does-the-value-mean

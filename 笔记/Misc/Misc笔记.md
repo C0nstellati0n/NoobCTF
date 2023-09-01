@@ -1375,4 +1375,4 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 使用cryptsetup解密truecrypt加密文件： https://kenfavors.com/code/how-to-open-a-truecrypt-container-using-cryptsetup/
 137. [NetFS 2](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/misc/netfs2),[wp](https://ptr-yudai.hatenablog.com/entry/2023/07/22/184044#NetFS-2)
 - `/proc/<PID>/wchan`文件记录了一个暂停的process为何暂停。假如process是因为等待用户输入而暂停的话，内容为`wait_woken`;假如是因为sleep而暂停的话，内容为`hrtimer_nanosleep`
-- 这里的非预期解在于，密码可以一个一个字符输入。假如输入的密码正确，就不会进入`elif c != password[i:i+1]:`分支，从而只会触发`with Timeout(5) as timer:`的`raise TimeoutError('Timeout')`。而要是密码错误的话，会触发wait的sleep函数。假如用telnetlib与服务器沟通，密码正确后的Timeout会引起EOFError，而密码错误引发的则是ConnectionResetError。pwntools则是在EOFError后若打印traceback.format_exc()信息，密码错误时提示里会多一句reset by peer
+- 这里的非预期解在于，密码可以一个一个字符输入。假如输入的密码正确，就不会进入`elif c != password[i:i+1]:`分支，从而只会触发`with Timeout(5) as timer:`的`raise TimeoutError('Timeout')`。而要是密码错误的话，会触发wait的sleep函数。假如用telnetlib与服务器沟通，密码正确后的Timeout会引起EOFError，而密码错误引发的则是ConnectionResetError。pwntools则是在EOFError后若打印traceback.format_exc()信息，密码错误时提示里会多一句reset by peer。详细参考 https://github.com/sbencoding/zer0pts_ctf_2023_writeups/tree/main/misc/netfs2

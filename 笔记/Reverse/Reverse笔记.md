@@ -878,3 +878,4 @@ print(ops_list)
         flag += sorted(counts.items(), key=lambda x: -x[1])[0][0]
         print(flag)
     ```
+100. qiling框架调试。使用[qdb](https://github.com/ucgJhe/Qdb): https://docs.qiling.io/en/latest/qdb/
