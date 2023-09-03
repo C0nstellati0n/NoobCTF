@@ -879,3 +879,6 @@ print(ops_list)
         print(flag)
     ```
 100. qiling框架调试。使用[qdb](https://github.com/ucgJhe/Qdb): https://docs.qiling.io/en/latest/qdb/
+101. [🏴❓🇨🇹🇫](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/%F0%9F%8F%B4%E2%9D%93%F0%9F%87%A8%F0%9F%87%B9%F0%9F%87%AB),[wp](https://wiki.cve.gay/en/Writeups/amateursCTF2023/emojis)
+- [emojicode](https://www.emojicode.org/docs/)逆向
+- side-channel attack[脚本](https://github.com/tabun-dareka/side-channel-crackme-solver)：利用perf计算指令长度从而猜测出正确输入
