@@ -50,6 +50,7 @@
 - [Implement Stack using Queues](./Easy/Implement%20Stack%20using%20Queues.md)
 - [Minimum Penalty for a Shop](./Medium/Minimum%20Penalty%20for%20a%20Shop.md)
 - [Counting Bits](./Easy/Counting%20Bits.md)
+- [Linked List Cycle](./Easy/Linked%20List%20Cycle.md). slow&fast(floyd)/reverse singly linked list
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

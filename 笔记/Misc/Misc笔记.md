@@ -1376,3 +1376,21 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 137. [NetFS 2](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/misc/netfs2),[wp](https://ptr-yudai.hatenablog.com/entry/2023/07/22/184044#NetFS-2)
 - `/proc/<PID>/wchan`文件记录了一个暂停的process为何暂停。假如process是因为等待用户输入而暂停的话，内容为`wait_woken`;假如是因为sleep而暂停的话，内容为`hrtimer_nanosleep`
 - 这里的非预期解在于，密码可以一个一个字符输入。假如输入的密码正确，就不会进入`elif c != password[i:i+1]:`分支，从而只会触发`with Timeout(5) as timer:`的`raise TimeoutError('Timeout')`。而要是密码错误的话，会触发wait的sleep函数。假如用telnetlib与服务器沟通，密码正确后的Timeout会引起EOFError，而密码错误引发的则是ConnectionResetError。pwntools则是在EOFError后若打印traceback.format_exc()信息，密码错误时提示里会多一句reset by peer。详细参考 https://github.com/sbencoding/zer0pts_ctf_2023_writeups/tree/main/misc/netfs2
+138. [Minceraft](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/forensics/minceraft),[wp](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/forensics/minecraft)
+- minecraft [region files](https://minecraft.fandom.com/wiki/Region_file_format)(.mca)文件隐写。mca文件binwalk一下就能知道只是一些compressed文件的集合。所以decompress后直接grep就能找到想要的字符串
+    - 每一个chunk都有chunk_header，记录长度和压缩方式 (1 = GZIP, 2 = ZLib, 3 = Uncompressed)。解压后的数据为[NBT format](https://minecraft.fandom.com/wiki/NBT_format)
+139. [zipper](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/forensics/zipper),[wp](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/forensics/zipper)
+- zip隐写方式及解决方式：
+    1. zip文件的comment
+    2. zip文件内的文件的comment
+    - 1和2都可以利用strings直接看到内容
+    3. zip内压缩两个重复名字的文件，然后把flag内容放在第一个里。这样正常解压的时候，后面那个重名的文件就会覆盖掉有flag内容的文件
+    - 用unzip command，遇到重复文件时会提示。选择重命名而不是覆盖即可
+    4. zip压缩一个名为`/flag`的文件，并创建一个`/flag`的文件夹。若文件夹先解压出来，后面zip再处理`/flag`文件时就会忽略掉它（为了不覆盖之前的`/flag`文件夹），与重名文件的覆盖不同。许多zip GUI软件也无法识别
+    - 不依赖软件，自己写程序处理zip。官方脚本仅支持无损zip，wp的脚本稍微有些损坏也能解压出来
+140. [Painfully Deep Flag](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/forensics/painfully_deep_flag)
+- pdf的XObjects可能隐藏额外文件，可用[pdfreader](https://pdfreader.readthedocs.io/en/latest/)检查
+150. [Gitint 5e](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/osint/gitint_5e)
+- git commits隐写：将内容藏在commit的内容中。`git clone repo`后cd进入文件夹，`git show`展示全部commits，然后`git show commitid`即可查看commit具体内容
+151. [Gitint 7d](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/osint/gitint-7d)
+- github的pull request界面的request的comment是可以编辑的，编辑后的comment会有个`edited`
