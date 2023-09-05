@@ -2687,3 +2687,4 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
         \verbatiminput{/flag.txt}
         \end{document}
         ```
+        - https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/LaTeX%20Injection

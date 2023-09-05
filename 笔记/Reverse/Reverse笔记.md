@@ -887,3 +887,5 @@ print(ops_list)
 101. [🏴❓🇨🇹🇫](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/%F0%9F%8F%B4%E2%9D%93%F0%9F%87%A8%F0%9F%87%B9%F0%9F%87%AB),[wp](https://wiki.cve.gay/en/Writeups/amateursCTF2023/emojis)
 - [emojicode](https://www.emojicode.org/docs/)逆向
 - side-channel attack[脚本](https://github.com/tabun-dareka/side-channel-crackme-solver)：利用perf计算指令长度从而猜测出正确输入
+102. [flagchecker](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/flagchecker),[wp](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/flagchecker.md)
+- scratch(`.sb3`)文件逆向。可以去 https://leopardjs.com/ 把sb3文件转为js后本地部署然后再逆向。
