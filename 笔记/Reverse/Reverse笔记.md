@@ -41,6 +41,11 @@
 3. 程序内遇见数据可以在下方右键->Follow address in Dump,在16进制栏跟踪数据。
 4. 在16进制栏选中数据，右键->Breakpoint->Memory,on access可以下内存访问断点，当选中数据被访问时就会中断程序。注意一个程序内只能下一个内存断点，如果之后想再别的地方下就要把原来的取消,右键->Breakpoint->Remove memory breakpoint
 
+## x64/32dbg使用
+1. 右键地址处（包括寄存器，指令等）可以修改值。意味着我们可以随时修改rip（右键->modify value）以及patch指令(右键指令->binary->edit)。不过这样的patch是一次性的，文件重新加载后就要重新patch
+2. ctrl+g可以输入并前往指定地址。也可以输入rip，这样就能快速回到正在调试的指令
+3. 右键空白处->search for->all modules->string references可以搜索程序内字符串
+
 ## Reverse笔记
 
 1. 地址差值混淆。特征：程序先是取了两个地址a和b的差值，如c=a-b。程序后面又b+c取值。此时就要意识到现在取的是a的值。

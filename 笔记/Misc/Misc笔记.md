@@ -1388,6 +1388,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - 用unzip command，遇到重复文件时会提示。选择重命名而不是覆盖即可
     4. zip压缩一个名为`/flag`的文件，并创建一个`/flag`的文件夹。若文件夹先解压出来，后面zip再处理`/flag`文件时就会忽略掉它（为了不覆盖之前的`/flag`文件夹），与重名文件的覆盖不同。许多zip GUI软件也无法识别
     - 不依赖软件，自己写程序处理zip。官方脚本仅支持无损zip，wp的脚本稍微有些损坏也能解压出来
+- 此题的其它解法：
+    - https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/zipped.md
+        - `unzip -p flag.zip flag/`
+        - https://www.countingcharacters.com/unzip-files
 140. [Painfully Deep Flag](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/forensics/painfully_deep_flag)
 - pdf的XObjects可能隐藏额外文件，可用[pdfreader](https://pdfreader.readthedocs.io/en/latest/)检查
 150. [Gitint 5e](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/osint/gitint_5e)

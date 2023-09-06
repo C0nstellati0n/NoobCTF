@@ -547,6 +547,12 @@ for i in range(1,e):
     - `ZZ[I](N)`表示将整数N转为高斯整数.ZZ[I]为高斯整数环
     - 也可以使用[divisors](https://doc.sagemath.org/html/en/constructions/number_theory.html#divisors)，直接给出所有因子。这种方法恢复p和q就不用爆破组合了，p和q就在里面，直接遍历因子列表然后isPrime判断即可
     - sagemath自带的[two_squares](https://doc.sagemath.org/html/en/reference/rings_standard/sage/arith/misc.html#sage.arith.misc.two_squares)确实可以很快把N写成两个平方的和，但是好像不一定是素数
+- [Non-Quadratic Residues](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/non-quadratic%20residues.md)
+    - 有这样一个式子： $c\equiv x^a\mod b$ ,其中a，b和c均已知。若a较小（如此题a=210），那么可以尝试用sagemath的[nth_root](https://doc.sagemath.org/html/en/reference/finite_rings/sage/rings/finite_rings/integer_mod.html#sage.rings.finite_rings.integer_mod.IntegerMod_abstract.nth_root)开出x。
+        ```py
+        #感觉使用情况和效果都和上面提过的amm差不多
+        GF(b)(c).nth_root(a,all=True)
+        ```
 
 ## 其他
 
@@ -2200,3 +2206,11 @@ print(long_to_bytes(int(M.xy()[0])))
     - 可以在这里查看什么样的曲线容易受到transfer相关的攻击： https://safecurves.cr.yp.to/transfer.html
 89. [rsalcg2](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/crypto/rsalcg2),[wp](https://hackmd.io/@keymoon/S100q2xch)
 - [half GCD(hgcd)算法](https://www.cnblogs.com/whx1003/p/16217087.html)在特殊情况下的加速。hgcd用于计算多项式的gcd，比欧几里得算法要快。
+90. [The Vault 2](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/the%20vault%202.md)
+- 三个立方和方程的参数化以及四个立方和方程的参数化
+    - https://en.wikipedia.org/wiki/Sum_of_four_cubes_problem
+    - https://www.alpertron.com.ar/FCUBES.HTM
+91. [Weak Primes](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/weak%20primes.md)
+- coppersmith补充
+    - The coppersmith method uses lattice reduction to find small integer solutions to a polynomial modulo a factor of n that is $\geq n^{\beta}$
+    - Setting $\beta\approx 0.5$ and $f(x)=2^{2047}+x$ , it will find an integer solution to x such that $2^{2047}+x\equiv 0\mod m$ where m|n, $m\geq n^{\beta}$ (the smaller the difference between m and $n^{\beta}$ the better)
