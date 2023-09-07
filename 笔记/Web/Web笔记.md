@@ -2682,9 +2682,9 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
         ```latex
         \documentclass{article}
         \usepackage{verbatim}
-        \begin{document}
-        Hello, world!!!
+        \begin{document} 
         \verbatiminput{/flag.txt}
-        \end{document}
+        \end{document} 
         ```
         - https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/LaTeX%20Injection
+        - https://book.hacktricks.xyz/pentesting-web/formula-doc-latex-injection#latex-injection

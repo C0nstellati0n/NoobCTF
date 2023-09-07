@@ -43,8 +43,9 @@
 
 ## x64/32dbg使用
 1. 右键地址处（包括寄存器，指令等）可以修改值。意味着我们可以随时修改rip（右键->modify value）以及patch指令(右键指令->binary->edit)。不过这样的patch是一次性的，文件重新加载后就要重新patch
-2. ctrl+g可以输入并前往指定地址。也可以输入rip，这样就能快速回到正在调试的指令
+2. ctrl+g可以输入并前往指定地址。也可以输入rip，这样就能快速回到正在调试的指令。注意使用ctrl+g跳转地址时，鼠标点到哪个窗口就会跳转到哪个窗口的地址。比如鼠标选到dump窗口，此时跳转地址后会在dump窗口里展示（而代码段不会变）
 3. 右键空白处->search for->all modules->string references可以搜索程序内字符串
+4. dump窗口可以手动填充地址处的内容。填充内容的长度取决于鼠标选中的内存的长度
 
 ## Reverse笔记
 
@@ -893,4 +894,8 @@ print(ops_list)
 - [emojicode](https://www.emojicode.org/docs/)逆向
 - side-channel attack[脚本](https://github.com/tabun-dareka/side-channel-crackme-solver)：利用perf计算指令长度从而猜测出正确输入
 102. [flagchecker](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/flagchecker),[wp](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/flagchecker.md)
-- scratch(`.sb3`)文件逆向。可以去 https://leopardjs.com/ 把sb3文件转为js后本地部署然后再逆向。
+- scratch(`.sb3`)文件逆向。可以去 https://leopardjs.com/ 把sb3文件转为js后本地部署然后再逆向
+  - 或者 https://scratch.mit.edu/ ，可以直接打开sb3文件并编辑
+103. [CSCE221](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/csce221)
+- 若一个程序没有开启PIE，那么其coredump包含的函数和数据也和程序在同一地址
+  - dump文件（core file）需要额外用反编译器反编译。注意有时候低版本的ghidra load core file会报错
