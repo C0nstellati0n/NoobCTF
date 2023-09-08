@@ -1397,8 +1397,11 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 140. [Painfully Deep Flag](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/forensics/painfully_deep_flag)
 - pdf的XObjects可能隐藏额外文件，可用[pdfreader](https://pdfreader.readthedocs.io/en/latest/)检查
     - https://xhacka.github.io/posts/writeup/2023/07/19/Painfully-Deep-Flag/ ：LibreOffice也行
+    - https://github.com/01bst/AmateursCTF2023 ：用[pdftohtml](https://linux.die.net/man/1/pdftohtml)将pdf转为html，然后隐藏的资源就出现了
 150. [Gitint 5e](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/osint/gitint_5e)
 - git commits隐写：将内容藏在commit的内容中。`git clone repo`后cd进入文件夹，`git show`展示全部commits，然后`git show commitid`即可查看commit具体内容
     - 要是repo在github上的话，直接去网站看commit也行
 151. [Gitint 7d](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/osint/gitint-7d)
 - github的pull request界面的request的comment是可以编辑的，编辑后的comment会有个`edited`
+152. [ScreenshotGuesser](https://github.com/01bst/AmateursCTF2023)
+- 利用[Wigle.net](https://wigle.net/)根据wifi网络的SSID查找坐标

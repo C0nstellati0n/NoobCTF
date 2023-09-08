@@ -2686,5 +2686,12 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
         \verbatiminput{/flag.txt}
         \end{document} 
         ```
+        - 单纯`\input{/flag.txt}`可能读不全文件，加个batchmode即可
+        ```latex
+        \batchmode
+        \input{/flag.txt}
+        ```
         - https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/LaTeX%20Injection
         - https://book.hacktricks.xyz/pentesting-web/formula-doc-latex-injection#latex-injection
+273. [uwuctf](https://github.com/L-T-B/CTFS/blob/main/amateursCTF/web/uwuctf.md)
+- `cat [filename]|xxx`，若filename可控制，尝试在文件名后加个null字符(\x00,%00)就可以截断命令，cat出来的文件内容不会进入后续xxx命令
