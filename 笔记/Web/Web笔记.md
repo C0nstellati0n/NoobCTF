@@ -2695,3 +2695,9 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
         - https://book.hacktricks.xyz/pentesting-web/formula-doc-latex-injection#latex-injection
 273. [uwuctf](https://github.com/L-T-B/CTFS/blob/main/amateursCTF/web/uwuctf.md)
 - `cat [filename]|xxx`，若filename可控制，尝试在文件名后加个null字符(\x00,%00)就可以截断命令，cat出来的文件内容不会进入后续xxx命令
+274. [sanity](https://github.com/Crypto-Cat/CTF/blob/main/ctf_events/amateurs_23/web/sanity.md)
+- dom clobbering+原型链污染
+    - `window.debug.extension.toString()`可用`<a id="debug"></a><a id="debug" name="extension" href="content"></a>` clobber，获取的内容为content
+    - dompurify预防dom clobbering，但chrome的Sanitizer暂时不能
+- js的fetch的参数可以是data url。如fetch `data:;,{"__proto__":{"sanitize":0}}`会得到`{"__proto__":{"sanitize":0}}`
+- 如果用ngrok host网站时得到 `No 'Access-Control-Allow-Origin' header is present on the requested resource.`报错，可以在启动ngrok时加上`--request-header-add "Access-Control-Allow-Origin: *"`选项，或者在网站本身加上`Access-Control-Allow-Origin` header

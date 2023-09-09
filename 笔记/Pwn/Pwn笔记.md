@@ -840,6 +840,7 @@ int pthread_cond_signal (pthread_cond_t * cond);
 - 可利用`setbuf(stderr,(char *)0x0);`getshell。stderr在bss段，因此只要能泄露地址/没有PIE+partial relro，就能尝试将setbuf的got表改成system，再往stderr里写入sh。甚至可以再找个方便控制调用的函数，将其got改为改动后的setbuf。如果system在改之前已经加载过，got表里填写的system plt地址就能往下写一条（从第一条jmp addr的地址写到push num）
 - pwntools gdb.debug使用。
 ```py
+context.terminal = ["tmux", "splitw", "-h"]
 io = gdb.debug( #使用gdb.debug需要安装gdbserver：sudo apt-get install gdbserver
          "./vuln",
          "\n".join(
