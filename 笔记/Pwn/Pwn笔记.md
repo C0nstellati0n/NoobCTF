@@ -841,7 +841,7 @@ int pthread_cond_signal (pthread_cond_t * cond);
 - pwntools gdb.debug使用。
 ```py
 context.terminal = ["tmux", "splitw", "-h"]
-io = gdb.debug( #使用gdb.debug需要安装gdbserver：sudo apt-get install gdbserver
+p = gdb.debug( #使用gdb.debug需要安装gdbserver：sudo apt-get install gdbserver
          "./vuln",
          "\n".join(
             [
