@@ -1379,6 +1379,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 138. [Minceraft](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/forensics/minceraft),[wp](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/forensics/minecraft)
 - minecraft [region files](https://minecraft.fandom.com/wiki/Region_file_format)(.mca)文件隐写。mca文件binwalk一下就能知道只是一些compressed文件的集合。所以decompress后直接grep就能找到想要的字符串
     - 每一个chunk都有chunk_header，记录长度和压缩方式 (1 = GZIP, 2 = ZLib, 3 = Uncompressed)。解压后的数据为[NBT format](https://minecraft.fandom.com/wiki/NBT_format)
+    - https://github.com/hhhtylerw/ctf-writeups/tree/main/AmateursCTF%202023/forensics/Minceraft ：也可以用NBTExplorer打开
 139. [zipper](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/forensics/zipper),[wp](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/forensics/zipper)
 - zip隐写方式及解决方式：
     1. zip文件的comment
@@ -1398,6 +1399,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - pdf的XObjects可能隐藏额外文件，可用[pdfreader](https://pdfreader.readthedocs.io/en/latest/)检查
     - https://xhacka.github.io/posts/writeup/2023/07/19/Painfully-Deep-Flag/ ：LibreOffice也行
     - https://github.com/01bst/AmateursCTF2023 ：用[pdftohtml](https://linux.die.net/man/1/pdftohtml)将pdf转为html，然后隐藏的资源就出现了
+    - 如果确认隐藏内容是图片的话：`pdfimages flag.pdf 1 -all`
 150. [Gitint 5e](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/osint/gitint_5e)
 - git commits隐写：将内容藏在commit的内容中。`git clone repo`后cd进入文件夹，`git show`展示全部commits，然后`git show commitid`即可查看commit具体内容
     - 要是repo在github上的话，直接去网站看commit也行

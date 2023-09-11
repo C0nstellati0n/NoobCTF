@@ -297,19 +297,15 @@ int main() {
     std::cout << "Hello World!";
 }
 ```
-
 编译后实际调用的函数是`_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc`，即函数修饰名。泄露地址时要找修饰名的地址调用，可以用pwntols的[ROP](https://docs.pwntools.com/en/stable/rop/rop.html#manual-rop)。
-
 - size_t代表unsigned，和int混用时容易出现经典的栈溢出（利用一个小size_t减一个大的size_t会得到一个很大的整数而不是负数的特点）。
 - std::string在内存中存储的结构：
-
 ```
 +00h: <Data Pointer> 
 +08h: <Data Size>
 +10h: <Data>  
 +18h: <Data>
 ```
-
 当Data Size超过0x10时, Data Pointer会存在堆上。
 
 36. Full RELRO，NX+PIE格式化字符串调用system('/bin/sh')。例题:[rut-roh-relro](https://jiravvit.github.io/230215-lactf2023-rut-roh-relro/),视频[wp](https://www.youtube.com/watch?v=K5sTGQPs04M)。rdi是一块可写的空间，泄露libc基地址后加上调试得到的偏移即可尝试写入，例如格式化字符串漏洞调用system。写栈上返回地址也是同理。不是往反编译出来的地址上写，而是泄露栈地址后调试找到偏移然后格式化字符串写。注意libc，stack，pie需要分别泄露地址，都需要靠动调找泄露出来的偏移。甚至于，同一个函数，不同调用的偏移都不是一致的。如果单纯PIE+NX，可以用格式化字符串泄露一个地址后算出基址，加上plt和got表的偏移即可算出system等函数的正确plt/got，改got表即可。
@@ -465,9 +461,10 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
     - https://xhacka.github.io/posts/writeup/2023/07/19/Censorship/ ：`vars(globals()[dir()[2]])[globals()[dir()[2]].__dir__()[42]](globals())`
   - [Censorship Lite](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/misc/censorship-lite)：类似Censorship但更多过滤
     - intend解法可以getshell，但是有点复杂
-    - `any="".__mod__;print(flag)`:覆盖any函数后过滤失效，直接print
+    - `any="".__mod__;print(flag)`:覆盖any函数后过滤失效，直接print. https://hackmd.io/@yqroo/Censorship-series
     - `vars(vars()['__bu' + chr(ord('A')^ord('(')) + chr(ord('E')^ord(')')) + chr(ord('H') ^ ord('<')) + chr(ord('A')^ord('(')) + 'ns__'])['pr' + chr(ord('A') ^ ord('(')) + 'n' + chr(ord('H') ^ ord('<')) + ''](vars()['f' + chr(ord('E')^ord(')')) + 'ag'])`
     - https://xhacka.github.io/posts/writeup/2023/07/19/Censorship/#censorship-lite : `vars(vars()[[*vars()][ord('A')-ord('B')]])[[*vars(vars()[[*vars()][ord('A')-ord('B')]])][ord('M')-ord('A')]]()`,开启pdb
+    - https://github.com/aparker314159/ctf-writeups/blob/main/AmateursCTF2023/censorships.md ：利用[tadpole operator](https://devblogs.microsoft.com/oldnewthing/20150525-00/?p=45044)(c++里面一个冷门语法，python里也有，作用是返回加上/减去1后的值，但不像`++,--`那样改变原变量的值。`-~y`等同于y+1,`~-y`等同于y-1)
   - [Censorship Lite++](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/misc/censorship-lite%2B%2B):泄露flag变量，但是过滤部分字符和符号以及全部数字
     - https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/censorships.md#censorship-lite-1 :过滤掉部分字符后可以利用python对字符串的[转换](https://stackoverflow.com/questions/961632/convert-integer-to-string-in-python)从函数等地方取。
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
@@ -608,7 +605,6 @@ patchelf --set-rpath . pwn
 __isoc99_scanf(&%ld,&local_18);
 printf("ok! time is %ld\n",local_18);
 ```
-
 当输入不符合`%ld`的字符，例如a时，不会修改栈，而是会泄露栈上的信息。
 - c语言里的close(1)会关闭stdout，导致无法输出。此时配合格式化字符串漏洞，有两种办法解决：
   - 假如使用printf输出需要的内容。因为printf会使用stdout的指针，所以可以在printf执行前将stdout的指针改成stderr的。[这种方法](https://blog.csdn.net/weixin_44145820/article/details/105992952)需要获取stderr倒数第二个byte（倒数第一个通常是固定的），如果没有只能爆破。
@@ -1111,3 +1107,5 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   - 目前工具自动创建的elf无法做到这么小，所以要手动在汇编里定义header然后用nasm编译。文章里也提供了一些缩减elf大小的技巧
   - x86 shellcode可以在[exploit-db](https://www.exploit-db.com/)找。wp提到了一个21字节的x86 shellcode，以及一个14字节的但是需要/bin/sh已在elf里存在的shellcode。构造elf的话可以把/bin/sh放在data段里
   - 若shellcode的执行开始于`_start`，可以默认寄存器值为0，就不用多余的字节来将一些寄存器设为0了
+103. [perfect-sandbox](https://github.com/itaybel/Weekly-CTF/blob/main/amateursCTF/pwn/perfect-sandbox.md)
+- In x86-64 there are 3 TLS entries, two of them accesible via FS and GS registers, FS is used internally by glibc (in IA32 apparently FS is used by Wine and GS by glibc).fs段里可以泄露一些有关栈的信息，汇编这样访问：`mov register, qword ptr fs:offset`

@@ -2691,6 +2691,13 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
         \batchmode
         \input{/flag.txt}
         ```
+        类似的还有以下payload，这个会把flag内容渲染到pdf
+        ```latex
+        \documentclass{article}
+        \begin{document}
+        $\input{/flag.txt}$
+        \end{document}
+        ```
         - https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/LaTeX%20Injection
         - https://book.hacktricks.xyz/pentesting-web/formula-doc-latex-injection#latex-injection
 273. [uwuctf](https://github.com/L-T-B/CTFS/blob/main/amateursCTF/web/uwuctf.md)
@@ -2699,5 +2706,9 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 - dom clobbering+原型链污染
     - `window.debug.extension.toString()`可用`<a id="debug"></a><a id="debug" name="extension" href="content"></a>` clobber，获取的内容为content
     - dompurify预防dom clobbering，但chrome的Sanitizer暂时不能
+    - 我一直疑惑为啥这样dom就能取到东西？看了另一篇[wp](https://justinapplegate.me/2023/amactf-sanity/)和[hacktricks](https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting/dom-clobbering)才了解。js里，若有2个html object有相同的id，它们就会被转化成array，然后第二个元素的名字会变成其attribute名称。这种x.y的可以用a标签，如果是x.y.z的就要用form了
 - js的fetch的参数可以是data url。如fetch `data:;,{"__proto__":{"sanitize":0}}`会得到`{"__proto__":{"sanitize":0}}`
 - 如果用ngrok host网站时得到 `No 'Access-Control-Allow-Origin' header is present on the requested resource.`报错，可以在启动ngrok时加上`--request-header-add "Access-Control-Allow-Origin: *"`选项，或者在网站本身加上`Access-Control-Allow-Origin` header
+275. [cps remastered](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/web/cps),[wp](https://github.com/quasar098/ctf-writeups/tree/main/amateursctf-2023/cps-remastered)
+- insert语句处的sql注入。无错误回显所以无法报错注入爆出信息。但是可以利用LIKE语句从数据库里拿出数据后在注册的用户名处回显
+    - 如果有update权限的话甚至可以把flag提取到password字段 https://ireland.re/posts/AmateursCTF/

@@ -896,6 +896,7 @@ print(ops_list)
 102. [flagchecker](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/flagchecker),[wp](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/flagchecker.md)
 - scratch(`.sb3`)文件逆向。可以去 https://leopardjs.com/ 把sb3文件转为js后本地部署然后再逆向
   - 或者 https://scratch.mit.edu/ ，可以直接打开sb3文件并编辑
+  - https://turbowarp.org/ 打开文件然后点击“转到源代码”也行
 103. [CSCE221](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/csce221)
 - 若一个程序没有开启PIE，那么其coredump包含的函数和数据也和程序在同一地址
   - dump文件（core file）需要额外用反编译器反编译。注意有时候低版本的ghidra load core file会报错

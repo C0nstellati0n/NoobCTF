@@ -2207,10 +2207,13 @@ print(long_to_bytes(int(M.xy()[0])))
 89. [rsalcg2](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/crypto/rsalcg2),[wp](https://hackmd.io/@keymoon/S100q2xch)
 - [half GCD(hgcd)算法](https://www.cnblogs.com/whx1003/p/16217087.html)在特殊情况下的加速。hgcd用于计算多项式的gcd，比欧几里得算法要快。
 90. [The Vault 2](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/the%20vault%202.md)
-- 三个立方和方程的参数化以及四个立方和方程的参数化
+- 三个立方和方程以及四个立方和方程的参数化
     - https://en.wikipedia.org/wiki/Sum_of_four_cubes_problem
     - https://www.alpertron.com.ar/FCUBES.HTM
+    - https://github.com/aparker314159/ctf-writeups/blob/main/AmateursCTF2023/the-vault-2.md
 91. [Weak Primes](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/weak%20primes.md)
 - coppersmith补充
     - The coppersmith method uses lattice reduction to find small integer solutions to a polynomial modulo a factor of n that is $\geq n^{\beta}$
     - Setting $\beta\approx 0.5$ and $f(x)=2^{2047}+x$ , it will find an integer solution to x such that $2^{2047}+x\equiv 0\mod m$ where m|n, $m\geq n^{\beta}$ (the smaller the difference between m and $n^{\beta}$ the better)
+92. [Non-Quadratic Residues](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/crypto/non-quadratic-residues),[wp](https://github.com/GabrieleDellepere/writeups/blob/main/AmateursCTF/non-quadratic-residue-writeup.md)
+- amm开根法应用的特殊情况。假如有 $x^a\equiv b\mod c$ 其中a，b和c已知，amm开根法可用于恢复x。若a可分解，可以参照wp里的做法，分别开分解后的质数次根。如`a=2*3*5*7`，就在模c的基础上开2次根，然后开出的结果拿去开3次根，结果再拿去开5次根……一直到恢复x
