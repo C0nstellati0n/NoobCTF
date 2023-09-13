@@ -2217,3 +2217,11 @@ print(long_to_bytes(int(M.xy()[0])))
     - Setting $\beta\approx 0.5$ and $f(x)=2^{2047}+x$ , it will find an integer solution to x such that $2^{2047}+x\equiv 0\mod m$ where m|n, $m\geq n^{\beta}$ (the smaller the difference between m and $n^{\beta}$ the better)
 92. [Non-Quadratic Residues](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/crypto/non-quadratic-residues),[wp](https://github.com/GabrieleDellepere/writeups/blob/main/AmateursCTF/non-quadratic-residue-writeup.md)
 - amm开根法应用的特殊情况。假如有 $x^a\equiv b\mod c$ 其中a，b和c已知，amm开根法可用于恢复x。若a可分解，可以参照wp里的做法，分别开分解后的质数次根。如`a=2*3*5*7`，就在模c的基础上开2次根，然后开出的结果拿去开3次根，结果再拿去开5次根……一直到恢复x
+    - 指数较小的甚至直接用sagemath构造多项式就能开出来
+    ```py
+    P.<x> = PolynomialRing(Zmod(b))
+    pol=x^a-c
+    roots=pol.roots()
+    ```
+93. [gcd-query](https://enscribe.dev/blog/actf-2023/gcd-query/)
+- $x\equiv -n\mod gcd(x+n,m)$

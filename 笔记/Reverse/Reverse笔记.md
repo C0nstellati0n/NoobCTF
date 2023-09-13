@@ -900,3 +900,11 @@ print(ops_list)
 103. [CSCE221](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/csce221)
 - 若一个程序没有开启PIE，那么其coredump包含的函数和数据也和程序在同一地址
   - dump文件（core file）需要额外用反编译器反编译。注意有时候低版本的ghidra load core file会报错
+104. [headache](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/headache),[wp](https://github.com/4rr4y/ctf-writeups/blob/main/2023_AmateursCTF/Rev_Headache.md)
+- python [Capstone](https://www.capstone-engine.org/lang_python.html)实践。个人感觉一般静态分析有ida或ghidra就不需要capstone了，不过这题比较特殊，整个程序是SMC的套娃，用SMC加密另一层SMC，总共套了近200层……如果手动一个一个解然后保存然后再放ida里就太繁琐了。可以就解那么几个找一下smc段的规律，加个capstone写个程序解。当然不用也可以，官方解法就没用
+  - 一些wp里的api介绍
+  ```py
+  Cs(CS_ARCH_X86, CS_MODE_64) #初始化x86架构64bit的反编译器实例
+  disasm(data, CS_MODE_64 | CS_MODE_LITTLE_ENDIAN) #反编译64bit，小端存储的data
+  (instn.address, instn.mnemonic, instn.op_str) #address为当前指令instn的地址，mnemonic则是可读的指令名字（比如mov），op_str是指令的参数
+  ```

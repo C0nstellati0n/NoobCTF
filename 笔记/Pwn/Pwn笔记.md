@@ -194,6 +194,7 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 - [House _OF _Emma](https://www.anquanke.com/post/id/260614)
 - [kernel pwn](https://lkmidas.github.io/posts/20210123-linux-kernel-pwn-part-1/)
   - 这个想学好久了，每次打CTF遇见这类题就寄，wp都看不懂
+- [House of Muney](https://maxwelldulin.com/BlogPost/House-of-Muney-Heap-Exploitation)
 
 ### 64位
 
@@ -1099,9 +1100,9 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   ```
 100. [ELFcrafting-v1](https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/pwn/elf_crafting_1)
 - execve不仅可以执行binary executable，还可以是如下格式的脚本文件：`#!interpreter [optional-arg]`（shebang）
-101. [I Love FFI](https://surg.dev/amateurs23/#i-love-ffi)
+101. [I Love FFI](https://surg.dev/amateurs23/#i-love-ffi),[wp2](https://amateurs.team/writeups/AmateursCTF-2023/i-love-ffi)
 - rust函数返回值。rust里不一定要使用return来返回结果，函数中最后一个表达式的值，默认作为返回值。 https://hardocs.com/d/rustprimer/function/return_value.html
-- rust/C FFI。这道题里表现为C程序调用外部由rust编写的函数。不知道为什么，rust里返回的struct在C里面各字段的顺序会改变
+- rust/C FFI。这道题里表现为C程序调用外部由rust编写的函数。即使在rust和C中用相同的顺序定义struct的字段和布局，编译后两者也会不同。因为编译器会pad struct的字段，让内存访问更快。而rust和C的padding规则不同。C will attempt to align struct fields to their memory size, but will maintain struct order. Rust will also attempt to align struct fields to their memory size, but will not maintain struct order.
 102. [ELFCrafting v2](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/pwn/ELFcrafting-v2),[wp](https://surg.dev/amateurs23/#elfcrafting-v2)
 - 构建一个极小但可运行的ELF文件。目前最小的64位elf是80字节，所以若题目要求构造的elf比这个更小，就要尝试构造32位elf了。 https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html
   - 目前工具自动创建的elf无法做到这么小，所以要手动在汇编里定义header然后用nasm编译。文章里也提供了一些缩减elf大小的技巧
@@ -1109,3 +1110,11 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   - 若shellcode的执行开始于`_start`，可以默认寄存器值为0，就不用多余的字节来将一些寄存器设为0了
 103. [perfect-sandbox](https://github.com/itaybel/Weekly-CTF/blob/main/amateursCTF/pwn/perfect-sandbox.md)
 - In x86-64 there are 3 TLS entries, two of them accesible via FS and GS registers, FS is used internally by glibc (in IA32 apparently FS is used by Wine and GS by glibc).fs段里可以泄露一些有关栈的信息，汇编这样访问：`mov register, qword ptr fs:offset`
+- 预期解和其它非预期解：https://amateurs.team/writeups/AmateursCTF-2023/perfect-sandbox
+  - On x64 processors, physical memory is mapped to virtual memory using a page table. The page table specifies how physical memory is mapped to virtual memory and stores the page permission bits and other information. When a virtual memory address is accessed, the processor must walk the page table in order to determine the physical address to access, which takes some time in order to perform. The processor employs a translation lookaside buffer (TLB) to aggressively cache recent virtual to physical memory mappings to reduce the performance impact of translating virtual to physical addresses. 意味着被TLB cache后的虚拟地址->内存访问映射速度要比没有cache过的快很多。假设flag存储在mmap内存中且知道大概地址但不完全，就可以利用这点进行side channel attack，一个一个试出真正的地址。这里唯一的问题是不能随便访问一些不存在的地址，会SEGFAULT。可以用那些访问地址不会触发报错且可以查询内存并访问TLB的指令。如[vmaskmov](https://www.felixcloutier.com/x86/vmaskmov)和[prefetch](https://www.felixcloutier.com/x86/prefetchh)
+  - write函数在遇到不合法地址时不会停止运行，只是会报错。而且假如在一段地址里有合法的和非法的（如从0x1337000开始write长度为0x1000000内存），write会自动跳过那些非法的地址，直接打印出合法地址所对应的内容，而且没有报错
+104. [simple-heap-v1](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/pwn/simple-heap-v1),[wp](https://amateurs.team/writeups/AmateursCTF-2023/simple-heap-v1)
+- When performing allocations with malloc, any allocation greater than MMAP_THRESHOLD_MIN, which is set to 128kb by default, malloc will use mmap instead of its internal heap. The second mmap will always be exactly below the libc in memory. This means that if we can control the size field of a mmapped chunk, we can unmap part of the libc.
+- If we inspect the section layout of the libc in memory(`readelf -l libc.so.6`), the .dynsym and .dynstr sections are located underneath the .text section. The .dynsym and .dynstr are used in lazy symbol resolution. If a external function called fgets is called in a binary compiled with lazy linking (indicated by PARTIAL RELRO), the linker will search shared libraries for a symbol defined with the name fgets and use the symbol information to retrieve the function address.
+  - After unmapping part of the libc, we can perform another mmap to remap the lower part of the libc with data that we control. We can exploit this to provide malicious values for symbols in the libc to hijack lazy symbol resolution.
+  - 感觉unmap libc效果有点像覆盖got表？两者都是劫持函数。只不过got表那个在程序里改，这个直接把libc给改了

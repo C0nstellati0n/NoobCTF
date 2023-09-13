@@ -2691,7 +2691,7 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
         \batchmode
         \input{/flag.txt}
         ```
-        类似的还有以下payload，这个会把flag内容渲染到pdf
+        类似的还有以下payload，也会把flag内容渲染到pdf但是有格式（比如flag内容有latex语法就会把latex二次渲染后的渲染上）
         ```latex
         \documentclass{article}
         \begin{document}
