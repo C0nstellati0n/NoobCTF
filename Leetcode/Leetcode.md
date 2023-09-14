@@ -211,3 +211,4 @@
 - [Minimum Replacements to Sort the Array](./Hard/Minimum%20Replacements%20to%20Sort%20the%20Array.md)
 - [Minimum Number of Taps to Open to Water a Garden](./Hard/Minimum%20Number%20of%20Taps%20to%20Open%20to%20Wate.md). greedy/dp
 - [Count All Valid Pickup and Delivery Options](./Hard/Count%20All%20Valid%20Pickup%20and%20Delivery%20Op.md). dp/combinations and permutations(排列组合)
+- [Candy](./Hard/Candy.md). greedy

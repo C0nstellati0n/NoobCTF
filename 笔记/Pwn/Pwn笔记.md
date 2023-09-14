@@ -1108,6 +1108,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   - 目前工具自动创建的elf无法做到这么小，所以要手动在汇编里定义header然后用nasm编译。文章里也提供了一些缩减elf大小的技巧
   - x86 shellcode可以在[exploit-db](https://www.exploit-db.com/)找。wp提到了一个21字节的x86 shellcode，以及一个14字节的但是需要/bin/sh已在elf里存在的shellcode。构造elf的话可以把/bin/sh放在data段里
   - 若shellcode的执行开始于`_start`，可以默认寄存器值为0，就不用多余的字节来将一些寄存器设为0了
+  - 注意加载程序时不能让程序的地址小于ubuntu的默认vm.mmap_min_addr（0x10000），否则程序会崩溃
 103. [perfect-sandbox](https://github.com/itaybel/Weekly-CTF/blob/main/amateursCTF/pwn/perfect-sandbox.md)
 - In x86-64 there are 3 TLS entries, two of them accesible via FS and GS registers, FS is used internally by glibc (in IA32 apparently FS is used by Wine and GS by glibc).fs段里可以泄露一些有关栈的信息，汇编这样访问：`mov register, qword ptr fs:offset`
 - 预期解和其它非预期解：https://amateurs.team/writeups/AmateursCTF-2023/perfect-sandbox
@@ -1118,3 +1119,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 - If we inspect the section layout of the libc in memory(`readelf -l libc.so.6`), the .dynsym and .dynstr sections are located underneath the .text section. The .dynsym and .dynstr are used in lazy symbol resolution. If a external function called fgets is called in a binary compiled with lazy linking (indicated by PARTIAL RELRO), the linker will search shared libraries for a symbol defined with the name fgets and use the symbol information to retrieve the function address.
   - After unmapping part of the libc, we can perform another mmap to remap the lower part of the libc with data that we control. We can exploit this to provide malicious values for symbols in the libc to hijack lazy symbol resolution.
   - 感觉unmap libc效果有点像覆盖got表？两者都是劫持函数。只不过got表那个在程序里改，这个直接把libc给改了
+105. [Frog Math](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/pwn/frog-math),[wp](https://github.com/5kuuk/CTF-writeups/tree/main/amateurs-2023/frogmath)
+- on modern x64 processors, mmx registers maps the 64 lsb of the x87 80bit registers. This means that accesses to the mmx registers modify the st(n) registers and vice versa. https://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/index-seo.php/X86ISA____MMX-REGISTERS-READS-AND-WRITES
+  - 在gdb中可用`i r f`指令查看x87寄存器
+  - mm7 corresponds to the mantissa of st7 and the mantissa must almost always start with a msb of 1。其它也类似。意味着如果要在里面存地址的话，只能用[subnormal numbers](https://en.wikipedia.org/wiki/Subnormal_number)。It has an exponent of 1 (but stored as 0), can have leading null most significant bits without being equal to 0. 原生python目前不够精确，可以用[mp-math](https://mpmath.org/)

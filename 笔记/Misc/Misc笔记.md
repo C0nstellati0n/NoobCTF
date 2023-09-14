@@ -402,7 +402,6 @@ flag.export("./flag.mp3", format="mp3")
 99. [Fish](https://esolangs.org/wiki/Fish)编程语言+[解释器](https://gist.github.com/anonymous/6392418)。例题:[Flowers](https://github.com/ZorzalG/the-big-MHSCTF2023-writeups/blob/main/Flowers.md)
 100. Powershell命令历史存储于ConsoleHost_history.txt。
 101. volatility3使用。关于volatility的教程大多都是volatility2的，记录一些平时看到的命令。注意镜像（如img后缀）和内存（如mem）后缀是不同的，工具不能混用。比如volatility就不能用来分析镜像。(volatility3似乎没有找profile的插件，只能用volatility2找：`python2 vol.py -f ctf.raw imageinfo`)
-
 - python3 vol.py -f Memdump.raw windows.filescan.FileScan
   - 搜寻Memdump.raw中的文件,会给出文件对应的偏移
 - python3 vol.py -f Memdump.raw windows.dumpfiles.DumpFiles --virtaddr 0xc88f21961af0
@@ -1281,7 +1280,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
             ```
             - type - must be a known type. I used the "user" type.
             - dest_keyring - Certain keyrings will not be found. With minor trial and error, KEY_SPEC_THREAD_KEYRING worked.
-130. volatility2命令及使用。发现volatility2有比3更多的功能。那就记一下吧。
+130. volatility2命令及使用。发现volatility2有些3没有的功能。那就记一下吧。
 - cheatsheet(2和3都有)： https://book.hacktricks.xyz/generic-methodologies-and-resources/basic-forensic-methodology/memory-dump-analysis/volatility-cheatsheet
 - https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack2
     - `vol.py -f ctf.raw --profile=profile pslist`
@@ -1321,6 +1320,11 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - https://siunam321.github.io/ctf/CrewCTF-2023/Forensics/Encrypt10n/
     - `vol.py --profile=profile -f ctf.raw truecryptsummary`
         - displays TrueCrypt summary information(包括密码)
+- https://github.com/daffainfo/ctf-writeup/tree/main/The%20Odyssey%20CTF/Black%20Pandora
+    - `vol.py -f ctf.vmem --profile=profile dlllist`
+        - print list of loaded dlls for each process
+    - `vol.py -f ctf.vmem --profile=profile psscan`
+        - obtain the pid and ppid of processes
 131. [Attaaaaack4](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack4)
 - 时刻注意那些名字类似windows内置文件的文件，它们可能是伪装的恶意病毒。如`runddl.exe`。它的名字类似`rundll.exe`,但是后者用于run Dynamic Link Library (DLLs) on the Windows operating system，而前者是恶意文件。
 132. [Attaaaaack8](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack8)
@@ -1407,3 +1411,13 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - github的pull request界面的request的comment是可以编辑的，编辑后的comment会有个`edited`
 152. [ScreenshotGuesser](https://github.com/01bst/AmateursCTF2023)
 - 利用[Wigle.net](https://wigle.net/)根据wifi网络的SSID查找坐标
+153. [Tengu in Colosseum](https://a1l4m.medium.com/tengu-in-colosseum-writeup-odyssey-ctf-91f9415e002f),[wp2](https://medium.com/@sh1fu/tengu-in-colosseum-ctf-writeup-e32073c194b6)
+- slack+discord forensic
+    - slack
+        - account_manager记录了name of the group/community
+        - 应用自带的文件中有数据库记录了全部的channel及其创建时间
+    - discord
+        - discord没有数据库
+        - guilds文件记录了group/server的相关信息，比如创建时间
+        - shared_prefs下的com.discord_preferences.xml记录了user’s trusted domain cache key
+- Android Filesystem介绍。由boot，system，recovery，data，cache和misc组成。AutoPsy也可以分析这类文件。
