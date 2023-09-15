@@ -908,3 +908,37 @@ print(ops_list)
   disasm(data, CS_MODE_64 | CS_MODE_LITTLE_ENDIAN) #反编译64bit，小端存储的data
   (instn.address, instn.mnemonic, instn.op_str) #address为当前指令instn的地址，mnemonic则是可读的指令名字（比如mov），op_str是指令的参数
   ```
+105. qiling框架使用案例。
+```py
+from qiling import *
+from qiling.const import *
+from qiling.exception import *
+from qiling.os.const import *
+from qiling.os.windows.const import *
+from qiling.os.windows.fncc import *
+from qiling.os.windows.handle import *
+from qiling.os.windows.thread import *
+from qiling.os.windows.utils import *
+def _connect(ql, address: int, params):
+    value = ql.mem.read(params['name'], params['namelen']) #读内存里的值
+def prepare() -> Qiling:
+    shellcode = b''
+    rootfs = r"C:\\"
+    ql = Qiling( #利用qiling实例运行在windows系统下的X86-64的shellcode
+        code=shellcode,
+        archtype=QL_ARCH.X8664,
+        ostype=QL_OS.WINDOWS,
+        rootfs=rootfs, #指定模拟时的根文件系统
+        console=True, #开启console output。qiling会把模拟的输出打印到console上
+    )
+    #参考https://docs.qiling.io/en/latest/hijack/
+    ql.os.set_api("connect", _connect, QL_INTERCEPT.ENTER) #hook名为connect的api函数，_connect为实际执行的callback函数。QL_INTERCEPT.ENTER为callback函数调用的时间，这个值表示原connect函数被调用之前
+    return ql
+def main():
+    ql = prepare()
+    try:
+        ql.run()
+    except:
+        pass
+main()
+```

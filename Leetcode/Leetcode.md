@@ -212,3 +212,4 @@
 - [Minimum Number of Taps to Open to Water a Garden](./Hard/Minimum%20Number%20of%20Taps%20to%20Open%20to%20Wate.md). greedy/dp
 - [Count All Valid Pickup and Delivery Options](./Hard/Count%20All%20Valid%20Pickup%20and%20Delivery%20Op.md). dp/combinations and permutations(排列组合)
 - [Candy](./Hard/Candy.md). greedy
+- [Reconstruct Itinerary](./Hard/Reconstruct%20Itinerary.md). [Semi-Eulerian(Eulerian) Graph](http://mathonline.wikidot.com/eulerian-graphs-and-semi-eulerian-graphs)+find [Eulerian path](https://en.wikipedia.org/wiki/Eulerian_path) in Semi-Eulerian Graph

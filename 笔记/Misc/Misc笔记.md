@@ -1019,7 +1019,45 @@ git pre-commit //运行触发hook
 - zst（zstandard compress）类型数据的开头为`28 B5 2F FD`。可用命令解压：`zstd -d data.zst`。获取原始数据后，有以下几种方法恢复原始png。
     - 将原始数据放入GIMP，参数设置为要复原的图片的参数（例如RGB，宽高等）
     - 与GIMP方法类似，但使用python PIL（Image.frombytes）
-    - 使用[PNG-Decoder](https://pyokagan.name/blog/2019-10-14-png/)
+    - 使用[PNG-Decoder](https://pyokagan.name/blog/2019-10-14-png/).这篇blog里也有许多知识点
+        - 可以利用IDAT_data的长度推测png图片的长和宽。`len(IDAT_data)=height*(1+width*bytesPerPixel)`
+        ```py
+        import zlib
+        import struct
+        f = open('', 'rb').read()
+        count = f.find(b"IDAT")-4
+        f = open('', 'rb')
+        def read_chunk(f):
+            chunk_length, chunk_type = struct.unpack('>I4s', f.read(8))
+            chunk_data = f.read(chunk_length)
+            chunk_expected_crc, = struct.unpack('>I', f.read(4))
+            chunk_actual_crc = zlib.crc32(chunk_data, zlib.crc32(struct.pack('>4s', chunk_type)))
+            if chunk_expected_crc != chunk_actual_crc:
+                raise Exception('chunk checksum failed')
+            return chunk_type, chunk_data
+        f.read(count)
+        chunks = []
+        while True:
+            try:
+                chunk_type, chunk_data = read_chunk(f)
+                chunks.append((chunk_type, chunk_data))
+                if chunk_type == b'IEND':
+                    break
+            except:
+                break
+        IDAT_data = b''.join(chunk_data for chunk_type, chunk_data in chunks if chunk_type == b'IDAT')
+        IDAT_data = zlib.decompress(IDAT_data)
+        # predict w * h possibilities
+        # len(IDAT_data) ==  h * (1 + w*4)
+        for i in range(5000):
+            for j in range(5000):
+                if i * (1+ j*4) == len(IDAT_data):
+                    width = j
+                    height = i
+                    print("Width = "+str(width))
+                    print("Height = "+str(height))
+        ```
+        - png里的ancillary chunk可以删除，只要critical chunk没问题即可。可以从chunk的名字判断其是否critical。如果名称以大写开头就是critical（IDAT）；若小写开头则是ancillary（gAMA）
     - 保留zstd数据，使用Zlib解压数据后重新放入IDAT.data
 161. [Almost Perfect Remote Signing](https://born2scan.run/writeups/2023/06/02/DanteCTF.html#almost-perfect-remote-signing)
 - [AFSK (Audio frequency-shift keying)](https://en.wikipedia.org/wiki/Frequency-shift_keying#Audio_frequency-shift_keying) modulated signal:[APRS](https://en.wikipedia.org/wiki/Automatic_Packet_Reporting_System)(Automatic Packet Reporting System is a packet system for real time data communications. Used by hams for location reporting, weather stations etc。本题用来记录GPS坐标)音频信号解码。可用[direwolf](https://github.com/wb2osz/direwolf)或[multimon-ng](https://www.kali.org/tools/multimon-ng/).使用multimon-ng解码时要先把wav文件转为raw：`sox -t wav ctf.wav -esigned-integer -b16 -r 22050 -t raw out.raw`(频率调22050Hz是因为这是APRS的标准),然后解码：`multimon-ng -t raw -a AFSK1200 out.raw > res`. 见另外的wp: https://github.com/suvoni/CTF_Writeups/tree/main/danteCTF_2023#2-almost-perfect-remote-signing , https://meashiri.github.io/ctf-writeups/posts/202306-dantectf/#almost-perfect-remote-signing
