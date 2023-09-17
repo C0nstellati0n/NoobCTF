@@ -169,6 +169,7 @@
 - [Group the People Given the Group Size They Belong To](./Medium/Group%20the%20People%20Given%20the%20Group%20Size%20.md)
 - [Minimum Deletions to Make Character Frequencies Unique](./Medium/Minimum%20Deletions%20to%20Make%20Character%20Fr.md)
 - [Min Cost to Connect All Points](./Medium/Min%20Cost%20to%20Connect%20All%20Points.md). mst+Prim's algorithm+Kruskal+union find
+- [Path With Minimum Effort](./Medium/Path%20With%20Minimum%20Effort.md). dijkstra/Bellman Ford/Binary Search
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
@@ -214,3 +215,4 @@
 - [Count All Valid Pickup and Delivery Options](./Hard/Count%20All%20Valid%20Pickup%20and%20Delivery%20Op.md). dp/combinations and permutations(排列组合)
 - [Candy](./Hard/Candy.md). greedy
 - [Reconstruct Itinerary](./Hard/Reconstruct%20Itinerary.md). [Semi-Eulerian(Eulerian) Graph](http://mathonline.wikidot.com/eulerian-graphs-and-semi-eulerian-graphs)+find [Eulerian path](https://en.wikipedia.org/wiki/Eulerian_path) in Semi-Eulerian Graph
+- [Shortest Path Visiting All Nodes](./Hard/Shortest%20Path%20Visiting%20All%20Nodes.md). simulatneous BFS(bfs的起始点未知，从任何可能的node开始bfs)+bitmask
