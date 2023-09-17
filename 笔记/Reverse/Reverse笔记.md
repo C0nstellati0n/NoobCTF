@@ -942,3 +942,6 @@ def main():
         pass
 main()
 ```
+106. [wysinwyg](https://ctftime.org/writeup/18786)
+- 可以hook syscall，达到“调用某个syscall但其实执行的是其它函数”的效果。参考[Intercepting and Emulating Linux System Calls with Ptrace](https://nullprogram.com/blog/2018/06/23/).`__libc_start_main`里可能出现hook syscall的代码，多注意当init_array内容不仅为main函数的情况。
+  - 一般由ptrace，一个child和一个parent process实现。可以更改syscall实际调用的函数，阻挡syscall调用，更改syscall num，创建自定义的syscall等

