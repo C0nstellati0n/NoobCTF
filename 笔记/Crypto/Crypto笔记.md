@@ -2227,3 +2227,15 @@ print(long_to_bytes(int(M.xy()[0])))
     ```
 93. [gcd-query](https://enscribe.dev/blog/actf-2023/gcd-query/)
 - $x\equiv -n\mod gcd(x+n,m)$
+94. [flatcrypt](https://github.com/EmpireCTF/empirectf/blob/master/writeups/2018-09-14-CSAW-CTF-Quals/README.md#100-crypto--flatcrypt)
+- [CRIME](https://en.wikipedia.org/wiki/CRIME) oracle攻击。攻击条件：
+    1. 可输入内容与服务器进行交互
+    2. 输入的内容被拼接到flag后并返回压缩的内容。压缩方式诸如gzip，zlib等都可以
+    - 原理（以zlib举例）：当压缩的内容有重复部分时,压缩内容的长度会比没有重复部分的短。可利用这点猜测出之前的内容是什么
+    ```py
+    import zlib
+    print(len(zlib.compress(b"good_secret"))) #19
+    print(len(zlib.compress(b"good_secret" + b"good"))) #21
+    print(len(zlib.compress(b"good_secret" + b"baad"))) #23
+    ```
+    脚本： https://github.com/mpgn/CRIME-poc/tree/master
