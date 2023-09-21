@@ -192,8 +192,6 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 - [house of pig](https://www.anquanke.com/post/id/242640)
 - [House OF Kiwi](https://www.anquanke.com/post/id/235598)
 - [House _OF _Emma](https://www.anquanke.com/post/id/260614)
-- [kernel pwn](https://lkmidas.github.io/posts/20210123-linux-kernel-pwn-part-1/)
-  - 这个想学好久了，每次打CTF遇见这类题就寄，wp都看不懂
 - [House of Muney](https://maxwelldulin.com/BlogPost/House-of-Muney-Heap-Exploitation)
 
 ### 64位
