@@ -29,3 +29,23 @@ mov     cr3, rdi
 设置cr3后再按照iretq/sysret的需求构造栈上内容即可。参考 https://zhuanlan.zhihu.com/p/137277724 （所以2019年那个patch禁止了cr4但没禁止cr3？）
 
 绕过kpti也能用UMH (user mode helpers)。事实上，umh不仅可以用来绕kpti，单纯用来提权也是可以的。即，`commit_creds(prepare_kernel_cred(0))`不是提权的必选项。能利用的umh configuration string有core_pattern和modprobe_path。modprobe我学过了，只针对core_pattern做个笔记。
+
+参考 https://stackoverflow.com/questions/2065912/core-dumped-but-core-file-is-not-in-the-current-directory ，core_pattern（/proc/sys/kernel/core_pattern）文件用于指定dump core时的文件名格式。若里面的内容以`|`开头，kernel会将`|`后面的内容当作命令来执行。所以将kernel里的core_pattern字符串改为`|cmd`，然后再触发core dumped（Segmentation fault即可）就能执行cmd。
+
+无论是modprobe_path还是core_pattern，它们的利用方式总体上还是一致的：
+1. 寻找可以将这些configuration string覆盖为evil的漏洞，利用脚本为exp
+2. 一个trigger文件，用于触发这些umh
+3. 一个evilsu文件用于弹root shell
+4. 上面提到的evil文件，内容为chown和chmod，将evilsu文件改成root权限且所有者是我们
+
+流程大概如下：
+1. 利用漏洞覆盖configuration string为evil
+2. 返回userland，用kpti trampoline或者swapgs+iretq都行
+3. userland里用trigger触发umh
+4. evilsu拿root shell
+
+不受FG-KASLR影响的区域：
+1. `.text`段，包含kpti trampoline
+2. `.data`段，包含modprobe_path等configuration string
+3. kernel symbol stable `__ksymtab`
+4. 从base一直到0x400dc6的gadgets

@@ -548,7 +548,7 @@ for i in range(1,e):
     - 也可以使用[divisors](https://doc.sagemath.org/html/en/constructions/number_theory.html#divisors)，直接给出所有因子。这种方法恢复p和q就不用爆破组合了，p和q就在里面，直接遍历因子列表然后isPrime判断即可
     - sagemath自带的[two_squares](https://doc.sagemath.org/html/en/reference/rings_standard/sage/arith/misc.html#sage.arith.misc.two_squares)确实可以很快把N写成两个平方的和，但是好像不一定是素数
 - [Non-Quadratic Residues](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/non-quadratic%20residues.md)
-    - 有这样一个式子： $c\equiv x^a\mod b$ ,其中a，b和c均已知。若a较小（如此题a=210），那么可以尝试用sagemath的[nth_root](https://doc.sagemath.org/html/en/reference/finite_rings/sage/rings/finite_rings/integer_mod.html#sage.rings.finite_rings.integer_mod.IntegerMod_abstract.nth_root)开出x。
+    - 有这样一个式子： $c\equiv x^a\mod b$ ,其中a，b（质数）和c均已知。若a较小（如此题a=210），那么可以尝试用sagemath的[nth_root](https://doc.sagemath.org/html/en/reference/finite_rings/sage/rings/finite_rings/integer_mod.html#sage.rings.finite_rings.integer_mod.IntegerMod_abstract.nth_root)开出x。
         ```py
         #感觉使用情况和效果都和上面提过的amm差不多
         GF(b)(c).nth_root(a,all=True)

