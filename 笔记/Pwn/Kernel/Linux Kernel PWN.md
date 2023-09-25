@@ -49,3 +49,11 @@ mov     cr3, rdi
 2. `.data`段，包含modprobe_path等configuration string
 3. kernel symbol stable `__ksymtab`
 4. 从base一直到0x400dc6的gadgets
+
+[02期](https://blog.wohin.me/posts/linux-kernel-pwn-02/)是对一个古老漏洞的探究：CVE-2009-1897。不过我现在要“速通”kernel入门，而这个漏洞目前已经用不了了，对我来说学了没啥意义，所以就当拓展了。（不过还是浅浅看了一遍，怎么感觉09年linux风评不好？）
+
+[03期](https://blog.wohin.me/posts/linux-kernel-pwn-03/)讲了怎么调试。我目前也用不上（exp都写不出来调个寂寞？），更关键的是，我估计在换电脑前是没法配置好linux系统了。列出文章里提到的一些链接，需要时随时回来查。
+- [qemu搭建Ubuntu发行版源码级内核调试环境](https://1vanchen.xyz/posts/kernel/2020-10-02-build-source-level-kernel-debugging-environment.txt)
+- [CVE-2022-34918 nftable堆溢出漏洞利用(list_head任意写)](https://bsauce.github.io/2022/07/26/CVE-2022-34918)
+- [Kernel pwn CTF 入门 - 1](https://www.anquanke.com/post/id/255882)
+- [内核下载与编译](https://ctf-wiki.org/pwn/linux/kernel-mode/environment/build-kernel/)
