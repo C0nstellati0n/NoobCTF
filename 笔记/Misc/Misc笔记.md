@@ -1459,3 +1459,17 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
         - guilds文件记录了group/server的相关信息，比如创建时间
         - shared_prefs下的com.discord_preferences.xml记录了user’s trusted domain cache key
 - Android Filesystem介绍。由boot，system，recovery，data，cache和misc组成。AutoPsy也可以分析这类文件。
+154. [Syshardening 8](https://github.com/Brycen-walker/CTF-Writeups/tree/main/imaginaryCTF-2023/syshardening-8)
+- 对于Fedora 38，若打开终端发现bash prompt有点奇怪且运行命令就报错，可能是因为用户将一个恶意Konsole profile设置为了默认profile。有两种方式修复：
+    - 将用户的Konsole profile设置为运行/bin/sh
+        - 点击Konsole的设置->manage profiles->new，然后将命令行设置为/bin/sh。然后将新设置好的这个profile设为默认
+    - 安装另一个终端软件
+        - 打开Software Center，在搜索框输入terminator（运行分屏的一个终端软件）即可
+- `sudo find / -exec lsattr {} + 2>/dev/null | grep "\---i"`:查找根目录下所有的immutable文件（无法修改或重命名）。可用`for i in $(sudo find /etc -exec lsattr {} + 2>/dev/null | grep "\---i" | awk '{print $2}');do sudo chattr -ia $i;done`修改全部文件的attr
+- 若遇见某个命令的无法使用的情况，可以新下载一份命令或者在Software Center重新安装Konsole
+- `~/.bashrc`下可以设置命令的alias
+- [X11 authorization(MIT-magic-cookie)](https://stackoverflow.com/questions/37157097/how-does-x11-authorization-work-mit-magic-cookie) key转为16进制。先用xauth命令查看xauth的key文件，然后list即可
+- SSH和HTTP都可以作为攻击媒介，但是HTTP的攻击面更广。优先查看webserver的日志（boa webserver在`/var/log/boa/access_log`）
+- CVE-2014-6271:[shellshock](https://wooyun.js.org/drops/Shellshock%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE%E4%B8%8E%E5%88%86%E6%9E%90%E6%B5%8B%E8%AF%95.html).exp特征：`() { :; };`
+- glibc.malloc.mxfast是glibc中一个可调参数，决定某些操作期间内存的分配速度。若此值过高，可能会导致内存分配速度过快，从而导致资源耗尽或导致某些内存利用攻击
+- linux forensic+系统安全加固
