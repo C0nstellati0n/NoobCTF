@@ -1472,4 +1472,23 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - SSH和HTTP都可以作为攻击媒介，但是HTTP的攻击面更广。优先查看webserver的日志（boa webserver在`/var/log/boa/access_log`）
 - CVE-2014-6271:[shellshock](https://wooyun.js.org/drops/Shellshock%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE%E4%B8%8E%E5%88%86%E6%9E%90%E6%B5%8B%E8%AF%95.html).exp特征：`() { :; };`
 - glibc.malloc.mxfast是glibc中一个可调参数，决定某些操作期间内存的分配速度。若此值过高，可能会导致内存分配速度过快，从而导致资源耗尽或导致某些内存利用攻击
-- linux forensic+系统安全加固
+- Fedora 38 linux系统安全加固
+    - Firewalld
+        - 应启动Firewalld service。`dnf install firewalld -y;systemctl start firewalld`.若报错说service is masked，运行`systemctl unmask --now firewalld`
+        - Firewalld IPv6 spoofing checks enabled/Firewalld blocks invalid IPv6 to IPv4 traffic.打开`/etc/firewalld/firewalld.conf`，将IPv6_rpfilter和RFC3964_IPv4改为yes
+    - Basics/sysctl
+        - List of administrators is correct。查看`/etc/group`保证管理员组人员正确
+        - No users are part of the sys group。sys组不应该有任何非管理员用户（有时候甚至不允许有任何用户）
+        - Sudo does not preserve environment variables.查看`/etc/sudoers`（设置超级用户命令和用户的上下文，通常用于允许特别的用户无需密码以root身份运行命令）。`Defaults    !env_reset`表示当一个命令以sudo运行时，环境变量不会重置。这样普通用户就能访问root环境变量，易导致提权。将其改为`Defaults    env_reset`.
+        - Unprivileged users are not allowed access to BPF.查看`sysctl.conf`，`echo 'kernel.unprivileged_bpf_disabled = 1' >> /etc/sysctl.conf`,运行`sysctl -p`使其生效(下面的相关操作也是这样)
+        - IPv4 spoofing protection set to strict。`echo 'net.ipv4.conf.default.rp_filter = 1' >> /etc/sysctl.conf`
+        - TCP TIME-WAIT assassination protection enabled.`echo 'net.ipv4.tcp_rfc1337 = 1' >> /etc/sysctl.conf`
+        - Access to the kernel syslog is restricted。`echo 'kernel.dmesg_restrict = 1' >> /etc/sysctl.conf`
+        - SUID binaries are not allowed to dump core.`echo 'kernel.dmesg_restrict = 0' >> /etc/sysctl.conf`
+    - Auditd
+        - Auditd service is started.`systemctl start auditd`
+        - Auditd writes logs to disk.打开`/etc/audit/auditd.conf`，将`write_logs = no`改为yes
+        - Auditd logs local events。将`local_events = no`改为yes
+    - SSH
+        - 若使用`systemctl start sshd`时提示sshd service file is masked，运行`systemctl unmask --now sshd`
+        - `/etc/systemd/system/sshd.service`文件里的ExecStart记录了启动服务时运行的命令，若这个出问题了会导致报错“did not take steps required..."。如果不知道正确的command可以拿一台新的机器，查看其`/usr/lib/systemd/system/sshd.service`的内容

