@@ -275,3 +275,53 @@ cred结构体指针在[task_struct结构体](https://elixir.bootlin.com/linux/v5
 [exp](https://gist.github.com/brant-ruan/5fc95dbcdde06c188013d11a859113c0)会有几次堆喷不奏效的情况，不过成功率还可以。
 
 如果只是为了提升权限，那么简单利用AAW去修改usermode helpers、cred结构体等已经足够；如果目的是容器逃逸，那么修改这些数据结构是不够的。
+
+## [040203 Pawnyable之UAF](https://blog.wohin.me/posts/pawnyable-0203/)
+
+```c
+#define DEVICE_NAME "holstein"
+#define BUFFER_SIZE 0x400
+char *g_buf = NULL;
+static int module_open(struct inode *inode, struct file *file) {
+  g_buf = kzalloc(BUFFER_SIZE, GFP_KERNEL);
+}
+static ssize_t module_read(struct file *file, char __user *buf, size_t count, loff_t *f_pos) {
+  if (count > BUFFER_SIZE) // <1> no OOB read
+    return -EINVAL;
+  copy_to_user(buf, g_buf, count);
+}
+static ssize_t module_write(struct file *file, const char __user *buf, size_t count, loff_t *f_pos) {
+  if (count > BUFFER_SIZE) // <2> no OOB write
+    return -EINVAL;
+  copy_from_user(g_buf, buf, count);
+}
+static int module_close(struct inode *inode, struct file *file) {
+  kfree(g_buf); // <3> UAF
+}
+```
+内核中同一模块的全局变量（g_buf）是共享的。如果在用户空间对漏洞设备执行了两次open操作，得到fd1和fd2，两者将共享全局变量g_buf。此时，如果执行close(fd1)，那么虽然g_buf指向的空间已经被释放了，但是依然能够通过读写fd2来实现对这部分空间的操纵。此为uaf,常出现在“资源共享”的场景中。内核是一种典型场景
+
+另外，open(fd1)时，g_buf指向了第一次申请的空间；open(fd2)时，g_buf指向了第二次申请的空间。因此，第一次申请的空间实际上没有被使用也没有被释放，这造成了内存泄漏
+
+UAF漏洞的利用思路与堆溢出有相似之处,也是使用堆喷。当触发uaf后，尝试使用堆喷喷射一些内核对象（如tty_struct），期待其中一个会使用g_buf目前指向的已释放空间。一旦堆喷成功，我们就可以通过读写fd2来篡改新的内核对象，接下来的利用手法就跟堆溢出高度重合了
+
+偶尔漏洞利用可能导致内核崩溃，原因是堆喷失败。这种情况下，只需要在ExP中加一个判断语句来安全退出，然后再次尝试即可：
+```c
+    if ((g_buf & 0xffffffff00000000) == 0xffffffff00000000) {
+        printf("[-] heap spraying failed\n");
+        exit(-1);
+    }
+```
+绕过kaslr：就算没有越界读，也可以通过fd2读g_buf指向的区域。由于uaf，g_buf指向的区域正是tty_struct所在区域。在里面随便找个指针计算base即可
+
+绕过SMEP和SMAP，可以构造kROP。与上一篇堆溢出的构造思路有异曲同工之妙。不过用了两个uaf，一个装rop链，另一个修改tty_ops。据说这么做可以提高稳定性，避免不经意间破坏内核对象。exp的构造建议看教程里的图，然后去读exp。只要上一篇的理解了，这篇的就不难。
+
+若没有smap，也可以尝试栈迁移到用户空间。这种方法不必在内核中布置ROP，因此也不要求泄漏堆地址。
+
+找mov esp gadget要注意8字节的地址对齐，如`mov esp, 0x39000000; ret;`。然后mmap映射到操作数稍小一点的地址，确保ROP中可能出现的向下访问操作合法。
+```c
+char *userland = mmap((void *)(0x39000000 - 0x4000), 0x8000, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS | MAP_POPULATE, -1, 0);
+```
+MAP_POPULATE的作用是确保内核中能够看到我们做的内存映射，即使KPTI启用.然后把伪函数表放在用户空间，让函数表指针指向操作数（如0x39000000，不是0x39000000 - 0x4000）即可。exp的ropchain构造几乎和堆溢出一样
+
+基于AAR/AAW的UAF漏洞利用与堆溢出版本基本差不多，也可以搞modprobe_path和cred结构体。只是后者用溢出控制tty_struct，uaf用uaf（有点废话）。注意篡改当前进程的cred结构体时aaw和aar的gadget第一次uaf就全写好，第二次uaf再写就不行了（全局变量，所以第二次uaf后全部指向的都是另一个空间了）

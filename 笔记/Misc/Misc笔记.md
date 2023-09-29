@@ -1492,3 +1492,17 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - SSH
         - 若使用`systemctl start sshd`时提示sshd service file is masked，运行`systemctl unmask --now sshd`
         - `/etc/systemd/system/sshd.service`文件里的ExecStart记录了启动服务时运行的命令，若这个出问题了会导致报错“did not take steps required..."。如果不知道正确的command可以拿一台新的机器，查看其`/usr/lib/systemd/system/sshd.service`的内容
+        - 可以将密码认证换成公钥认证。在`/etc/ssh/sshd_config`添加`PubkeyAuthentication yes`和`PasswordAuthentication no`
+        - SSH root login disabled。在`/etc/ssh/sshd_config`里，将`PermitRootLogin yes`改为`PermitRootLogin no`。允许root身份登录可能非常危险，想用root可以用sudo
+        - SSH X11 forwarding disabled.将`X11Forwarding yes`改为`X11Forwarding no`。This disables the ability for a connecting client to run a graphical program on the server and forward the display to the client's machine. When X11 forwarding is enabled, there may be additional exposure to the server and to client displays if the sshd proxy display is configured to listen on the wildcard address. Additionally, the authentication spoofing and authentication data verification and substitution occur on the client side. The security risk of using X11 forwarding is that the client's X11 display server maybe exposed to attack when the SSH client requests forwarding
+    - Boa web server
+        - `/etc/boa/boa.conf`记录了CGI bin配置。CGI bins无法运行不在sandbox（CGIPath）里的系统二进制文件,以及网站运行时的端口
+        - Boa runs as the nobody user。配置文件中指定boa运行时的用户和组。应为nobody
+        - Boa default MIME type is text/plain。`cat /etc/boa/boa.conf | grep -v "^#" | grep . --color=none`获取所有启动的配置.设置`DefaultType text/html`
+    - Others
+        - DNF package manager GPG check globally enabled。在`/etc/dnf/dnf.conf`，设置`gpgcheck=True`
+        - 可用`ls -l /etc/ | awk '{print $3":"$4,$9}' | grep -v "^root:root" | grep -v "^:"`检查普通用户是否对`/etc`下的系统文件有错误权限。递归版本：`find /etc/ -exec ls -l {} \; | awk '{print $3":"$4,$9}' | grep -v "^root:root" | grep -v "^:"`
+        - `find /etc/ -type f -perm /o+w`:检查`/etc`下的全局可写系统文件。不应允许普通用户可写，会导致系统设置改变
+        - `find / -perm -4000 2>/dev/null`:查找所有有SUID位的文件（不安全，易导致提权）.取消suid位：`chmod -s file`
+        - SELinux enabled and set to enforcing. SELinux is a Linux kernel security module that provides a mechanism for supporting access control security policies, including mandatory access controls.`sestatus`：检查是否启动。启动：打开`/etc/selinux/config`，改为`SELINUX=enforcing`
+        - User processes are killed on logout.查看`/etc/systemd/logind.conf`.改为`KillUserProcesses=yes`

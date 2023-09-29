@@ -55,6 +55,7 @@
 - [The K Weakest Rows in a Matrix](./Easy/The%20K%20Weakest%20Rows%20in%20a%20Matrix.md). heap+binary search
 - [Is Subsequence](./Easy/Is%20Subsequence.md). two pointers/dp/binary search
 - [Find the Difference](./Easy/Find%20the%20Difference.md)
+- [Sort Array By Parity](./Easy/Sort%20Array%20By%20Parity.md)
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
