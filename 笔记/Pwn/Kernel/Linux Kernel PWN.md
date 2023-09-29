@@ -325,3 +325,91 @@ char *userland = mmap((void *)(0x39000000 - 0x4000), 0x8000, PROT_READ | PROT_WR
 MAP_POPULATE的作用是确保内核中能够看到我们做的内存映射，即使KPTI启用.然后把伪函数表放在用户空间，让函数表指针指向操作数（如0x39000000，不是0x39000000 - 0x4000）即可。exp的ropchain构造几乎和堆溢出一样
 
 基于AAR/AAW的UAF漏洞利用与堆溢出版本基本差不多，也可以搞modprobe_path和cred结构体。只是后者用溢出控制tty_struct，uaf用uaf（有点废话）。注意篡改当前进程的cred结构体时aaw和aar的gadget第一次uaf就全写好，第二次uaf再写就不行了（全局变量，所以第二次uaf后全部指向的都是另一个空间了）
+
+## [040204 Pawnyable之竞态条件](https://blog.wohin.me/posts/pawnyable-0204/)
+
+竞态条件个人喜欢叫“条件竞争”。该漏洞利用在多核环境下的成功率更高。如果题目的qemu命令有一句`-smp 2`将虚拟机设置为2核，可以推测目标环境可能存在条件竞争漏洞。
+
+这节没什么新的知识点，稍微看一眼exp的构造即可（如何判断是否触发条件竞争？怎样开两个线程同时运行一个方法？怎样设置CPU Affinity来让不同线程运行在不同的CPU上从而提高竞态条件触发成功率和堆喷成功率？）。基本就是触发条件竞争->获取uaf->上节的利用手段krop
+
+条件竞争的exp通常不是很稳定，多试几次即可
+
+## [040302 Pawnyable之双取](https://blog.wohin.me/posts/pawnyable-0302/)
+
+0301本来应该是“空指针解引用”，但是SMAP和mmap_min_addr给空指针解引用漏洞利用带来了很大限制。另外，[02期](https://blog.wohin.me/posts/linux-kernel-pwn-02/)已经讲过如何利用了（没做笔记，因为真的过时太久了）
+
+双取是double fetch的翻译。这个漏洞是条件竞争的一种：TOCTOU。简而言之，程序的检查逻辑和动作执行逻辑之间存在间隙，攻击者可以先提供一个合法对象以绕过检查，然后立即将其替换为恶意对象。第一次fetch用户数据用于检查，第二次fetch用户数据用于操作。两次fetch之间的时间就是攻击者将正常用户数据替换为恶意用户数据的时机。
+
+如果传的是不动的数据本身（按值传递）可能没法double fetch，但是在现代Linux操作系统中，用户空间与内核空间的数据交换非常频繁。系统常常需要从用户空间向内核空间传递复杂的数据结构，并且需要先对传入的数据进行校验和预处理。在这种情况下，一开始被传递的可能并不是数据本身，只是指向结构体的指针，具体数据仍然存在于用户空间留待后续处理。如果攻击者在内核检查和使用数据的过程之间有机会改动待传入数据，就可能绕过内核中的相应检查机制，实现double fetch
+
+接下来根据漏洞模块分配的缓冲区大小选择合适的内核对象进行堆喷。此题为32字节，选择seq_operations结构体。该结构体包含4个函数指针：
+```c
+struct seq_operations {
+void * (*start) (struct seq_file *m, loff_t *pos);
+void (*stop) (struct seq_file *m, void *v);
+void * (*next) (struct seq_file *m, void *v, loff_t *pos);
+int (*show) (struct seq_file *m, void *v);
+};
+```
+用户空间中打开/proc/self/stat文件的操作可以触发内核中seq_operations的分配。堆喷：
+```c
+spray[i] = open("/proc/self/stat", O_RDONLY);
+```
+用户空间对上述打开的文件描述符执行read系统调用最终会导致seq_operations中的start函数指针指向的函数被执行。seq_operations的函数指针值也能泄露内核基址，从而绕过KASLR。但是seq_operations仅有的四个成员均为指向非堆区域的函数指针，无法泄露堆地址。有些时候可以再喷射一些能够泄露堆地址的其他内核对象，然后向内核堆上写ROP。不过此题缓冲区只有32字节，对于提权的rop来说不够
+
+与tty_struct不同，无法从用户空间向seq_operations的start函数传递参数。因此没有AAR和AAW原语。
+
+内核中系统调用的处理入口是entry_SYSCALL_64，其中包含这样一条指令:`PUSH_AND_CLEAR_REGS rax=$-ENOSYS`。[PUSH_AND_CLEAR_REGS](https://elixir.bootlin.com/linux/v5.17.1/source/arch/x86/entry/calling.h#L117) 是一个汇编宏，包含PUSH_REGS和CLEAR_REGS两个宏，其中PUSH_REGS会将寄存器压栈：
+```
+.macro PUSH_REGS rdx=%rdx rax=%rax save_ret=0
+.if \save_ret
+pushq %rsi /* pt_regs->si */
+movq 8(%rsp), %rsi /* temporarily store the return address in %rsi */
+movq %rdi, 8(%rsp) /* pt_regs->di (overwriting original return address) */
+.else
+pushq   %rdi /* pt_regs->di */
+pushq   %rsi /* pt_regs->si */
+.endif
+pushq \rdx /* pt_regs->dx */
+pushq   %rcx /* pt_regs->cx */
+pushq   \rax /* pt_regs->ax */
+pushq   %r8 /* pt_regs->r8 */
+pushq   %r9 /* pt_regs->r9 */
+pushq   %r10 /* pt_regs->r10 */
+pushq   %r11 /* pt_regs->r11 */
+pushq %rbx /* pt_regs->rbx */
+pushq %rbp /* pt_regs->rbp */
+pushq %r12 /* pt_regs->r12 */
+pushq %r13 /* pt_regs->r13 */
+pushq %r14 /* pt_regs->r14 */
+pushq %r15 /* pt_regs->r15 */
+UNWIND_HINT_REGS
+
+.if \save_ret
+pushq %rsi /* return address on top of stack */
+.endif
+.endm
+```
+然后在栈中形成一个[pt_regs](https://elixir.bootlin.com/linux/v5.17.1/source/arch/x86/include/asm/ptrace.h#L59) 结构体。该结构体位于内核栈栈底。可以借助这个保存在栈底的pt_regs结构体来布置ROP。最终劫持控制流的read系统调用用不到那么多寄存器，因此完全可以在ExP中将ROP gadgets借助内联汇编传入寄存器，从而使它们位于内核栈栈底。实际能供我们使用的寄存器有：r8～r15、rbp、rbx。另外，r11用于保存rflags，被排除，因此算下来共有9个寄存器可以用来传递ROP gadgets。要考虑两个问题：
+1. 如何控制rsp寄存器指向pt_regs，从而将控制流劫持到ROP链上？
+2. pt_regs提供的空间对于提权的ROP链来说是否足够？
+
+对于第一个问题，只要找到一个形如add rsp, val; ret的gadget放在start函数处即可，其实就是做stack pivoting。其中val的值等于“控制流劫持到这个gadget时rsp的值”与“pt_regs中第一个压栈的r15的内存地址”之差。若没有这样简洁的gadget，只有带若干pop的gadget，还需要将val再减小一些，让gadget里的pop执行完后rsp正好落在我们通过r15传入并压栈的第一个ROP gadget上。
+
+对于第二个问题，答案是够，但是需要一个额外的`pop;ret`来清除栈上无法控制的r11。正好是9个指针:
+```
+"mov r15, pop_rdi_ret;"
+"mov r14, 0x0;"
+"mov r13, prepare_kernel_cred;"
+"mov r12, pop_rcx_ret;"
+"mov rbp, 0x0;"
+"mov rbx, pop_rbx_ret;" // make rsp skip r11
+"mov r10, mov_rdi_rax_rep_movsq_ret;"
+"mov r9, commit_creds;"
+"mov r8, swapgs_restore_regs_and_return_to_usermode;"
+```
+pt_regs结构体的末尾恰好提供了用户态寄存器上下文信息，因此不必像以往的ROP一样把它们放在栈上。
+
+如果题目环境的内核中init_cred没有导出，就没法获得它的偏移。如果能拿到，可以直接`commit_creds(&init_cred)`，无需`prepare_kernel_cred`。
+
+另外需要注意的是，针对用于绕过KPTI的swapgs_restore_regs_and_return_to_usermode（kpti trampoline），以往我们都是选择跳转到它偏移22处的指令，从那里开始执行，因为该函数开头部分有大量的对ROP不必要的pop指令。但是这里不行。pt_regs结构体中用到的最后一个成员“寄存器r8”与“用于返回用户态的寄存器上下文信息的第一个成员ip”之间隔了6个无关成员，而以往从偏移22处开始执行swapgs_restore_regs_and_return_to_usermode需要处理后面的2个额外pop指令，因此最终我们需要将偏移减4，也就是多包含swapgs_restore_regs_and_return_to_usermode中的4个pop指令，一共有6个pop，刚好把pt_regs中的无关成员跳过。（这块对照着[pt_regs结构体](https://elixir.bootlin.com/linux/v5.17.1/source/arch/x86/include/asm/ptrace.h#L59)的定义就清楚了，我们只能控制到r8，下面还有6个没有的寄存器，用几个pop跳过后才到iretq的ip）

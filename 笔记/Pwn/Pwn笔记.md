@@ -1122,3 +1122,32 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   - 在gdb中可用`i r f`指令查看x87寄存器
   - mm7 corresponds to the mantissa of st7 and the mantissa must almost always start with a msb of 1。其它也类似。意味着如果要在里面存地址的话，只能用[subnormal numbers](https://en.wikipedia.org/wiki/Subnormal_number)。It has an exponent of 1 (but stored as 0), can have leading null most significant bits without being equal to 0. 原生python目前不够精确，可以用[mp-math](https://mpmath.org/)
 106. libc-2.27的tcache poisoning条件非常宽松，没有地址对齐的限制（申请的空间无需对齐16），只往tcache free 1个chunk就可以篡改fd了（不知道是什么版本以后，要想通过写fd获取任意地址空间的话，至少要free两个chunk，往第二个free的chunk的fd写地址。往第一个写是申请不到的）。写了第一个free进tcache的chunk的fd时，在pwndbg里看bins会显示只有一个chunk，但是可以free两次，free到目标地址后tcache会显示-1……
+107. [mailman](https://surg.dev/ictf23/)
+- 2.35全保护+seccomp（只允许read，write,open,fstat,exit）。漏洞为read after free（uaf）+double free。趁这个机会完整记录一遍思路+技巧吧
+  - 泄露libc：分配两个较大的chunk（如1350），free第一个，利用unsorted bin attack+read after free泄露libc地址（第二个多余的chunk应该是用来防止与top chunk合并的）
+  - 泄露堆地址：free两个chunk（这里用的是128大小的，应该其他的也行），依次free后就能利用uaf读链表上的地址。但是需要处理safe linking。消除safe linking后尝试拿heap base，用于计算/预测未来申请的堆的地址。额外步骤：若bins里很乱，可以malloc几次把bins清空
+  - 思路：这里复习一下，全保护导致不能改got；2.35移除`__free_hook`和`__malloc_hook`；写`__exit_funcs`是hook的替代（function table of exit handlers），当程序通过libc调用`exit()`会调用`__exit_funcs`。但是直接用`_exit()`就不会走handlers了。那么尝试把ropchain（pwntools可以自动化）写入函数返回时的栈帧（不一定要是main的，这题main用exit根本不会返回，但是还有其他函数。再或者，任意调用read的lib function）。这样需要泄露栈地址。通常的方法是泄露libc里的environ，其存储着envp在stack上的地址
+  - [House of Botcake](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/house_of_botcake.c)：利用double free获取任意地址上的chunk。虽然2.35有double free的一点保护，即不能连续free一个chunk两次。但是中间free另一个chunk即可。具体步骤：
+    - allocate 7 0x200 sized blocks, this will fill the tcache for 0x200 and makes any other frees end up in a different bin
+    - allocate a previous chunk, and our victim chunk, each of size 0x200
+    - allocate a 16 byte chunk to prevent any further consolidation past our victim chunk
+    - free those 7 original chunks to actually fill the tcache.
+    - free our victim chunk, it ends up in the unsorted bin, since its too large for any other bin
+    - free our previous chunk, because malloc now sees two large, adjacent chunks, it consoldates them and places a 0x421 size block into the unsorted bin. (malloc automatically allocs 16 bytes more than what we ask, and uses the last byte as a flag, so this is the result of 2 0x210 chunks)
+    - free our victim chunk again. This bypasses the naive double free exception, and since our victim chunk has the info for a 0x210 byte block, it gets placed into the tcache
+    - alloc a 0x230 sized chunk. Why? Because malloc will split the unsorted block into two, giving us the 0x230 block... but this contains the metadata of our victim chunk, which we now have write control over during our allocation
+    - When we now alloc a 0x200 block, we'll get the victim chunk, but then the next address that the tcache is pointed to is any address of our choosing
+    - 别忘了修改metadata时地址要safe linking。safe linking时的地址通过调试获得（之前拿的heap基地址派上用场了），且原地址要16字节对齐（尝试分配到stack时更要注意）
+  - FSOP：利用stdout泄露任意地址处数据（这里是environ）。这里不会阐述原理，只记录做法，具体见wp。
+    - Set stdout->flags = _IO_MAGIC | (~_IO_NO_WRITES) | IO_IS_CURRENTLY_PUTTING | _IO_IS_APPENDING
+    - Set stdout->_IO_write_base to &environ, to make that our buffer
+    - Set stdout->_IO_write_ptr = stdout->_IO_write_end = _IO_buf_end to be &environ+8, to make our buffer non zero and just print out the stack leak.
+    ```py
+    p64(0xfbad1800) + #flags
+    p64(environ)*3 + #read_ptrs, don't matter
+    p64(environ) +  #write_base
+    p64(environ + 0x8)*2 + #write_ptr and end
+    p64(environ + 8) + # buf_base
+    p64(environ + 8) # buf_end
+    ```
+    覆盖成功后立刻就能拿到泄露。
