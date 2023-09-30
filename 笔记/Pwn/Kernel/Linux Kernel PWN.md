@@ -413,3 +413,30 @@ pt_regs结构体的末尾恰好提供了用户态寄存器上下文信息，因�
 如果题目环境的内核中init_cred没有导出，就没法获得它的偏移。如果能拿到，可以直接`commit_creds(&init_cred)`，无需`prepare_kernel_cred`。
 
 另外需要注意的是，针对用于绕过KPTI的swapgs_restore_regs_and_return_to_usermode（kpti trampoline），以往我们都是选择跳转到它偏移22处的指令，从那里开始执行，因为该函数开头部分有大量的对ROP不必要的pop指令。但是这里不行。pt_regs结构体中用到的最后一个成员“寄存器r8”与“用于返回用户态的寄存器上下文信息的第一个成员ip”之间隔了6个无关成员，而以往从偏移22处开始执行swapgs_restore_regs_and_return_to_usermode需要处理后面的2个额外pop指令，因此最终我们需要将偏移减4，也就是多包含swapgs_restore_regs_and_return_to_usermode中的4个pop指令，一共有6个pop，刚好把pt_regs中的无关成员跳过。（这块对照着[pt_regs结构体](https://elixir.bootlin.com/linux/v5.17.1/source/arch/x86/include/asm/ptrace.h#L59)的定义就清楚了，我们只能控制到r8，下面还有6个没有的寄存器，用几个pop跳过后才到iretq的ip）
+
+## [040303 Pawnyable之userfaultfd](https://blog.wohin.me/posts/pawnyable-0303/)
+
+这篇还是条件竞争，不过竞争要做的步骤更复杂了，导致达到竞争的理想状态非常困难。加上不理想的竞争状态可能会导致内核崩溃，所以需要Linux userfaultfd机制提高内核竞态条件漏洞利用的成功率
+
+userfaultfd机制允许多线程程序中的某个线程为其他线程提供用户空间页面——如果该线程将这些页面注册到了userfaultfd对象上，那么当针对这些页面的缺页异常发生时，触发缺页异常的线程将暂停运行，内核将生成一个缺页异常事件并通过userfaultfd文件描述符传递给异常处理线程。异常处理线程可以做一些处理，然后唤醒之前暂停的线程。补充链接：[CTF wiki](https://ctf-wiki.org/pwn/linux/kernel-mode/exploitation/race/userfaultfd/)（这里面说从5.4开始只有 root 权限才能使用 userfaultfd。看来又有点过时了。但谁知道会不会继续出题?）
+
+使用userfaultfd机制需要满足两个条件：
+1. 内核通过设置CONFIG_USERFAULTFD=y启用了userfaultfd机制。
+2. 用户在初始user namespace中具有CAP_SYS_PTRACE权限，或系统/proc/sys/vm/unprivileged_userfaultfd被设置为1
+
+大部分内核漏洞利用过程大体都可以抽象为一次或多次的用户空间与内核空间的数据交换。例如：
+1. 用户空间从内核空间中获取数据，从而获得内核符号地址。
+2. 用户空间向内核空间写数据，从而在内核中布置ROP链或其他载荷。
+3. 用户空间执行触发漏洞的系统调用，劫持控制流。
+
+其中，第1步和第2步都需要对用户空间的内存进行写或读操作。那么，内核对用户空间内存页的第一次读或写操作都将触发缺页异常（这里不太明白，如果内核对用户态第一次读写都会缺页，那之前怎么好好的？可能这里指的读写是对空白匿名页的读写？）。在userfaultfd机制下，控制流将回到异常处理线程上。这样一来，攻击者得以有机会在对用户空间内存写（对应第1步，通常是内核copy_to_user函数过程中）或读（对应第2步，通常是内核copy_from_user函数过程中）操作发生前施加控制
+
+漏洞模块在尾部调用了copy_from_user和copy_to_user函数。因此，可以利用userfaultfd机制，在这些点将控制流重新拿回来，在异常处理线程中执行blob_del造成UAF、或进行堆喷操作
+
+条件竞争漏洞利用的线程通常需要在指定CPU上运行。在本文环境中，为了保证主线程和子线程在同一CPU上运行，需要借助[sched_setaffinity](https://man7.org/linux/man-pages/man2/sched_setaffinity.2.html) 来实现控制
+
+流程如下：主线程首先在用户空间映射一个空白匿名页，然后触发blob_get，该函数末尾的copy_to_user将导致缺页异常，控制流回到异常处理线程。该线程制造UAF并堆喷tty_struct，最后blob_get恢复执行后将把tty_struct对象内容复制到空白匿名页中，实现地址泄露
+
+需要注意的是，copy_to_user并不能把完整的一个tty_struct对象复制到用户空间。如果追踪该函数的源码，发现在汇编层面它是不断循环迭代去复制数据的。第一次迭代复制操作触发缺页异常，然后我们才制造UAF。因此，第一次复制的数据来自UAF发生前的正常的blob对象。这种复制操作的结果是，如果我们将复制长度设定为较大值（如0x400），那么tty_struct开头的若一些字节（第一次迭代的数据）将无法被复制到用户空间。为了有效泄露内核基地址和堆地址，最好设定较小的复制长度
+
+userfaultfd提高条件竞争成功率的关键在于它能让指令走到一半停掉。普通条件竞争的难点在于各命令之间不等人，很难卡到成功的点。而userfaultfd利用缺页异常暂停当前线程并去到另一个线程，这另一个线程就能随意uaf了，做完再返回，不用担心卡不上点
