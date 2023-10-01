@@ -1151,3 +1151,21 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
     p64(environ + 8) # buf_end
     ```
     覆盖成功后立刻就能拿到泄露。
+108. [Window Of Opportunity](https://hackmd.io/@capri/SyQS6Eo9n)
+- linux kernel rop(smep,smap,kaslr,kpti)+modprobe_path.一些security features：
+  - kptr_restrict
+    - kernel pointers that are printed will (not) be censored
+  - perf_event_paranoid
+    - controls use of the performance events system by unprivileged users
+  - dmesg_restrict
+    - control access to kernel buffer (dmesg)
+
+  三者都是用来防止普通用户泄露kernel信息的
+- 获取aar的基础上爆破kaslr base。以下三点使爆破成为可能：
+  - copy_to_user is fail-safe
+    > copy_to_user does not fail even if the kernel address provided is not mapped yet, it simply copies a bunch of null bytes to the userspace buffer. It only throws an error and fails when a kernel address is not physically mappable or does not have the appropriate permissions.
+  - kaslr is brute-forceable
+    > Unlike in userspace where the ASLR entropy can be as high as 30 bits (1073741824 combinations), the KASLR entropy is only 9 bits (512 combinations) due to space constraints and alignment issues.
+  - we know the range of kaslr addresses to brute force
+    > The physical address and virtual address of kernel text itself are randomized to a different position separately. The physical address of the kernel can be anywhere under 64TB, while the virtual address of the kernel is restricted between [0xffffffff80000000, 0xffffffffc0000000], the 1GB space.
+- 如何找stack canary. canary位于gs:0x28（`$gs_base+0x28`）但gs_base的地址会随机。可以通过泄露kernel image里一个相对于gs_base的指针来计算canary的地址从而泄露canary。canary在runtime才被确定，所以需要关注那些在runtime还可写的空间。比如bss段。使用`grep " b " /proc/kallsyms | head`命令来找到和gs_base相关的地址

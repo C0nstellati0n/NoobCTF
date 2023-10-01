@@ -440,3 +440,48 @@ userfaultfd机制允许多线程程序中的某个线程为其他线程提供用
 需要注意的是，copy_to_user并不能把完整的一个tty_struct对象复制到用户空间。如果追踪该函数的源码，发现在汇编层面它是不断循环迭代去复制数据的。第一次迭代复制操作触发缺页异常，然后我们才制造UAF。因此，第一次复制的数据来自UAF发生前的正常的blob对象。这种复制操作的结果是，如果我们将复制长度设定为较大值（如0x400），那么tty_struct开头的若一些字节（第一次迭代的数据）将无法被复制到用户空间。为了有效泄露内核基地址和堆地址，最好设定较小的复制长度
 
 userfaultfd提高条件竞争成功率的关键在于它能让指令走到一半停掉。普通条件竞争的难点在于各命令之间不等人，很难卡到成功的点。而userfaultfd利用缺页异常暂停当前线程并去到另一个线程，这另一个线程就能随意uaf了，做完再返回，不用担心卡不上点
+
+## [040304 Pawnyable之FUSE](https://blog.wohin.me/posts/pawnyable-0304/)
+
+还是条件竞争，与上篇同样的漏洞模块。
+
+userfaultfd机制目前存在两个限制:
+1. 默认情况下，非特权用户不能使用该机制。
+2. 即使非特权用户能够使用该机制，在没有特权的情况下，内核空间的缺页异常也无法被捕获。
+
+FUSE可以替代userfaultfd。
+
+Linux FUSE(Filesystem in Userspace)是一个Linux内核模块，允许用户空间程序通过系统调用接口来实现文件系统。FUSE允许开发人员在用户空间而不是内核空间中编写文件系统，这样就可以更轻松地开发、测试和调试文件系统，而无需修改内核代码。
+
+FUSE编程通常包括以下步骤：
+
+1. 安装FUSE库和头文件：在开发FUSE文件系统之前，需要先安装FUSE库和头文件。这可以通过操作系统自带的包管理器来完成。
+2. 编写文件系统代码：FUSE编程需要实现一系列文件系统函数，这些函数将接收并处理系统调用。FUSE提供了一个标准的C库来简化这些函数的实现。
+3. 编译和运行文件系统：在文件系统代码完成后，需要使用编译器将其编译成可执行文件。FUSE文件系统可以通过在终端中运行它来挂载。
+4. 测试和调试文件系统：当文件系统运行后，可以使用常规的文件操作（如读、写和删除文件）来测试文件系统的功能。如果发现问题，可以使用调试工具来跟踪并解决问题。
+
+fuse案例: https://gist.github.com/brant-ruan/12196c36e8a740f200d4c168e83fa466 。使用了[libfuse](https://github.com/libfuse/libfuse)，根据脚本记住fuse基础编程的步骤即可。编译：`gcc <filename> -o <output_name> -D_FILE_OFFSET_BITS=64 -static -pthread -lfuse -ldl`。只要使用了fuse就要这么写，包括后续利用时的exp。
+
+FUSE编程的核心在于实现对应的文件操作方法（有点像编写kernel模块，不对它好像就是kernel模块，不过在用户空间里编写）。它对条件竞争的帮助与userfaultfd类似。我们注册一个fuse，然后打开，在里面mmap一个空白的page。接着去漏洞模块add一个node，`get(victim, page, 0x400);`。漏洞模块会读fuse，调用`read_callback`。在`read_callback`里就能重复上一篇的uaf操作了。不过uaf_read和uaf_write在同一个函数里，因为FUSE callback发生在文件访问过程，并不是内存页的访问过程。虽然漏洞内核模块对于用户空间内存页的访问是有读有写的，但是从引发缺页异常到FUSE callback处理，对于文件来说，它都是首先被读到内存页中。读和写只是针对内存页而言的。
+
+这里不太理解的地方是，漏洞模块读取空白内存页引发缺页后，为啥调用的是`read_callback`？根据我的理解，`read_callback`应该是当读取注册的fuse时才会被调用。虽然漏洞模块的确读取了，但是会引发缺页异常，缺页异常又去哪了？难道缺页异常一起在`read_callback`里被处理了？
+
+## [05 ret2dir](https://blog.wohin.me/posts/linux-kernel-pwn-05/)
+
+ret2dir (return-to-direct-mapped memory)利用一块直接映射到某一部分或者全部系统物理内存的内核区域来绕过现有的ret2usr防护。让攻击者在kernel地址空间里直接“镜像”一块user space数据
+
+在linux上，这样的一块区域叫做physmap，可在[Linux virtual memory map](https://www.kernel.org/doc/Documentation/x86/x86_64/mm.txt)里找到
+
+如图所示，physmap是一块kernel地址空间里巨大的连续虚拟内存区域，其中包含部分或全部（取决于架构）物理内存的直接映射，从而导致address aliasing。攻击者控制的用户进程的内存可通过其[kernel-resident](https://unix.stackexchange.com/questions/49104/what-does-kernel-resident-mean) synonym访问（synonym是个啥？）.物理内存的映射开始于一个固定已知的地址，无论是否有kaslr。在x86-64系统中，physmap从页帧零开始，将整个RAM以1:1的方式直接映射进一个64TB的区域。32位架构会有些不同
+
+在x86中，全部kernel版本下physmap映射后都是RW权限。x86-64则是RWX，不过只持续到3.8.13。3.9以后就是RW了
+
+实施ret2dir首先需要在user space映射payload。一旦提供给攻击进程一个页帧，payload将会在kernel space里出现。那么接下来的问题就是如何确定内核空间里的payload的地址。方法是在用户空间喷射尽量多的payload，让physmap里目标内核空间地址大概率包含payload
+
+与堆喷相似，攻击者选择任意一个physmap地址，尽可能保证其对应的页帧被一个包含payload的user page mmap。可以通过用多个payload填充攻击进程的地址空间做到这点
+
+如果physmap可执行，攻击者可以直接在里面放shellcode然后劫持控制流。如果不可执行，就放ropchain。先把控制流劫持到栈迁移gadget，然后把kernel stack迁移到physmap
+
+最初的ret2dir已无法在新版的kernel上成功，但是physmap spraying技术有些时候还能用
+
+参考这篇[文章](https://www.anquanke.com/post/id/185408),可以放一些特殊的字符串在mmap的page里。这样方便用gdb调试时找到地址。
