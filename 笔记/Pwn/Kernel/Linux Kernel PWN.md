@@ -485,3 +485,7 @@ ret2dir (return-to-direct-mapped memory)利用一块直接映射到某一部分�
 最初的ret2dir已无法在新版的kernel上成功，但是physmap spraying技术有些时候还能用
 
 参考这篇[文章](https://www.anquanke.com/post/id/185408),可以放一些特殊的字符串在mmap的page里。这样方便用gdb调试时找到地址。
+
+## [06 DirtyCred](https://blog.wohin.me/posts/linux-kernel-pwn-06/)
+
+这篇干货很多，和堆溢出那篇一样。堆溢出那篇我基本上全部都是抄的，没啥意思。所以不想无用功地抄了，而且这篇没有例题，暂时不做具体研究（等我实战中碰见然后看了wp再说）。另外，英文看得头疼，[这篇](https://kiprey.github.io/2022/10/dirty-cred/)是中文的
