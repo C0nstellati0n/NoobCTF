@@ -58,6 +58,7 @@
 - [Sort Array By Parity](./Easy/Sort%20Array%20By%20Parity.md)
 - [Monotonic Array](./Easy/Monotonic%20Array.md)
 - [Reverse Words in a String III](./Easy/Reverse%20Words%20in%20a%20String%20III.md)
+- [Number of Good Pairs](./Easy/Number%20of%20Good%20Pairs.md)
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

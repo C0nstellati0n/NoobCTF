@@ -1506,3 +1506,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
         - `find / -perm -4000 2>/dev/null`:查找所有有SUID位的文件（不安全，易导致提权）.取消suid位：`chmod -s file`
         - SELinux enabled and set to enforcing. SELinux is a Linux kernel security module that provides a mechanism for supporting access control security policies, including mandatory access controls.`sestatus`：检查是否启动。启动：打开`/etc/selinux/config`，改为`SELINUX=enforcing`
         - User processes are killed on logout.查看`/etc/systemd/logind.conf`.改为`KillUserProcesses=yes`
+155. [Web](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Forensics/web),[wp](https://ayusshh.medium.com/imaginaryctf-web-forensics-2f8181262b1)
+- Mozilla Firefox web browser存储文件夹`.mozilla` forensic.可用工具：
+- [Firefed](https://github.com/numirias/firefed)/[dumpzilla](https://github.com/Busindre/dumpzilla):通用工具
+- [Firefox Decrypt](https://github.com/unode/firefox_decrypt):extract passwords from profiles of Mozilla
