@@ -531,7 +531,9 @@ for i in range(1,e):
             break
 ```
 - [superstitious](https://github.com/BCACTF/bcactf-4.0/tree/main/superstitious):分解特殊的n。若 $n=pq=(a^m+r_p)(b^m+r_q)$ ，则有更快速的方式分解n。参考论文： https://einspem.upm.edu.my/journal/fullpaper/vol13saugust/8.pdf ，具体实现方式在第7页。
-- [Boneh-Durfee Attack](https://cryptohack.gitbook.io/cryptobook/untitled/low-private-component-attacks/boneh-durfee-attack):当d < $N^{0.292}$ 时，可利用该攻击方法恢复d。
+- [Boneh-Durfee Attack](https://cryptohack.gitbook.io/cryptobook/untitled/low-private-component-attacks/boneh-durfee-attack):当d < $N^{0.292}$ 时，可利用该攻击方法恢复d
+- [Sus](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Sus):分解n=p\*q\*r,其中 $q=p^2+p+1$
+- [Wasteful](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Wasteful):给出`sz=2048;e_fast = getPrime(sz // 2);e_slow = e_fast + getPrime(sz // 3) * phi`,和2048位的公钥n，利用coppersmith获取p
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
@@ -553,6 +555,10 @@ for i in range(1,e):
         #感觉使用情况和效果都和上面提过的amm差不多
         GF(b)(c).nth_root(a,all=True)
         ```
+- [Tan](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Tan)
+- $tan(m).n(1024)=t,arctan(t)+k\pi\approx m$ ,接下来可以用LLL尝试恢复准确的m。或者参考 https://math.stackexchange.com/questions/2160925/find-an-integer-a-such-that-a-sqrt2-has-a-given-decimal-part/2161019#2161019
+    - [n](https://doc.sagemath.org/html/en/reference/misc/sage/misc/functional.html)
+    - [LLL](https://doc.sagemath.org/html/en/reference/matrices/sage/matrix/matrix_integer_dense.html#sage.matrix.matrix_integer_dense.Matrix_integer_dense.LLL)
 
 ## 其他
 

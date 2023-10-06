@@ -2746,3 +2746,8 @@ if (password_verify($password, $res['pwhash'])) //...
 ```
 除了可以在sql语句处爆出数据库内容，还能绕过登录。`' UNION SELECT 'admin' AS username,'fake_hash' AS pwhash--`,利用union伪造一条查询结果。fake_hash为提前计算好的自行输入的任意password
 - 形如`$2y$10$C4lfi0f8kouggVBFkKF1ru./NEQTKqptjJCh6JI/hJieELWHLeFXi`是bcrypt hash。bcrypt限制hash内容的长度为72，意味着若hash的内容超过72后，只会取前72个字符进行hash，剩下的就丢掉了。若flag被拼接到可控制的输入后面且会返回hash的结果，可执行oracle攻击获取flag。原理：构造长度为71的任意pad字符串，尾部拼接flag后hash的内容就会携带flag的第一个字符。oracle返回pad+flag[0]的hash，就能拿着这个hash自行爆破，拿到第一个字符。然后pad长度减一，尾部拼接flag后hash的内容就会携带flag的前两个字符。拿到hash后自己拿pad+之前获取到的flag爆破即可。后面的flag以此类推
+283. [Sanitized](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Sanitized),[Sanitized Revenge](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Sanitized%20Revenge)
+- dompurify默认使用html parser，所以无法正确处理[xhtml](https://www.zhihu.com/question/19783105)文件的dom clobbering（正确设置：`{PARSER_MEDIA_TYPE: 'application/xhtml+xml'}`）。可以用CDATA+`<style>`绕过,得到xss
+- 让`<script>`标签插入innerhtml里触发的唯一做法是用`<iframe srcdoc="...">`.xhtml里不能用`<`，还可以用`&lt;`
+- html和xhtml对`<!---->`的解析有差异。HTML comment inside script tag is ignored by HTML parser，但xhtml仍会将其视作注释
+- xhtml文件可用非ascii字符作tag名来绕过dompurify的html正则检测。这是因为html限制只能用ascii字符，但是xhtml没有这个限制
