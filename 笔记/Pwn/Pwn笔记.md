@@ -1173,3 +1173,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 - 其他wp：https://nasm.re/posts/iwindow/
   - 可以利用cpu_entry_area泄露base。cpu_entry_area不受kaslr限制，利用gdb在这块内存里搜索与`kernel .text`相关的指针即可获取base
   - 整个initramfs会被映射到kernel memory且偏移固定。因此可以直接在里面尝试搜索flag。参考 https://ctf-wiki.org/pwn/linux/kernel-mode/exploitation/tricks/initramfs/
+109. [setcontext](https://www.cnblogs.com/pwnfeifei/p/15819825.html)
+- 利用setcontext处的gadget执行rop。rop链的构造可以使用pwntools的SigreturnFrame()，也可以手动写。当题目开启沙盒时，可将hook改为这里的地址实现orw
+110. [scanf与malloc_consolidate](https://bbs.kanxue.com/thread-272098.htm#msg_header_h3_20)
+- 当通过scanf，gets等走IO指针的读入函数读入大量数据时，若默认缓冲区（0x400）不够存放这些数据，则会申请一个large bin存放这些数据，例如读入0x666个字节的数据，则会申请0x810大小的large bin，并且在读入结束后，将申请的large bin进行free，其过程中由于申请了large bin，因此会触发malloc_consolidate
