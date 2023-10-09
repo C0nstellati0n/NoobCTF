@@ -235,4 +235,5 @@
 - [Reconstruct Itinerary](./Hard/Reconstruct%20Itinerary.md). [Semi-Eulerian(Eulerian) Graph](http://mathonline.wikidot.com/eulerian-graphs-and-semi-eulerian-graphs)+find [Eulerian path](https://en.wikipedia.org/wiki/Eulerian_path) in Semi-Eulerian Graph
 - [Shortest Path Visiting All Nodes](./Hard/Shortest%20Path%20Visiting%20All%20Nodes.md). simulatneous BFS(bfs的起始点未知，从任何可能的node开始bfs)+bitmask
 - [Median of Two Sorted Arrays](./Hard/Median%20of%20Two%20Sorted%20Arrays.md). binary search
-- [Build Array Where You Can Find The Maximum Exactly K Comparisons](./Hard/Build%20Array%20Where%20You%20Can%20Find%20The%20Maximum%20Exactly%20K%20Comparisons.md). 多维dp
+- [Build Array Where You Can Find The Maximum Exactly K Comparisons](./Hard/Build%20Array%20Where%20You%20Can%20Find%20The%20Maximum%20Exactly%20K%20Comparisons.md). 三维dp
+- [Max Dot Product of Two Subsequences](./Hard/Max%20Dot%20Product%20of%20Two%20Subsequences.md). 二维dp+空间优化
