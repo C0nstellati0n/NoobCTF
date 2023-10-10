@@ -1129,7 +1129,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   - 泄露libc：分配两个较大的chunk（如1350），free第一个，利用unsorted bin attack+read after free泄露libc地址（第二个多余的chunk应该是用来防止与top chunk合并的）
   - 泄露堆地址：free两个chunk（这里用的是128大小的，应该其他的也行），依次free后就能利用uaf读链表上的地址。但是需要处理safe linking。消除safe linking后尝试拿heap base，用于计算/预测未来申请的堆的地址。额外步骤：若bins里很乱，可以malloc几次把bins清空
   - 思路：这里复习一下，全保护导致不能改got；2.35移除`__free_hook`和`__malloc_hook`；写`__exit_funcs`是hook的替代（function table of exit handlers），当程序通过libc调用`exit()`会调用`__exit_funcs`。但是直接用`_exit()`就不会走handlers了。那么尝试把ropchain（pwntools可以自动化）写入函数返回时的栈帧（不一定要是main的，这题main用exit根本不会返回，但是还有其他函数。再或者，任意调用read的lib function，比如fgets）。这样需要泄露栈地址。通常的方法是泄露libc里的environ，其存储着envp在stack上的地址
-  - [House of Botcake](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/house_of_botcake.c)：利用double free获取任意地址上的chunk。虽然2.35有double free的一点保护，即不能连续free一个chunk两次。但是中间free另一个chunk即可。原理在于利用double free构造出一个overlapped chunk，然后在申请chunk时覆盖被overlap的chunk的metadata。具体步骤（根据malloc chunk的大小不同，详细步骤也会有点不同，比如 https://nasm.re/posts/mailman/ 每步分配的大小就不一样。这是第一次使用时的步骤，成功后第二次就没那么麻烦了）：
+  - [House of Botcake](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/house_of_botcake.c)：利用double free获取任意地址上的chunk。虽然2.35有double free的一点保护，即不能连续free一个chunk两次。但是中间free另一个chunk即可。原理在于利用double free构造出一个overlapped chunk，然后在申请chunk时覆盖被overlap的chunk的metadata。具体步骤（根据malloc chunk的大小不同，详细步骤也会有点不同，比如 https://nasm.re/posts/mailman/ 每步分配的大小就不一样。这是第一次使用时的步骤，成功后第二次就没那么麻烦了。因为可以重复free A+B和B，两者重叠，继续修改B的metadata）：
     - allocate 7 0x200 sized blocks, this will fill the tcache for 0x200 and makes any other frees end up in a different bin
     - allocate a previous chunk, and our victim chunk, each of size 0x200
     - allocate a 16 byte chunk to prevent any further consolidation past our victim chunk
@@ -1140,6 +1140,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
     - alloc a 0x230 sized chunk. Why? Because malloc will split the unsorted block into two, giving us the 0x230 block... but this contains the metadata of our victim chunk, which we now have write control over during our allocation
     - When we now alloc a 0x200 block, we'll get the victim chunk, but then the next address that the tcache is pointed to is any address of our choosing
     - 别忘了修改metadata时地址要safe linking。safe linking时的地址通过调试获得（之前拿的heap基地址派上用场了），且原地址要16字节对齐（尝试分配到stack时更要注意）。具体是拿要分配到的目标地址异或`((chunk_location) >> 12)`（所以要提前调试获得chunk地址）。要是没有对齐会崩溃，把目标地址+8或-8即可
+    - 另一篇[wp](https://rektedekte.github.io/CTF-writeups/ImaginaryCTF%202023/mailman/)说，这个攻击还需要分配的地址处所指向的内容也是个地址（The value at the pointer must be an address）
   - FSOP：利用stdout泄露任意地址处数据（这里是environ）。这里不会阐述原理，只记录做法，具体见wp。
     - Set stdout->flags = _IO_MAGIC | (~_IO_NO_WRITES) | IO_IS_CURRENTLY_PUTTING | _IO_IS_APPENDING
     - Set stdout->_IO_write_base to &environ, to make that our buffer
@@ -1181,5 +1182,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 111. 阅读[nightmare](https://guyinatuxedo.github.io/)时的笔记
 - https://guyinatuxedo.github.io/07-bof_static/bkp16_simplecalc/index.html ：当free的参数是0时，free会直接返回
 - https://guyinatuxedo.github.io/08-bof_dynamic/fb19_overfloat/index.html ：当输入被转为float再存入内存时如何构造ropchain
+- https://guyinatuxedo.github.io/10-fmt_strings/backdoor17_bbpwn/index.html ：格式化字符串修改内存。之前知道格式化字符串利用已输出的字符数来覆盖内存，但是假如已输出的字符数已经超过目标byte了呢？比如已经输出了0x52个字符，但是目标是0xb？答案是再加点字符凑成`0x10b`，因为地址是按byte写的，`0x0b`会留下来，溢出的`0x1`留到下面再继续覆盖。双字节时也是一样的道理，参考下面的 Tokyowesterns 2016 greeting
+- https://guyinatuxedo.github.io/11-index/sunshinectf2017_alternatesolution/index.html :nan是唯一一个既不小于某个小数又不大于那个小数的float。比如nan即不大于37.35928345也不小于它，就连37.35928345本身都不行，因为这个小数“contains more decimal places than a float handles”
 112. [Hunting](https://github.com/luisrodrigues154/Cyber-Security/tree/master/HackTheBox/Challenges/Pwn/Hunting)
 - [Egghunter Shellcode](https://anubissec.github.io/Egghunter-Shellcode/)([64位](https://pentesterslife.blog/2017/11/24/x64-egg-hunting-in-linux-systems/))构造。这类shellcode用于在内存中找指定内容同时避免访问无效地址。目标通常开头有特殊字符串，shellcode便利用access测试某个内存页是否可访问，能访问就在当前内存页搜寻特殊字符串，不能访问就切换下一页。这样一直重复直到找到目标

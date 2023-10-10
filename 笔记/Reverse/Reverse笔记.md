@@ -949,5 +949,5 @@ main()
 - lambda演算（lambda calculus）是图灵完备的，可以只用lambda编写程序。可用[Church encoding](https://en.wikipedia.org/wiki/Church_encoding)在lambda演算里表示数字。可以用 https://lambdacalc.io/ 可视化lambda演算
 - wp里还展示了一些常见的算术操作与递归的lambda形式
 108. [snailchecker](https://fazect.github.io/imaginaryctf2023-rev/#snailchecker)
-- [Josephus Problem](https://www.geeksforgeeks.org/josephus-problem/)以及解决问题的[算法](https://sites.math.northwestern.edu/~mlerma/problem_solving/solutions/josephus.pdf)
+- [Josephus Problem](https://www.geeksforgeeks.org/josephus-problem/)以及解决问题的[算法](https://sites.math.northwestern.edu/~mlerma/problem_solving/solutions/josephus.pdf)和逆算法（原来是n个元素，每隔m淘汰一个，找出剩下的k；逆向是给k和间隔m，找n）。间隔为2的最快算法： https://github.com/4rr4y/ctf-writeups/blob/main/2023_ImaginaryCTF/Reversing_SnailChecker.md
 - `int.from_bytes(b, 'big')`的本质是`b[0] * 2 ** 24 + b[1] * 2 ** 16 + b[2] * 2 ** 8 + b[3]`

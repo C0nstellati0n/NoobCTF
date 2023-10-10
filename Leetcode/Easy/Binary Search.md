@@ -96,7 +96,6 @@ class Solution {
         int right = nums.Length - 1; // initialize right pointer to the last index of the array
         while (left <= right) { // continue the loop till left pointer is less than or equal to right pointer
             int mid = left + (right - left) / 2; // calculate the middle index of the array
-            
             if (nums[mid] == target) { // check if the middle element is equal to target
                 return mid; // return the middle index
             } else if (nums[mid] < target) { // check if the middle element is less than target
