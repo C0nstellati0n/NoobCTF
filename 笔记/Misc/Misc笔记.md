@@ -1512,3 +1512,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [Firefox Decrypt](https://github.com/unode/firefox_decrypt):extract passwords from profiles of Mozilla
 156. [temu](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/temu),[wp](https://github.com/daeMOn63/ctf-writeups/tree/main/imaginary23/temu)
 - 利用[ReDoS](https://www.regular-expressions.info/redos.html)延长条件竞争的窗口期从而提高利用成功率。redos指的是程序使用了某些时间复杂度为指数级的正则表达式，导致程序运行/占用时间过长。可用[redos-checker](https://devina.io/redos-checker)检查
+157. [Forensics](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Forensics)
+- pcap文件格式理解+修复
