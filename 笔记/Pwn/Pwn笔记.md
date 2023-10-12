@@ -244,7 +244,7 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 
 24. ubuntu18中需要[栈平衡](https://blog.csdn.net/qq_41560595/article/details/112161243)（按照16字节对齐）才能正常调用system。例题:[suctf_2018_stack](https://buuoj.cn/challenges#suctf_2018_stack)
 - 补充：后来发现read等函数也需要栈对齐（rsp以0结尾），也不仅仅是ubuntu18。可能是从这里往上的libc版本和所有的系统调用都要对齐？
-25. 程序在推出是会调用fini_array，因此可以通过改fini_array获取一次循环。需要注意的是，这个数组的内容在再次从start开始执行后又会被修改，由此无法获得无限循环。例题:[ciscn_2019_sw_1](https://blog.csdn.net/wuyvle/article/details/116310454)
+25. 程序在退出时会调用fini_array，因此可以通过改fini_array获取一次循环。需要注意的是，这个数组的内容在再次从start开始执行后又会被修改，由此无法获得无限循环。例题:[ciscn_2019_sw_1](https://blog.csdn.net/wuyvle/article/details/116310454)
 26. strcpy 在复制字符串时会拷贝结束符 '\x00'，比如原字符串长8，strcpy会连着末尾的\x00一起拷贝到目标地址，也就是9个字符，易发生off-by-null。
 27. 拟态入门。该类题型会给出两个功能完全相同的程序，还有一个裁决程序，fork出这两个程序，并监听着它们的输出。如果两者输出不一样或者一方崩溃，则裁决程序就会kill掉它们两个，要求我们写出两个程序都共用的exp。例题:[强网杯2019 拟态 STKOF](https://blog.csdn.net/seaaseesa/article/details/105407007)
 28. realloc函数下的tcache dup+stdout泄露libc地址。realloc函数相比malloc，有4种情况：
@@ -1124,7 +1124,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   - 在gdb中可用`i r f`指令查看x87寄存器
   - mm7 corresponds to the mantissa of st7 and the mantissa must almost always start with a msb of 1。其它也类似。意味着如果要在里面存地址的话，只能用[subnormal numbers](https://en.wikipedia.org/wiki/Subnormal_number)。It has an exponent of 1 (but stored as 0), can have leading null most significant bits without being equal to 0. 原生python目前不够精确，可以用[mp-math](https://mpmath.org/)
 106. libc-2.27的tcache poisoning条件非常宽松，没有地址对齐的限制（申请的空间无需对齐16），只往tcache free 1个chunk就可以篡改fd了（不知道是什么版本以后，要想通过写fd获取任意地址空间的话，至少要free两个chunk，往第二个free的chunk的fd写地址。往第一个写是申请不到的）。写了第一个free进tcache的chunk的fd时，在pwndbg里看bins会显示只有一个chunk，但是可以free两次，free到目标地址后tcache会显示-1……
-107. [mailman](https://surg.dev/ictf23/)
+107. [mailman](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/mailman),[wp](https://surg.dev/ictf23/)
 - 2.35全保护+seccomp（只允许read，write,open,fstat,exit）。漏洞为read after free（uaf）+double free。趁这个机会完整记录一遍思路+技巧吧
   - 泄露libc：分配两个较大的chunk（如1350），free第一个，利用unsorted bin attack+read after free泄露libc地址（第二个多余的chunk应该是用来防止与top chunk合并的）
   - 泄露堆地址：free两个chunk（这里用的是128大小的，应该其他的也行），依次free后就能利用uaf读链表上的地址。但是需要处理safe linking。消除safe linking后尝试拿heap base，用于计算/预测未来申请的堆的地址。额外步骤：若bins里很乱，可以malloc几次把bins清空
@@ -1184,7 +1184,39 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 - https://guyinatuxedo.github.io/08-bof_dynamic/fb19_overfloat/index.html ：当输入被转为float再存入内存时如何构造ropchain
 - https://guyinatuxedo.github.io/10-fmt_strings/backdoor17_bbpwn/index.html ：格式化字符串修改内存。之前知道格式化字符串利用已输出的字符数来覆盖内存，但是假如已输出的字符数已经超过目标byte了呢？比如已经输出了0x52个字符，但是目标是0xb？答案是再加点字符凑成`0x10b`，因为地址是按byte写的，`0x0b`会留下来，溢出的`0x1`留到下面再继续覆盖。双字节时也是一样的道理，参考下面的 Tokyowesterns 2016 greeting
 - https://guyinatuxedo.github.io/11-index/sunshinectf2017_alternatesolution/index.html :nan是唯一一个既不小于某个小数又不大于那个小数的float。比如nan即不大于37.35928345也不小于它，就连37.35928345本身都不行，因为这个小数“contains more decimal places than a float handles”
+- https://guyinatuxedo.github.io/17-stack_pivot/dcquals19_speedrun4/index.html ：只能覆盖rbp一个字节的栈迁移。这种栈迁移还是有巧合的因素，因为栈迁移基本配置是要两个leave;ret，这题正好main函数最后调用了一个函数，那个函数返回一次leave;ret，紧跟着main也leave;ret。不过这题还介绍了个ret slide。因为只能覆盖一个字节，加上PIE，不知道rbp最后具体在哪。那就尽量在那块填充很多个ret，直通rop chain。可以提高成功率，和nop slide作用差不多
+- https://guyinatuxedo.github.io/17-stack_pivot/insomnihack18_onewrite/index.html ：fini_array利用+如何找fini_array地址。fini_array有两个entry，但是是倒着来的。因此应该先写第二个entry才能立即获取一次调用。这次调用完后，fini_array当前entry就变成了第一个，照应25条的“无法获得无限循环”。但是还有个办法，可以将调用fini_array的`__libc_csu_fini`函数的返回地址写成`__libc_csu_fini`，这样就又从fini_array的最后一个entry开始调用了。加上fini_array有两个entry，一个entry用于写诸如rop chain的东西，一个entry用于重新获取`__libc_csu_fini`调用，四舍五入就是无限循环
 112. [Hunting](https://github.com/luisrodrigues154/Cyber-Security/tree/master/HackTheBox/Challenges/Pwn/Hunting)
 - [Egghunter Shellcode](https://anubissec.github.io/Egghunter-Shellcode/)([64位](https://pentesterslife.blog/2017/11/24/x64-egg-hunting-in-linux-systems/))构造。这类shellcode用于在内存中找指定内容同时避免访问无效地址。目标通常开头有特殊字符串，shellcode便利用access测试某个内存页是否可访问，能访问就在当前内存页搜寻特殊字符串，不能访问就切换下一页。这样一直重复直到找到目标
 113. [generic-rop-challenge](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/generic-rop-challenge)
 - arm rop下binary自带的泄露libc通用gadget+libc里控制x0，x1，x2的gadget。部分gadget在 https://cor.team/posts/zh3r0-ctf-v2-complete-pwn-writeups/ 也有介绍。rop为orw
+114. shellcode题集合。忘记给这种常见题开集合了。之前记的零零散散的就放那吧，改的话序号全乱了。
+- [lcode](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/lcode)：可使用最多20种不同byte，且每个byte都是单数；开启沙盒故目标是写orw shellcode。非预期解是写一个获取堆地址的shellcode，然后往那里读rop chain
+```
+mov bl, 1
+xchg eax, ebx
+mov bl, 1
+xchg edi, ebx
+mov bl, 0xdf
+mov bh, 0x05
+lea edx, [ebx]
+mov r15, rsp
+lea rsi, [r15]
+syscall
+xor ebx, ebx
+xchg eax, ebx
+xor ebx, ebx
+xchg edi, ebx
+syscall
+ret
+```
+115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
+- 极小elf rop题目。源码只有简单的：
+```c
+#include <stdio.h>
+int main() {
+  char buf[8];
+  syscall(0, 0, buf, 0x900);
+}
+```
+虽然不算什么知识点，但我觉得应该不能有比这还小的elf pwn题了吧？所以记录一下，说不定这么特殊的以后还会遇到呢？或者以后遇到稍微大点的elf也不怕了。minimal是getshell，minimaler是orw。其他解法： https://gist.github.com/unvariant/9ac05bc3214fdfd6835ac38617508a94 。这个思路之前没见过：利用栈迁移在bss段里构造假的Elf64_Rela, Elf64_Sym, 和symbol，然后调用dl_resolver加上合适的参数即可调用`system("/bin/sh")`。似乎连加沙盒的也能这样通解

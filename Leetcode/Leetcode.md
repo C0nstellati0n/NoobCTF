@@ -239,3 +239,4 @@
 - [Build Array Where You Can Find The Maximum Exactly K Comparisons](./Hard/Build%20Array%20Where%20You%20Can%20Find%20The%20Maximum%20Exactly%20K%20Comparisons.md). 三维dp
 - [Max Dot Product of Two Subsequences](./Hard/Max%20Dot%20Product%20of%20Two%20Subsequences.md). 二维dp+空间优化
 - [Minimum Number of Operations to Make Array Continuous](./Hard/Minimum%20Number%20of%20Operations%20to%20Make%20Array%20Continuous.md). binary search/sliding window
+- [Number of Flowers in Full Bloom](./Hard/Number%20of%20Flowers%20in%20Full%20Bloom.md).line sweep+binary search/heap
