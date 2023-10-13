@@ -240,3 +240,4 @@
 - [Max Dot Product of Two Subsequences](./Hard/Max%20Dot%20Product%20of%20Two%20Subsequences.md). 二维dp+空间优化
 - [Minimum Number of Operations to Make Array Continuous](./Hard/Minimum%20Number%20of%20Operations%20to%20Make%20Array%20Continuous.md). binary search/sliding window
 - [Number of Flowers in Full Bloom](./Hard/Number%20of%20Flowers%20in%20Full%20Bloom.md).line sweep+binary search/heap
+- [Find in Mountain Array](./Hard/Find%20in%20Mountain%20Array.md). binary search
