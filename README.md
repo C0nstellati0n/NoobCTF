@@ -14,6 +14,8 @@
 
 决赛地点在**沙特阿拉伯的利雅得**，时间为**2023年14-16号**，可能需要提前到场。机票和食宿费用需自行承担。
 
+Edit: web选手已经找到了。
+
 Some content that has nothing to do with README but I hope everyone can see (._.)
 
 The team formed by my friends and I entered the finals of [BlackHat MEA](https://blackhatmea.com/), but due to time and money reasons, two team members were unable to go, and they were responsible for pwn and web respectively. So if anyone is interested, please contact me:
@@ -21,3 +23,5 @@ The team formed by my friends and I entered the finals of [BlackHat MEA](https:/
 - discord: c0nst3llati0n
 
 The final venue will be **Riyadh, Saudi Arabia**, from **14th to 16th 2023**. You may need to arrive in advance. Air tickets, food and accommodation are at your own expense.
+
+Edit: We have found a web player.

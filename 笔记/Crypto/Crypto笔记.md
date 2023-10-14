@@ -2247,3 +2247,6 @@ print(long_to_bytes(int(M.xy()[0])))
     脚本： https://github.com/mpgn/CRIME-poc/tree/master
 95. [signer](https://meashiri.github.io/ctf-writeups/posts/202307-imaginaryctf/#signer)
 - crc32无法防止collsion，也无法防止数据被篡改。在给定一个crc32值后，可以利用[工具](https://github.com/theonlypwner/crc32)逆向算法，获取该crc32值对应的字符串
+96. [MCTEENX](https://xhacka.github.io/posts/writeup/2023/07/29/MCTEENX/)
+- 利用bkcrack爆破ZipCrypto Store： https://www.anter.dev/posts/plaintext-attack-zipcrypto/
+- 利用CyberChef爆破异或密码的key（cribdrag）
