@@ -1517,3 +1517,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - pcap文件格式理解+修复
 158. [故乡话](../../CTF/moectf/2023/Misc/故乡话.md)
 - minecraft[标准银河字母](https://minecraft.fandom.com/zh/wiki/%E9%99%84%E9%AD%94%E5%8F%B0#%E6%A0%87%E5%87%86%E9%93%B6%E6%B2%B3%E5%AD%97%E6%AF%8D)（standard galactic alphabet）与[解码](https://www.dcode.fr/standard-galactic-alphabet)
+159. [magnet_network](../../CTF/moectf/2023/Misc/magnet_network.md)
+- torrent的文件结构: https://en.wikipedia.org/wiki/Torrent_file ,结构查看： https://chocobo1.github.io/bencode_online/
+- qBittorrent有pad文件，用于将文件长度pad成piece length(16384)。文件的填充内容是`\x00`
+160. [EZ Conv](../../CTF/moectf/2023/AI/EZ%20Conv.md)
+- python pytorch卷积。参考 https://www.geeksforgeeks.org/apply-a-2d-convolution-operation-in-pytorch/ 和 https://stackoverflow.com/questions/49768306/pytorch-tensor-to-numpy-array

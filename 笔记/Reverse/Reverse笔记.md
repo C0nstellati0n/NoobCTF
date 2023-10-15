@@ -954,3 +954,5 @@ main()
 - `int.from_bytes(b, 'big')`的本质是`b[0] * 2 ** 24 + b[1] * 2 ** 16 + b[2] * 2 ** 8 + b[3]`
 109. [icancount](https://guyinatuxedo.github.io/13-angr/plaid19_icancount/index.html)
 - PIE下的angr模拟
+110. [unwind](../../CTF/moectf/2023/Reverse/unwind.md)
+- windows SEH程序动态调试。参考 https://reverseengineering.stackexchange.com/questions/18192/stepping-into-exception-handler ，将断点下在`ntdll!ExecuteHandler2`的`call ecx`指令处，然后就能跟进看到接下来调用了什么函数了。若找不到`ntdll!ExecuteHandler2`这个symbol，可以x32/x64dbg ctrl+f搜指令`call ecx`。这个指令程序里不多，一个一个排除即可

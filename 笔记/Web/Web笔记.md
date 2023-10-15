@@ -2763,3 +2763,10 @@ if (password_verify($password, $res['pwhash'])) //...
 - python requests处理flask session cookie
     - 如何保持post/get时服务器下发的cookie（session.post）
     - 如何解码cookie（requests.utils.dict_from_cookiejar）
+287. [出去旅游的心海](../../CTF/moectf/2023/Web/出去旅游的心海.md)
+- sql insert/update/delete语句报错注入： https://wooyun.js.org/drops/%E5%88%A9%E7%94%A8insert%EF%BC%8Cupdate%E5%92%8Cdelete%E6%B3%A8%E5%85%A5%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE.html
+288. [moeworld](../../CTF/moectf/2023/Web/moeworld.md)
+- 内网端口扫描工具[fscan](https://github.com/shadow1ng/fscan)使用
+- python pymysql模块连接sql数据库以及查询数据
+- python使用redis模块连接redis服务器以及利用[redis未授权访问漏洞](https://_thorns.gitbooks.io/sec/content/redis_getshellzi_dong_hua_shi_jian_zhi_ssh_key.html)
+- 使用python paramiko模块连接ssh： https://www.cnblogs.com/wongbingming/articles/12384764.html

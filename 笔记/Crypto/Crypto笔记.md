@@ -267,7 +267,6 @@ print(plaintext)
 
 - 根据d和e构造出n:[Calculating RSA Public Modulus from Private Exponent and Public Exponent](https://crypto.stackexchange.com/questions/81615/calculating-rsa-public-modulus-from-private-exponent-and-public-exponent)。更详细的方法：https://stackoverflow.com/questions/2921406/calculate-primes-p-and-q-from-private-exponent-d-public-exponent-e-and-the
 - [已知d分解n](https://crypto.stackexchange.com/questions/6361/is-sharing-the-modulus-for-multiple-rsa-key-pairs-secure)。
-
 ```python
 import random
 import math
@@ -311,6 +310,7 @@ m = pow(c, d, n)
 flag = p - m
 print(long_to_bytes(flag))
 ```
+已知phi分解n也是这个考点。本身已知e和d分解n就是为了凑phi的倍数，现在如果有phi直接分解即可。[factorize_me!](../../CTF/moectf/2023/Crypto/factorize_me!.md)
 
 - p高位泄露（coppersmith），可直接根据泄露的高位p，n和e求出p。需使用sagemath运行。
 

