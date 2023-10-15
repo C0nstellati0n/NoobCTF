@@ -569,6 +569,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 ```
 
 但加上-e选项却提取不出来jpg。这时可以用`dd if=data2 skip=2191360 of=res.jpg`提取。
+
 126. [minecraft](https://hackmd.io/9_WE-HinSYqFQyKubluRuw?view#minecraft---200---Easy)
 - .mcworld后缀的文件其实是zip，后缀改成zip即可解压
 - 更完整的grep命令：`strings 000003.log | grep bucket -A 2 -B 2`。解决grep出来的字符串不全的问题。
@@ -1514,3 +1515,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 利用[ReDoS](https://www.regular-expressions.info/redos.html)延长条件竞争的窗口期从而提高利用成功率。redos指的是程序使用了某些时间复杂度为指数级的正则表达式，导致程序运行/占用时间过长。可用[redos-checker](https://devina.io/redos-checker)检查
 157. [Forensics](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Forensics)
 - pcap文件格式理解+修复
+158. [故乡话](../../CTF/moectf/2023/Misc/故乡话.md)
+- minecraft[标准银河字母](https://minecraft.fandom.com/zh/wiki/%E9%99%84%E9%AD%94%E5%8F%B0#%E6%A0%87%E5%87%86%E9%93%B6%E6%B2%B3%E5%AD%97%E6%AF%8D)（standard galactic alphabet）与[解码](https://www.dcode.fr/standard-galactic-alphabet)

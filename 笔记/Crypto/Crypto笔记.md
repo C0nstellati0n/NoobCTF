@@ -2179,6 +2179,7 @@ M = d * C
 print(long_to_bytes(int(M.xy()[0])))
 ```
 或者参考 https://zhuanlan.zhihu.com/p/643176962 ，在p和q下分别求离散对数，然后crt。
+
 84. [Big](https://zhuanlan.zhihu.com/p/643355092)
 - [Cocks IBE scheme](https://en.wikipedia.org/wiki/Cocks_IBE_scheme)：基于二次剩余（quadratic residuosity）的加密方式
 - [韦达定理](https://baike.baidu.com/item/%E9%9F%A6%E8%BE%BE%E5%AE%9A%E7%90%86/105027)+sagemath利用kronecker求二次剩余
@@ -2250,3 +2251,5 @@ print(long_to_bytes(int(M.xy()[0])))
 96. [MCTEENX](https://xhacka.github.io/posts/writeup/2023/07/29/MCTEENX/)
 - 利用bkcrack爆破ZipCrypto Store： https://www.anter.dev/posts/plaintext-attack-zipcrypto/
 - 利用CyberChef爆破异或密码的key（cribdrag）
+97. [Fermentation](https://xa21.netlify.app/blog/tfcctf-2023/Fermentation/)
+- [aes cbc翻转字节攻击](http://www.f0und.icu/article/28.html)。可以在不知道key和iv的情况下，通过修改密文实现解密出来的明文为攻击者期望的内容

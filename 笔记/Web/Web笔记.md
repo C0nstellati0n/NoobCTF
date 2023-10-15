@@ -1722,6 +1722,7 @@ response = client.get_function(FunctionName="wani_function")
 pprint(response)
 ```
 官方[wp](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/lambda)给的是命令行的解法。
+
 207. [screenshot](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/screenshot)
 - SSRF常出现于服务器访问用户提供的url时。此时可用file://协议读取本地文件。
 - js里的req.query.url在名为url的参数有两个时，会返回列表。此处隐藏着parameter type confusion。下面的代码：
@@ -2750,3 +2751,15 @@ if (password_verify($password, $res['pwhash'])) //...
 - html和xhtml对`<!---->`的解析有差异。HTML comment inside script tag is ignored by HTML parser，但xhtml仍会将其视作注释
 - xhtml文件可用非ascii字符作tag名来绕过dompurify的html正则检测。这是因为html限制只能用ascii字符，但是xhtml没有这个限制
 - 作者说此题的灵感来源： https://jakearchibald.com/2023/against-self-closing-tags-in-html/
+284. [Baby Ducky Notes: Revenge](https://ireland.re/posts/TheFewChosen_2023/#baby-ducky-notes-revenge)
+- 在python flask中：
+```html
+<p> {{post.get('content') | safe}} </p>
+```
+表示flask不会对content的内容进行过滤，意味着可能有xss
+285. [Cookie Store](https://ireland.re/posts/TheFewChosen_2023/#cookie-store)
+- 若xss题目中bot有提交form的操作，可以尝试污染dom：`<input type="submit" formaction="server"/>`。formaction要比action优先级更高，会将bot导向攻击者的server
+286. [gas](../../CTF/moectf/2023/Web/gas.md)
+- python requests处理flask session cookie
+    - 如何保持post/get时服务器下发的cookie（session.post）
+    - 如何解码cookie（requests.utils.dict_from_cookiejar）
