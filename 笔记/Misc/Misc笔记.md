@@ -1522,3 +1522,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - qBittorrent有pad文件，用于将文件长度pad成piece length(16384)。文件的填充内容是`\x00`
 160. [EZ Conv](../../CTF/moectf/2023/AI/EZ%20Conv.md)
 - python pytorch卷积。参考 https://www.geeksforgeeks.org/apply-a-2d-convolution-operation-in-pytorch/ 和 https://stackoverflow.com/questions/49768306/pytorch-tensor-to-numpy-array
+161. [MCELLA](https://xhacka.github.io/posts/writeup/2023/07/29/MCELLA/)
+- [steg86](https://github.com/woodruffw/steg86):用于将信息隐写进x86和AMD64 binary的工具

@@ -1248,3 +1248,13 @@ int main() {
 117. [feedback](../../CTF/moectf/2023/Pwn/feedback.md)
 - stdout利用。若地址未知，覆盖_IO_write_base的最后一个字节将其改小就能泄露libc地址。若地址已知，直接更改_IO_write_base和_IO_write_ptr实现任意地址读
 - 一般都能成功，只有一种情况例外：_IO_write_base最后一个字节本身就很小，比如是`0x3`。这时改成`\x00`也只能泄露0x3个字节（`_IO_write_ptr`默认和`_IO_write_base`一样）
+118. [Inj](https://github.com/qLuma/TFC-CTF-2023/tree/main/Inj),[wp](https://xa21.netlify.app/blog/tfcctf-2023/inj/)
+- 可以在64位程序里使用`int 0x80`调用32位的系统调用（遵守32位系统调用的调用号和参数传递）。利用`BPF_JUMP`和`BPF_STMT`设置沙盒时也可以分32位和64位系统调用分别设置
+- 只有open和read无write调用时可以通过测信道的方式读取flag。读取flag后，一位一位地遍历flag。若为0，让程序崩溃；若为1，让程序延时（执行另一个read或者执行一个很长的loop）
+119. [Bad grades](https://github.com/luisrodrigues154/Cyber-Security/tree/master/HackTheBox/Challenges/Pwn/BadGrades)
+- 当scanf遇见`.`,`+`,`-`输入时，会跳过，即参数的内存处不会被修改
+120. [File Reader?](https://ireland.re/posts/Lexington_Informatics_Tournament_CTF_23/#file-reader)
+- glibc利用一些记录在内存中的数据判断一个chunk是否被double free。获取任意地址写后，三种方法修改数据使glibc忽视double free
+  - overwrite the key (freed_chunk + 8) with nonsense (if the key is the same as the address of the first chunk, the one with size 0x290, libc thinks it's a double free)
+  - change the size of the chunk (freed_chunk - 8) so it goes into a different tcache list than the one it's supposed to go in (libc checks for double free by looking at only one of the lists).
+  - set the 0x50 size bin's head to 0 so the freed_chunk doesn't appear in the list.

@@ -2253,3 +2253,33 @@ print(long_to_bytes(int(M.xy()[0])))
 - 利用CyberChef爆破异或密码的key（cribdrag）
 97. [Fermentation](https://xa21.netlify.app/blog/tfcctf-2023/Fermentation/)
 - [aes cbc翻转字节攻击](http://www.f0und.icu/article/28.html)。可以在不知道key和iv的情况下，通过修改密文实现解密出来的明文为攻击者期望的内容
+98. [Polypoint](https://maxniederman.com/posts/ctf/lit-2023/polypoint/)
+- 线性方程组缺少一个完全未知的方程的解法。之前见过缺少一个方程组的线性系统，但是那个未知的方程解已知。这题完全不知道。当线性系统缺少方程时，方程组有解且有无数个解，这时就需要通过设置解的范围来确定唯一的的解。wp作者使用的软件为Mathematica
+```
+Encoded = Import["encoded.csv"]; //导入文件
+X = Encoded[[All, 1]];
+Y = Encoded[[All, 2]]; //将文件中第二列全部内容存入Y
+V = Function[x, Power[x, Range[0, 10]]]; //构造一个函数，参数为x，返回x 0-10幂次组成的数列
+M = V /@ X; //将函数作用于X中的每一元素
+p = {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11};
+SolutionBounds = Cuboid[ //构造一个解的范围。根据wp，p1的下限是0，上限是2^(78 * 8)；其余的下限是10^11，上限是10^12
+        Join[{0}, Table[10^11, 10]],
+        Join[{2^(78 * 8)}, Table[10^12, 10]]
+    ];
+Solution = Solve[M.p == Y &&  p ∈ SolutionBounds, p, Integers]
+Flag = First[p1 /. Solution]
+Print[ByteArrayToString[ByteArray[IntegerDigits[Flag, 2^8]]]]
+```
+99. [The Door to the Xord](https://demo.hedgedoc.org/s/aCKUEfByW)
+- 获取MT19937连续的624个32-bit输出后，即可预测接下来的随机数。参考 https://www.schutzwerk.com/en/blog/attacking-a-rng/ ，工具： https://github.com/anneouyang/MT19937 。因为其state有19968 bit，624个32 bit就是624×32=19968
+- mt19937是线性的，就算只能获取32-bit输出与一个固定未知值的异或结果，仍然也是线性的。只需要在z3里实现mt19937即可
+- 如果不能获取32 bit输出而是其n倍bit，可以将n倍bit转为32 bit。因为其输出是倒着拼接的
+```py
+import random
+random.seed(0)
+print([hex(random.getrandbits(32)) for _ in range(8)])
+random.seed(0)
+print(hex(random.getrandbits(256)))
+#['0xd82c07cd', '0x629f6fbe', '0xc2094cac', '0xe3e70682', '0x6baa9455', '0xa5d2f34', '0x42485e3a', '0xf728b4fa']
+#0xf728b4fa42485e3a0a5d2f346baa9455e3e70682c2094cac629f6fbed82c07cd
+```
