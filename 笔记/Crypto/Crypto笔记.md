@@ -2270,6 +2270,7 @@ Solution = Solve[M.p == Y &&  p ∈ SolutionBounds, p, Integers]
 Flag = First[p1 /. Solution]
 Print[ByteArrayToString[ByteArray[IntegerDigits[Flag, 2^8]]]]
 ```
+- 某些情况下可以用z3： https://nolliv22.com/writeups/lit%20ctf%202023/polypoint
 99. [The Door to the Xord](https://demo.hedgedoc.org/s/aCKUEfByW)
 - 获取MT19937连续的624个32-bit输出后，即可预测接下来的随机数。参考 https://www.schutzwerk.com/en/blog/attacking-a-rng/ ，工具： https://github.com/anneouyang/MT19937 。因为其state有19968 bit，624个32 bit就是624×32=19968
 - mt19937是线性的，就算只能获取32-bit输出与一个固定未知值的异或结果，仍然也是线性的。只需要在z3里实现mt19937即可

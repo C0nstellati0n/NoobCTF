@@ -914,6 +914,7 @@ if(*xd==1234){
 }
 ```
 xd在程序开始时会被calloc/malloc的指针覆盖，即使程序没有PIE也无法直接往里面写值。可以在程序里任意选择一处可读可写地址a，将a的值写为1234，然后将xd写为a。`fmtstr_payload(offset,{a:1234,xd:a})`,`*xd=*(xd->a)=1234`
+
 80. [painter](https://github.com/TJCSec/tjctf-2023-challenges/tree/main/pwn/painter),[wp](https://gist.github.com/awt-256/8e6bdad37116308bd070d5e0aa7a2ebd)
 - wasm binary pwn。wasm可用不同高级语言写成，比如C/C++。字节溢出等问题也会在wasm里出现。
 - `$global0` is LLVM's RSP in wasm
@@ -1231,6 +1232,9 @@ xchg edi, ebx
 syscall
 ret
 ```
+- [Inj](https://github.com/qLuma/TFC-CTF-2023/tree/main/Inj),[wp](https://xa21.netlify.app/blog/tfcctf-2023/inj/)
+  - 可以在64位程序里使用`int 0x80`调用32位的系统调用（遵守32位系统调用的调用号和参数传递）。利用`BPF_JUMP`和`BPF_STMT`设置沙盒时也可以分32位和64位系统调用分别设置
+  - 只有open和read无write调用时可以通过测信道的方式读取flag。读取flag后，一位一位地遍历flag。若为0，让程序崩溃；若为1，让程序延时（执行另一个read或者执行一个很长的loop）
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
@@ -1248,13 +1252,20 @@ int main() {
 117. [feedback](../../CTF/moectf/2023/Pwn/feedback.md)
 - stdout利用。若地址未知，覆盖_IO_write_base的最后一个字节将其改小就能泄露libc地址。若地址已知，直接更改_IO_write_base和_IO_write_ptr实现任意地址读
 - 一般都能成功，只有一种情况例外：_IO_write_base最后一个字节本身就很小，比如是`0x3`。这时改成`\x00`也只能泄露0x3个字节（`_IO_write_ptr`默认和`_IO_write_base`一样）
-118. [Inj](https://github.com/qLuma/TFC-CTF-2023/tree/main/Inj),[wp](https://xa21.netlify.app/blog/tfcctf-2023/inj/)
-- 可以在64位程序里使用`int 0x80`调用32位的系统调用（遵守32位系统调用的调用号和参数传递）。利用`BPF_JUMP`和`BPF_STMT`设置沙盒时也可以分32位和64位系统调用分别设置
-- 只有open和read无write调用时可以通过测信道的方式读取flag。读取flag后，一位一位地遍历flag。若为0，让程序崩溃；若为1，让程序延时（执行另一个read或者执行一个很长的loop）
-119. [Bad grades](https://github.com/luisrodrigues154/Cyber-Security/tree/master/HackTheBox/Challenges/Pwn/BadGrades)
+118. [Bad grades](https://github.com/luisrodrigues154/Cyber-Security/tree/master/HackTheBox/Challenges/Pwn/BadGrades)
 - 当scanf遇见`.`,`+`,`-`输入时，会跳过，即参数的内存处不会被修改
-120. [File Reader?](https://ireland.re/posts/Lexington_Informatics_Tournament_CTF_23/#file-reader)
+119. [File Reader?](https://ireland.re/posts/Lexington_Informatics_Tournament_CTF_23/#file-reader)
 - glibc利用一些记录在内存中的数据判断一个chunk是否被double free。获取任意地址写后，三种方法修改数据使glibc忽视double free
   - overwrite the key (freed_chunk + 8) with nonsense (if the key is the same as the address of the first chunk, the one with size 0x290, libc thinks it's a double free)
   - change the size of the chunk (freed_chunk - 8) so it goes into a different tcache list than the one it's supposed to go in (libc checks for double free by looking at only one of the lists).
   - set the 0x50 size bin's head to 0 so the freed_chunk doesn't appear in the list.
+120. [stiller-printf](https://eth007.me/blog/ctf/stiller-printf/)
+- pie+只有一次格式化字符串漏洞+exit。可能是格式化字符串漏洞最难的一道题，需要在一次漏洞中直接无视pie修改返回地址而且需要保持1/3的通过率，导致单纯爆破肯定是不行的。需要同时利用多个指针链
+  - 之前70条提过指针链不要用数字参数，这题继续加深理解。这个指的是如果想要利用指针链在同一次printf利用中修改二级指针+返回地址的话，就不要用类似`%numc%15$hn%numc%41$hn`的payload。因为printf内部调用的vfprintf在看到第一个`$`后会将后续全部的参数全部存到一个buf里，第一个`%15$hn`改完后，改`%41$hn`还用的是之前缓存的而不是刚才现改的值（这也告诉我们当后续没有其他要写的东西时，或者说最后一个是可以用数字偏移的）。解决办法是用%c拼凑过去：`%c%p%c%c%c%c%c%c%c%c%c%c%c%4894c%hn%165c%41$hhn`，让第一个%hn就在15的偏移处，就不用偏移了
+  - printf的字符数只需要满足num mod 2^bit_length。比如用%hhn修改，只需要保证之前打印的字符数为0x09 mod 256即可
+  - `%*c`的使用。这是一个特殊的format，使用时会拿两个参数，第一个是width，第二个是要打印的字符。比如：
+  ```c
+  printf("%*c", 42, 'a');
+  //Output: "                                          a"
+  ```
+  利用这个format可以实现pie无leak情况下修改返回地址（但是成功率1/3）

