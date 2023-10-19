@@ -2795,3 +2795,27 @@ if (password_verify($password, $res['pwhash'])) //...
 </body>
 </html>
 ```
+290. [Art Contest](https://blog.junron.dev/writeups/web/art-contest.html),[wp2](https://ireland.re/posts/Lexington_Informatics_Tournament_CTF_23/#art-contest)
+- python的os.path.splitext函数有特殊情况：路径最后一个部分前面的点号属于root路径的一部分
+```py
+>>> splitext('.cshrc')
+('.cshrc', '')
+>>> splitext('/foo/....jpg')
+('/foo/....jpg', '')
+```
+- chrome中，名为html的文件不会被当成html渲染，但名为`.html`的文件会
+- 浏览器的沙盒禁止用js读取磁盘上的文件
+- 可以用window.open函数开启一个新的页面。虽然通常会被浏览器的弹出窗口拦截器给拦截，但是在诸如Playwright的模拟环境中不会。页面可通过playwright context.pages[index]按开启的顺序取得
+- js的history.replaceState函数可以更改一个页面显示的url，但不会影响真正所在的url。比如当前在`a/b`，可改成`a/c`。这样显示的是`a/c`，但实际在`a/b`。只能同源页面下使用，a.com不能改成b.com
+- flask路由返回的任何字符串都会被看作是html渲染
+- 可以在打开新页面的同时修改其内容
+```js
+var my = window.open('/x' + e, '_blank' ,"height=600, width=600");
+my.onload = function () {
+ my.document.body.innerHTML = "winner!!";
+};
+```
+但是仅限打开的页面与当前页面同源
+
+291. [petpet rcbee](https://drt.sh/posts/htb-petpet-rcbee/)
+- [Python PIL/Pillow Remote Shell Command Execution via Ghostscript](https://github.com/farisv/PIL-RCE-Ghostscript-CVE-2018-16509)。将一段ghostscript作为图片文件提供给pil，当调用Image.Open时，pil监测到这是个EPS图片，然后利用漏洞在ghostscript里写要执行的命令

@@ -71,19 +71,16 @@ rabin算法可以解出来4个明文，一般末尾会有类似校验码的东�
 from Crypto.Util.number import *
 import gmpy2
 from sympy.ntheory.modular import crt
-
 e1 = 0
 p1 = 0
 q1 = 0
 c1 = 0
 n1 = p1 * q1
-
 e2 = 0
 p2 = 0
 q2 = 0
 c2 = 0
 n2 = p2 * q2
-
 p = p1
 phi1 = (p - 1) * (q1 - 1)
 phi2 = (p - 1) * (q2 - 1)
@@ -92,15 +89,12 @@ a1 = e1 // b
 a2 = e2 // b
 bd1 = gmpy2.invert(a1, phi1)
 bd2 = gmpy2.invert(a2, phi2)
-
 mb1 = pow(c1, bd1, n1)
 mb2 = pow(c2, bd2, n2)
 c3 = mb1 * mb2 % p
 c2 = mb2 % q2
 c1 = mb1 % q1
-
 res = crt([q1, q2, p],[c1, c2, c3])[0]
-
 n = q1 * q2
 f = (q1 - 1) * (q2 - 1)
 m = res % n
@@ -251,15 +245,12 @@ def smallEattack(c, e, n):
 from Crypto.Util.number import *
 from Crypto.PublicKey import RSA
 from pwn import xor
-
 n = 0
 e = 65537
 d = 0
-ciphertext = "x"
-
+ciphertext =
 p = RSA.construct((n, e, d)).p
 q = n//p
-
 key = xor(long_to_bytes(p), long_to_bytes(q)) #pwn的xor函数无需两个字符串相同长度
 plaintext = xor(bytes.fromhex(ciphertext), key).decode()
 print(plaintext)
@@ -559,6 +550,10 @@ for i in range(1,e):
 - $tan(m).n(1024)=t,arctan(t)+k\pi\approx m$ ,接下来可以用LLL尝试恢复准确的m。或者参考 https://math.stackexchange.com/questions/2160925/find-an-integer-a-such-that-a-sqrt2-has-a-given-decimal-part/2161019#2161019
     - [n](https://doc.sagemath.org/html/en/reference/misc/sage/misc/functional.html)
     - [LLL](https://doc.sagemath.org/html/en/reference/matrices/sage/matrix/matrix_integer_dense.html#sage.matrix.matrix_integer_dense.Matrix_integer_dense.LLL)
+- [LCG to the power of n!](https://github.com/SuperBeetleGamer/Crypto-Writeups/blob/main/LITCTF%202023/lcg%20to%20the%20power%20of%20n!.md)
+    - 格（lattice）中的Closest Vector Problem（CVP）
+    - [IntegerLattice](https://doc.sagemath.org/html/en/reference/modules/sage/modules/free_module_integer.html#sage.modules.free_module_integer.IntegerLattice)
+    - Babai_closest_vector算法实现
 
 ## 其他
 

@@ -246,3 +246,4 @@
 - [Find in Mountain Array](./Hard/Find%20in%20Mountain%20Array.md). binary search
 - [Painting the Walls](./Hard/Painting%20the%20Walls.md). dp
 - [Number of Ways to Stay in the Same Place After Some Steps](./Hard/Number%20of%20Ways%20to%20Stay%20in%20the%20Same%20Place%20After%20Some%20Steps.md). dp
+- [Parallel Courses III](./Hard/Parallel%20Courses%20III.md). dfs(dp)/拓扑排序, Kahn's Algorithm
