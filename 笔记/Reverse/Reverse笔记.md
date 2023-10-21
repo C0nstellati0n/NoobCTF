@@ -958,3 +958,8 @@ main()
 - windows SEH程序动态调试。参考 https://reverseengineering.stackexchange.com/questions/18192/stepping-into-exception-handler ，将断点下在`ntdll!ExecuteHandler2`的`call ecx`指令处，然后就能跟进看到接下来调用了什么函数了。若找不到`ntdll!ExecuteHandler2`这个symbol，可以x32/x64dbg ctrl+f搜指令`call ecx`。这个指令程序里不多，一个一个排除即可
 111. [ilovepython](https://github.com/cewau/ctf-writeups/blob/main/20230805-litctf/REV_ilovepython.md)
 - python高级类型推断（逆变、协变）。这题非常复杂，看懂了python的类型就懂了（但是我看不懂，后面再遇到的话再看吧）
+112. [What Is It](https://learn-cyber.net/writeup/What-Is-It)
+- AutoIt脚本可能被隐藏在exe中（strings这样的exe会有AutoIt字样）。提取工具： https://github.com/nazywam/AutoIt-Ripper
+113. [Old Obfuscation](https://learn-cyber.net/writeup/Old-Obfuscation)
+- exe和python文件同时出现在一个文件夹下很有可能是pyinstaller打包程序。strings exe文件内有pyinstaller字样。可用[pyinstxtractor](https://github.com/extremecoders-re/pyinstxtractor)解压
+- PyArmor混淆。参考 https://github.com/Svenskithesource/PyArmor-Unpacker/tree/main 进行反混淆
