@@ -2284,3 +2284,5 @@ print(hex(random.getrandbits(256)))
 101. [E(Z/C)LCG](https://meashiri.github.io/ctf-writeups/posts/202308-litctf/#cryptoezclcg)
 - 椭圆曲线（ecc）的参数恢复。Weierstrass形式的椭圆曲线方程为 $y^2=x^3+ax+b$ ，若已知曲线上任意两个点，就能恢复a和b。 https://github.com/jvdsn/crypto-attacks/blob/master/attacks/ecc/parameter_recovery.py
 - 注意当g=ax，其中x是椭圆曲线上的点，a是常数的话，已知g，a求x要用离散对数（还是要根据定义来，这里的乘法不是常规意义上的乘法，是椭圆曲线自己定义的）
+102. [All in One](https://meashiri.github.io/ctf-writeups/posts/202308-cybergonctf/#all-in-one)
+- 维吉尼亚密码（Vigenere）decoder。这个decoder的字符集较广而且区分大小写，网上常见的decoder都解不出来

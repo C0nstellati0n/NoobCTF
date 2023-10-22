@@ -90,7 +90,8 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
 - [Twitter Secret Messages](https://holloway.nz/steg/)。这个工具的密文很好辨认，例如`I hａtｅ tｈis flｙiｎｇ ｂⅰrｄ aｐp... Peοpｌe saｙ ｏnｅ thіngｂutyoｕ ａｌｗayｓ gοtta reａd bｅtｗeen thｅliｎeｓ ｔο interpret them right ://`。推特/蓝鸟是出题人的提示关键词。
 - [mp3stego](https://www.petitcolas.net/steganography/mp3stego/).mp3带密码的隐写工具。
 - [base100](https://github.com/AdamNiederer/base100)。将文字与emoji互相转换的编码工具。
-
+- [videostego](https://github.com/JavDomGom/videostego)
+    > 视频文件的LSB隐写工具。若没有后续改动的话，被隐写后的视频的exif的Writer栏为JavDomGom
 1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)。不同版本的zip加密位不一样,例如有些zip需要将第7个字节的09改成00。如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
 3.   numpy.loadtxt读取坐标文件+基本matplotlib图像绘制。例题:[梅花香之苦寒来](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Misc/%E6%A2%85%E8%8A%B1%E9%A6%99%E4%B9%8B%E8%8B%A6%E5%AF%92%E6%9D%A5.md)
@@ -1531,3 +1532,19 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - python pytorch卷积。参考 https://www.geeksforgeeks.org/apply-a-2d-convolution-operation-in-pytorch/ 和 https://stackoverflow.com/questions/49768306/pytorch-tensor-to-numpy-array
 161. [MCELLA](https://xhacka.github.io/posts/writeup/2023/07/29/MCELLA/)
 - [steg86](https://github.com/woodruffw/steg86):用于将信息隐写进x86和AMD64 binary的工具
+162. [Device Info](https://www.youtube.com/watch?v=sZAVLJTHtj4)
+- FTK Imager+linux log forensic
+- 一些linux基础信息
+    - 操作系统：`/usr/lib/os-release`
+    - 设备ip：`/etc/networks`,`/var/log/syslog`
+    - 设备名：`/etc/hostname`,`/etc/hosts`
+    - 连接的wifi(SSID)和密码：`/etc/sysconfig/network`，`/etc/netplan`(`/var/log/syslog`可能也有记录)
+    - device model detail of the host:`/var/log/kern.log`
+    - 尝试登录本机的ip:`/var/log/auth.log`
+    - ssh失败/成功登录信息：`Failed password for ... from ...`/`Accepted password for ... from ...`
+163. [dO nOT aCCESS](https://meashiri.github.io/ctf-writeups/posts/202308-cybergonctf/#do-not-access)
+- DNA code解码脚本
+164. [Frozen Xip](https://meashiri.github.io/ctf-writeups/posts/202308-cybergonctf/#frozen-xip)
+- 若解压zip文件发现报错`mismatching local filename`，可能是0x1A处的字节有问题。这个偏移处记录了压缩文件名的长度
+165. [RegRipper3.0](https://github.com/keydet89/RegRipper3.0)
+- 可用于处理hive文件，windows里timezone和hostname能在SYSTEM里找到

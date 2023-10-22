@@ -2819,3 +2819,6 @@ my.onload = function () {
 
 291. [petpet rcbee](https://drt.sh/posts/htb-petpet-rcbee/)
 - [Python PIL/Pillow Remote Shell Command Execution via Ghostscript](https://github.com/farisv/PIL-RCE-Ghostscript-CVE-2018-16509)。将一段ghostscript作为图片文件提供给pil，当调用Image.Open时，pil监测到这是个EPS图片，然后利用漏洞在ghostscript里写要执行的命令
+292. [Cybergon's Blog](https://learn-cyber.net/writeup/Cybergon's-Blog)
+- php session文件包含rce。php session文件通常在默认目录下，且文件的内容用户一般可控制（如记录了username）。如果有文件包含漏洞，将代码放进session文件里再包含即可触发rce
+- 有时候session可能不在默认目录下。这种情况尝试`/proc/self/fd/[num]`，有概率访问到session文件
