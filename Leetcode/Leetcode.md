@@ -251,3 +251,4 @@
 - [Parallel Courses III](./Hard/Parallel%20Courses%20III.md). dfs(dp)/拓扑排序, Kahn's Algorithm
 - [Constrained Subsequence Sum](./Hard/Constrained%20Subsequence%20Sum.md). dp+heap+sliding window+Monotonic Deque(双端队列，出
 用LinkedList模拟)+Kadane's algorithm
+- [Maximum Score of a Good Subarray](./Hard/Maximum%20Score%20of%20a%20Good%20Subarray.md). greedy+two pointers/binary search/Monotonic Stack

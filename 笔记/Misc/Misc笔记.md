@@ -1548,3 +1548,12 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 若解压zip文件发现报错`mismatching local filename`，可能是0x1A处的字节有问题。这个偏移处记录了压缩文件名的长度
 165. [RegRipper3.0](https://github.com/keydet89/RegRipper3.0)
 - 可用于处理hive文件，windows里timezone和hostname能在SYSTEM里找到
+166. [I love this world](https://meashiri.github.io/ctf-writeups/posts/202308-sekaictf/#i-love-this-world)
+- .svp文件结构分析： https://www.bilibili.com/read/cv16383991/ 。可用Synthesizer V软件播放svp文件
+- svp文件为json格式，所以也可以自行打开分析
+167. [QR God](https://meashiri.github.io/ctf-writeups/posts/202308-sekaictf/#qr-god)
+- [古腾堡图表(Gutenberg Diagram)](https://wiki.mbalib.com/wiki/%E5%8F%A4%E8%85%BE%E5%A0%A1%E5%9B%BE%E8%A1%A8)
+- 二维码（QR code）构造时的细节。数据从右下到左上依次填充进不同区域，填充完成后还会应用8个xor pattern中的一个（具体是哪个不知道，这题就需要爆破）。爆破一个二维码数据的构造需要尝试error correction quality（四种，L，M，Q，H）和mask pattern（刚才提到的xor pattern）
+168. [ssh](https://github.com/Kaiziron/sekai-ctf-2023-writeup/blob/main/ssh.md)
+- 使用[arpspoof](https://linux.die.net/man/8/arpspoof)进行[arp spoofing](https://zh.wikipedia.org/wiki/ARP%E6%AC%BA%E9%A8%99)并利用 https://github.com/jtesta/ssh-mitm 实施MITM（中间人攻击）
+- arp spoofing利用ARP协议欺骗两台机器A和B，让A以为本机（C）是B，B认为C是A。因此A和B的交流全部经过C的转发，一些重要的如ssh登录凭证就能在这时窃取

@@ -2822,3 +2822,7 @@ my.onload = function () {
 292. [Cybergon's Blog](https://learn-cyber.net/writeup/Cybergon's-Blog)
 - php session文件包含rce。php session文件通常在默认目录下，且文件的内容用户一般可控制（如记录了username）。如果有文件包含漏洞，将代码放进session文件里再包含即可触发rce
 - 有时候session可能不在默认目录下。这种情况尝试`/proc/self/fd/[num]`，有概率访问到session文件
+293. [Re-Remix](https://github.com/minaminao/ctf-blockchain/tree/main/src/ProjectSekaiCTF2023)
+- solidity [Read-only reentrancy](https://medium.com/@zokyo.io/read-only-reentrancy-attacks-understanding-the-threat-to-your-smart-contracts-99444c0a7334)攻击。算reentrancy下的一个小分支，利用错误的逻辑导致程序读取一些重要的值时出错。这种攻击一般都出现在不遵守[Checks, Effects, Interactions](https://blockchain-academy.hs-mittweida.de/courses/solidity-coding-beginners-to-intermediate/lessons/solidity-11-coding-patterns/topic/checks-effects-interactions/)的代码中。Checks, Effects, Interactions指的是代码需要先检查，再更改状态，最后与用户交互。一个例子就是取钱逻辑，首先要判断用户是否有那么多的钱，然后在帐户上扣除相应的钱，最后再调用用户的诸如`payable(msg.sender).call`函数。如果反过来，检查后先与用户交互，再扣除钱，那么用户可以在call函数内再来一次取钱。因为状态未更新，凭空就多出来了双倍的钱
+- 简述一下这道题的Read-only reentrancy。在getGlobalInfo函数中，d和_totalVolumeGain的值正常情况下是一样的，`(d * 10 ** DECIMALS) / _totalVolumeGain`最终结果是`10 ** DECIMALS`，1后面跟着很多0。我们的目标是让这个结果包含更多数字（不只是1和0）。increaseVolume和decreaseVolume可以修改_totalVolumeGain，但是正常调用的话d的值也会改，效果就是_totalVolumeGain继续等于d。关键点在于decreaseVolume中有句`payable(msg.sender).sendValue(amount);`,此时其中一个值改了但另一个值没改（就是上面提到的Effects, Interactions反了）。那么就能在攻击合约的`receive()`函数中调用finish间接调用getGlobalInfo，利用d和_totalVolumeGain值不一样的时机完成攻击
+- 这题的代码似乎从 https://chainsecurity.com/curve-lp-oracle-manipulation-post-mortem/ 更改而来

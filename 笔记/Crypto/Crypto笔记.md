@@ -2286,3 +2286,10 @@ print(hex(random.getrandbits(256)))
 - 注意当g=ax，其中x是椭圆曲线上的点，a是常数的话，已知g，a求x要用离散对数（还是要根据定义来，这里的乘法不是常规意义上的乘法，是椭圆曲线自己定义的）
 102. [All in One](https://meashiri.github.io/ctf-writeups/posts/202308-cybergonctf/#all-in-one)
 - 维吉尼亚密码（Vigenere）decoder。这个decoder的字符集较广而且区分大小写，网上常见的decoder都解不出来
+103. [CryptoGRAPHy 1](https://ctfnote.leg.bzh/pad/s/Z_QKPfErn)
+- Graph Encryption Scheme(GES)。似乎和给定两点后图表内连接两点的最短路径有关系。属于对称加密，因为已知key后就能直接解密服务器提供的最短路径
+104. [CryptoGRAPHy 2](https://ctfnote.leg.bzh/pad/s/dZNZbd-9e)
+- 只要有足够的query次数和泄露的token，可以从加密后的最短路径构造出single-destination shortest path (SDSP) tree。具体操作为query每个（除destination本身）node到destination的最短路径，然后建立token到node的映射即可
+105. [Noisy CRC](https://ctfnote.leg.bzh/pad/s/haum5HonP)
+- CRC16的本质是在二进制多项式域(`GF(2)[x]`)上的除法。给定要求CRC的key p(x)和生成多项式q(x),CRC16算法会做一个多项式长除法，返回 $p(x)\*x^{16}$ 除以q(x)的余数。如果可以控制q(x)，就能在获取多个CRC值后利用CRT恢复p(x)
+- 特别地，如果CRC值被混在其他随机值内，可以选择 $x^6$ 的倍数作为多项式。这样其余数一定也是 $x^6$ 的倍数，而随机值是倍数的可能性很小
