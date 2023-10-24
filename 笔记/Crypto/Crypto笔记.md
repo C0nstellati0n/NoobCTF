@@ -2293,3 +2293,14 @@ print(hex(random.getrandbits(256)))
 105. [Noisy CRC](https://ctfnote.leg.bzh/pad/s/haum5HonP)
 - CRC16的本质是在二进制多项式域(`GF(2)[x]`)上的除法。给定要求CRC的key p(x)和生成多项式q(x),CRC16算法会做一个多项式长除法，返回 $p(x)\*x^{16}$ 除以q(x)的余数。如果可以控制q(x)，就能在获取多个CRC值后利用CRT恢复p(x)
 - 特别地，如果CRC值被混在其他随机值内，可以选择 $x^6$ 的倍数作为多项式。这样其余数一定也是 $x^6$ 的倍数，而随机值是倍数的可能性很小
+- 另一个[wp](https://7rocky.github.io/en/ctf/other/sekai-ctf/noisy-crc/)用dfs来爆破正确的crc值组合
+- 还有个[wp](https://imp.ress.me/blog/2023-08-28/sekaictf-2023#noisy-crc)利用composite moduli的性质。假设有多组 $f_i(x)=g(x)\*h_i(x)$ ，那么求 $res=s(x)\mod g(x)\*h_i(x)$ ，每组的res模g(x)的结果应该是一样的（要求g(x)不可约）
+106. [cryptoGRAPHy 3](https://7rocky.github.io/en/ctf/other/sekai-ctf/cryptography-1-2-3/#cryptography-3)
+- tree isomorphism, which defines a one-to-one relation between the nodes of two trees. python的etworkx模块提供了tree_isomorphism函数来找到同构
+- 这篇wp里还有cryptoGRAPHy 1和2更详细的解释
+107. [RandSubWare](https://imp.ress.me/blog/2023-08-28/sekaictf-2023#randsubware)
+- 针对[代换-置换网络(Substitution–permutation network)](https://en.wikipedia.org/wiki/Substitution%E2%80%93permutation_network)的[差分攻击(differential attack)](https://ioactive.com/differential-cryptanalysis-for-dummies/)。差分攻击简述就是分析明文与密文之间的差距（差距的定义不同密码，不同，可以是异或的值，也可以是别的东西），然后爆破密钥，哪个密钥最符合之前得到的差距，哪个就可能是最可能的密钥。选择明文+爆破攻击
+- 可用差分攻击的特征：
+    - SPN密码轮数较少（例如5轮）。small number of rounds means that differences in ciphertext are poorly diffused
+    - 对于好的SPN密码，明文中1 bit的更改应导致输出中一半的bit更改。如果这个值较低（如0.4），大概率有问题
+- 出题人的自动化模块，利用z3: https://github.com/deut-erium/auto-cryptanalysis
