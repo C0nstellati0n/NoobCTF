@@ -554,6 +554,10 @@ for i in range(1,e):
     - 格（lattice）中的Closest Vector Problem（CVP）
     - [IntegerLattice](https://doc.sagemath.org/html/en/reference/modules/sage/modules/free_module_integer.html#sage.modules.free_module_integer.IntegerLattice)
     - Babai_closest_vector算法实现
+- [Noisier CRC](https://imp.ress.me/blog/2023-08-28/sekaictf-2023#noisier-crc)
+    - [irreducible_element](https://doc.sagemath.org/html/en/reference/polynomial_rings/sage/rings/polynomial/polynomial_ring.html#sage.rings.polynomial.polynomial_ring.PolynomialRing_dense_finite_field.irreducible_element):获取环上指定degree的不可约元素
+    - [right_kernel](https://doc.sagemath.org/html/en/prep/Quickstarts/Linear-Algebra.html)
+    - [basis](https://doc.sagemath.org/html/en/constructions/linear_algebra.html)
 
 ## 其他
 
@@ -2304,3 +2308,6 @@ print(hex(random.getrandbits(256)))
     - SPN密码轮数较少（例如5轮）。small number of rounds means that differences in ciphertext are poorly diffused
     - 对于好的SPN密码，明文中1 bit的更改应导致输出中一半的bit更改。如果这个值较低（如0.4），大概率有问题
 - 出题人的自动化模块，利用z3: https://github.com/deut-erium/auto-cryptanalysis
+108. [Diffecientwo](https://imp.ress.me/blog/2023-08-28/sekaictf-2023#diffecientwo)
+- 利用z3找到[布隆过滤器(bloom filter)](https://zhuanlan.zhihu.com/p/43263751)的碰撞（collision）。布隆过滤器的实现一般会使用murmurhash3（`import mmh3`）
+- 注意脚本内使用了z3.LShR而不是单纯的`>>`。z3中的整数默认是有符号的，不这么做可能会得到unsat

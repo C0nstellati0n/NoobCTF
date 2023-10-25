@@ -890,6 +890,8 @@ print(ops_list)
         flag += sorted(counts.items(), key=lambda x: -x[1])[0][0]
         print(flag)
     ```
+- [icancount](https://guyinatuxedo.github.io/13-angr/plaid19_icancount/index.html)
+  - PIE下的angr模拟
 100. qiling框架调试。使用[qdb](https://github.com/ucgJhe/Qdb): https://docs.qiling.io/en/latest/qdb/
 101. [🏴❓🇨🇹🇫](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/%F0%9F%8F%B4%E2%9D%93%F0%9F%87%A8%F0%9F%87%B9%F0%9F%87%AB),[wp](https://wiki.cve.gay/en/Writeups/amateursCTF2023/emojis)
 - [emojicode](https://www.emojicode.org/docs/)逆向
@@ -952,17 +954,20 @@ main()
 108. [snailchecker](https://fazect.github.io/imaginaryctf2023-rev/#snailchecker)
 - [Josephus Problem](https://www.geeksforgeeks.org/josephus-problem/)以及解决问题的[算法](https://sites.math.northwestern.edu/~mlerma/problem_solving/solutions/josephus.pdf)和逆算法（原来是n个元素，每隔m淘汰一个，找出剩下的k；逆向是给k和间隔m，找n）。间隔为2的最快算法： https://github.com/4rr4y/ctf-writeups/blob/main/2023_ImaginaryCTF/Reversing_SnailChecker.md
 - `int.from_bytes(b, 'big')`的本质是`b[0] * 2 ** 24 + b[1] * 2 ** 16 + b[2] * 2 ** 8 + b[3]`
-109. [icancount](https://guyinatuxedo.github.io/13-angr/plaid19_icancount/index.html)
-- PIE下的angr模拟
-110. [unwind](../../CTF/moectf/2023/Reverse/unwind.md)
+109. [unwind](../../CTF/moectf/2023/Reverse/unwind.md)
 - windows SEH程序动态调试。参考 https://reverseengineering.stackexchange.com/questions/18192/stepping-into-exception-handler ，将断点下在`ntdll!ExecuteHandler2`的`call ecx`指令处，然后就能跟进看到接下来调用了什么函数了。若找不到`ntdll!ExecuteHandler2`这个symbol，可以x32/x64dbg ctrl+f搜指令`call ecx`。这个指令程序里不多，一个一个排除即可
-111. [ilovepython](https://github.com/cewau/ctf-writeups/blob/main/20230805-litctf/REV_ilovepython.md)
+110. [ilovepython](https://github.com/cewau/ctf-writeups/blob/main/20230805-litctf/REV_ilovepython.md)
 - python高级类型推断（逆变、协变）。这题非常复杂，看懂了python的类型就懂了（但是我看不懂，后面再遇到的话再看吧）
-112. [What Is It](https://learn-cyber.net/writeup/What-Is-It)
+111. [What Is It](https://learn-cyber.net/writeup/What-Is-It)
 - AutoIt脚本可能被隐藏在exe中（strings这样的exe会有AutoIt字样）。提取工具： https://github.com/nazywam/AutoIt-Ripper
-113. [Old Obfuscation](https://learn-cyber.net/writeup/Old-Obfuscation)
+112. [Old Obfuscation](https://learn-cyber.net/writeup/Old-Obfuscation)
 - exe和python文件同时出现在一个文件夹下很有可能是pyinstaller打包程序。strings exe文件内有pyinstaller字样。可用[pyinstxtractor](https://github.com/extremecoders-re/pyinstxtractor)解压
 - PyArmor混淆。参考 https://github.com/Svenskithesource/PyArmor-Unpacker/tree/main 进行反混淆
-114. [Hollywood](https://learn-cyber.net/writeup/Hollywood)
+113. [Hollywood](https://learn-cyber.net/writeup/Hollywood)
 - 当strings一个exe文件，发现里面有.NET字样时，说明这是个c#逆向题，可以用dnSpy反编译
 - dnSpy可以编辑代码然后继续编译，可以利用这点绕过反动调。有时候编辑后会报错，但是仍然可以正常应用修改
+114. z3使用案例
+- [Guardians of the Kernel](https://github.com/moabid42/CTF-Writeups/tree/master/SekaiCTF/Guardians%20of%20the%20kernel)
+  - 如果在ghidra中看见类似`CONCAT17(buffer[7],CONCAT16(buffer[6],CONCAT15(buffer[5],CONCAT14(buffer[4],buffer._0_4_)`的CONCAT语句，z3里有现成的Concat函数(注意bit length，可以参考ghidra CONCAT函数的命名： https://stackoverflow.com/questions/69430800/what-does-concat15-and-concat412-mean-in-ghidra)
+  - BitVecVal与BitVec的区别： https://stackoverflow.com/questions/49247323/what-is-the-difference-between-bitvec-and-bitvecval-in-z3 ,前者是常数，后者是要求解的symbol
+  - z3 And函数使用（不确定和python的and有啥区别）
