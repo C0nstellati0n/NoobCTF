@@ -198,6 +198,7 @@
 - [Find Largest Value in Each Tree Row](./Medium/Find%20Largest%20Value%20in%20Each%20Tree%20Row.md). 层级bfs/dfs/遍历dfs(stack)
 - [K-th Symbol in Grammar](./Medium/K-th%20Symbol%20in%20Grammar.md). dfs/binary search/binary tree
 - [Binary Trees With Factors](./Medium/Binary%20Trees%20With%20Factors.md). dp
+- [Longest Palindromic Substring](./Medium/Longest%20Palindromic%20Substring.md). dp/[Manacher's Algorithm](https://www.zhihu.com/question/37289584)
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
