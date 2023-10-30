@@ -258,3 +258,4 @@
 用LinkedList模拟)+Kadane's algorithm
 - [Maximum Score of a Good Subarray](./Hard/Maximum%20Score%20of%20a%20Good%20Subarray.md). greedy+two pointers/binary search/Monotonic Stack
 - [Count Vowels Permutation](./Hard/Count%20Vowels%20Permutation.md). dp
+- [Poor Pigs](./Hard/Poor%20Pigs.md)

