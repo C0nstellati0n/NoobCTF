@@ -2907,3 +2907,6 @@ wp里还有将要泄露的内容转换为符合域名规范的16进制的进阶p
 - [JWKS Spoofing](https://book.hacktricks.xyz/pentesting-web/hacking-jwt-json-web-tokens#jwks-spoofing)：有些网站验证JWT token时会请求某个url A获取public key，然后验签。利用cache poisoning，将url A投毒为攻击者自己的公钥即可伪造jwt
 298. [The Bidding](https://lkmidas.github.io/posts/20230828-sekaictf2023-writeups)
 - Anchor Framework solana（rust） blockchain题目。这题在比赛时被归为pwn，但是我习惯把blockchain相关的放在web
+299. [Leakless Note](https://gist.github.com/eskildsen/ec9cecbf2ae567b24f468cea077ddce5)
+- 根据[官方文档](http://nginx.org/en/docs/http/ngx_http_headers_module.html)，当nginx配置中add_header处的CSP没有设置always，那么CSP不会被应用于404页面
+- 浏览器会限制同时访问一个origin的requests的数量，Chromium中默认是6个平行请求。剩余的会加入队列中

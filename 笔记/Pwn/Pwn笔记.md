@@ -1310,3 +1310,5 @@ io.interactive()
 ```
 122. [Network Tools](https://snocc.dev/blog/sekai-nettools)
 - rust bof题目。思路和普通的C程序一样，都是rop（甚至有时候还有csu）。不过这题不知道因为什么原因不能ret2libc，只能写/bin/sh到bss后调用binary里自带的execvp函数：`execvp("/bin/sh", [0])`。注意该函数的第二个参数是数组，传一个指向null的指针即可
+123. [Algorithm Multitool](https://jt00000.github.io/2023/09/03/post_sekaictf2023_algorithm_multitool_en.html)
+- c++ heap:[Do not use capturing lambdas that are coroutines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rcoro-capture)。c++的lambda有个语法，可以捕捉上文的变量传进lambda函数体。假如函数体内部使用coroutine，可能在co_await处退出，然后继续执行。然而退出后捕捉的变量会出作用域，然后被free。lambda内部继续使用这个变量的话会造成uaf
