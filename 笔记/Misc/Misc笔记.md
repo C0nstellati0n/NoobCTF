@@ -419,6 +419,10 @@ flag.export("./flag.mp3", format="mp3")
   - 通过上一步获取到注册表后，根据获得的偏移进一步获取键名信息。
 - python3 vol.py -f mem.raw windows.registry.printkey.PrintKey --offset 0xf8a0000212d0 --key "ControlSet001\Control\ComputerName\ComputerName"  
   - 可以一直沿着获取的键名走下去。上面的命令用于获取主机名。详情见[此处](https://www.bnessy.com/archives/%E7%94%B5%E5%AD%90%E6%95%B0%E6%8D%AE%E5%8F%96%E8%AF%81-volatility),内含基础例题。
+- [Dumpster Dive](https://github.com/project-sekai-ctf/sekaictf-2023/tree/main/forensics/dumpster-dive)
+    - linux.bash for bash history
+    - linux.pslist to get pid of processes
+    - linux.proc has a dump option, `linux.proc --pid <pid> --dump`
 
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。动图解释：https://zhuanlan.zhihu.com/p/63362804
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
@@ -1557,3 +1561,6 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 168. [ssh](https://github.com/Kaiziron/sekai-ctf-2023-writeup/blob/main/ssh.md)
 - 使用[arpspoof](https://linux.die.net/man/8/arpspoof)进行[arp spoofing](https://zh.wikipedia.org/wiki/ARP%E6%AC%BA%E9%A8%99)并利用 https://github.com/jtesta/ssh-mitm 实施MITM（中间人攻击）
 - arp spoofing利用ARP协议欺骗两台机器A和B，让A以为本机（C）是B，B认为C是A。因此A和B的交流全部经过C的转发，一些重要的如ssh登录凭证就能在这时窃取
+169. [A letter from the Human Resource Management](https://github.com/project-sekai-ctf/sekaictf-2023/tree/main/misc/a-letter-from-the-human-resource-management)
+- [Human Resource Code](https://esolangs.org/wiki/Human_Resource_Code)逆向。链接里已经提供了反编译器，作者提供了修改版本，方便爆破
+- [hrm-tools](https://nrkn.github.io/hrm-tools/labels-comments/):解码labels和comments并将其渲染成图片

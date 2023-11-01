@@ -2310,4 +2310,5 @@ print(hex(random.getrandbits(256)))
 - 出题人的自动化模块，利用z3: https://github.com/deut-erium/auto-cryptanalysis
 108. [Diffecientwo](https://imp.ress.me/blog/2023-08-28/sekaictf-2023#diffecientwo)
 - 利用z3找到[布隆过滤器(bloom filter)](https://zhuanlan.zhihu.com/p/43263751)的碰撞（collision）。布隆过滤器的实现一般会使用murmurhash3（`import mmh3`）
+- https://www.josephkirwin.com/2018/04/07/z3-hash-inversions/ 。用这里面的代码硬找所要求hash的明文也是可以的，就是时间比较长。这篇里面还提到了一个z3使用tips： https://www.josephkirwin.com/2017/11/16/constraint-solver-tips/
 - 注意脚本内使用了z3.LShR而不是单纯的`>>`。z3中的整数默认是有符号的，不这么做可能会得到unsat

