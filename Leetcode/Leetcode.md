@@ -1,6 +1,6 @@
 # Leetcode
 
-最近打了个CTF，十几道题就做出来2道，还有一道是签到题……其中有部分算法题，看来是时候练Leetcode了。语言我用的是C#，不过各种语言差不多(现在看来并不是)，选哪个不重要。现在记录说不定以后遇见类似的题可以直接抄。
+最近打了个CTF，十几道题就做出来2道，还有一道是签到题……其中有部分算法题，看来是时候练Leetcode了。语言我用的是C#(半年后的我走上了c++的不归路)，不过各种语言差不多(现在看来并不是)，选哪个不重要。现在记录说不定以后遇见类似的题可以直接抄。
 
 ## Easy
 - [Two Sum](Easy/TwoSum.md)。Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.You may assume that each input would have exactly one solution, and you may not use the same element twice.You can return the answer in any order.给定nums数组和目标target，返回nums中相加得target的数字的索引。假设只有一对解，索引顺序不重要。使用字典，空间换取时间的方式缩短运行时间。
@@ -65,6 +65,7 @@
 - [Backspace String Compare](./Easy/Backspace%20String%20Compare.md). stack/two pointers
 - [Power of Four](./Easy/Power%20of%20Four.md)
 - [Sort Integers by The Number of 1 Bits](./Easy/Sort%20Integers%20by%20The%20Number%20of%201%20Bits.md). Brian Kerninghan's Algorithm/bucket sort
+- [Find Mode in Binary Search Tree](./Easy/Find%20Mode%20in%20Binary%20Search%20Tree.md). dfs/bfs/Morris Traversal
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

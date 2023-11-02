@@ -2911,3 +2911,29 @@ wp里还有将要泄露的内容转换为符合域名规范的16进制的进阶p
 299. [Leakless Note](https://gist.github.com/eskildsen/ec9cecbf2ae567b24f468cea077ddce5)
 - 根据[官方文档](http://nginx.org/en/docs/http/ngx_http_headers_module.html)，当nginx配置中add_header处的CSP没有设置always，那么CSP不会被应用于404页面
 - 浏览器会限制同时访问一个origin的requests的数量，Chromium中默认是6个平行请求。剩余的会加入队列中
+300. [Smooth Jazz](https://www.justinsteven.com/posts/2023/09/10/ductf-2023-smooth-jazz-sqli/)
+- 在php中，使用mysql查询会截断ascii值大于等于0x80的字符以及其后面的所有字符
+- php vsprintf函数使用
+    - 和C的格式化字符串一样，也能用`$1%s`显式获取printf参数。
+    ```php
+    print_r(vsprintf("%c", array("1337BEEF")));
+    //9
+    //1337BEEF后的BEEF被截断，只剩下1337.%c将其强制转换为字符，结果为chr(1337 % 256)='9'
+    ```
+    - 一个比较特殊的技巧。`%1$'>%`本身不是一个格式：
+    ```php
+    print_r(vsprintf('%1$\'>% %s', ["Hello, world!"]));
+    //% Hello, world!
+    ```
+    但是在`htmlspecialchars($content,ENT_COMPAT | ENT_SUBSTITUTE);`后变为`%1$'&gt;%s`，结果却包含了一个%s：
+    ```
+    [+] %1$'&g
+    %  - start of format string conversion specification
+    1$ - argnum    - take from the first item in the values array
+    '& - flags     - use the & character as a padding character
+    g  - specifier - general format
+    [+] t;
+    Plain old data
+    [+] %s
+    A humble %s format string conversion specification
+    ```
