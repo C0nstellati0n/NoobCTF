@@ -564,6 +564,7 @@ print(base64.b64encode(temp.encode()))
   """
   )
   ```
+- 进入python的help()界面后，可以输入`:e [filename]`读取文件
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -583,7 +584,7 @@ p=remote("",443,ssl=True)
    0x00007ffff7a9aaaa <+218>:  ret 
 ```
 
-可控制rbx和rbp。配合`add    dword ptr [rbp - 0x3d], ebx`这个gadget实现更改got表。关键在于第二次fread的buf指针指向上一次fread迁移的栈的上方，即可任意控制栈顶。
+可控制rbx和rbp。配合`add dword ptr [rbp - 0x3d], ebx`这个gadget实现更改got表。关键在于第二次fread的buf指针指向上一次fread迁移的栈的上方，即可任意控制栈顶。
 
 44. 利用python库进行提权（[Privilege Escalation: Hijacking Python Library](https://medium.com/@klockw3rk/privilege-escalation-hijacking-python-library-2a0e92a45ca7)）。脚本：
 
@@ -1380,3 +1381,5 @@ io.interactive()
 - rust bof题目。思路和普通的C程序一样，都是rop（甚至有时候还有csu）。不过这题不知道因为什么原因不能ret2libc，只能写/bin/sh到bss后调用binary里自带的execvp函数：`execvp("/bin/sh", [0])`。注意该函数的第二个参数是数组，传一个指向null的指针即可
 123. [Algorithm Multitool](https://jt00000.github.io/2023/09/03/post_sekaictf2023_algorithm_multitool_en.html)
 - c++ heap:[Do not use capturing lambdas that are coroutines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rcoro-capture)。c++的lambda有个语法，可以捕捉上文的变量传进lambda函数体。假如函数体内部使用coroutine，可能在co_await处退出，然后继续执行。然而退出后捕捉的变量会出作用域，然后被free。lambda内部继续使用这个变量的话会造成uaf
+124. [one byte](https://github.com/giggsterpuku/CTF-Writeups/tree/main/DownUnderCTF/4.0/pwn/one%20byte)
+- 栈上的off by one。如果溢出发生的变量是栈上唯一一个，且没有canary，这个byte会溢出到rbp/ebp的lsb。因为返回地址存储在栈上，如果能把rbp改成一块存储了win函数返回地址的内存，利用函数返回时的epilogue就能返回到win函数。如果栈地址未知，尽量将输入填充多个win函数，然后爆破最后一个字节尝试将rbp修改为输入那块内存
