@@ -1311,6 +1311,8 @@ ret
 - [Inj](https://github.com/qLuma/TFC-CTF-2023/tree/main/Inj),[wp](https://xa21.netlify.app/blog/tfcctf-2023/inj/)
   - 可以在64位程序里使用`int 0x80`调用32位的系统调用（遵守32位系统调用的调用号和参数传递）。利用`BPF_JUMP`和`BPF_STMT`设置沙盒时也可以分32位和64位系统调用分别设置
   - 只有open和read无write调用时可以通过测信道的方式读取flag。读取flag后，一位一位地遍历flag。若为0，让程序崩溃；若为1，让程序延时（执行另一个read或者执行一个很长的loop）
+- [the great escape](https://gerrardtai.com/coding/ductf#the-great-escape)
+  - 利用read,openat,nanosleep时间测信道获取flag
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
@@ -1383,3 +1385,9 @@ io.interactive()
 - c++ heap:[Do not use capturing lambdas that are coroutines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rcoro-capture)。c++的lambda有个语法，可以捕捉上文的变量传进lambda函数体。假如函数体内部使用coroutine，可能在co_await处退出，然后继续执行。然而退出后捕捉的变量会出作用域，然后被free。lambda内部继续使用这个变量的话会造成uaf
 124. [one byte](https://github.com/giggsterpuku/CTF-Writeups/tree/main/DownUnderCTF/4.0/pwn/one%20byte)
 - 栈上的off by one。如果溢出发生的变量是栈上唯一一个，且没有canary，这个byte会溢出到rbp/ebp的lsb。因为返回地址存储在栈上，如果能把rbp改成一块存储了win函数返回地址的内存，利用函数返回时的epilogue就能返回到win函数。如果栈地址未知，尽量将输入填充多个win函数，然后爆破最后一个字节尝试将rbp修改为输入那块内存
+125. [ROPPENHEIMER](https://github.com/5kuuk/CTF-writeups/tree/main/ductf-2023/roppenheimer)
+- c++ ordered_map collision。参考 https://codeforces.com/blog/entry/62393 ，构造特殊的key，使所有key均为某个质数的倍数即可让所有key碰撞。这个质数需要测试，如果当前测试的质数是目标的话，ordered_map的时间复杂度会上升到 $O(n^2)$
+- 利用pop rsp进行栈迁移。如果栈迁移的位置不够写下完整ropchain，可以重新返回main继续利用漏洞。如果之前迁移的栈正好在main的栈变量里面，会使main的栈帧与栈变量重叠，可以直接rop，无需二次迁移
+- 注意system调用时会往栈里写数据，因此调用时当前栈要可写。如果不可写，先用mprotect改当前所在内存权限
+126. [shifty mem](https://gerrardtai.com/coding/ductf#shifty-mem)
+- C语言的共享内存使用（shm_open）与条件竞争/TOCTOU

@@ -1564,3 +1564,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 169. [A letter from the Human Resource Management](https://github.com/project-sekai-ctf/sekaictf-2023/tree/main/misc/a-letter-from-the-human-resource-management)
 - [Human Resource Code](https://esolangs.org/wiki/Human_Resource_Code)逆向。链接里已经提供了反编译器，作者提供了修改版本，方便爆破
 - [hrm-tools](https://nrkn.github.io/hrm-tools/labels-comments/):解码labels和comments并将其渲染成图片
+170. [needle in iam](https://github.com/Cydroz/CTF-Writeups/blob/main/DUCTF/2023/beginner/needle%20in%20iam.md)
+- Google Cloud CLI基础使用
+    - 登录：`gcloud auth login --cred-file credentials.json`
+    - 设置默认project：`gcloud config set project <project-name>`
+    - 获取roles信息：`gcloud iam roles describe <role-name> --project=<project-name>`,`gcloud iam roles list --project=<role-name>`
+171. [baby ruby](https://github.com/daffainfo/ctf-writeup/tree/main/DownUnderCTF%202023/baby%20ruby)
+- 参考 https://www.akshaykhot.com/call-shell-commands-in-ruby/ ，小于5个字符的ruby shell（传入eval）：\`sh\`。这题命令的执行不知道为啥看不到stdout的内容，只能看到stderr。所以参考 https://stackoverflow.com/questions/30542501/on-a-linux-system-how-would-i-redirect-stdout-to-stderr ，做个redirect即可:`cat /chal/flag 1>&2`。或者参考wp，`sh < /chal/flag`

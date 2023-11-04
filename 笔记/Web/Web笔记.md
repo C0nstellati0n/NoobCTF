@@ -2945,3 +2945,5 @@ wp里还有将要泄露的内容转换为符合域名规范的16进制的进阶p
 302. [Breaking Grad](https://d4rkstat1c.medium.com/breaking-grad-hackthebox-write-up-9e780ff2b68b)
 - js原型链污染。递归merge（clone）时，除了直接用键名`__proto__`污染，也可以间接使用`constructor`：`{'constructor':{'prototype':{'target_property':'value'}}`
 - 原型链污染可以污染`child_process.fork`的options。可以污染NODE_OPTIONS让其读取environ文件，然后污染env为要执行的node js脚本。或者参考 https://y3a.github.io/2021/06/15/htb-breaking-grad/ ，污染execPath和execArgv
+303. [Static File Server](https://xhacka.github.io/posts/writeup/2023/09/03/static-file-server/)
+- 有时候浏览器会标准化url，让路径穿越的payload`../`无法使用。此时可以用curl加上`--path-as-is`选项访问
