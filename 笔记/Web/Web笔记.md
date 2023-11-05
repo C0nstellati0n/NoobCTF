@@ -2947,3 +2947,30 @@ wp里还有将要泄露的内容转换为符合域名规范的16进制的进阶p
 - 原型链污染可以污染`child_process.fork`的options。可以污染NODE_OPTIONS让其读取environ文件，然后污染env为要执行的node js脚本。或者参考 https://y3a.github.io/2021/06/15/htb-breaking-grad/ ，污染execPath和execArgv
 303. [Static File Server](https://xhacka.github.io/posts/writeup/2023/09/03/static-file-server/)
 - 有时候浏览器会标准化url，让路径穿越的payload`../`无法使用。此时可以用curl加上`--path-as-is`选项访问
+304. [Eight Five Four Five](https://www.youtube.com/watch?v=1FxjP_hwqec)
+- 使用python web3与solidity blockchain进行基础交互：连接，调用函数。题目一般会给出以下值：
+    - player wallet address
+    - private key
+    - contract address:题目合约所在的地址
+    - rpc url
+    - abi：也可以从题目给出的源码那里自行编译获取
+    - initial gas price
+```py
+from web3 import Web3
+web3=Web3(Web3.HTTPProvider(rpc_url))
+contract=web3.eth.contract(address=contract_address,abi=abi)
+#contract.functions为全部可调用的函数
+contract.functions.function_name().call() #调用名为function_name的函数。注意这种调用方式只能调用那些仅从blockchain读取数据的函数（例如单纯return某个值），无法调用会改变合约状态的函数（例如函数内部会给一个属性赋值）。调用这类函数参考下面：
+#有些POA chain在build之前需要middleware，否则会引发ExtraDataLengthError
+from web3.middleware import geth_poa_middleware
+web3.middleware_onion.inject(geth_poa_middleware,layer=0)
+#get nonce
+nonce=web3.eth.get_transaction_count(caller)
+#build transaction
+trx=contract.functions.function_name().build_transaction({'from':player_wallet_address,'nonce':nonce,'gasPrice':initial_gas_price})
+#用私钥签名transaction
+strx=web3.eth.account.sign_transaction(trx,private_key=private_key)
+hstrx=web3.eth.send_raw_transaction(strx.rawTransaction)
+#当status为1时表示处理成功
+res=web3.eth.wait_for_transaction_receipt(hstrx)
+```

@@ -1571,3 +1571,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - 获取roles信息：`gcloud iam roles describe <role-name> --project=<project-name>`,`gcloud iam roles list --project=<role-name>`
 171. [baby ruby](https://github.com/daffainfo/ctf-writeup/tree/main/DownUnderCTF%202023/baby%20ruby)
 - 参考 https://www.akshaykhot.com/call-shell-commands-in-ruby/ ，小于5个字符的ruby shell（传入eval）：\`sh\`。这题命令的执行不知道为啥看不到stdout的内容，只能看到stderr。所以参考 https://stackoverflow.com/questions/30542501/on-a-linux-system-how-would-i-redirect-stdout-to-stderr ，做个redirect即可:`cat /chal/flag 1>&2`。或者参考wp，`sh < /chal/flag`
+172. [Pynycode](https://meashiri.github.io/ctf-writeups/posts/202309-ductf/#pynycode)
+- 解码punycode。punycode是一种将unicode编码为ascii字符的方法，编码时会跳过unicode，然后在最后补上。例如München的编码为Mnchen-3ya。可能需要爆破编码结果的字符集（从索引0开始爆破所有可能的子字符集[i:]，因为错误的字符集会产生没有规律的乱码）。由于这题是python代码，也可以用ltrace或者coredump在内存里直接找解码后的结果
