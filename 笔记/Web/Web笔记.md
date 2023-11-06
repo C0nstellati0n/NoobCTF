@@ -497,6 +497,8 @@ Content-Disposition: form-data; name="submit"
 ```php
 <?=`$_GET[0]`?>
 ```
+更多参考 https://github.com/bayufedra/Tiny-PHP-Webshell
+
 47. sql注入如果没有过滤load_file，就能直接读取文件。例如：
 - ',\`address\`=(select(load_file('/flag.txt')))#
 可以直接在不爆表爆字段等任何信息的情况下直接读取到flag.txt文件。
@@ -2947,6 +2949,7 @@ wp里还有将要泄露的内容转换为符合域名规范的16进制的进阶p
 - 原型链污染可以污染`child_process.fork`的options。可以污染NODE_OPTIONS让其读取environ文件，然后污染env为要执行的node js脚本。或者参考 https://y3a.github.io/2021/06/15/htb-breaking-grad/ ，污染execPath和execArgv
 303. [Static File Server](https://xhacka.github.io/posts/writeup/2023/09/03/static-file-server/)
 - 有时候浏览器会标准化url，让路径穿越的payload`../`无法使用。此时可以用curl加上`--path-as-is`选项访问
+- Python的aiohttp asynchronous HTTP Client/Server中`web.static('/files', './files', follow_symlinks=True)`无法防止/files处的路径穿越
 304. [Eight Five Four Five](https://www.youtube.com/watch?v=1FxjP_hwqec)
 - 使用python web3与solidity blockchain进行基础交互：连接，调用函数。题目一般会给出以下值：
     - player wallet address
@@ -2974,3 +2977,6 @@ hstrx=web3.eth.send_raw_transaction(strx.rawTransaction)
 #当status为1时表示处理成功
 res=web3.eth.wait_for_transaction_receipt(hstrx)
 ```
+- 文字版的wp： https://justinapplegate.me/2023/ductf-8545/ ，连接的方法是一样的，不过多了个怎么用remix找合约的abi
+- remix解法： https://bsempir0x65.github.io/CTF_Writeups/DownUnderCTF_2023
+- cast命令解法： https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/blockchain/eightfivefourfive/solve

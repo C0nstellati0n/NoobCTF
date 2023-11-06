@@ -1566,10 +1566,13 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [hrm-tools](https://nrkn.github.io/hrm-tools/labels-comments/):解码labels和comments并将其渲染成图片
 170. [needle in iam](https://github.com/Cydroz/CTF-Writeups/blob/main/DUCTF/2023/beginner/needle%20in%20iam.md)
 - Google Cloud CLI基础使用
-    - 登录：`gcloud auth login --cred-file credentials.json`
+    - 登录：`gcloud auth login --cred-file credentials.json`或`gcloud auth activate-service-account --key-file=credential.json`
     - 设置默认project：`gcloud config set project <project-name>`
     - 获取roles信息：`gcloud iam roles describe <role-name> --project=<project-name>`,`gcloud iam roles list --project=<role-name>`
 171. [baby ruby](https://github.com/daffainfo/ctf-writeup/tree/main/DownUnderCTF%202023/baby%20ruby)
 - 参考 https://www.akshaykhot.com/call-shell-commands-in-ruby/ ，小于5个字符的ruby shell（传入eval）：\`sh\`。这题命令的执行不知道为啥看不到stdout的内容，只能看到stderr。所以参考 https://stackoverflow.com/questions/30542501/on-a-linux-system-how-would-i-redirect-stdout-to-stderr ，做个redirect即可:`cat /chal/flag 1>&2`。或者参考wp，`sh < /chal/flag`
 172. [Pynycode](https://meashiri.github.io/ctf-writeups/posts/202309-ductf/#pynycode)
-- 解码punycode。punycode是一种将unicode编码为ascii字符的方法，编码时会跳过unicode，然后在最后补上。例如München的编码为Mnchen-3ya。可能需要爆破编码结果的字符集（从索引0开始爆破所有可能的子字符集[i:]，因为错误的字符集会产生没有规律的乱码）。由于这题是python代码，也可以用ltrace或者coredump在内存里直接找解码后的结果
+- 解码punycode。punycode是一种将unicode编码为ascii字符的方法，编码时会跳过unicode，然后在最后补上。例如München的编码为Mnchen-3ya。解码时记得移除最开始的`#coding: punycode`,参考 https://github.com/D13David/ctf-writeups/tree/main/ductf23/rev/pyny 。由于这题是python代码，也可以用ltrace或者coredump在内存里直接找解码后的结果
+173. [Mini DNS Server](https://justinapplegate.me/2023/ductf-minidns/)
+- dns请求格式解析+如何使用Message Compression。Message Compression利用指针可将请求包的长度缩小。但是需要注意，指针不单单指向一个label，而是代表直到null字节的全部label；以及只能在最后使用，不能夹在中间
+- 假如dns请求包由python的dnslib处理，可以进行Byte Smuggling，然后用于Message Compression的指针。这样处理后的包可被python正常读取，但是例如wireshark的软件无法识别

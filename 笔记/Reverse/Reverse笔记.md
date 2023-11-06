@@ -972,9 +972,16 @@ main()
   - BitVecVal与BitVec的区别： https://stackoverflow.com/questions/49247323/what-is-the-difference-between-bitvec-and-bitvecval-in-z3 ,前者是常数，后者是要求解的symbol
   - z3 And函数使用（不确定和python的and有啥区别）
   - 参考 https://mcfx.us/posts/2023-09-01-sekaictf-2023-writeup/#guardians-of-the-kernel ，还有RotatLeft和RotateRight
+- [Wrong Signal](https://trebledj.github.io/posts/ductf-2023-wrong-signal/)
+  - 如何将一个byte分割为4个crumb（2个bit，或者说四分之一byte）
+  - 如何将symbolic crumb组合成一个完整的byte(使用`z3.ZeroExt(n, bv)`，用于将bitvector bv添加n个前缀0)
+  - `z3.If`使用:`z3.If(condition, then_expr, else_expr)`,类似三元表达式，可以嵌套
+  - `z3.Not`，`solver.eval`,`as_long`
 115. [Conquest of Camelot](https://black-frost.github.io/posts/sekai2023/)
 - OCaml语言binary逆向。这种语言的函数调用约定比较奇怪，ida可能无法生成伪代码。另外，这种语言对数组的操作会自动添加大量的bound checking，函数体会看起来很复杂但逻辑可能很简单
 - 參考 https://mcfx.us/posts/2023-09-01-sekaictf-2023-writeup/#conquest-of-camelot ，（ida里）calling convection应该为`__int64 __usercall func<rax>(__int64 arg0@<rax>, __int64 arg1@<rax>, __int64 arg2@<rdi>)`
 116. [Sahuang Flag Checker](https://github.com/TheBlupper/ctf_writeups/tree/main/sekaiCTF2023)
 - use AVX-512 instruction set and other vector instructions to obfuscate a program。据说ghidra和ida都没法反编译，binja可以反编译一部分，错误的地方需要手动修改
 - 只有支持AVX-512的cpu才能运行这类binary。可以用[Intel SDE](https://www.intel.com/content/www/us/en/developer/articles/tool/software-development-emulator.html)运行
+117. [SPACEGAME](https://github.com/D13David/ctf-writeups/tree/main/ductf23/rev/spacegame)
+- lua love2d game engine游戏逆向。游戏的exe文件可以用binwalk提取出资源，包括lua脚本，不过是混淆过的。其中部分为混淆后的字符串，可参考wp的做法将其反混淆

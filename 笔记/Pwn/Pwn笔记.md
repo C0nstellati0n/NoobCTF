@@ -564,7 +564,7 @@ print(base64.b64encode(temp.encode()))
   """
   )
   ```
-- 进入python的help()界面后，可以输入`:e [filename]`读取文件
+- 进入python的help()界面后，可以随便输入一个模块（如os）然后输入`:e [filename]`读取文件(默认使用less命令展示文档)
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
