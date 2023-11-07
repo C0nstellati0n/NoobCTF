@@ -1576,3 +1576,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 173. [Mini DNS Server](https://justinapplegate.me/2023/ductf-minidns/)
 - dns请求格式解析+如何使用Message Compression。Message Compression利用指针可将请求包的长度缩小。但是需要注意，指针不单单指向一个label，而是代表直到null字节的全部label；以及只能在最后使用，不能夹在中间
 - 假如dns请求包由python的dnslib处理，可以进行Byte Smuggling，然后用于Message Compression的指针。这样处理后的包可被python正常读取，但是例如wireshark的软件无法识别
+174. [daas](https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/misc/daas)
+- decompyle3 rce。可通过构造恶意pyc让decompyle3反编译pyc时执行任意命令
+175. [real baby ruby](https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/misc/real-baby-ruby)
+- 利用eval不超过4个字符的payload获取rce。假如不能使用\`号，需要进行一系列复杂的变量赋值来实现

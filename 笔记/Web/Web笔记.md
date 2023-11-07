@@ -2980,3 +2980,8 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 - 文字版的wp： https://justinapplegate.me/2023/ductf-8545/ ，连接的方法是一样的，不过多了个怎么用remix找合约的abi
 - remix解法： https://bsempir0x65.github.io/CTF_Writeups/DownUnderCTF_2023
 - cast命令解法： https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/blockchain/eightfivefourfive/solve
+305. [strapi in](https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/web/strapi-in)
+- [strapi-plugin-email-designer](https://github.com/alexzaganelli/strapi-plugin-email-designer)ssti
+306. [0day blog](https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/web/0day-blog)
+- Drupal core `JSON:API` module cache poisoning。可通过构造恶意url，使admin访问这个url后session cookie会被cache进这个url，以后任意一个普通用户访问这个url就能获取admin的session cookie
+307. Mongo ObjectId是可预测的，利用工具： https://github.com/andresriancho/mongo-objectid-predict
