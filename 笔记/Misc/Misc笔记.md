@@ -1580,3 +1580,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - decompyle3 rce。可通过构造恶意pyc让decompyle3反编译pyc时执行任意命令
 175. [real baby ruby](https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/misc/real-baby-ruby)
 - 利用eval不超过4个字符的payload获取rce。假如不能使用\`号，需要进行一系列复杂的变量赋值来实现
+176. [WPA](https://github.com/ArmanHZ/ctf-writeups/tree/master/Patriot_CTF_2023#wpa)
+- wpa2 handshake pcap分析。参考 https://book.hacktricks.xyz/generic-methodologies-and-resources/basic-forensic-methodology/pcap-inspection/wifi-pcap-analysis ，可用aircrack-ng爆破密码（`sudo apt-get install -y aircrack-ng`）
+177. [Secret Wall Code](https://github.com/MasonCompetitiveCyber/PatriotCTF2023/tree/main/Crypto/Secret%20Wall%20Code)
+- FNAF wall code. 形如小旗子。discord里有人发了对照图： https://discord.com/channels/958195827933855854/970069048706613258/1150551861376598037
+178. [Evil Monkey 1](https://meashiri.github.io/ctf-writeups/posts/202309-patriotctf/#evil-monkey-1)
+- blender模型文件内部可以嵌入python脚本，也有自己的api
+179. wireshark根据端口判断数据包使用的协议。所以如果一个包被标注malformed，可能是使用了某种协议但没有使用协议对应的默认端口。反过来，如果数据包使用不同的端口，也会被鉴定为不同的协议（打开protocol hierarchy发现有各种协议但是每个协议的包数量很少，可能根本就没有用那个协议，而是用了不同的端口）

