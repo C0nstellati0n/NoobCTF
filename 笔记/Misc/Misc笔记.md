@@ -1584,6 +1584,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - wpa2 handshake pcap分析。参考 https://book.hacktricks.xyz/generic-methodologies-and-resources/basic-forensic-methodology/pcap-inspection/wifi-pcap-analysis ，可用aircrack-ng爆破密码（`sudo apt-get install -y aircrack-ng`）
 177. [Secret Wall Code](https://github.com/MasonCompetitiveCyber/PatriotCTF2023/tree/main/Crypto/Secret%20Wall%20Code)
 - FNAF wall code. 形如小旗子。discord里有人发了对照图： https://discord.com/channels/958195827933855854/970069048706613258/1150551861376598037
-178. [Evil Monkey 1](https://meashiri.github.io/ctf-writeups/posts/202309-patriotctf/#evil-monkey-1)
+178. [Evil Monkey 1](https://gist.github.com/kna27/0273b50f5e43e0a8c3d450fd574e5c4b)
 - blender模型文件内部可以嵌入python脚本，也有自己的api
 179. wireshark根据端口判断数据包使用的协议。所以如果一个包被标注malformed，可能是使用了某种协议但没有使用协议对应的默认端口。反过来，如果数据包使用不同的端口，也会被鉴定为不同的协议（打开protocol hierarchy发现有各种协议但是每个协议的包数量很少，可能根本就没有用那个协议，而是用了不同的端口）
+180. [Read The EULA](https://github.com/MasonCompetitiveCyber/PatriotCTF2023/tree/main/Forensics/ReadTheEULA)
+- wireshark分析minetest游戏协议。可用插件： https://github.com/minetest/minetest/blob/master/util/wireshark/minetest.lua

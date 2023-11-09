@@ -985,3 +985,5 @@ main()
 - 只有支持AVX-512的cpu才能运行这类binary。可以用[Intel SDE](https://www.intel.com/content/www/us/en/developer/articles/tool/software-development-emulator.html)运行
 117. [SPACEGAME](https://github.com/D13David/ctf-writeups/tree/main/ductf23/rev/spacegame)
 - lua love2d game engine游戏逆向。游戏的exe文件可以用binwalk提取出资源，包括lua脚本，不过是混淆过的。其中部分为混淆后的字符串，可参考wp的做法将其反混淆
+118. [patchwork](https://github.com/MindSystemm/CTF-WriteUps/blob/master/Challenges/PatriotCTF23/Writeups.md#patchwork)
+- 可配置ghidra使其反编译无法到达的代码段
