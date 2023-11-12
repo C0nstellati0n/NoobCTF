@@ -1589,3 +1589,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 179. wireshark根据端口判断数据包使用的协议。所以如果一个包被标注malformed，可能是使用了某种协议但没有使用协议对应的默认端口。反过来，如果数据包使用不同的端口，也会被鉴定为不同的协议（打开protocol hierarchy发现有各种协议但是每个协议的包数量很少，可能根本就没有用那个协议，而是用了不同的端口）
 180. [Read The EULA](https://github.com/MasonCompetitiveCyber/PatriotCTF2023/tree/main/Forensics/ReadTheEULA)
 - wireshark分析minetest游戏协议。可用插件： https://github.com/minetest/minetest/blob/master/util/wireshark/minetest.lua
+181. [Discord Admin Bot](https://austinstitz-hacking.github.io/csaw23qual/later)
+- 如何邀请bot进自己的server。邀请后可以绕过一些特殊的权限，比如admin。在自己的服务器里设置一个admin role即可
+182. [What is going on?](https://github.com/D13David/ctf-writeups/tree/main/csaw23/ir/whats_going_on)
+- 可以用guestmount在linux上挂载windows的vmdk
+183. [Initial Access](https://github.com/D13David/ctf-writeups/tree/main/csaw23/ir/initial_access)
+- Outlook Data Files on windows contain your email messages, calendar, tasks:`Documents\Outlook Files`。可用[libpst](https://www.kali.org/tools/libpst/)工具处理

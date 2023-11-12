@@ -2805,6 +2805,7 @@ if (password_verify($password, $res['pwhash'])) //...
 <p> {{post.get('content') | safe}} </p>
 ```
 表示flask不会对content的内容进行过滤，意味着可能有xss
+
 285. [Cookie Store](https://ireland.re/posts/TheFewChosen_2023/#cookie-store)
 - 若xss题目中bot有提交form的操作，可以尝试污染dom：`<input type="submit" formaction="server"/>`。formaction要比action优先级更高，会将bot导向攻击者的server
 286. [gas](../../CTF/moectf/2023/Web/gas.md)
@@ -2988,3 +2989,5 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 306. [0day blog](https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/web/0day-blog)
 - Drupal core `JSON:API` module cache poisoning。可通过构造恶意url，使admin访问这个url后session cookie会被cache进这个url，以后任意一个普通用户访问这个url就能获取admin的session cookie
 307. Mongo ObjectId是可预测的，利用工具： https://github.com/andresriancho/mongo-objectid-predict
+308. [Smug-Dino](https://github.com/osirislab/CSAW-CTF-2023-Quals/tree/main/web/smug-dino),[wp](https://github.com/D13David/ctf-writeups/tree/main/csaw23/web/smug_dino)
+- nginx 1.17.6请求走私

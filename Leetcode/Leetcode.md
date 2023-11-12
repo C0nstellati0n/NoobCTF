@@ -271,3 +271,4 @@
 - [Maximum Score of a Good Subarray](./Hard/Maximum%20Score%20of%20a%20Good%20Subarray.md). greedy+two pointers/binary search/Monotonic Stack
 - [Count Vowels Permutation](./Hard/Count%20Vowels%20Permutation.md). dp
 - [Poor Pigs](./Hard/Poor%20Pigs.md)
+- [Design Graph With Shortest Path Calculator](./Hard/Design%20Graph%20With%20Shortest%20Path%20Calculator.md). dijkstra/c++ priority_queue

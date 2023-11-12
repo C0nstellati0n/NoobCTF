@@ -987,3 +987,6 @@ main()
 - lua love2d game engine游戏逆向。游戏的exe文件可以用binwalk提取出资源，包括lua脚本，不过是混淆过的。其中部分为混淆后的字符串，可参考wp的做法将其反混淆
 118. [patchwork](https://github.com/MindSystemm/CTF-WriteUps/blob/master/Challenges/PatriotCTF23/Writeups.md#patchwork)
 - 可配置ghidra使其反编译无法到达的代码段
+119. [Impossibrawler!](https://github.com/D13David/ctf-writeups/tree/main/csaw23/rev/impossibrawler)
+- godot engine游戏逆向。可利用工具 https://github.com/bruvzg/gdsdecomp recover project，然后在引擎内打开
+- 也可以参考 https://github.com/n132/CTF-Write-Up/tree/main/2023-CSAW-CTF-Quals/Impossibrawler ，用工具并修改脚本后重新build： https://docs.godotengine.org/en/latest/contributing/development/compiling/index.html
