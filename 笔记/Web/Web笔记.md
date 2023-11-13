@@ -2985,9 +2985,14 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 - remix解法： https://bsempir0x65.github.io/CTF_Writeups/DownUnderCTF_2023
 - cast命令解法： https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/blockchain/eightfivefourfive/solve
 305. [strapi in](https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/web/strapi-in)
-- [strapi-plugin-email-designer](https://github.com/alexzaganelli/strapi-plugin-email-designer)ssti
+- [strapi-plugin-email-designer](https://github.com/alexzaganelli/strapi-plugin-email-designer) ssti
 306. [0day blog](https://github.com/DownUnderCTF/Challenges_2023_Public/tree/main/web/0day-blog)
 - Drupal core `JSON:API` module cache poisoning。可通过构造恶意url，使admin访问这个url后session cookie会被cache进这个url，以后任意一个普通用户访问这个url就能获取admin的session cookie
 307. Mongo ObjectId是可预测的，利用工具： https://github.com/andresriancho/mongo-objectid-predict
 308. [Smug-Dino](https://github.com/osirislab/CSAW-CTF-2023-Quals/tree/main/web/smug-dino),[wp](https://github.com/D13David/ctf-writeups/tree/main/csaw23/web/smug_dino)
 - nginx 1.17.6请求走私
+309. [rainbow-notes](https://github.com/osirislab/CSAW-CTF-2023-Quals/tree/main/web/rainbow-notes)
+- 利用dom clobbering使`node.parentElement.removeChild()`报错
+- 利用[STTF fragments](https://xsleaks.dev/docs/attacks/experiments/scroll-to-text-fragment/)和CSS的`:target` selector泄露页面上的内容。参考 https://book.hacktricks.xyz/pentesting-web/xs-search/css-injection#styling-scroll-to-text-fragment 。此题的其他参考解法：
+    - `<form id="f"><input name="insertBefore">X<style>:target{background:url("")}</style></form>#:~:text=flag{`
+    - https://github.com/SuperStormer/writeups/tree/master/csawctf_2023/web/rainbow-notes
