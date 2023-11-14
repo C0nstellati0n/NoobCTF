@@ -2204,14 +2204,15 @@ print(long_to_bytes(int(M.xy()[0])))
     #配合sage_eval和coefficient： https://shiho-elliptic.tumblr.com/post/722391959624433664/crypto-ctf-2023-writeup-en
     ```
     - 构造方程解法： https://zhuanlan.zhihu.com/p/643355092
-88. ecc上的[Smart's Attack](https://ariana1729.github.io/2021/05/31/SmartAttack.html)。当一个椭圆曲线additive transfer时，则可以进行Smart's Attack，能够在线性时间内解决ecc上的dlp问题。
-    - additive transfer指the order of the elliptic curve group is equal to the order of the underlying prime field. 感觉用sagemath里的api比较好解释：
-    ```py
-    Ep = EllipticCurve(GF(p), [a, b]) #p-1: the order of the underlying prime field. 要是p不是质数的话可能会是别的数，质数的话就是p-1
-    Ep.order() #曲线加法群的阶（the order of the elliptic curve group）
-    ```
-    - 攻击脚本：https://github.com/jvdsn/crypto-attacks/blob/master/attacks/ecc/smart_attack.py
-    - 可以在这里查看什么样的曲线容易受到transfer相关的攻击： https://safecurves.cr.yp.to/transfer.html
+88. ecc上的[Smart's Attack](https://ariana1729.github.io/2021/05/31/SmartAttack.html)。当一个椭圆曲线additive transfer（anomalous curve）时，则可以进行Smart's Attack，能够在线性时间内解决ecc上的dlp问题。
+ - additive transfer指the order of the elliptic curve group is equal to the order of the underlying prime field. 感觉用sagemath里的api比较好解释：
+```py
+Ep = EllipticCurve(GF(p), [a, b]) #p-1: the order of the underlying prime field. 要是p不是质数的话可能会是别的数，质数的话就是p-1
+Ep.order() #曲线加法群的阶（the order of the elliptic curve group）
+```
+- 攻击脚本：https://github.com/jvdsn/crypto-attacks/blob/master/attacks/ecc/smart_attack.py
+- 可以在这里查看什么样的曲线容易受到transfer相关的攻击： https://safecurves.cr.yp.to/transfer.html
+- 关于如何判断曲线是否anomalous以及另一个版本的smart attack脚本，可以参考[这题](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/crypto_ecc-fantasy)的生成函数。感觉特征应该是`E.trace_of_frobenius() == 1`
 89. [rsalcg2](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/crypto/rsalcg2),[wp](https://hackmd.io/@keymoon/S100q2xch)
 - [half GCD(hgcd)算法](https://www.cnblogs.com/whx1003/p/16217087.html)在特殊情况下的加速。hgcd用于计算多项式的gcd，比欧几里得算法要快。
 90. [The Vault 2](https://github.com/rwandi-ctf/ctf-writeups/blob/main/amateursctf2023/the%20vault%202.md)

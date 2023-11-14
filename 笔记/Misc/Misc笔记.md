@@ -559,7 +559,7 @@ print(len(out))
 - stegseek爆破steghide密码。
 122. [CrackingTheBadVault](https://github.com/CybercellVIIT/VishwaCTF-23_Official_Writeups/blob/main/Digital%20Forensics/DigitalForensics_CrackingTheBadVault.pdf)
 - dcfldd命令从veracrypt partition volume header中提取hashcat爆破所需的hash。一般在第一个sector，通常一个sector 512字节。`sudo dcfldd if=image.img of=header.tc bs=1 count=512`
-- hashcat爆破Veracrypt+sha512：`sudo hashcat -a 3 -m 13721 <hash-path> <word-list>`。爆破内部隐藏partition密码（已知pim和keyfiles）：`sudo hashcat -a 3 -m 13721 --veracrypt-keyfiles=key.png --veracrypt-pim-start=900 --veracrypt-pim-start=901 hidden-vol.tc <word-list>`
+- hashcat爆破Veracrypt+sha512：`sudo hashcat -a 3 -m 13721 <hash-path> <word-list>`。爆破内部隐藏partition密码（已知pim或者大致爆破范围和keyfiles）：`sudo hashcat -a 3 -m 13721 --veracrypt-keyfiles=key.png --veracrypt-pim-start=900 --veracrypt-pim-start=901 hidden-vol.tc <word-list>`，`hashcat --force --status --hash-type=13721 --veracrypt-pim-start=start --veracrypt-pim-stop=end -S -w 3 --workload-profile="2" vol rockyou.txt`
 - 可在veracrypt volume中隐藏partition。提取隐藏partition的volume header的命令:`sudo dcfldd if=image.img of=hidden-vol.tc bs=1 skip=65536 count=512`
 123. 电路模拟软件：[Proteus](https://www.labcenter.com/proteus_pcb/?gclid=EAIaIQobChMI14GMoc2l_gIV321vBB01rglHEAAYASAAEgLKaPD_BwE)。可以模拟Arduino，不过需要提供hex file，例如`code.ino.hex`。[I see wires everywhere](https://github.com/CybercellVIIT/VishwaCTF-23_Official_Writeups/blob/main/Stegnography/Steganography_I%20see%20wires%20everywhere.pdf)
 124. 当遇见带密码的pdf时，可以尝试用[pdfcrack](https://www.kali.org/tools/pdfcrack/)破解密码。`pdfcrack -f ctf.pdf -w rockyou.txt`
@@ -1595,3 +1595,16 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 可以用guestmount在linux上挂载windows的vmdk
 183. [Initial Access](https://github.com/D13David/ctf-writeups/tree/main/csaw23/ir/initial_access)
 - Outlook Data Files on windows contain your email messages, calendar, tasks:`Documents\Outlook Files`。可用[libpst](https://www.kali.org/tools/libpst/)工具处理
+184. [Disguised Source Control](https://0xryuk.gitlab.io/posts/ctf/winjactf2023/#disguised-source-control)
+- 获取一个repo的token后，即可利用clone命令cloneprivate repo。private repo在github上会显示404，但是用git clone就会提示需要密码，密码就是token
+185. [Sheep loves Maths](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_sheep-loves-maths)
+- zip crc32爆破脚本(可自动提取crc32值)+[Tupper's self-referential formula](https://en.wikipedia.org/wiki/Tupper%27s_self-referential_formula)
+186. [Canguard?](https://github.com/neil-vs/my-ctf-challenges-writeups/tree/main/vsCTF%202023/Canguard)
+- 游戏Valorant的Vanguard日志位于`\Program Files\Riot Vanguard\Logs`，默认被加密，可利用[脚本](https://www.unknowncheats.me/forum/anti-cheat-bypass/488665-vanguard-log-decryptor.html)解密。改版脚本： https://squarezero.dev/vsCTF2023/#challenge--canguard ，可统一解密当前目录下的所有日志文件
+187. [RoRansom 1](https://github.com/neil-vs/my-ctf-challenges-writeups/tree/main/vsCTF%202023/RoRansom%201)
+- 游戏roblox的日志位于`\Users\username\AppData\Local\Roblox\logs`。在日志里可以获取placeId，可用于在roblox网站上搜索到对应的游戏
+- 按F9可以进入Roblox debugger console，有些调试台信息也可以在日志中看到
+188. [RoRansom 2](https://github.com/neil-vs/my-ctf-challenges-writeups/tree/main/vsCTF%202023/RoRansom%202)
+- Roblox caches assets in several locations,其中一个目录为` \Users\username\AppData\Local\Roblox\Downloads\roblox-player`
+189. [Ottersec is a cat](https://basilics.github.io/2023/09/25/ottersec-is-a-cat.html)
+- python使用keras机器学习模块处理图片数据并训练模型。wp中的训练方法属于一种bad practice，会产生过度拟合（[overfitting](https://en.wikipedia.org/wiki/Overfitting)）的模型。但是应对题目不变的数据绰绰有余

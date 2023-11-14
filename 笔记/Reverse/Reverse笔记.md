@@ -990,3 +990,7 @@ main()
 119. [Impossibrawler!](https://github.com/D13David/ctf-writeups/tree/main/csaw23/rev/impossibrawler)
 - godot engine游戏逆向。可利用工具 https://github.com/bruvzg/gdsdecomp recover project，然后在引擎内打开
 - 也可以参考 https://github.com/n132/CTF-Write-Up/tree/main/2023-CSAW-CTF-Quals/Impossibrawler ，用工具并修改脚本后重新build： https://docs.godotengine.org/en/latest/contributing/development/compiling/index.html
+120. [ANNS](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/rev_anns)
+- python使用faiss库
+121. [teenage_wasm](https://github.com/D13David/ctf-writeups/tree/main/vsctf23/rev/teenage_wasm)
+- chrome dev tools调试wasm： https://developer.chrome.com/blog/wasm-debugging-2020/

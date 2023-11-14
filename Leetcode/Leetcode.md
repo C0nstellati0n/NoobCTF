@@ -211,6 +211,7 @@
 - [Determine if a Cell Is Reachable at a Given Time](./Medium/Determine%20if%20a%20Cell%20Is%20Reachable%20at%20a%20Given%20Time.md). [Chebyshev distance](https://en.wikipedia.org/wiki/Chebyshev_distance)(切比雪夫距离)
 - [Count Number of Homogenous Substrings](./Medium/Count%20Number%20of%20Homogenous%20Substrings.md)
 - [Restore the Array From Adjacent Pairs](./Medium/Restore%20the%20Array%20From%20Adjacent%20Pairs.md). dfs/bfs/graph
+- [Sort Vowels in a String](./Medium/Sort%20Vowels%20in%20a%20String.md). counting sort
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。

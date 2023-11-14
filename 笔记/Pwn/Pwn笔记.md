@@ -1391,3 +1391,14 @@ io.interactive()
 - 注意system调用时会往栈里写数据，因此调用时当前栈要可写。如果不可写，先用mprotect改当前所在内存权限
 126. [shifty mem](https://gerrardtai.com/coding/ductf#shifty-mem)
 - C语言的共享内存使用（shm_open）与条件竞争/TOCTOU
+127. [tiny-pwn](https://www.youtube.com/watch?v=BRnMRdQJVeo)
+- 一些编写shellcode时的技巧。假如程序允许的shellcode长度很短，可以考虑额外用read读取较长shellcode再执行：
+```
+xor ebx,ebx
+push 3
+pop eax
+push 100
+pop edx
+int 0x80
+```
+使用push和pop修改寄存器的值要比使用mov更短。主要思路是将shellcode读取到当前eip指向的位置，然后从stdin获取第二阶段getshell shellcode时就能直接运行了。注意要保证第二阶段的shellcode对齐，比较简单粗暴的方法是在开头多放几个nop

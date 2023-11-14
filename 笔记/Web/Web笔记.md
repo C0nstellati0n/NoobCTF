@@ -2996,3 +2996,9 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 - 利用[STTF fragments](https://xsleaks.dev/docs/attacks/experiments/scroll-to-text-fragment/)和CSS的`:target` selector泄露页面上的内容。参考 https://book.hacktricks.xyz/pentesting-web/xs-search/css-injection#styling-scroll-to-text-fragment 。此题的其他参考解法：
     - `<form id="f"><input name="insertBefore">X<style>:target{background:url("")}</style></form>#:~:text=flag{`
     - https://github.com/SuperStormer/writeups/tree/master/csawctf_2023/web/rainbow-notes
+310. [SculptAI](https://blog.aravindha.in/winja-ctf-nullcon-goa-2023/)
+- websocket下的sqlite注入。漏洞点和利用方法都一样，只不过连接方式不同。sqlmap默认不支持websocket，需要借助于工具： https://github.com/BKreisel/sqlmap-websocket-proxy?ref=blog.aravindha.in
+311. [reCAPTCHA v39](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_recaptcha-v39)
+- python建立websocket连接+计算图片阴影部分面积
+312. [ZKPLite](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_zkplite)
+- 如何计算/预测合约地址（msg.sender）： https://docs.soliditylang.org/en/latest/control-structures.html#salted-contract-creations-create2
