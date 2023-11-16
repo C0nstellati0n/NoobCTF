@@ -1599,6 +1599,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 获取一个repo的token后，即可利用clone命令cloneprivate repo。private repo在github上会显示404，但是用git clone就会提示需要密码，密码就是token
 185. [Sheep loves Maths](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_sheep-loves-maths)
 - zip crc32爆破脚本(可自动提取crc32值)+[Tupper's self-referential formula](https://en.wikipedia.org/wiki/Tupper%27s_self-referential_formula)
+- 其他wp： https://github.com/0x-Matthias/CTF-Writeups/tree/main/vsCTF_2023/misc/Sheep%20Loves%20Maths
+    - 另一个自动化工具： https://github.com/kmyk/zip-crc-cracker 。不过这个工具会尝试爆破全部文件，假如zip包含某些较大的文件，可以先用`zip -d`删除后（无需知道密码）再爆破。如何删除： https://superuser.com/questions/600385/remove-single-file-from-zip-archive-on-linux
+    - python [OEIS](https://oeis.org/)使用，用于鉴别特殊的数列
 186. [Canguard?](https://github.com/neil-vs/my-ctf-challenges-writeups/tree/main/vsCTF%202023/Canguard)
 - 游戏Valorant的Vanguard日志位于`\Program Files\Riot Vanguard\Logs`，默认被加密，可利用[脚本](https://www.unknowncheats.me/forum/anti-cheat-bypass/488665-vanguard-log-decryptor.html)解密。改版脚本： https://squarezero.dev/vsCTF2023/#challenge--canguard ，可统一解密当前目录下的所有日志文件
 187. [RoRansom 1](https://github.com/neil-vs/my-ctf-challenges-writeups/tree/main/vsCTF%202023/RoRansom%201)

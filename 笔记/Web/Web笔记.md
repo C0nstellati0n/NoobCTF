@@ -2999,6 +2999,10 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 310. [SculptAI](https://blog.aravindha.in/winja-ctf-nullcon-goa-2023/)
 - websocket下的sqlite注入。漏洞点和利用方法都一样，只不过连接方式不同。sqlmap默认不支持websocket，需要借助于工具： https://github.com/BKreisel/sqlmap-websocket-proxy?ref=blog.aravindha.in
 311. [reCAPTCHA v39](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_recaptcha-v39)
-- python建立websocket连接+计算图片阴影部分面积
+- python建立websocket连接+计算图片阴影部分面积。websocket连接的网页用requests是连不上的
 312. [ZKPLite](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_zkplite)
 - 如何计算/预测合约地址（msg.sender）： https://docs.soliditylang.org/en/latest/control-structures.html#salted-contract-creations-create2
+313. [Optimized Admin Bot](https://www.youtube.com/watch?v=BRnMRdQJVeo)
+- JSDOM在服务器的node context下执行代码，所以获取xss时可以利用spawn等函数直接RCE。当`runScripts`设置为`dangerously`时，有一个小小的沙盒用于执行代码，可以参考wp的做法逃逸： https://gist.github.com/c0nrad/b919aa1c659a4d0f9596f5c6e1aad47f 。其他做法：
+    - https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#optimized-admin-bot
+    - https://github.com/jsdom/jsdom/issues/2729

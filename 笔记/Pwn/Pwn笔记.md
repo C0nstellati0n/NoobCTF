@@ -1402,3 +1402,9 @@ pop edx
 int 0x80
 ```
 使用push和pop修改寄存器的值要比使用mov更短。主要思路是将shellcode读取到当前eip指向的位置，然后从stdin获取第二阶段getshell shellcode时就能直接运行了。注意要保证第二阶段的shellcode对齐，比较简单粗暴的方法是在开头多放几个nop
+128. [Cosmic Ray v2](https://www.youtube.com/watch?v=BRnMRdQJVeo)
+- jmp系列指令（如JZ）机器码中有一个字节表示偏移。假如可程序可以翻转任意位置上的bit，将这类指令偏移字节的某个bit翻转有几率获取程序无限执行（假如当前函数下面正好是main的话）。有可能会跳到某个指令的中间，不过不是所有情况都会崩溃
+- 写shellcode时一个可以考虑的位置是`deregister_tm_clones`函数
+129. [LLM-Wrapper](https://www.youtube.com/watch?v=BRnMRdQJVeo)
+- c++ pwn。c++内置的string是无法溢出的，但使用`c_str()`将其转换为纯C字符串时则有溢出的风险
+- basic_string结构利用。参考第35条，当字符串的大小不超过16时Data Pointer就会存储在栈上，意味着当其他数据结构发生溢出时可以覆盖该指针。假设字符串B的Data Pointer被覆盖，那么程序打印B时打印的就是被覆盖的Data Pointer所指向的内容了。在利用bof漏洞写rop时，也要注意保留这些结构，不要一股脑a全填过去
