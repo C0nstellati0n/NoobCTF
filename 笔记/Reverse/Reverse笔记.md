@@ -977,6 +977,7 @@ main()
   - 如何将symbolic crumb组合成一个完整的byte(使用`z3.ZeroExt(n, bv)`，用于将bitvector bv添加n个前缀0)
   - `z3.If`使用:`z3.If(condition, then_expr, else_expr)`,类似三元表达式，可以嵌套
   - `z3.Not`，`solver.eval`,`as_long`
+- https://github.com/sam-b/z3-stuff
 115. [Conquest of Camelot](https://black-frost.github.io/posts/sekai2023/)
 - OCaml语言binary逆向。这种语言的函数调用约定比较奇怪，ida可能无法生成伪代码。另外，这种语言对数组的操作会自动添加大量的bound checking，函数体会看起来很复杂但逻辑可能很简单
 - 參考 https://mcfx.us/posts/2023-09-01-sekaictf-2023-writeup/#conquest-of-camelot ，（ida里）calling convection应该为`__int64 __usercall func<rax>(__int64 arg0@<rax>, __int64 arg1@<rax>, __int64 arg2@<rdi>)`

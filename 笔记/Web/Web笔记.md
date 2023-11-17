@@ -3003,6 +3003,11 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 312. [ZKPLite](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_zkplite)
 - 如何计算/预测合约地址（msg.sender）： https://docs.soliditylang.org/en/latest/control-structures.html#salted-contract-creations-create2
 313. [Optimized Admin Bot](https://www.youtube.com/watch?v=BRnMRdQJVeo)
-- JSDOM在服务器的node context下执行代码，所以获取xss时可以利用spawn等函数直接RCE。当`runScripts`设置为`dangerously`时，有一个小小的沙盒用于执行代码，可以参考wp的做法逃逸： https://gist.github.com/c0nrad/b919aa1c659a4d0f9596f5c6e1aad47f 。其他做法：
-    - https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#optimized-admin-bot
-    - https://github.com/jsdom/jsdom/issues/2729
+- JSDOM在服务器的node context下执行代码，所以获取xss时可以利用spawn等函数直接RCE。当`runScripts`设置为`dangerously`时，有一个小小的沙盒用于执行代码，可以参考wp的做法逃逸： https://gist.github.com/c0nrad/b919aa1c659a4d0f9596f5c6e1aad47f
+- [其他做法](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#optimized-admin-bot)包含技巧：
+    - 使用node addon
+    - 利用XMLHttpRequest从原型链污染到RCE： https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution/prototype-pollution-to-rce
+    - https://github.com/jsdom/jsdom/issues/2729 (wouldnt work by itself cause require doesnt exist in es6 modules)
+314. [Dependency Confusion](https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610)
+- 部分项目会使用内部编写的库，但当黑客利用各种方式获取到内部库的名字后，可以提前在各种库管理工具注册同名的公共库。某些工具在库名重复时优先选择版本高的，所以黑客将自己的库版本提高然后往里面放有害代码即可完成RCE
+    - 有漏洞风险的工具包括python的pip，nodejs的npm，ruby的gems和[Haskell](https://frasertweedale.github.io/blog-fp/posts/2021-02-12-haskell-dependency-confusion.html)

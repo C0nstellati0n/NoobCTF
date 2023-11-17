@@ -558,6 +558,7 @@ for i in range(1,e):
     - [irreducible_element](https://doc.sagemath.org/html/en/reference/polynomial_rings/sage/rings/polynomial/polynomial_ring.html#sage.rings.polynomial.polynomial_ring.PolynomialRing_dense_finite_field.irreducible_element):获取环上指定degree的不可约元素
     - [right_kernel](https://doc.sagemath.org/html/en/prep/Quickstarts/Linear-Algebra.html)
     - [basis](https://doc.sagemath.org/html/en/constructions/linear_algebra.html)
+- 攻击与格有关的密码的工具： https://github.com/josephsurin/lattice-based-cryptanalysis
 
 ## 其他
 
