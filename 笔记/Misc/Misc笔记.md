@@ -1591,6 +1591,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - wireshark分析minetest游戏协议。可用插件： https://github.com/minetest/minetest/blob/master/util/wireshark/minetest.lua
 181. [Discord Admin Bot](https://austinstitz-hacking.github.io/csaw23qual/later)
 - 如何邀请bot进自己的server。邀请后可以绕过一些特殊的权限，比如admin。在自己的服务器里设置一个admin role即可
+    - 复制用户ID需要开启开发者模式，参考 https://beebom.com/how-enable-disable-developer-mode-discord/
 182. [What is going on?](https://github.com/D13David/ctf-writeups/tree/main/csaw23/ir/whats_going_on)
 - 可以用guestmount在linux上挂载windows的vmdk
 183. [Initial Access](https://github.com/D13David/ctf-writeups/tree/main/csaw23/ir/initial_access)
