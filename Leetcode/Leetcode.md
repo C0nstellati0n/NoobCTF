@@ -213,9 +213,10 @@
 - [Restore the Array From Adjacent Pairs](./Medium/Restore%20the%20Array%20From%20Adjacent%20Pairs.md). dfs/bfs/graph
 - [Sort Vowels in a String](./Medium/Sort%20Vowels%20in%20a%20String.md). counting sort
 - [Unique Length-3 Palindromic Subsequences](./Medium/Unique%20Length-3%20Palindromic%20Subsequences.md). dp/c++ unordered_set
-- [Maximum Element After Decreasing and Rearranging](./Medium/Maximum%20Element%20After%20Decreasing%20and%20Rearranging.md). count sort
+- [Maximum Element After Decreasing and Rearranging](./Medium/Maximum%20Element%20After%20Decreasing%20and%20Rearranging.md). counting sort
 - [Find Unique Binary String](./Medium/Find%20Unique%20Binary%20String.md). [Cantor's diagonal argument](https://en.wikipedia.org/wiki/Cantor%27s_diagonal_argument)
 - [Minimize Maximum Pair Sum in Array](./Medium/Minimize%20Maximum%20Pair%20Sum%20in%20Array.md)
+- [Frequency of the Most Frequent Element](./Medium/Frequency%20of%20the%20Most%20Frequent%20Element.md). sliding window/binary search
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。

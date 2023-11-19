@@ -107,35 +107,25 @@ print(long_to_bytes(msg).decode())
 ```python
 import gmpy2
 from Crypto.Util.number import long_to_bytes
-
-
 def continuedFra(x, y):
     cF = []
     while y:
         cF += [x // y]
         x, y = y, x % y
     return cF
-
-
 def Simplify(ctnf):
     numerator = 0
     denominator = 1
     for x in ctnf[::-1]:
         numerator, denominator = denominator, x * denominator + numerator
     return (numerator, denominator)
-
-
 def calculateFrac(x, y):
     cF = continuedFra(x, y)
     cF = list(map(Simplify, (cF[0:i] for i in range(1, len(cF)))))
     return cF
-
-
 def solve_pq(a, b, c):
     par = gmpy2.isqrt(b * b - 4 * a * c)
     return (-b + par) // (2 * a), (-b - par) // (2 * a)
-
-
 def wienerAttack(e, n):
     for (d, k) in calculateFrac(e, n):
         if k == 0:
@@ -559,6 +549,9 @@ for i in range(1,e):
     - [right_kernel](https://doc.sagemath.org/html/en/prep/Quickstarts/Linear-Algebra.html)
     - [basis](https://doc.sagemath.org/html/en/constructions/linear_algebra.html)
 - 攻击与格有关的密码的工具： https://github.com/josephsurin/lattice-based-cryptanalysis
+- [sqrt](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/crp/sqrt):计算Permutations(256)中某个元素的平方根。注意一个元素的平方根可能有很多个
+    - [to_cycles](https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/permutation.html#sage.combinat.permutation.Permutation.to_cycles)
+    - [sage.combinat.permutation.from_cycles](https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/permutation.html#sage.combinat.permutation.from_cycles)
 
 ## 其他
 
@@ -2322,3 +2315,7 @@ print(hex(random.getrandbits(256)))
 - ECDSA中nonce的选取应该完全随机。如果使用了cubic congruential generator，会导致所有nonce之间都有一定的关系，可通过related nonce attack获取私钥（对于cubic congruential generator来说需要6个签名）。论文： https://eprint.iacr.org/2023/305.pdf
 112. [Circles](https://github.com/osirislab/CSAW-CTF-2023-Quals/tree/main/crypto/circles)
 - [Moser's Circles pattern](https://3blue1brown.substack.com/p/revisiting-mosers-circle-problem)。该序列以`1, 2, 4, 8, 16`开头，看起来像2的n次方，但后续则与2的n次方渐行渐远
+113. [arc3](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/crp/arc3)
+- RC4攻击。与[普通RC4](https://github.com/C0nstellati0n/NoobCTF/blob/main/%E7%AC%94%E8%AE%B0/Tools/%E5%B7%A5%E5%85%B7%E8%84%9A%E6%9C%AC.md#rc4%E5%8A%A0%E5%AF%86%E8%84%9A%E6%9C%AC)不同的是，这里的RC4更像个RNG，S盒为打乱顺序的0-255数字序列，i和j均为随机一个索引，每次输出`S[(S[i] + S[j]) % 256]`。明文的前1000个字节已知，尝试爆破200000轮运行后的RC4的输出序列
+114. [random](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/crp/random)
+- 64位机器上的C#默认使用`xoshiro256**`作为其PRNG。此题提供了在获取i到i+2000(共2000个输出)个`rng.Next(256)`后如何获取第i-1个`rng.Next(256)`的输出
