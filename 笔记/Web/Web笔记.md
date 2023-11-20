@@ -3011,3 +3011,14 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 314. [Dependency Confusion](https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610)
 - 部分项目会使用内部编写的库，但当黑客利用各种方式获取到内部库的名字后，可以提前在各种库管理工具注册同名的公共库。某些工具在库名重复时优先选择版本高的，所以黑客将自己的库版本提高然后往里面放有害代码即可完成RCE
     - 有漏洞风险的工具包括python的pip，nodejs的npm，ruby的gems和[Haskell](https://frasertweedale.github.io/blog-fp/posts/2021-02-12-haskell-dependency-confusion.html)
+315. [Dictionary](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/ppc/dictionary)
+- GenjiDB sql时间布尔盲注。不过genjidb没有substr等函数，建议用binary search猜测字符串长度及内容
+316. [ChadGPT](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/web/chadgpt)
+- [GoJay](https://github.com/francoispqt/gojay)与标准`encoding/json`库的解析差异。GoJay解析全部的json字段后，允许在最后加上任意内容（包括注释），但是标准库则会报错
+317. [My Secrets](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/web/my-secrets)
+- js express links漏洞。links函数用于给response添加[Link header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)，Link header本身又等于[<link>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link)的作用。当用户可以控制传入links的参数时，可以用`>`号闭合当前内容，并添加自己的preload url。可利用这点促使服务器访问自己的webhook
+318. [picoblog](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/web/picoblog)
+- [rust-rpxy](https://github.com/junkurihara/rust-rpxy)漏洞：
+    - 错误的host header实现
+    - 缓存功能存在条件竞争。可以同时准备多个request但缺少最后一个字节，然后同时发出最后一个字节
+- 若CSP不允许`unsafe-inline`且X-Frame-Options header和CSP frame-ancestors选项都启用，仍然可以利用`<iframe>`+srcdoc绕过

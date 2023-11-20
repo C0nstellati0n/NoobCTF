@@ -1612,3 +1612,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - Roblox caches assets in several locations,其中一个目录为` \Users\username\AppData\Local\Roblox\Downloads\roblox-player`
 189. [Ottersec is a cat](https://basilics.github.io/2023/09/25/ottersec-is-a-cat.html)
 - python使用keras机器学习模块处理图片数据并训练模型。wp中的训练方法属于一种bad practice，会产生过度拟合（[overfitting](https://en.wikipedia.org/wiki/Overfitting)）的模型。但是应对题目不变的数据绰绰有余
+190. [sralker](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/for/sralker)
+- 解码GSM信号： https://github.com/ptrkrysik/gr-gsm/tree/master 。有时候可能要转换wav为该工具能识别的格式。另外这个工具的安装在`Ubuntu 18.04`上更容易
+- 解码[GSM 03.38](https://en.wikipedia.org/wiki/GSM_03.38)编码
+191. [gif0day](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/ppc/gif0day)
+- 类似acropalypse的漏洞。利用acropalypse切割gif图片时，被切割的部分仍然会被放置在图片的尾部，攻击者因此可以恢复被切割的部分。 https://github.com/heriet/acropalypse-gif

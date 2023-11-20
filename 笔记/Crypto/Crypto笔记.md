@@ -2098,7 +2098,7 @@ print(uG^dlog == uP)
 - python里，若将字符串以`utf-8-sig`编码，除了字符串正常UTF-8编码，还会在结果前面加上Unicode byte order marker。Utf-8里这个marker为`ef bb bf`
 - C语言爆破CRC脚本
 69. [Three-Time Pad](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/three_time),[wp](https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/Three-Time%20Pad)
-- 同样的密钥用于加密多个消息且密文已知，可直接用wp里的脚本恢复明文+key。不过这题其实没那么麻烦，只是记录一下脚本：https://github.com/Jwomers/many-time-pad-attack/tree/master
+- 同样的密钥用于加密多个消息且密文已知，可直接用wp里的脚本恢复明文+key。不过这题其实没那么麻烦，只是记录一下脚本：https://github.com/Jwomers/many-time-pad-attack/tree/master ,即使密文长度不一样也可以用
 70. [Morphing Time](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/crypto/morphing),[wp](https://tsumiiiiiiii.github.io/uiu-crypto/#morphing-time)
 - [Elgamal Cryptosystem](https://en.wikipedia.org/wiki/ElGamal_encryption)：homomorphic under multiplication。
 - 利用[tonelli shanks algorithm](https://en.wikipedia.org/wiki/Tonelli%E2%80%93Shanks_algorithm)解方程 $x^2\equiv a\mod p$
@@ -2319,3 +2319,8 @@ print(hex(random.getrandbits(256)))
 - RC4攻击。与[普通RC4](https://github.com/C0nstellati0n/NoobCTF/blob/main/%E7%AC%94%E8%AE%B0/Tools/%E5%B7%A5%E5%85%B7%E8%84%9A%E6%9C%AC.md#rc4%E5%8A%A0%E5%AF%86%E8%84%9A%E6%9C%AC)不同的是，这里的RC4更像个RNG，S盒为打乱顺序的0-255数字序列，i和j均为随机一个索引，每次输出`S[(S[i] + S[j]) % 256]`。明文的前1000个字节已知，尝试爆破200000轮运行后的RC4的输出序列
 114. [random](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/crp/random)
 - 64位机器上的C#默认使用`xoshiro256**`作为其PRNG。此题提供了在获取i到i+2000(共2000个输出)个`rng.Next(256)`后如何获取第i-1个`rng.Next(256)`的输出
+115. [SSS](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/crp/sss)
+- 利用largrange polynomial计算多项式在某一点上的值
+- [Fast Fourier transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform)（FFT）以及inverse FFT. FFT is equivalent to evaluating the polynomial at every power of the root of unity used; the inverse FFT (normal FFT using an inverted root of unity) is equivalent to interpolating the polynomial
+- Bluestein's algorithm
+- 为了理解这题去看了傅里叶分析的介绍： https://zhuanlan.zhihu.com/p/19763358 ，还是啥也不懂
