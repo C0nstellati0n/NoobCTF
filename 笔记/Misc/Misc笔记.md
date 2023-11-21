@@ -1617,3 +1617,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 解码[GSM 03.38](https://en.wikipedia.org/wiki/GSM_03.38)编码
 191. [gif0day](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/ppc/gif0day)
 - 类似acropalypse的漏洞。利用acropalypse切割gif图片时，被切割的部分仍然会被放置在图片的尾部，攻击者因此可以恢复被切割的部分。 https://github.com/heriet/acropalypse-gif
+192. [pong](https://github.com/OliverRosenberg/CTF-WriteUps/tree/main/BuckeyeCTF%202023/pong-challenge)
+- 使用tcpdump命令捕捉icmp流进pcap：`sudo tcpdump -c <count> -vvv -XX -i any icmp -w out.pcap`。运行这行命令后会尝试捕捉接下来计算机的count个icmp包
+193. [Replace me](https://www.youtube.com/watch?v=6AnSX5fJL9U)
+- Android bootimg相关知识+forensic
+    - `abootimg img`:查看bootimg的信息
+    - `abootimg -x img`:将bootimg内的文件（boot image config,kernel,ramdisk）提取到当前目录。其中initrd.img（ramdisk）为gzip压缩数据。加个gz后缀即可解压。解压后的文件为cpio archive，为众多文件目录的压缩文件
+    - 解压cpio archive到当前目录：`cat initrd.img|cpio -div`

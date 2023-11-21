@@ -34,7 +34,7 @@ The union bound: 对于U中两个事件 $A_1$ 和 $A_2$ ，有 $Pr[A_1\cup A_2]\
 
 ## The one-time pad and stream ciphers
 
-perfect secrecy：这里正式定义有点繁琐，简述就是，给定任意一个密文c，攻击者无法判断到底是加密 $m_i$ 还是加密 $m_j$ 得到的。one-time pad（OTP）就具有perfect secrecy。有意思的地方在于，只有当key的长度大于等于明文的长度时，该密码才有可能具有perfect secrecy
+perfect secrecy：这里正式定义有点繁琐，简述就是，给定任意一个密文c，攻击者无法判断到底是加密 $m_i$ 还是加密 $m_j$ 得到的。one-time pad（OTP）就具有perfect secrecy。有意思的地方在于，只有当key的长度大于等于明文的长度时，该密码才有可能具有perfect secrecy。稍微提一嘴，做课后练习的时候遇见个题，整个明文/密文/密钥空间只有256，但是仍然可以为perfect secrecy。perfect secrecy只和能不能分辨出来到底是哪个明文加密出来的有关，和容不容易破解无关
 
 这里提到了glibc的随机数生成器random函数也是可以预测的，因为其定义为 $r[i]\leftarrow(r[i-3]+r[i-31])\mod 2^{32}$ ，输出r[i]>>1。只是一些简单的线性运算，很容易预测
 
@@ -68,3 +68,38 @@ $G:K\rightarrow\{0,1\}^n$ 为一个PRG，A为一个 $\{0,1\}^n$ 上的统计测�
 ## Semantic Security
 
 Semantic Security(one-time key)：加密方法视为semantically secure，如果对于所有有效的adversary A， $Adv_{SS}[A,E]$ negligible。这里的Adversary有两个， $A_0$ 和 $A_1$ ,两者为同一个函数，输出0或1（所以就是同一个函数跑两次）。对于一组明文 $m_0,m_1$ 及其对应的密文 $c_0,c_1$，给 $A_0$ $c_0$ ,给 $A_1$ $c_1$ 。 $A_0$ 和 $A_1$ 需要各自根据获得密文输出结果。如果两者输出相同，说明两个A无法分辨不同的密文；反之则是可以。也可以说对于每组 $m_0,m_1\in M$ ，有{ $E(k,m_0)$ } $\approx_p$ { $E(k,m_1)$ }
+
+## What are Block Ciphers?
+
+伪随机函数(pseudo random function(PSF)):函数 $F:K\times X\rightarrow Y$ 定义在(K,X,Y)(key space,input space,output space)上，输入K中和X中一个元素，输出Y中的一个元素。需要保证存在某个高效的算法评估该函数（即能够快速输出，过程无需可逆）
+
+伪随机排列（pseudo random permutation(PRP)）: 函数 $E:K\times X\rightarrow X$ 定义在(K,X)（key space，任意集合X）上，需满足：
+1. 存在某个高效的算法评估E(k,x)
+2. E(k,\*)为单射（one-to-one）
+3. 存在某个高效的逆函数D(k,y)
+
+PRP和块密码（block cipher）的定义句法上一致，因此后续课程教授会将两者混合使用。常见的PRP：3DES，AES... PRP同时也是PRF，只不过多加个X=Y且可逆的条件
+
+安全的PRF定义：让 $F:K\times X\rightarrow Y$ 为一个PRF。构造两个集合：
+1. Funcs[X,Y]: 从X到Y所有函数的集合
+2. $S_F$ = { $F(k,\*),k\in K$ } $\subseteq$ Funcs[X,Y]。这里指随机从K选出一个k，固定该值并与全部可能x值组合，所形成的全部（固定k）的函数集合
+
+该PRF是安全的，若一个Funcs[X,Y]中的随机函数无法与 $S_F$ 中的随机函数区分
+
+通俗点说，假设有个人随机从X里选了一个x，然后把这个x放到一个机器里。机器里有两个函数，一个是来自Funcs[X,Y]的f(x)，一个是随机从K选择一个k后 $S_F$ 中对应这个k的函数。两者分别将x输入，给出输出。机器随机返回两个输出中的一个。要是那个人分辨不出来这是f(x)还是另外一个函数的输出，这个PRF就是安全的
+
+PRP的安全定义与这个差不多，只不过从选随机函数变成了在集合X中选随机组合。只要那个人分辨不出来，该PRP就是安全的
+
+PRF可以转换为PRG。让 $F:K\times$ { $0,1$ } $^n\rightarrow$ { $0,1$ } $^n$ 为一个安全的PRF。则 $G:K\rightarrow$ { $0,1$ } $^{nt}$ 是一个安全的PRG(t为用户参数)。可以这么构造:G(k)=F(k,0)||F(k,1)||...||F(k,t)
+
+## The Data Encryption Standard
+
+若 $f:K\times$ { $0,1$ } $^n\rightarrow$ { $0,1$ } $^n$ 是一个安全的PRF，那么使用f作为轮函数的3轮[feistel network](https://en.wikipedia.org/wiki/Feistel_cipher) $F:K^3\times$ { $0,1$ } $^{2n}\rightarrow$ { $0,1$ } $^{2n}$ 是一个安全的PRP
+
+查看feistel network的构造，每一轮交换R和L时都会调用轮函数 $f(k_i,R_i)$ 。因此只要保证f是安全的PRF且每次使用的 $k_i$ 互相独立没有任何关系，那么3轮的network足以构造出一个安全的PRP
+
+教授在讲DES的时候提到了一个DES的错误S盒选择。DES和AES一样，都有个S盒用来替换（不过DES是6 bit替换4 bit）。但是为什么不直接异或而是要替换呢？答案是，要是直接异或的话，整个过程就是完全线性的了。之前说过异或在模2下就是加法，整个S盒替换就变成了矩阵乘法：
+
+![xor_matrix](../images/xor_matrix.png)
+
+如果不来S盒替换破坏这种线性，那DES密码完全就是线性的了。简单的线性代数就能由密码恢复明文
