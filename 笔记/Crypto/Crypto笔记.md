@@ -2324,3 +2324,5 @@ print(hex(random.getrandbits(256)))
 - [Fast Fourier transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform)（FFT）以及inverse FFT. FFT is equivalent to evaluating the polynomial at every power of the root of unity used; the inverse FFT (normal FFT using an inverted root of unity) is equivalent to interpolating the polynomial
 - Bluestein's algorithm
 - 为了理解这题去看了傅里叶分析的介绍： https://zhuanlan.zhihu.com/p/19763358 ，还是啥也不懂
+116. [Electronical](https://github.com/D13David/ctf-writeups/tree/main/buckeyectf23/crypto/electronical)
+- aes ecb padding oracle attack. 特征是有oracle接收任意输入，拼接上flag后返回整体的加密结果。其他可用脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101

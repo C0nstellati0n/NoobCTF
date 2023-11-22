@@ -3024,8 +3024,10 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 - 若CSP不允许`unsafe-inline`且X-Frame-Options header和CSP frame-ancestors选项都启用，仍然可以利用`<iframe>`+srcdoc绕过
 319. [Ohio Instruments 84](https://github.com/4n86rakam1/writeup/tree/main/BuckeyeCTF-2023/web/Ohio_Instruments_84)
 - octave --eval命令注入。若攻击者可控制--eval后的参数，可实现getshell等功能。这里列举出读文件的做法（过滤单双引号，分号。但分号可用`\n`代替），要求程序会渲染图表（所以部分解法会把文件内容读到图表名里）: https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#ohio-instruments-84
+    - https://github.com/luketrenaman/bctf-2023/tree/main/ohio-instruments-84
 320. [Text Adventure API](https://github.com/4n86rakam1/writeup/tree/main/BuckeyeCTF-2023/web/Text_Adventure_API)
 - pickle反序列化执行系统命令。wp的做法使用`python3 -c`创建HTTPConnection然后read flag，将flag带到自己的服务器上
+- https://github.com/goku007xx/CTF-Writeups/tree/main/2023/BuckeyeCTF-2023/test-adventure-api 提供了反弹shell做法（使用ngrok）
 321. [area51](https://github.com/4n86rakam1/writeup/tree/main/BuckeyeCTF-2023/web/area51)
 - mongodb(nodejs里有个库叫Mongoose,两者的区别参考 https://stackoverflow.com/questions/28712248/difference-between-mongodb-and-mongoose ) nosql注入。以前知道拼接会产生注入，没想到这种代码也会：
 ```js
@@ -3034,6 +3036,6 @@ return User.find({
 			session: token
 		}).then(...)
 ```
-注入方式是让token为`{{"token":{{"$regex":"session.*"}}}}`，其中session是要获取的值。每次爆破session的一个字符，有回显就继续爆破session的下个字符
+注入方式是让token为`{{"token":{{"$regex":"session.*"}}}}`，其中session是要获取的值。每次爆破session的一个字符，有回显就继续爆破session的下个字符。也可以参考 https://github.com/goku007xx/CTF-Writeups/tree/main/2023/BuckeyeCTF-2023/area51 使用`^`作为正则
 322. [infinity](https://github.com/4n86rakam1/writeup/tree/main/BuckeyeCTF-2023/web/infinity)
 - python socketio库（js socket.io）使用。这个库和普通的socket有些不同

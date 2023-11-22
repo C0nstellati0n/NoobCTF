@@ -1624,3 +1624,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - `abootimg img`:查看bootimg的信息
     - `abootimg -x img`:将bootimg内的文件（boot image config,kernel,ramdisk）提取到当前目录。其中initrd.img（ramdisk）为gzip压缩数据。加个gz后缀即可解压。解压后的文件为cpio archive，为众多文件目录的压缩文件
     - 解压cpio archive到当前目录：`cat initrd.img|cpio -div`
+- 假如是像这题直接找在cpio archive里的文件，也可以尝试binwalk： https://github.com/D13David/ctf-writeups/tree/main/buckeyectf23/misc/replace_me
+194. [smerderij](https://github.com/luketrenaman/bctf-2023/tree/main/smerderij)
+- [github workflow](https://docs.github.com/en/actions/using-workflows/about-workflows)注入。workflow和`.github/workflows`文件夹下的yaml文件有关，触发配置里的event后（如pull request）会自动执行配置的代码。所以如果执行的代码段里直接拼接用户可控制的内容，会有注入发生并RCE的可能
+195. [typescrip](https://gist.github.com/ky28059/a851fdabc90d887a61af81c071f6f0ce)
+- typescript [Template Literal Types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html)可用于函数的参数，要求传入函数的参数满足Template Literal Types指定的格式，否则运行时会报错

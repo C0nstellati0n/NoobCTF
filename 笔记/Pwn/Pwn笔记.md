@@ -1408,3 +1408,5 @@ int 0x80
 129. [LLM-Wrapper](https://www.youtube.com/watch?v=BRnMRdQJVeo)
 - c++ pwn。c++内置的string是无法溢出的，但使用`c_str()`将其转换为纯C字符串时则有溢出的风险
 - basic_string结构利用。参考第35条，当字符串的大小不超过16时Data Pointer就会存储在栈上，意味着当其他数据结构发生溢出时可以覆盖该指针。假设字符串B的Data Pointer被覆盖，那么程序打印B时打印的就是被覆盖的Data Pointer所指向的内容了。在利用bof漏洞写rop时，也要注意保留这些结构，不要一股脑a全填过去
+130. [Igpay Atinlay Natoriay 3000](https://github.com/D13David/ctf-writeups/tree/main/buckeyectf23/pwn/ian_3000)
+- rust的`&word[0..1]`默认word全部由单字节字符组成。若word是unicode，存储时就会用多个字节，分割时就会报错

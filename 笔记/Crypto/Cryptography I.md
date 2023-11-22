@@ -103,3 +103,15 @@ PRF可以转换为PRG。让 $F:K\times$ { $0,1$ } $^n\rightarrow$ { $0,1$ } $^n$
 ![xor_matrix](../images/xor_matrix.png)
 
 如果不来S盒替换破坏这种线性，那DES密码完全就是线性的了。简单的线性代数就能由密码恢复明文
+
+## Exhaustive Search Attacks
+
+DES可以通过爆破密钥的方式破解，所以人们想出了3-DES：用3个key将des用三次： $E(k_1,D(k_2,E(k_3,m)))$ 。很明显，用三次的后果就是比正常des慢三倍。那为啥不用2DES？两次加密只慢两倍，而且密钥也无法爆破。主要是因为 $E(k_1,E(k_2,m))$ 可以写成 $E(k_2,m)=D(k_1,c)$ 。每当发现这种两个变量在方程两边的式子时，说明这俩玩意就不独立了，通常存在meet-in-the-middle攻击
+
+针对2DES的meet-in-the-middle攻击简述如下：
+1. 构造一个表，表中为全部 $2^{56}$ 个key以及其对应的 $E(k_i,m)$
+2. 然后用全部 $2^{56}$ 个key计算 $D(k_i,c)$ 。满足 $D(k_j,c)$ 结果等于 $E(k_i,m)$ 的一组 $(k_i,k_j)$ 就是要找的两个key
+
+## More Attacks on Block Ciphers
+
+Linear and differential attack:给出非常多的明文/密文对，在小于 $2^{256}$ 的时间复杂度里恢复key。假设c=DES(k,m)，对于随机的k和m，有 $Pr[m[i_1]\bigoplus...\bigoplus m[i_r]\bigoplus c[j_j]\bigoplus...\bigoplus c[j_v]=k[l_1]\bigoplus... k[l_u]]=\frac{1}{2}+\epsilon$ (对于DES， $\epsilon\approx 0.0000000477$ )。可以利用这个方程来找出某些key bits。假设给出 $\frac{1}{\epsilon^2}$ 个随机(m,c=DES(k,m))明文/密文对，有很大的概率 $k[l_1,...,l_u]=MAJ[m[i_1,...,i_r]\bigoplus c[j_j,...,j_v]]$ （MAJ表示集合中的众数，这个众数很有可能就是全部key bits的异或结果）。通常来说能靠这样恢复14 bits，剩下的42 bits需要爆破

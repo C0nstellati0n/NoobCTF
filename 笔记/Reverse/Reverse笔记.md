@@ -999,4 +999,4 @@ main()
 121. [teenage_wasm](https://github.com/D13David/ctf-writeups/tree/main/vsctf23/rev/teenage_wasm)
 - chrome dev tools调试wasm： https://developer.chrome.com/blog/wasm-debugging-2020/
 122. [Skribl](https://github.com/4n86rakam1/writeup/tree/main/BuckeyeCTF-2023/rev/Skribl)
-- python 3.13 pyc反编译。因为版本过高，大部分pyc反编译器都不能用， https://github.com/nedbat/coveragepy/blob/coverage-5.6b1/lab/show_pyc.py 可以。不过不能直接反编译成python代码，只能是类似python汇编的内容
+- python 3.13 pyc反编译。因为版本过高，大部分pyc反编译器都不能用， https://github.com/nedbat/coveragepy/blob/coverage-5.6b1/lab/show_pyc.py 可以。不过不能直接反编译成python代码，只能是类似python汇编的内容。不过直接用python自带的dis似乎也是一样的效果： https://github.com/chloge/BuckeyeCTF-2023/tree/main
