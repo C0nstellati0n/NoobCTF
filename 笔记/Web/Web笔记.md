@@ -3036,6 +3036,30 @@ return User.find({
 			session: token
 		}).then(...)
 ```
-注入方式是让token为`{{"token":{{"$regex":"session.*"}}}}`，其中session是要获取的值。每次爆破session的一个字符，有回显就继续爆破session的下个字符。也可以参考 https://github.com/goku007xx/CTF-Writeups/tree/main/2023/BuckeyeCTF-2023/area51 使用`^`作为正则
+注入方式为利用题目没有检查输入类型的特点，让token为`{"token":{"$regex":"flag.*"}}`，其中session是要获取的值。每次爆破session的一个字符，有回显就继续爆破session的下个字符。也可以参考 https://github.com/goku007xx/CTF-Writeups/tree/main/2023/BuckeyeCTF-2023/area51 使用`^`作为正则
+- 更多nosql注入参考 https://book.hacktricks.xyz/pentesting-web/nosql-injection
 322. [infinity](https://github.com/4n86rakam1/writeup/tree/main/BuckeyeCTF-2023/web/infinity)
 - python socketio库（js socket.io）使用。这个库和普通的socket有些不同
+- js做法： https://voxal.dev/blog/inf!
+333. [new-management](https://www.youtube.com/watch?v=I-zBSHp9qOc)
+- 如何利用remix+metamask与sepolia testnet上的合约进行交互。有意思的地方在于，在这种testnet上可以看到其他人的操作（调用了什么函数，按照时间顺序排序），意味着可以借鉴其他人的做法
+334. [certs](https://www.youtube.com/watch?v=I-zBSHp9qOc)
+- js jose库[jwtVerify](https://github.com/panva/jose/blob/main/docs/functions/jwt_verify.jwtVerify.md)的错误使用。下面这段代码的try和catch段分别为非对称验证的对称验证的案例：
+```js
+try {
+        const result = await jose.jwtVerify(
+        token,
+        await jose.importSPKI(publicKey, "RS256") //非对称，签名时用私钥，验证时用公钥
+    );
+    return result.payload as any;
+} catch (e) {
+    try {
+        const result = await jose.jwtVerify(
+        token,
+        new TextEncoder().encode(publicKey) //对称，签名时用一个密钥，验证时也用同样的密钥
+    );
+    return result.payload as any;
+    } catch (e) {}
+}
+```
+这个同样也是错误示范。如果源码给出公钥，攻击者就能用公钥签名jwt后走catch分支验证

@@ -71,7 +71,7 @@ Semantic Security(one-time key)：加密方法视为semantically secure，如果
 
 ## What are Block Ciphers?
 
-伪随机函数(pseudo random function(PSF)):函数 $F:K\times X\rightarrow Y$ 定义在(K,X,Y)(key space,input space,output space)上，输入K中和X中一个元素，输出Y中的一个元素。需要保证存在某个高效的算法评估该函数（即能够快速输出，过程无需可逆）
+伪随机函数(pseudo random function(PRF)):函数 $F:K\times X\rightarrow Y$ 定义在(K,X,Y)(key space,input space,output space)上，输入K中和X中一个元素，输出Y中的一个元素。需要保证存在某个高效的算法评估该函数（即能够快速输出，过程无需可逆）
 
 伪随机排列（pseudo random permutation(PRP)）: 函数 $E:K\times X\rightarrow X$ 定义在(K,X)（key space，任意集合X）上，需满足：
 1. 存在某个高效的算法评估E(k,x)
@@ -94,7 +94,7 @@ PRF可以转换为PRG。让 $F:K\times$ { $0,1$ } $^n\rightarrow$ { $0,1$ } $^n$
 
 ## The Data Encryption Standard
 
-若 $f:K\times$ { $0,1$ } $^n\rightarrow$ { $0,1$ } $^n$ 是一个安全的PRF，那么使用f作为轮函数的3轮[feistel network](https://en.wikipedia.org/wiki/Feistel_cipher) $F:K^3\times$ { $0,1$ } $^{2n}\rightarrow$ { $0,1$ } $^{2n}$ 是一个安全的PRP
+若 $f:K\times$ { $0,1$ } $^n\rightarrow$ { $0,1$ } $^n$ 是一个安全的PRF，那么使用f作为轮函数的3轮[feistel network](https://en.wikipedia.org/wiki/Feistel_cipher)（它还有个名字：Luby–Rackoff block ciphers） $F:K^3\times$ { $0,1$ } $^{2n}\rightarrow$ { $0,1$ } $^{2n}$ 是一个安全的PRP
 
 查看feistel network的构造，每一轮交换R和L时都会调用轮函数 $f(k_i,R_i)$ 。因此只要保证f是安全的PRF且每次使用的 $k_i$ 互相独立没有任何关系，那么3轮的network足以构造出一个安全的PRP
 
@@ -115,3 +115,17 @@ DES可以通过爆破密钥的方式破解，所以人们想出了3-DES：用3�
 ## More Attacks on Block Ciphers
 
 Linear and differential attack:给出非常多的明文/密文对，在小于 $2^{256}$ 的时间复杂度里恢复key。假设c=DES(k,m)，对于随机的k和m，有 $Pr[m[i_1]\bigoplus...\bigoplus m[i_r]\bigoplus c[j_j]\bigoplus...\bigoplus c[j_v]=k[l_1]\bigoplus... k[l_u]]=\frac{1}{2}+\epsilon$ (对于DES， $\epsilon\approx 0.0000000477$ )。可以利用这个方程来找出某些key bits。假设给出 $\frac{1}{\epsilon^2}$ 个随机(m,c=DES(k,m))明文/密文对，有很大的概率 $k[l_1,...,l_u]=MAJ[m[i_1,...,i_r]\bigoplus c[j_j,...,j_v]]$ （MAJ表示集合中的众数，这个众数很有可能就是全部key bits的异或结果）。通常来说能靠这样恢复14 bits，剩下的42 bits需要爆破
+
+## Block Ciphers From PRGs
+
+可以从PRG搭建出一个PRF。让 $G:K\rightarrow K^2$ 为一个安全的PRG，定义一个1 bit的PRF： $F:K\times$ { $0,1$ } $\rightarrow K$ 为 $F(k,x\in[0,1])=G(k)[x]$ 。则F也是一个安全的PRF
+
+但是这样太小了，可以按照下面的方法延展。既然 $G:K\rightarrow K^2$ ,也就是说一个bit的输入可以输出两个bit，那么拿出G(k)[0]和G(k)[1]，分别再放进G(k)，各自输出2个bit，拼在一起就是4个bit了。定义这个做法为 $G_1:K\rightarrow K^4$ ,过程写出来就是 $G_1(k)=G(G(k)[0])||G(G(k)[1])$ 。同时也有了2-bit PRF： $F(k,x\in$ {0,1} $^2$ )= $G_1(k)[x]$ 。易证 $G_1$ 也是一个安全的PRG。延展n次的话就得到了GGM PRF，虽然安全，但是性能太差了就没有实际运用
+
+## Review: PRPs and PRFs
+
+任何安全的PRP也是安全的PRF的前提是|X|足够大（比如AES的 $2^{128}$ ）。假设E是一个(K,X)上的PRP，那么任意一个adversary A请求该PRP q次后，有 $|Adv_{PRF}[A,E]-Adv_{PRP}[A,E]|$ < $\frac{q^2}{2|X|}$ 。说明 $Adv_{PRP}[A,E]$ negligible $\Rightarrow Adv_{PRF}[A,E]$ negligible
+
+## Modes of Operation: One Time Key
+
+ECB模式不满足Semantic Security。对于ECB，相同的明文输出相同的密文，然后拼接。adversary可以根据密文中是否有重复部分轻松分辨出 $m_0$ 和 $m_1$

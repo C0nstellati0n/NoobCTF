@@ -1629,3 +1629,6 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [github workflow](https://docs.github.com/en/actions/using-workflows/about-workflows)注入。workflow和`.github/workflows`文件夹下的yaml文件有关，触发配置里的event后（如pull request）会自动执行配置的代码。所以如果执行的代码段里直接拼接用户可控制的内容，会有注入发生并RCE的可能
 195. [typescrip](https://gist.github.com/ky28059/a851fdabc90d887a61af81c071f6f0ce)
 - typescript [Template Literal Types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html)可用于函数的参数，要求传入函数的参数满足Template Literal Types指定的格式，否则运行时会报错
+196. [Parkour](https://nolliv22.com/writeups/buckeyectf%202023/parkour)
+- sklauncher for minecraft: https://skmedix.pl/downloads ,minecraft类型题可以用这个免费版本
+- 安装mod管理器[fabric](https://fabricmc.net/use/installer/)和[Meteor Client Mod](https://www.9minecraft.net/meteor-client-mod/)。该mod可以在连接至minecraft服务器后在client端作弊
