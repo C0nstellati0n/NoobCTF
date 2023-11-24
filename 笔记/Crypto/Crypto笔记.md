@@ -2328,3 +2328,5 @@ print(hex(random.getrandbits(256)))
 - aes ecb padding oracle attack. 特征是有oracle接收任意输入，拼接上flag后返回整体的加密结果。其他可用脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101
 117. [Real Smooth](https://github.com/nass15456/CTFs/blob/main/BuckeyeCTF/Real%20Smooth.md)
 - chacha20 key/nonce reuse+明文攻击。chacha20的算法比较复杂，但是可以简易地理解成“对于明文中的每个字节，生成一个对应的密钥字节与其异或”。不同的key/nonce组合会生成不同的密钥字节（与key不同），因此重用一对key/nonce就成了many time pad。假如已知一对明文和密文，就能异或两者得到完整的密钥字节，进而解码其余密文
+118. [coding](https://github.com/cscosu/buckeyectf-2023-public/tree/master/crypto-coding)
+- [arithmetic coding](https://www.nayuki.io/page/reference-arithmetic-coding)

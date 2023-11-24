@@ -1313,6 +1313,9 @@ ret
   - 只有open和read无write调用时可以通过测信道的方式读取flag。读取flag后，一位一位地遍历flag。若为0，让程序崩溃；若为1，让程序延时（执行另一个read或者执行一个很长的loop）
 - [the great escape](https://gerrardtai.com/coding/ductf#the-great-escape)
   - 利用read,openat,nanosleep时间测信道获取flag
+- [saas](https://github.com/cscosu/buckeyectf-2023-public/tree/master/pwn-saas),[wp](https://github.com/HAM3131/hacking/tree/main/BuckeyeCTF/pwn/saas)
+  - arm Self-modifying shellcode
+  - 一些arm学习链接： https://www.davespace.co.uk/arm/introduction-to-arm/immediates.html
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
@@ -1410,3 +1413,9 @@ int 0x80
 - basic_string结构利用。参考第35条，当字符串的大小不超过16时Data Pointer就会存储在栈上，意味着当其他数据结构发生溢出时可以覆盖该指针。假设字符串B的Data Pointer被覆盖，那么程序打印B时打印的就是被覆盖的Data Pointer所指向的内容了。在利用bof漏洞写rop时，也要注意保留这些结构，不要一股脑a全填过去
 130. [Igpay Atinlay Natoriay 3000](https://github.com/D13David/ctf-writeups/tree/main/buckeyectf23/pwn/ian_3000)
 - rust的`&word[0..1]`默认word全部由单字节字符组成。若word是unicode，存储时就会用多个字节，分割时就会报错
+131. [flag_sharing](https://github.com/HAM3131/hacking/tree/main/BuckeyeCTF/pwn/flag_sharing)
+- ctf常用的题目容器nsjail可以进行side-channel cache attack。这种攻击简述就是，cpu在执行指令时需要访问内存，但是在计算机的角度来看，耗时较长。于是设计了一个cache，内存中之前访问过的指令会存到cache里，下次取就快很多了。直到某段时间后这段内存不用了或是没有空间了后，会flush cache，于是下一次访问又变慢了。部分处理器设计的cache是共享的，意味着不同cpu，进程都可以访问cache。所以可以利用某段指令访问的快慢程度进行测信道攻击。进程A执行某些指令，进程B访问进程A可能执行的区域，若某一段访问较快，说明这一段就是刚刚进程A访问的部分。泄露一段后手动flush cache，继续等待下一次攻击。可见若cache不共享，这种攻击是无法使用的
+- 一些汇编指令
+    - rdtsc：将时间戳读入edx:eax
+    - `clflush [register]`：将register指向的地址处内存手动flush
+    - mfence+lfence:防止后续指令先于前面的指令完毕前执行

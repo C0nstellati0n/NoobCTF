@@ -129,3 +129,11 @@ Linear and differential attack:给出非常多的明文/密文对，在小于 $2
 ## Modes of Operation: One Time Key
 
 ECB模式不满足Semantic Security。对于ECB，相同的明文输出相同的密文，然后拼接。adversary可以根据密文中是否有重复部分轻松分辨出 $m_0$ 和 $m_1$
+
+## Security for Many-Time Key (CPA security)
+
+CPA代表选择明文攻击（chosen plaintext attack）。many-time key的semantic security定义如下。B=(E,D)为(K,M,C)上一个密码。对于 $b\in$ {0,1}，定义EXP(b)为chal和adv，对于i=1,...,q，adv向chal发送 $(m_{i,0},m_{i,1})\in M,|m_{i,0}|=|m_{i,1}|$ ，chal随机返回 $E(k,m_{i,b})$ 。目前都和之前学过的semantic security相同，但是这次adv可以让 $m_{j,0}=m_{j,1}=m$ ,这样adv就能固定获得m的密文了。定义B在CPA下semantic secure，如果对于所有有效的adv，都有 $Adv_{CPA}[A,B]=|Pr[EXP(0)=1]-Pr[EXP(1)=1]|$ negligible
+
+不难看出那些对于相同明文永远输出相同密文的密码一定没有CPA semantic security。解决办法之一为randomized encryption。对于相同的明文，每次在输出里混进几个随机bit。或者用nonce-based encryption，用相同密钥k配上不同的nonce，并保证每对(k,n)组合不重复即可
+
+CPA security for nonce-based encryption与前一种差不多，只不过这次adversary可以选nonce交给chal加密，唯一要求是adv选的nonce不能重复

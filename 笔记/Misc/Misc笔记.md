@@ -1291,6 +1291,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - 参考官方wp的脚本使用[nwsrx](http://www.kk5jy.net/nwsrx-v1/)
     - ultimon-ng:`/multimon-ng/build/multimon-ng -v 2 -t wav -a EAS ./ctf.wav 2>/dev/null | grep 'EAS (part)'`
     - https://github.com/ctfguy/My_CTF_Writeups/tree/main/UIUCTF%202023/misc/Tornado%20Warning :[SeaTTY](https://www.dxsoft.com/en/products/seatty/)
+- 又看到个SAME编码的题： https://github.com/cscosu/buckeyectf-2023-public/tree/master/misc-weather ，和另一个工具： https://github.com/nicksmadscience/eas-same-encoder
 128. [Schrodinger’s Cat](https://github.com/sigpwny/UIUCTF-2023-Public/tree/main/challenges/misc/schrodingers-cat),[wp](https://flocto.github.io/writeups/2023/uiuctf/uiuctf-writeups/#schr%C3%B6dingers-cat)
 - python quantum computing qiskit入门
     - 概念/定义
@@ -1624,11 +1625,13 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - `abootimg img`:查看bootimg的信息
     - `abootimg -x img`:将bootimg内的文件（boot image config,kernel,ramdisk）提取到当前目录。其中initrd.img（ramdisk）为gzip压缩数据。加个gz后缀即可解压。解压后的文件为cpio archive，为众多文件目录的压缩文件
     - 解压cpio archive到当前目录：`cat initrd.img|cpio -div`
-- 假如是像这题直接找在cpio archive里的文件，也可以尝试binwalk： https://github.com/D13David/ctf-writeups/tree/main/buckeyectf23/misc/replace_me
+- 假如是像这题直接找在cpio archive里的文件，也可以尝试binwalk： https://github.com/D13David/ctf-writeups/tree/main/buckeyectf23/misc/replace_me ,或者这个工具： https://github.com/xiaolu/mkbootimg_tools
 194. [smerderij](https://github.com/luketrenaman/bctf-2023/tree/main/smerderij)
 - [github workflow](https://docs.github.com/en/actions/using-workflows/about-workflows)注入。workflow和`.github/workflows`文件夹下的yaml文件有关，触发配置里的event后（如pull request）会自动执行配置的代码。所以如果执行的代码段里直接拼接用户可控制的内容，会有注入发生并RCE的可能
+- 官方解法： https://github.com/cscosu/buckeyectf-2023-public/tree/master/misc-smederij
 195. [typescrip](https://gist.github.com/ky28059/a851fdabc90d887a61af81c071f6f0ce)
 - typescript [Template Literal Types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html)可用于函数的参数，要求传入函数的参数满足Template Literal Types指定的格式，否则运行时会报错
 196. [Parkour](https://nolliv22.com/writeups/buckeyectf%202023/parkour)
 - sklauncher for minecraft: https://skmedix.pl/downloads ,minecraft类型题可以用这个免费版本
 - 安装mod管理器[fabric](https://fabricmc.net/use/installer/)和[Meteor Client Mod](https://www.9minecraft.net/meteor-client-mod/)。该mod可以在连接至minecraft服务器后在client端作弊
+- 也可以用这个[工具](https://github.com/mircokroon/minecraft-world-downloader)直接从服务器下载世界
