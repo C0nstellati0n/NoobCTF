@@ -222,6 +222,7 @@
 - [Count Nice Pairs in an Array](./Medium/Count%20Nice%20Pairs%20in%20an%20Array.md). permutation
 - [Diagonal Traverse II](./Medium/Diagonal%20Traverse%20II.md). c++ priority_queue自定义比较器： https://stackoverflow.com/questions/16111337/declaring-a-priority-queue-in-c-with-a-custom-comparator /bfs
 - [Arithmetic Subarrays](./Medium/Arithmetic%20Subarrays.md)
+- [Maximum Number of Coins You Can Get](./Medium/Maximum%20Number%20of%20Coins%20You%20Can%20Get.md). counting sort
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
