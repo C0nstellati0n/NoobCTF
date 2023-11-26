@@ -137,3 +137,21 @@ CPA代表选择明文攻击（chosen plaintext attack）。many-time key的seman
 不难看出那些对于相同明文永远输出相同密文的密码一定没有CPA semantic security。解决办法之一为randomized encryption。对于相同的明文，每次在输出里混进几个随机bit。或者用nonce-based encryption，用相同密钥k配上不同的nonce，并保证每对(k,n)组合不重复即可
 
 CPA security for nonce-based encryption与前一种差不多，只不过这次adversary可以选nonce交给chal加密，唯一要求是adv选的nonce不能重复
+
+## Modes of Operation: Many Time Key (CBC)
+
+假如加密的明文长度L大于0，且E为一个(K,X)上安全的PRP，那么 $E_{CBC}$ 在 $(K,X^L,X^{L+1})$ （表示输入L长度的明文块会输出L+1长度的密文块，因为要多加一个块记录IV）上的CPA具有semantic security。具体地说，假设有adversary A进行q次query，那么存在另一个攻击PRP本身的adversary B，使得 $Adv_{CPA}[A,E_{CBC}]\leq 2\times Adv_{PRP}[B,E]+2q^2L^2/|X|$ 。 $2q^2L^2/|X|$ 也叫error term，只有当 $q^2L^2<<|X|$ 时才安全。q表示k加密的明文数量，L表示最长的明文的长度。比如AES的 $|X|=2^{128}$ ，得到qL < $2^{48}$ 。所以加密 $2^{48}$ 个明文块后就需要更换key了
+
+攻击者可预测IV的CBC不满足CPA-secure。adv可以给出明文0，chal返回 $c_1\leftarrow[IV_1,E(k,0\bigoplus IV_1)]$ ，adv随即计算 $m_0=IV\bigoplus IV_1$ (IV为预测的下一个IV)，与任意选择的另一个 $m_1\not ={m_0}$ 一起发送给chal。这个时候chal有两种选择，加密 $m_0$ 或者 $m_1$ 。若加密 $m_0$ ，结果为 $[IV,E(k,(IV\bigoplus IV_1)\bigoplus IV)]=[IV,E(k,IV_1)]$ ，结果等于最开始拿到的 $c_1$ 。这样就能判断加密的到底是哪个明文了
+
+nonce-based CBC。key为 $(k,k_1)$ ，unique nonce要求(key,n)对只用于一个明文。加密最开始用 $k_1$ 加密nonce得到IV，然后接下来的步骤与普通CBC一致
+
+## Modes of Operation: Many Time Key (CTR)
+
+random ctr-mode:让F为一个安全的PRF，加密时指定IV和k，将第i个明文块与对应的F(k,IV+i)异或。这个模式可并行计算，不像CBC那样只能加密完一个再到另一个
+
+nonce ctr-mode：多加个nonce，IV分为两部分，前面是随机的nonce，后面是counter
+
+假如加密的明文长度L大于0，且F为一个(K,X,X)上安全的PRF，那么 $E_{CTR}$ 在 $(K,X^L,X^{L+1})$ 上的CPA具有semantic security。具体地说，假设有adversary A进行q次query，那么存在另一个攻击PRF本身的adversary B，使得 $Adv_{CPA}[A,E_{CTR}]\leq 2\times Adv_{PRF}[B,E]+2q^2L/|X|$ 。这里能加密的块数比CBC多，因为要求 $q^2L<<|X|$ ，而CBC这里是 $L^2$
+
+可见CTR在各方面都比CBC好。另外，无论是one-time CAP还是many-time CPA均无法保证data integrity（密文不被篡改）

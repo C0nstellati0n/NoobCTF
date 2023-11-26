@@ -3026,7 +3026,7 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 - octave --eval命令注入。若攻击者可控制--eval后的参数，可实现getshell等功能。这里列举出读文件的做法（过滤单双引号，分号。但分号可用`\n`代替），要求程序会渲染图表（所以部分解法会把文件内容读到图表名里）: https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#ohio-instruments-84
     - https://github.com/luketrenaman/bctf-2023/tree/main/ohio-instruments-84
 320. [Text Adventure API](https://github.com/4n86rakam1/writeup/tree/main/BuckeyeCTF-2023/web/Text_Adventure_API)
-- pickle反序列化执行系统命令。wp的做法使用`python3 -c`创建HTTPConnection然后read flag，将flag带到自己的服务器上
+- pickle反序列化执行系统命令。wp的做法使用`python3 -c`创建HTTPConnection然后read flag，将flag带到自己的服务器上。似乎平时用的[webhook](https://webhook.site)没法连接，但是 https://app.interactsh.com 可以
 - https://github.com/goku007xx/CTF-Writeups/tree/main/2023/BuckeyeCTF-2023/test-adventure-api 提供了反弹shell做法（使用ngrok）
 321. [area51](https://github.com/4n86rakam1/writeup/tree/main/BuckeyeCTF-2023/web/area51)
 - mongodb(nodejs里有个库叫Mongoose,两者的区别参考 https://stackoverflow.com/questions/28712248/difference-between-mongodb-and-mongoose ) nosql注入。以前知道拼接会产生注入，没想到这种代码也会：
@@ -3070,3 +3070,6 @@ try {
 - 其他做法/参考链接：
     - https://github.com/SuperStormer/writeups/tree/master/buckeyectf_2023/web/font-review
     - https://sekurak.pl/wykradanie-danych-w-swietnym-stylu-czyli-jak-wykorzystac-css-y-do-atakow-na-webaplikacje/
+336. [sentiment](https://github.com/cscosu/buckeyectf-2023-public/tree/master/web-sentiment)
+- xss+CSRF（with token）without iframes+csp `connect-src 'none'`。具体操作和另一个题目的[wp](https://ctftime.org/writeup/32800)差不多，都是通过操控bot open一个edit tab修改note，note内容为将flag带出的xss payload。发现两者的思路都是将flag使用window.open在另一个窗口打开->edit修改note（flag修改为xss payload，但是打开的那个窗口里还有flag）->访问note，触发xss，将flag窗口里的flag带出。拿出flag常用`document.querySelector`或`querySelectorAll`
+- 其他wp： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#sentiment
