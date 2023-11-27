@@ -1000,3 +1000,19 @@ main()
 - chrome dev tools调试wasm： https://developer.chrome.com/blog/wasm-debugging-2020/
 122. [Skribl](https://github.com/4n86rakam1/writeup/tree/main/BuckeyeCTF-2023/rev/Skribl)
 - python 3.13 pyc反编译。因为版本过高，大部分pyc反编译器都不能用， https://github.com/nedbat/coveragepy/blob/coverage-5.6b1/lab/show_pyc.py 可以。不过不能直接反编译成python代码，只能是类似python汇编的内容。不过直接用python自带的dis似乎也是一样的效果： https://github.com/chloge/BuckeyeCTF-2023/tree/main
+123. [First Date](https://github.com/D13David/ctf-writeups/tree/main/sunshinectf23/rev/first_date)
+- pdz后缀文件（Playdate PDZ）逆向。可以在[模拟器](https://help.play.date/manual/simulator/)内运行这类文件。相关逆向资料： https://github.com/cranksters/playdate-reverse-engineering
+- pdz文件内部包含很多文件，可用binwalk提取（上面的逆向资料里也有pdz.py提取）。游戏内部的脚本使用lua（后缀luac，为Lua bytecode）。列举一些反编译器（但是据wp作者所说，它们基本都不支持lua高版本）：
+  - [luadec](https://github.com/viruscamp/luadec)，反编译playdate bytecode的fork版本： https://github.com/scratchminer/unluac
+  - [unluac](https://sourceforge.net/projects/unluac/)
+  - [RustyLuaDec](https://github.com/dondish/RustyLuaDec)
+  - 在线反编译器： https://luadec.metaworm.site/ ， https://lua-bytecode.github.io/ 
+  - 额外做法：去 http://www.lua.org/ftp/ 找到对应的lua版本，下载后用里面内置的`./luac -l`反编译。假如是反编译playdate的bytecode，注意playdate的bytecode文件头稍微有些不一样，要按照wp里的做法改一下，而且会多一些自定义操作码（参考 https://github.com/cranksters/playdate-reverse-engineering/blob/main/formats/luac.md ），这个[fork](https://github.com/scratchminer/lua54)可以解决:
+  ```sh
+  curl -sLO https://github.com/scratchminer/unluac/releases/download/v2023.03.22/unluac.jar
+  mkdir decompiled
+  java -jar unluac.jar main.luac -o main.lua
+  ```
+  - 有助于手动反编译lua assembly的工具： https://www.luac.nl/ 。可参考wp作者的做法，就是自己写lua代码，然后看出来的bytecode是不是和目标差不多
+- 其他wp/做法：
+  - https://www.youtube.com/watch?v=qA6ajf7qZtQ

@@ -155,3 +155,17 @@ nonce ctr-mode：多加个nonce，IV分为两部分，前面是随机的nonce，
 假如加密的明文长度L大于0，且F为一个(K,X,X)上安全的PRF，那么 $E_{CTR}$ 在 $(K,X^L,X^{L+1})$ 上的CPA具有semantic security。具体地说，假设有adversary A进行q次query，那么存在另一个攻击PRF本身的adversary B，使得 $Adv_{CPA}[A,E_{CTR}]\leq 2\times Adv_{PRF}[B,E]+2q^2L/|X|$ 。这里能加密的块数比CBC多，因为要求 $q^2L<<|X|$ ，而CBC这里是 $L^2$
 
 可见CTR在各方面都比CBC好。另外，无论是one-time CAP还是many-time CPA均无法保证data integrity（密文不被篡改）
+
+## Message Authentication Codes
+
+安全的MAC定义：攻击者可选择 $m_1,m_2,...m_q$ 并获取其mac： $t_i\leftarrow S(k,m_i)$ 。目标是伪造一个新的有效的message/tag对(m,t)，保证 $(m,t)\not\in$ { $(m_1,t_1),...,(m_q,t_q)$ }。若攻击者无法实现这一点，且给出(m,t)，攻击者无法找到另一个有效的(m,t'),则该mac算法S是安全的。或者拿经典的adversary-chal定义：I=(S,V)为一个安全的mac算法，如果对于所有有效的A，都有 $Adv_{MAC}[A,I]=Pr[Chal\space outputs\space 1]$ negligible
+
+## MACs Based On PRFs
+
+假设有PRF $F:K\times X\rightarrow Y$ ，利用F定义一个MAC $I_F=(S,V)$ :
+- S(k,m)=F(k,m)
+- V(k,m,t)(验证函数，参数分别为密钥，消息，tag)：若t=F(k,m)，输出yes；否则no
+
+如果F是一个安全的PRF且 $\frac{1}{|Y|}$ negligible，则 $I_F$ 也是一个安全的mac。具体地说，对于每个有效的攻击 $I_F$ 的adversary A，都存在另一个攻击F本身的adversary B，使得 $Adv_{MAC}[A,I_F]\leq Adv_{PRF}[B,F]+\frac{1}{|Y|}$
+
+假如 $F:K\times X\rightarrow$ {0,1} $^n$ 是一个安全的PRF，则 $F_t(k,m)=F(k,m)[1...t],1\leq t\leq n$ 也是安全的PRF。基于PRF的mac也同理，不过要保证截取的w bit满足 $\frac{1}{2^w}$ negligible

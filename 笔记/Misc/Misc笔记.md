@@ -1635,3 +1635,15 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - sklauncher for minecraft: https://skmedix.pl/downloads ,minecraft类型题可以用这个免费版本
 - 安装mod管理器[fabric](https://fabricmc.net/use/installer/)和[Meteor Client Mod](https://www.9minecraft.net/meteor-client-mod/)。该mod可以在连接至minecraft服务器后在client端作弊
 - 也可以用这个[工具](https://github.com/mircokroon/minecraft-world-downloader)直接从服务器下载世界
+197. [Knowledge Repository](https://github.com/D13David/ctf-writeups/tree/main/sunshinectf23/misc/knowledge_repository)
+- git相关命令使用
+    - 将git bundle转换为repository：`git bundle verify git_bundle`,`git clone git_bundle`或`git bundle unbundle <name>`
+    - 查看全部git commits数量：`git rev-list --count --all`
+    - 提取仓库中每个commit的全部文件的脚本： https://gist.github.com/magnetikonline/5faab765cf0775ea70cd2aa38bd70432
+- python脚本批量解码morse code音频参考 https://www.youtube.com/watch?v=qA6ajf7qZtQ 。其他可用工具： 
+    - python 3.10: https://github.com/mkouhia/morse-audio-decoder
+    - https://github.com/fastrgv/MATTA
+    - https://manpages.ubuntu.com/manpages/focal/man1/morse2ascii.1.html
+198. python telnetlib使用： https://www.youtube.com/watch?v=S3uP-9bBssE
+199. [SimonProgrammer 2](https://github.com/4n86rakam1/writeup/tree/main/SunshineCTF_2023/scripting/SimonProgrammer_2)
+- python解码特殊的base64需要用`base64.urlsafe_b64decode`。例如编码了unicode字符的base64，直接用b64decode会报错

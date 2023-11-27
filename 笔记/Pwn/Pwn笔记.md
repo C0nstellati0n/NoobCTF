@@ -1419,3 +1419,6 @@ int 0x80
     - rdtsc：将时间戳读入edx:eax
     - `clflush [register]`：将register指向的地址处内存手动flush
     - mfence+lfence:防止后续指令先于前面的指令完毕前执行
+132. [house-of-sus](https://www.youtube.com/watch?v=qA6ajf7qZtQ)
+- libc 2.27 house of force
+- 当one_gadget因为不满足条件无法使用时，可考虑借用“跳板”。例如，将malloc_hook改为one_gadget,然后将其他函数改为malloc。这样调用那个函数时会调用malloc进而调用one_gadget，但是栈的情况可能会不同让one_gadget得以使用
