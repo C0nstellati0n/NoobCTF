@@ -537,21 +537,27 @@ for i in range(1,e):
         GF(b)(c).nth_root(a,all=True)
         ```
 - [Tan](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Tan)
-- $tan(m).n(1024)=t,arctan(t)+k\pi\approx m$ ,接下来可以用LLL尝试恢复准确的m。或者参考 https://math.stackexchange.com/questions/2160925/find-an-integer-a-such-that-a-sqrt2-has-a-given-decimal-part/2161019#2161019
-    - [n](https://doc.sagemath.org/html/en/reference/misc/sage/misc/functional.html)
-    - [LLL](https://doc.sagemath.org/html/en/reference/matrices/sage/matrix/matrix_integer_dense.html#sage.matrix.matrix_integer_dense.Matrix_integer_dense.LLL)
-- [LCG to the power of n!](https://github.com/SuperBeetleGamer/Crypto-Writeups/blob/main/LITCTF%202023/lcg%20to%20the%20power%20of%20n!.md)
-    - 格（lattice）中的Closest Vector Problem（CVP）
-    - [IntegerLattice](https://doc.sagemath.org/html/en/reference/modules/sage/modules/free_module_integer.html#sage.modules.free_module_integer.IntegerLattice)
-    - Babai_closest_vector算法实现
+    - $tan(m).n(1024)=t,arctan(t)+k\pi\approx m$ ,接下来可以用LLL尝试恢复准确的m。或者参考 https://math.stackexchange.com/questions/2160925/find-an-integer-a-such-that-a-sqrt2-has-a-given-decimal-part/2161019#2161019
+        - [n](https://doc.sagemath.org/html/en/reference/misc/sage/misc/functional.html)
+        - [LLL](https://doc.sagemath.org/html/en/reference/matrices/sage/matrix/matrix_integer_dense.html#sage.matrix.matrix_integer_dense.Matrix_integer_dense.LLL)
 - [Noisier CRC](https://imp.ress.me/blog/2023-08-28/sekaictf-2023#noisier-crc)
     - [irreducible_element](https://doc.sagemath.org/html/en/reference/polynomial_rings/sage/rings/polynomial/polynomial_ring.html#sage.rings.polynomial.polynomial_ring.PolynomialRing_dense_finite_field.irreducible_element):获取环上指定degree的不可约元素
     - [right_kernel](https://doc.sagemath.org/html/en/prep/Quickstarts/Linear-Algebra.html)
     - [basis](https://doc.sagemath.org/html/en/constructions/linear_algebra.html)
-- 攻击与格有关的密码的工具： https://github.com/josephsurin/lattice-based-cryptanalysis
 - [sqrt](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/crp/sqrt):计算Permutations(256)中某个元素的平方根。注意一个元素的平方根可能有很多个
     - [to_cycles](https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/permutation.html#sage.combinat.permutation.Permutation.to_cycles)
     - [sage.combinat.permutation.from_cycles](https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/permutation.html#sage.combinat.permutation.from_cycles)
+
+## Lattice(格)
+
+是的我需要一个格题分类。虽然我根本就不懂什么是格
+
+- 攻击与格有关的密码的工具： https://github.com/josephsurin/lattice-based-cryptanalysis
+- [LCG to the power of n!](https://github.com/SuperBeetleGamer/Crypto-Writeups/blob/main/LITCTF%202023/lcg%20to%20the%20power%20of%20n!.md)
+    - 格（lattice）中的Closest Vector Problem（CVP）
+    - [IntegerLattice](https://doc.sagemath.org/html/en/reference/modules/sage/modules/free_module_integer.html#sage.modules.free_module_integer.IntegerLattice)
+    - Babai_closest_vector算法实现
+- [Geometry Hash](https://connor-mccartney.github.io/cryptography/other/Geometry-Hash-Balsn-CTF-2023)。这题的格构造与三角形的Centroid，Circumcenter和Incenter有关
 
 ## 其他
 

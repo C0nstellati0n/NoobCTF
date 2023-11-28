@@ -3073,3 +3073,17 @@ try {
 336. [sentiment](https://github.com/cscosu/buckeyectf-2023-public/tree/master/web-sentiment)
 - xss+CSRF（with token）without iframes+csp `connect-src 'none'`。具体操作和另一个题目的[wp](https://ctftime.org/writeup/32800)差不多，都是通过操控bot open一个edit tab修改note，note内容为将flag带出的xss payload。发现两者的思路都是将flag使用window.open在另一个窗口打开->edit修改note（flag修改为xss payload，但是打开的那个窗口里还有flag）->访问note，触发xss，将flag窗口里的flag带出。拿出flag常用`document.querySelector`或`querySelectorAll`
 - 其他wp： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#sentiment
+337. [Web3](https://gist.github.com/YSc21/9be0bb2ce1ed3141e47def6643c19959)
+- js ethers库中的[getAddress](https://docs.ethers.org/v5/api/utils/address/#utils-getAddress)可以接受[ICAP格式](https://docs.ethers.org/v5/api/utils/address/#address-icap)的地址。如何获取ICAP地址/签名消息：
+```js
+const wallet = ethers.Wallet.createRandom();
+ethers.getIcapAddress(wallet.address);
+signature = await wallet.signMessage(message);
+```
+338. [0FA](https://github.com/RiuSalvi/CTF_Challenges/tree/main/2023/0FA_balsnctf)
+- 伪造[JA3](https://github.com/salesforce/ja3) fingerprint的工具： https://github.com/Danny-Dasilva/CycleTLS 。使用前提是要知道服务器期望的ja3 fingerprint
+339. [SaaS](https://github.com/RiuSalvi/CTF_Challenges/tree/main/2023/SaaS_balsnctf)
+- [fastify](https://www.npmjs.com/package/fast-json-stringify)模块js SSTI。当程序使用用户提供的schema时，可以在required段注入代码并在登录验证时执行
+    - 还可以在`$id`段注入： https://gist.github.com/arkark/32e1a0386360fe5ce7d63e141a74d7b9
+340. [1linenginx](https://gist.github.com/arkark/32e1a0386360fe5ce7d63e141a74d7b9)
+- nginx/1.16.1 Request Smuggling(请求走私)+xss。其他解法： https://gist.github.com/lebr0nli/dd9c2fef635799865022044817e88956

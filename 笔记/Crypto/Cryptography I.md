@@ -169,3 +169,24 @@ nonce ctr-mode：多加个nonce，IV分为两部分，前面是随机的nonce，
 如果F是一个安全的PRF且 $\frac{1}{|Y|}$ negligible，则 $I_F$ 也是一个安全的mac。具体地说，对于每个有效的攻击 $I_F$ 的adversary A，都存在另一个攻击F本身的adversary B，使得 $Adv_{MAC}[A,I_F]\leq Adv_{PRF}[B,F]+\frac{1}{|Y|}$
 
 假如 $F:K\times X\rightarrow$ {0,1} $^n$ 是一个安全的PRF，则 $F_t(k,m)=F(k,m)[1...t],1\leq t\leq n$ 也是安全的PRF。基于PRF的mac也同理，不过要保证截取的w bit满足 $\frac{1}{2^w}$ negligible
+
+## CBC-MAC and NMAC
+
+上节课提到PRF可用作mac，但是只能处理少量数据。下面介绍可处理大量数据的encrypted cbc-mac（ECBC）。让 $F:K\times X\rightarrow X$ 为PRP，定义新的PRF $F_{ECBC}:K^2\times X^{\leq L}\rightarrow X$ 。其实理论上能加密任意大小的数据，给个bound L只是为了方便定义。具体实现和CBC差不多，将信息分为多个块，放入PRP函数求得密文。不同点在于，CBC输出当前块的密文并将该密文与下一个块异或再放入PRP；而ECBC直接异或，跳过输出步骤。最后一块的输出要再用PRP加密一起，且key要与之前用的key毫无相关性。最后这一步很重要，去掉这步单纯是raw cbc，不是安全的mac。可按照如下步骤伪造mac：
+1. 选择任意one-block message $m\in X$
+2. 获取m的tag t=F(k,m)
+3. t为2-block message $(m,t\bigoplus m)$ 的伪造mac
+
+另一种做法叫nested mac（NMAC）。让 $F:K\times X\rightarrow K$ 为PRF，定义新的PRF $F_{NMAC}:K^2\times X^{\leq L}\rightarrow K$ 。同样是把明文切成若干块，然后输入k和第一块明文，得到另一个key space下的输出。将其与第二块明文搭配，继续输出的key给第三块……一直到最后输出t，在t末尾添加固定的padding fpad（fixed pad）后搭配另外的随机 $k_1$ 输入进F，最后的输出就是tag。添加pad前面的步骤叫cascade，它不是安全的mac，只需一次mac query即可预测更长信息的mac
+
+假如加密的明文长度L大于0，所有攻击 $F_{ECBC}$ 或 $F_{NMAC}$ 的adversary A进行q次query后，存在另一个攻击PRP/PRF本身的adversary B，使得：
+- $Adv_{PRF}[A,F_{ECBC}]\leq Adv_{PRP}[B,F]+\frac{2q^2}{|X|}$
+- $Adv_{PRF}[A,F_{NMAC}]\leq q\times L\times Adv_{PRF}[B,F]+\frac{q^2}{2|K|}$
+
+假设mac内部的PRF F为PRP，则ECBC和NMAC均满足下面的extension attack： $\forall x,y,w:F_{BIG}(k,x)=F_{BIG}(k,y)\Rightarrow F_{BIG}(k,x||w)=F_{BIG}(k,y||w)$ 。 $F_{BIG}$ 表示 $F_{ECBC}$ 或 $F_{NMAC}$
+
+## MAC Padding
+
+信息无法分割为整数个block就没法放进PRP，所以要padding。第一个想法是往末尾添0，但是存在伪造攻击。假设有m0和m00，两者pad后的结果是一样的，自然tag就一样，但是信息本身不同。正确做法是pad `1000...`。但是要注意就算信息可以分割为整数块，也要在最后加上个dummy block，否则要是某个信息恰好结尾是100就又可以伪造了
+
+或者用CMAC。CMAC有三个key $(k,k_1,k_2)$ ，f用作PRF，假如信息pad了话，在CBC-MAC的最后一步之前异或 $k_1$ ,否则 $k_2$
