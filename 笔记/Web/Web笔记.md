@@ -3087,3 +3087,10 @@ signature = await wallet.signMessage(message);
     - 还可以在`$id`段注入： https://gist.github.com/arkark/32e1a0386360fe5ce7d63e141a74d7b9
 340. [1linenginx](https://gist.github.com/arkark/32e1a0386360fe5ce7d63e141a74d7b9)
 - nginx/1.16.1 Request Smuggling(请求走私)+xss。其他解法： https://gist.github.com/lebr0nli/dd9c2fef635799865022044817e88956
+341. [Ginowa](https://github.com/w181496/My-CTF-Challenges/tree/master/Balsn-CTF-2023#ginowa)
+- sql注入写webshell。不同做法的知识点：
+    - 将webshell写到webroot，然后利用这篇[文章](https://www.n00py.io/2019/06/understanding-unc-paths-smb-and-webdav/)里的知识点对那个文件发送http请求触发webshell。原理是当[unc路径](https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats#unc-paths)中带了一个`@`号后会尝试向路径里指定的文件发送HTTP请求，如sql语法下的`load_file('//localhost@8080/a.php')`，就会向a.php发送HTTP请求
+    - 直接向`.htaccess`写内容，在每个php文件开头都添上webshell
+    - 利用`LOAD_FILE`+windows短名称（shortname）直接运行名字部分已知的文件：`HEX(LOAD_FILE('C:\\readfl~1.exe'))`
+    - dump shell命令（hex）到`sc.bat`
+    - 将webshell写到PEAR目录下的config.php

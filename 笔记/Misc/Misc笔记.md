@@ -1647,3 +1647,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 198. python telnetlib使用： https://www.youtube.com/watch?v=S3uP-9bBssE
 199. [SimonProgrammer 2](https://github.com/4n86rakam1/writeup/tree/main/SunshineCTF_2023/scripting/SimonProgrammer_2)
 - python解码特殊的base64需要用`base64.urlsafe_b64decode`。例如编码了unicode字符的base64，直接用b64decode会报错
+200. [kShell](https://github.com/w181496/My-CTF-Challenges/tree/master/Balsn-CTF-2023#kshell)
+- 利用ssh命令getshell。有些解法可能需要使用telnet

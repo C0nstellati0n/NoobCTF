@@ -190,3 +190,17 @@ nonce ctr-mode：多加个nonce，IV分为两部分，前面是随机的nonce，
 信息无法分割为整数个block就没法放进PRP，所以要padding。第一个想法是往末尾添0，但是存在伪造攻击。假设有m0和m00，两者pad后的结果是一样的，自然tag就一样，但是信息本身不同。正确做法是pad `1000...`。但是要注意就算信息可以分割为整数块，也要在最后加上个dummy block，否则要是某个信息恰好结尾是100就又可以伪造了
 
 或者用CMAC。CMAC有三个key $(k,k_1,k_2)$ ，f用作PRF，假如信息pad了话，在CBC-MAC的最后一步之前异或 $k_1$ ,否则 $k_2$
+
+## PMAC and the Carter-Wegman MAC
+
+PMAC——parallel mac，与前面两种mac不同的地方在于可以并行计算。让 $F:K\times X\rightarrow X$ 为PRF，定义新的PRF $F_{PMAC}:K^2\times X^{\leq L}\rightarrow X$ 。有一对key $(k,k_1)$ 。过程如下：将信息分为多块，每块与P(k,i)异或（i为当前信息块的索引，P就是个简单的函数，比如某个域上的乘法），除最后一块外都放入 $F(k_1,\*)$ 中计算结果。最后将所有的结果全部异或，异或结果再放入 $F(k_1,\*)$ ，最后的结果就是tag。安全分析就不抄那段话了，直接看公式： $Adv_{PRF}[A,F_{PMAC}]\leq Adv_{PRF}[B,F]+2q^2L^2/|X|$
+
+one-time mac：顾名思义，一个key只能用来加密一条信息。让q为一个很大的质数， $key=(k,a)\in$ {1,...,q} $^2$ （[1,q]里两个随机整数）。定义 $P_{msg}(x)=m[L]\times x^L+...+m[1]\times x$ 为L次多项式。mac算法为 $S(key,msg)=P_{msg}(k)+a\mod q$
+
+one-time mac可用来构造many-time mac。让(S,V)为(K_I,M,{0,1} $^n$ )上的安全one-time mac；让 $F:K_F\times$ {0,1} $^n\rightarrow$ {0,1} $^n$ 为一个安全的PRF。Carter-Wegman mac定义如下： $CW((k_1,k_2),m)=(r,F(k_1,r)\bigoplus S(k_2,m))$ ，其中r为随机选择的一个数
+
+## Introduction
+
+让 $H:M\rightarrow T$ 为一个哈希函数（|M|远远大于|T|）。H中一对消息 $(m_0,m_1)\in M$ 的碰撞（collision）定义为 $H(m_0)=H(m_1)$ 且 $m_0\not ={m_1}$ 。函数H抗碰撞（collision resistant）如果对于所有有效的算法A，都有 $Adv_{CR}[A,H]=Pr[A\space outputs\space collision\space for\space H]$ negligible
+
+让I=(S,V)为(K,M,T)上针对短消息的MAC，再让 $H:M^{big}\rightarrow$ 。就有 $(K,M^{big},T)$ 上的 $I^{big}=(S^{big},V^{big})=S^{big}(k,m)=S(k,H(m));V^{big}(k,m,t)=V(k,H(m),t)$ 。如果I是安全的mac且H抗碰撞，则 $I^{big}$ 也是个安全的mac。比如 $AES_{2-block-cbc}(k,SHA-256(m))$

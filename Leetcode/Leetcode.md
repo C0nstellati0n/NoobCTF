@@ -288,3 +288,4 @@
 - [Poor Pigs](./Hard/Poor%20Pigs.md)
 - [Design Graph With Shortest Path Calculator](./Hard/Design%20Graph%20With%20Shortest%20Path%20Calculator.md). dijkstra/c++ priority_queue
 - [Bus Routes](./Hard/Bus%20Routes.md). 多源bfs
+- [Number of Ways to Divide a Long Corridor](./Hard/Number%20of%20Ways%20to%20Divide%20a%20Long%20Corridor.md)。组合学（Combinatorics）
