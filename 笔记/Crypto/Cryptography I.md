@@ -204,3 +204,14 @@ one-time mac可用来构造many-time mac。让(S,V)为(K_I,M,{0,1} $^n$ )上的�
 让 $H:M\rightarrow T$ 为一个哈希函数（|M|远远大于|T|）。H中一对消息 $(m_0,m_1)\in M$ 的碰撞（collision）定义为 $H(m_0)=H(m_1)$ 且 $m_0\not ={m_1}$ 。函数H抗碰撞（collision resistant）如果对于所有有效的算法A，都有 $Adv_{CR}[A,H]=Pr[A\space outputs\space collision\space for\space H]$ negligible
 
 让I=(S,V)为(K,M,T)上针对短消息的MAC，再让 $H:M^{big}\rightarrow$ 。就有 $(K,M^{big},T)$ 上的 $I^{big}=(S^{big},V^{big})=S^{big}(k,m)=S(k,H(m));V^{big}(k,m,t)=V(k,H(m),t)$ 。如果I是安全的mac且H抗碰撞，则 $I^{big}$ 也是个安全的mac。比如 $AES_{2-block-cbc}(k,SHA-256(m))$
+
+## Generic Birthday Attack
+
+让 $H:M\rightarrow$ {0,1} $^n$ 为一个哈希函数（|M|>> $2^n$ ）。以下算法可在 $O(2^{\frac{n}{2}})$ hash下找到碰撞
+1. 在M中选择 $2^{\frac{n}{2}}$ 个随机消息
+2. 对于 $i=1,...,2^{\frac{n}{2}}$ ，计算 $t_i=H(m_i)\in$ {0,1} $^n$
+3. 在第二步里的tag中寻找碰撞。如果没找到，返回第一步
+
+## The Merkle-Damgard Paradigm
+
+[Merkle–Damgard construction](https://en.wikipedia.org/wiki/Merkle%E2%80%93Damg%C3%A5rd_construction)：若MD内部使用的h（wikipedia里是f）抗碰撞，则整体H也抗碰撞

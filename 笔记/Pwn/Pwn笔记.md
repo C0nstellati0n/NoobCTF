@@ -1309,13 +1309,31 @@ syscall
 ret
 ```
 - [Inj](https://github.com/qLuma/TFC-CTF-2023/tree/main/Inj),[wp](https://xa21.netlify.app/blog/tfcctf-2023/inj/)
-  - 可以在64位程序里使用`int 0x80`调用32位的系统调用（遵守32位系统调用的调用号和参数传递）。利用`BPF_JUMP`和`BPF_STMT`设置沙盒时也可以分32位和64位系统调用分别设置
+  - 可以在64位程序里使用`int 0x80`调用32位的系统调用（遵守32位系统调用的调用号和参数传递，有些seccomp会禁掉，只允许64位）。利用`BPF_JUMP`和`BPF_STMT`设置沙盒时也可以分32位和64位系统调用分别设置
   - 只有open和read无write调用时可以通过测信道的方式读取flag。读取flag后，一位一位地遍历flag。若为0，让程序崩溃；若为1，让程序延时（执行另一个read或者执行一个很长的loop）
 - [the great escape](https://gerrardtai.com/coding/ductf#the-great-escape)
   - 利用read,openat,nanosleep时间测信道获取flag
 - [saas](https://github.com/cscosu/buckeyectf-2023-public/tree/master/pwn-saas),[wp](https://github.com/HAM3131/hacking/tree/main/BuckeyeCTF/pwn/saas)
   - arm Self-modifying shellcode
   - 一些arm学习链接： https://www.davespace.co.uk/arm/introduction-to-arm/immediates.html
+- [Babysbx](https://github.com/nobodyisnobody/write-ups/tree/main/Blackhat.MEA.CTF.Finals.2023/pwn/babysbx)
+  - xmm系列寄存器里存有大量地址，包括heap，libc和程序。例如从xmm0里拿堆地址：`movd rax, xmm0`
+  - 利用seccomp entry value找到堆上的seccomp rule并确定动态地址。seccomp没法检查具体内存地址处的内容，只能保证调用syscall时参数用的是某个地址A。PIE下A的地址随机，但是仍然可以借助搜索seccomp entry value `0x0000000200240015`找到确定的地址
+  - 利用shmget和shmat remap内存。效果为修改某段内存的权限。比较冷门的做法， mmap, mprotect, munmap, ptrace都禁掉后还可用这种
+  - 汇编引用标签字符串。wp的shellcode里出现了之前没见过的语法：
+  ```
+  ...
+  mov rbx,cmd[rip]
+  mov [rdi],rbx
+  mov rbx,cmd+8[rip]
+  mov [rdi+8],rbx
+  ...
+
+  cmd:
+    .string "/readflag"
+  ```
+  这个`cmd[rip]`和`cmd+8[rip]`不懂什么意思，调试后发现执行时分别变成了`mov rbx, qword ptr [rip + 0x19]`和`mov rbx, qword ptr [rip + 0x17]`。似乎是一种根据rip来引用字符串的固定做法？
+  - [预期解](https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#babysbx)使用mremap
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
@@ -1427,3 +1445,9 @@ int 0x80
 RESOLV_HOST_CONF=/root/flag bash 2>&1
 cat</dev/tcp/a/1
 ```
+134. [memstream](https://github.com/itaybel/Weekly-CTF/blob/main/BlackHatMEA/pwn/memstream.md)
+- 当pwndbg打开程序发现代码段不在`0x55***000`而是`0x7ff****000`时，说明这段代码是被mmaped的。这意味着程序段与ld.so的偏移是固定的，有可能ld.so的地址比程序段还要小
+- ld.so会在可写段记录程序基地址，而且不止一个。当程序使用exit退出时，会跳到记录基址的那个地址+0x3d88。假设exit时rax为`*(0x7ffff7fef2e0) = 0x7ffff7ff7000`，执行指令`call [rax + 0x3d88]`就相当于跳转到`[0x7ffff7ff7000+0x3d88]`。通常情况下这里是`__do_global_dtors_aux`。假设ld.so在A和B处都记录了基地址，一种PIE下的利用思路是，利用partial write将A处的基地址改为getshell的函数（不确定one_gadget行不行？），然后再用一次partial write将B处的地址改为A-0x3d88。这样当rax=B时，内部地址为A-0x3d88，call的函数就是A处的one_gadget了
+135. [profile](https://github.com/itaybel/Weekly-CTF/blob/main/BlackHatMEA/pwn/profile.md)
+- 注意scanf的format。如果format是`%ld`，接收的就是8字节。如果存放输入的buffer是int这类只有4个字节的格式，就会有4字节的溢出。特别是在struct里，这溢出的4个字节通常就覆盖了下一个字段的指针
+- free会检查chunk的size，不合格就会报错。所以在覆盖指针时要注意这点
