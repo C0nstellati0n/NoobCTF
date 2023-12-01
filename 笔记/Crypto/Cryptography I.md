@@ -215,3 +215,15 @@ one-time mac可用来构造many-time mac。让(S,V)为(K_I,M,{0,1} $^n$ )上的�
 ## The Merkle-Damgard Paradigm
 
 [Merkle–Damgard construction](https://en.wikipedia.org/wiki/Merkle%E2%80%93Damg%C3%A5rd_construction)：若MD内部使用的h（wikipedia里是f）抗碰撞，则整体H也抗碰撞
+
+## Constructing Compression Functions
+
+一些block cipher constructions：
+- [Davies-Meyer Hash Function](https://en.wikipedia.org/wiki/One-way_compression_function#Davies%E2%80%93Meyer)
+- [Miyaguchi–Preneel](https://en.wikipedia.org/wiki/One-way_compression_function#Miyaguchi%E2%80%93Preneel),有很多种变种
+
+或者利用数论构造compression function。选择一个随机的2000 bit质数和随机的 $1\leq u,v\leq p$ 。对于m,h $\in$ {0,...,p-1}，定义 $h(H,m)=u^H\times v^m\mod p$ 。抗碰撞，但是计算过于缓慢
+
+## HMAC
+
+HMAC的构造： https://en.wikipedia.org/wiki/HMAC

@@ -25,6 +25,7 @@
 19. ida默认无法反编译过大的函数，要将ida /ctg目录下的hexrays.cfg文件中的MAX_FUNCSIZE=64 改为 MAX_FUNCSIZE=1024后才能正常反编译。
 20. idc脚本基础使用（解密简单自加密函数）。例题:[[GWCTF 2019]re3](../../CTF/BUUCTF/Reverse/[GWCTF%202019]re3.md)
 21. 菜单栏Search->Search immediate可搜寻汇编里的立即操作数，例如`add ptr 3`里面的3。勾选Find All Occurences可一次性列出全部出现位置。有时候利用这一点可以走捷径。例如一个贪吃蛇游戏，每次吃到东西后速度都会+3。这时就能直接搜寻这个3，patch成0就能让游戏变得很简单。
+22. [Flare CAPA](https://github.com/mandiant/capa/tree/master/capa/ida/plugin)插件可以帮助分析程序，例如找到程序里的混淆字符串
 
 ## Jadx使用
 
@@ -1016,3 +1017,5 @@ main()
   - 有助于手动反编译lua assembly的工具： https://www.luac.nl/ 。可参考wp作者的做法，就是自己写lua代码，然后看出来的bytecode是不是和目标差不多
 - 其他wp/做法：
   - https://www.youtube.com/watch?v=qA6ajf7qZtQ
+124. [What am I?](https://www.youtube.com/watch?v=-E3VTblFkKg)
+- dll文件可以当作压缩文件（archive）打开，`.rsrc`文件夹下可能有图片之类的资源

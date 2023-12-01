@@ -423,7 +423,8 @@ flag.export("./flag.mp3", format="mp3")
     - linux.bash for bash history
     - linux.pslist to get pid of processes
     - linux.proc has a dump option, `linux.proc --pid <pid> --dump`
-
+- [Not supported](https://pakcyberbot.github.io/CTF-Writeups/posts/BHME-NotSupported/)
+    - `vol -f file.mem windows.memmap.Memmap --pid <num> --dump`:dump pid为num的进程的内容。有意思的地方在于，Memdumps are essentially RAM moment captures，可以将dump出来的文件后缀改成.data放进GIMP，能看到内存的图片，包括字符串形式的flag。参考 https://www.youtube.com/watch?v=-E3VTblFkKg
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。动图解释：https://zhuanlan.zhihu.com/p/63362804
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
 

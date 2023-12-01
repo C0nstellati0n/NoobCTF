@@ -1451,3 +1451,7 @@ cat</dev/tcp/a/1
 135. [profile](https://github.com/itaybel/Weekly-CTF/blob/main/BlackHatMEA/pwn/profile.md)
 - 注意scanf的format。如果format是`%ld`，接收的就是8字节。如果存放输入的buffer是int这类只有4个字节的格式，就会有4字节的溢出。特别是在struct里，这溢出的4个字节通常就覆盖了下一个字段的指针
 - free会检查chunk的size，不合格就会报错。所以在覆盖指针时要注意这点
+136. [DEVPRO](https://github.com/nobodyisnobody/write-ups/tree/main/Blackhat.MEA.CTF.Finals.2023/pwn/devpro)
+- 在linux里，从/dev/null读内容永远会返回end-of-file (EOF)，无论所读内容的长度。比如说用fread尝试读/dev/null的0x500的字节，fread会返回0，即没有读到任何内容
+- open device时，会在堆上分配chunk给FILE结构体用来代表该device，后续对该device的读写与其息息相关。`_IO_write_ptr`到`_IO_buf_end`是所读内容的缓冲区，若所读内容长度大于等于缓冲区的长度，会被立即丢弃；反之会将读到的内容读入`_IO_write_ptr`所记录的缓冲区（这个字段攻击者可改，改成stdout后就能修改stdout从而获取FSOP了，其他地方也同理）。从哪里读字节由当前device的FILE结构体的`_fileno`决定，且可被攻击者利用溢出等方式修改。比如原本是3，从文件描述符为3的文件里读字节，改成0后就变成从stdin读了。溢出修改`_fileno`时记得保留`_chain`字段的值
+- libc 2.38 FSOP。参考 https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc#3---the-fsop-way-targetting-stdout ，作者提供了利用的模板

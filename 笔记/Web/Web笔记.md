@@ -3094,3 +3094,10 @@ signature = await wallet.signMessage(message);
     - 利用`LOAD_FILE`+windows短名称（shortname）直接运行名字部分已知的文件：`HEX(LOAD_FILE('C:\\readfl~1.exe'))`
     - dump shell命令（hex）到`sc.bat`
     - 将webshell写到PEAR目录下的config.php
+342. [Authy](https://pakcyberbot.github.io/CTF-Writeups/posts/BHME-authy/)
+- go语言里的unicode编码
+```go
+user.Name := "😃" // Contains 1 emoji character
+lengthOfString := len(user.Name)            // Length of the string (bytes) - 4 (UTF-8 encoding)。直接求unicode字符的长度是4
+lengthOfRuneSlice := len([]rune(user.Name)) // Length of rune slice (code points) - 1。转成go里特有的处理unicode的rune后长度就是1
+```
