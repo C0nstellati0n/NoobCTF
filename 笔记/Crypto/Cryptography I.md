@@ -172,7 +172,7 @@ nonce ctr-mode：多加个nonce，IV分为两部分，前面是随机的nonce，
 
 ## CBC-MAC and NMAC
 
-上节课提到PRF可用作mac，但是只能处理少量数据。下面介绍可处理大量数据的encrypted cbc-mac（ECBC）。让 $F:K\times X\rightarrow X$ 为PRP，定义新的PRF $F_{ECBC}:K^2\times X^{\leq L}\rightarrow X$ 。其实理论上能加密任意大小的数据，给个bound L只是为了方便定义。具体实现和CBC差不多，将信息分为多个块，放入PRP函数求得密文。不同点在于，CBC输出当前块的密文并将该密文与下一个块异或再放入PRP；而ECBC直接异或，跳过输出步骤。最后一块的输出要再用PRP加密一起，且key要与之前用的key毫无相关性。最后这一步很重要，去掉这步单纯是raw cbc，不是安全的mac。可按照如下步骤伪造mac：
+上节课提到PRF可用作mac，但是只能处理少量数据。下面介绍可处理大量数据的encrypted [cbc-mac](https://en.wikipedia.org/wiki/CBC-MAC)（ECBC）。让 $F:K\times X\rightarrow X$ 为PRP，定义新的PRF $F_{ECBC}:K^2\times X^{\leq L}\rightarrow X$ 。其实理论上能加密任意大小的数据，给个bound L只是为了方便定义。具体实现和CBC差不多，将信息分为多个块，放入PRP函数求得密文。不同点在于，CBC输出当前块的密文并将该密文与下一个块异或再放入PRP；而ECBC直接异或，跳过输出步骤。最后一块的输出要再用PRP加密一起，且key要与之前用的key毫无相关性。最后这一步很重要，去掉这步单纯是raw cbc，不是安全的mac。可按照如下步骤伪造mac：
 1. 选择任意one-block message $m\in X$
 2. 获取m的tag t=F(k,m)
 3. t为2-block message $(m,t\bigoplus m)$ 的伪造mac
@@ -227,3 +227,12 @@ one-time mac可用来构造many-time mac。让(S,V)为(K_I,M,{0,1} $^n$ )上的�
 ## HMAC
 
 HMAC的构造： https://en.wikipedia.org/wiki/HMAC
+
+## Timing attacks on MAC verification
+
+有个python的mac库在比较mac tag时使用了==号来比较(`return HMAC(key,msg)==sig_bytes`)。问题在于python内部==是用个循环逐字节比对，有一个不同就break。这就导致了可以使用Timing attack，根据服务器的返回时间逐字节爆破tag。正确的做法应该是手动用for循环遍历两个tag，用按位或和异或保证每次比较都使用相同的时间。不过有些时候编译器会自作聪明给优化掉。第二种解决办法是：
+```py
+def Verify(key,msg,sig_bytes):
+    mac=HMAC(key,msg)
+    return HMAC(key,mac)==HMAC(key,sig_bytes)
+```

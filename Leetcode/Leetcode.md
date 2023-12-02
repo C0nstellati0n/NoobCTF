@@ -67,6 +67,7 @@
 - [Sort Integers by The Number of 1 Bits](./Easy/Sort%20Integers%20by%20The%20Number%20of%201%20Bits.md). Brian Kerninghan's Algorithm/bucket sort
 - [Find Mode in Binary Search Tree](./Easy/Find%20Mode%20in%20Binary%20Search%20Tree.md). dfs/bfs/Morris Traversal
 - [Number of 1 Bits](./Easy/Number%20of%201%20Bits.md)
+- [Check If Two String Arrays are Equivalent](./Easy/Check%20If%20Two%20String%20Arrays%20are%20Equivalent.md)
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。
