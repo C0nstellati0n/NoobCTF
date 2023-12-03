@@ -236,3 +236,19 @@ def Verify(key,msg,sig_bytes):
     mac=HMAC(key,msg)
     return HMAC(key,mac)==HMAC(key,sig_bytes)
 ```
+
+## Definitions
+
+认证加密系统（authenticated encryption system）（E，D）定义为：
+- $E:K\times M(\times N)\rightarrow C$
+- $D:K\times C(\times N)\rightarrow M\cup$ { $\perp$ }
+
+{ $\perp$ }标记何时该密文应该被丢弃。该系统必须满足：
+- CPA下的Semantic Security
+- 密文完整性（ciphertext integrity）。攻击者无法在获取密文的情况下通过修改密文使其解密成其他明文
+
+## Chosen Ciphertext Attacks
+
+密码(E,D)为认证加密。那么(E,D)在选择密文攻击（chosen ciphertext attack，就是可任意选择密文给交互端解密）下安全。For any q-query eff. A, there exist eff. $B_1,B_2$ s.t. : $Adv_{CCA}[A,E]\leq 2q\times Adv_{CI}[B_1,E]+Adv_{CPA}[B_2,E]$
+
+authenticated encryption无法抵御重放攻击和侧信道攻击
