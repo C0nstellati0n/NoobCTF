@@ -69,6 +69,7 @@
 - [Number of 1 Bits](./Easy/Number%20of%201%20Bits.md)
 - [Check If Two String Arrays are Equivalent](./Easy/Check%20If%20Two%20String%20Arrays%20are%20Equivalent.md)
 - [Find Words That Can Be Formed by Characters](./Easy/Find%20Words%20That%20Can%20Be%20Formed%20by%20Characters.md). frequency count
+- [Minimum Time Visiting All Points](./Easy/Minimum%20Time%20Visiting%20All%20Points.md)
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

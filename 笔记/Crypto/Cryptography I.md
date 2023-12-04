@@ -252,3 +252,11 @@ def Verify(key,msg,sig_bytes):
 密码(E,D)为认证加密。那么(E,D)在选择密文攻击（chosen ciphertext attack，就是可任意选择密文给交互端解密）下安全。For any q-query eff. A, there exist eff. $B_1,B_2$ s.t. : $Adv_{CCA}[A,E]\leq 2q\times Adv_{CI}[B_1,E]+Adv_{CPA}[B_2,E]$
 
 authenticated encryption无法抵御重放攻击和侧信道攻击
+
+## Constructions From Ciphers and MACs
+
+建议按照enc-then-mac的数学女结合加密和mac。首先加密m，得到c；然后在c的最后拼接上c的tag。mac-then-encrypt的做法是先获取m的tag，拼接到m后再一起加密。有被cca攻击的风险，但是当使用的密码是rand-CTR（one-time mac即可）或者rand-CBC时，是安全的
+
+## Case Study: TLS 1.2
+
+CRC是线性的。给出CRC(m)，就有 $CRC(m\bigoplus p)=CRC(m)\bigoplus F(p)$ （这个函数F据说是一个网上很容易查到的函数）
