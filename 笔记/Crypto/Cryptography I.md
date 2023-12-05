@@ -260,3 +260,13 @@ authenticated encryption无法抵御重放攻击和侧信道攻击
 ## Case Study: TLS 1.2
 
 CRC是线性的。给出CRC(m)，就有 $CRC(m\bigoplus p)=CRC(m)\bigoplus F(p)$ （这个函数F据说是一个网上很容易查到的函数）
+
+## CBC Padding Attacks
+
+cbc padding oracle attack: https://en.wikipedia.org/wiki/Padding_oracle_attack 。encrypt-then-mac可以避免这类攻击
+
+## Attacking Non-Atomic Decryption
+
+一个攻击ssh的案例。ssh有个binary packet protocol，具体实现细节不重要，只需要知道cbc encryption的内容里前32 bit为packet len，最后有个plaintext的tag。当ssh接收到这样一个packet后，会只解密packet len，然后根据解密结果读入相应长度的字节。那么攻击者可以这么做：随便发送一个aes加密block，前32 bit会被服务器解密。攻击者一个字节一个字节地发过去，直到发送字节个数为packet len后，服务器返回mac验证失败。这时攻击者就能通过计算发送的字节数获取任意aes加密block的前32 bit明文了
+
+不要使用任何未经验证的解密字段。一定要先验证

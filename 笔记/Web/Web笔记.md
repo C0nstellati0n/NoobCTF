@@ -3101,3 +3101,23 @@ user.Name := "😃" // Contains 1 emoji character
 lengthOfString := len(user.Name)            // Length of the string (bytes) - 4 (UTF-8 encoding)。直接求unicode字符的长度是4
 lengthOfRuneSlice := len([]rune(user.Name)) // Length of rune slice (code points) - 1。转成go里特有的处理unicode的rune后长度就是1
 ```
+343. [Venue](https://chovid99.github.io/posts/tcp1p-ctf-2023/#venue)
+- solidity blockchain的EVM里有两种与合约交互的形式：
+    - call：A read-only operation that executes a contract function locally without altering the blockchain state. It’s used to query or test functions and doesn’t require gas since it doesn’t create a transaction on the blockchain
+    - transaction：A write operation that alters the blockchain state (such as updating variables, transferring ETH, or contract deployment). It requires gas and confirmation by the network, and the changes are permanently recorded on the blockchain
+
+长话短说，call用来调用那些不会改变合约自身状态的函数（只读）；transaction则与之相反。用foundry call函数时不需要private key，而transaction需要
+
+344. [Location](https://chovid99.github.io/posts/tcp1p-ctf-2023/#location)
+- solidity blockchain EVM slot。EVM中的每个合约都有persistent storage。每个合约中的字段都会按顺序放到storage slots里，直到当前slot已满（一个slot 32字节）。有些被标记immutable的字段除外，它们不被存储在任何slot里。可以用solc命令查看详细的storage slots信息：`solc test.sol --storage-layout`
+345. [VIP](https://chovid99.github.io/posts/tcp1p-ctf-2023/#vip)
+- 如何安装MetaMask并获取private key。在执行合约的transaction时必须有自己的wallet和私钥
+- foundry 与合约进行交互：call/transaction
+346. [Invitation](https://chovid99.github.io/posts/tcp1p-ctf-2023/#invitation)
+- EVM内部有function selector，selector是一个以hex格式表示的长度为4个字节的标识符，从函数签名中得来。无法逆向selector，意味着无法在得到selector的情况下的得知该函数的签名；但是可以里用[网站](https://www.4byte.directory/)的数据库查询。可以从合约的bytecode里获取selector，关注下面这段汇编：
+```
+PUSH4 <selector>
+EQ
+PUSH <code_dest>
+JUMPI
+```

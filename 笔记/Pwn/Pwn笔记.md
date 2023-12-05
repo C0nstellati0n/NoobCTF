@@ -1515,3 +1515,36 @@ r.send(payload) #new_rbp-0x40-0x30
 ```
 139. [💀](https://chovid99.github.io/posts/tcp1p-ctf-2023/#heading)
 - linux kernel pwn爆破kernel base+利用modprobe_path提权。利用任意地址读扫描`0xffffffff81000000`到`0xffffffffc0000000`，每次增加0x100000。当读取的内容里包含`/sbin/m`(即modprobe_path的开头)时，说明当前所在地址就是kernel base
+140. [tickery](https://chovid99.github.io/posts/tcp1p-ctf-2023/#tickery)
+- glibc 2.37 safe linking+tcache poisoning+environ泄露栈地址+gets读取任意大小ropchain
+- 可通过修改tcache metadata中的count字段修改tcache中各个大小堆块的数量。利用这点可以欺骗tcache让其以为某个bin满了，进而将堆块放入unsorted bin从而泄露地址。metadata位于堆内存的起始处，各个count字段的对应关系如下：
+```
+pwndbg> x/8gx 0x55555555b000
+0x55555555b000: 0x0000000000000000      0x0000000000000291
+0x55555555b010: 0x0001000200030004      0x0005000600070008
+0x55555555b020: 0x0009000a000b000c      0x000d000e000f0010
+0x55555555b030: 0x0011001200130014      0x0000000000000000
+pwndbg> bins
+tcachebins
+0x20 [  4]: 0x0
+0x30 [  3]: 0x0
+0x40 [  2]: 0x0
+0x50 [  1]: 0x0
+0x60 [  8]: 0x0
+0x70 [  7]: 0x0
+0x80 [  6]: 0x0
+0x90 [  5]: 0x0
+0xa0 [ 12]: 0x0
+0xb0 [ 11]: 0x0
+0xc0 [ 10]: 0x0
+0xd0 [  9]: 0x0
+0xe0 [ 16]: 0x0
+0xf0 [ 15]: 0x0
+0x100 [ 14]: 0x0
+0x110 [ 13]: 0x0
+0x120 [ 20]: 0x0
+0x130 [ 19]: 0x0
+0x140 [ 18]: 0x0
+0x150 [ 17]: 0x0
+```
+- 当seccomp只允许open，read，write时，仍然可以调用gets
