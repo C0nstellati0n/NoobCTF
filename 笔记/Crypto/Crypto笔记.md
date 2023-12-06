@@ -2336,3 +2336,12 @@ print(hex(random.getrandbits(256)))
 - chacha20 key/nonce reuse+明文攻击。chacha20的算法比较复杂，但是可以简易地理解成“对于明文中的每个字节，生成一个对应的密钥字节与其异或”。不同的key/nonce组合会生成不同的密钥字节（与key不同），因此重用一对key/nonce就成了many time pad。假如已知一对明文和密文，就能异或两者得到完整的密钥字节，进而解码其余密文
 118. [coding](https://github.com/cscosu/buckeyectf-2023-public/tree/master/crypto-coding)
 - [arithmetic coding](https://www.nayuki.io/page/reference-arithmetic-coding)
+119. [Jack’s Worst Trials](https://berliangabriel.github.io/post/tcp1p-ctf-2023/)
+- 当python网站使用`jwt.decode()`而没有指定具体使用的算法时，代表可能可以用公钥伪造JWT，然后用HS256算法验证。参考CVE-2017-11424，enables symmetric/asymmetric key confusion attacks against users using the PKCS1 PEM encoded public keys。利用工具 https://github.com/silentsignal/rsa_sign2n 可从两个jwt中计算公钥，然后伪造jwt
+120. [Final Consensus](https://berliangabriel.github.io/post/tcp1p-ctf-2023/)
+- Meet in the Middle attack,常用于double encryption scheme：
+```
+c1=encrypt(k1,plaintext)
+c2=encrypt(k2,c1)
+```
+如果直接爆破k1和k2，时间复杂度为key space of k1\*key space of k2。但是可以把两者拆开，分别计算encrypt(k1,plaintext)和decrypt(k2,c2)。若两者结果匹配，我们就找到了(k1,k2)，时间复杂度要少上不少

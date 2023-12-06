@@ -71,6 +71,7 @@
 - [Find Words That Can Be Formed by Characters](./Easy/Find%20Words%20That%20Can%20Be%20Formed%20by%20Characters.md). frequency count
 - [Minimum Time Visiting All Points](./Easy/Minimum%20Time%20Visiting%20All%20Points.md)
 - [Largest 3-Same-Digit Number in String](./Easy/Largest%203-Same-Digit%20Number%20in%20String.md)
+- [Count of Matches in Tournament](./Easy/Count%20of%20Matches%20in%20Tournament.md)
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

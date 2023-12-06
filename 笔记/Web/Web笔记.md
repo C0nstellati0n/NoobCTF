@@ -3063,7 +3063,7 @@ try {
 }
 ```
 这个同样也是错误示范。如果源码给出公钥，攻击者就能用公钥签名jwt后走catch分支验证
-- 假如服务器没有给公钥，这个[工具](https://github.com/silentsignal/rsa_sign2n)可以从两个签名的token里提取出公钥。不过其结果在末尾会有个换行符，视情况删除
+- 假如服务器没有给公钥，这个[工具](https://github.com/silentsignal/rsa_sign2n)可以从两个签名的token里提取出公钥。不过其结果在末尾会有个换行符，视情况删除。参考Crypto笔记的119条
 335. [font-review](https://github.com/cscosu/buckeyectf-2023-public/tree/master/web-font-review),[wp](https://github.com/Nambers/ctf-writeups/tree/main/buckeyeCTF-2023/web-font_review-hard)
 - [css injection](https://book.hacktricks.xyz/pentesting-web/xs-search/css-injection#text-node-exfiltration-i-ligatures-1)。这类题目只允许输入css，要求用某种方法泄露bot所在页面上的flag。此题利用自定义字体（font）[ligatures](https://fonts.google.com/knowledge/glossary/ligature)猜测flag。当页面中的字符溢出时，会报错；反之不会。那么利用某个css匹配flag，若flag匹配则让字体变大导致溢出；反之不会。进而一个字符一个字符猜出完整的flag
 - hacktricks里的技巧使用svg font，不过现代浏览器已经不支持了，因此需要使用[fontforge](https://github.com/fontforge/fontforge/tree/master)将svg font转为woff
@@ -3121,3 +3121,10 @@ EQ
 PUSH <code_dest>
 JUMPI
 ```
+347. [Un Secure](https://berliangabriel.github.io/post/tcp1p-ctf-2023/)
+- php反序列化漏洞：通过串联多个类获得RCE。这里想提的是php网站里的vendor文件夹和composer.json。可以在composer.json里配置autoload，然后require `vendor/autoload.php`。这样在反序列化/编写文件时会自动包含autoload里提到的类。参考 https://stackoverflow.com/questions/57720711/what-should-i-do-to-using-vendor-folder-located-classes-after-download-via-compo 和 https://getcomposer.org/doc/01-basic-usage.md#autoloading
+348. [A Simple Web](https://berliangabriel.github.io/post/tcp1p-ctf-2023/)
+- 版本小于等于rc12的[Nuxt.js](https://github.com/nuxt/framework)在dev mode运行时有路径穿越漏洞，参考 https://huntr.com/bounties/4849af83-450c-435e-bc0b-71705f5be440/ 。可用`/_nuxt/@fs/filename`读取任意文件
+349. [Latex](https://berliangabriel.github.io/post/tcp1p-ctf-2023/)
+- 尝试用latex读取文件，但是需要绕过黑名单。wp的做法利用`\catcode`改变字符的category code。比如\catcode`\@=0,将@字符的作用改成了\，以后需要用\的地方都可以用@代替。额外地，还可以利用这个方法将_改成13。因为flag里通常包含下划线，改成13后不会让latex报错
+- 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5

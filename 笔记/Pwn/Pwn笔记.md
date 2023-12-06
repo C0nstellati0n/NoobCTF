@@ -1448,7 +1448,7 @@ RESOLV_HOST_CONF=/root/flag bash 2>&1
 cat</dev/tcp/a/1
 ```
 134. [memstream](https://github.com/itaybel/Weekly-CTF/blob/main/BlackHatMEA/pwn/memstream.md)
-- 当pwndbg打开程序发现代码段不在`0x55***000`而是`0x7ff****000`时，说明这段代码是被mmaped的。这意味着程序段与ld.so的偏移是固定的，有可能ld.so的地址比程序段还要小
+- 当pwndbg打开程序发现代码段不在`0x55***000`而是`0x7ff****000`时，说明这段代码是被mmaped的。这意味着程序段与ld.so的偏移是固定的，有可能ld.so的地址比程序段还要小。这种情况可能出现在被upx打包的程序
 - ld.so会在可写段记录程序基地址，而且不止一个。当程序使用exit退出时，会跳到记录基址的那个地址+0x3d88。假设exit时rax为`*(0x7ffff7fef2e0) = 0x7ffff7ff7000`，执行指令`call [rax + 0x3d88]`就相当于跳转到`[0x7ffff7ff7000+0x3d88]`。通常情况下这里是`__do_global_dtors_aux`。假设ld.so在A和B处都记录了基地址，一种PIE下的利用思路是，利用partial write将A处的基地址改为getshell的函数（不确定one_gadget行不行？），然后再用一次partial write将B处的地址改为A-0x3d88。这样当rax=B时，内部地址为A-0x3d88，call的函数就是A处的one_gadget了
 135. [profile](https://github.com/itaybel/Weekly-CTF/blob/main/BlackHatMEA/pwn/profile.md)
 - 注意scanf的format。如果format是`%ld`，接收的就是8字节。如果存放输入的buffer是int这类只有4个字节的格式，就会有4字节的溢出。特别是在struct里，这溢出的4个字节通常就覆盖了下一个字段的指针
