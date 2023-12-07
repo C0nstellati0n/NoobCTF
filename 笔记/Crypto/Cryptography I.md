@@ -270,3 +270,13 @@ cbc padding oracle attack: https://en.wikipedia.org/wiki/Padding_oracle_attack �
 一个攻击ssh的案例。ssh有个binary packet protocol，具体实现细节不重要，只需要知道cbc encryption的内容里前32 bit为packet len，最后有个plaintext的tag。当ssh接收到这样一个packet后，会只解密packet len，然后根据解密结果读入相应长度的字节。那么攻击者可以这么做：随便发送一个aes加密block，前32 bit会被服务器解密。攻击者一个字节一个字节地发过去，直到发送字节个数为packet len后，服务器返回mac验证失败。这时攻击者就能通过计算发送的字节数获取任意aes加密block的前32 bit明文了
 
 不要使用任何未经验证的解密字段。一定要先验证
+
+## Deterministic Encryption: SIV and Wide PRP
+
+synthetic IV (SIV): https://crypto.stackexchange.com/questions/37069/why-is-synthetic-iv-siv-mode-considered-deterministic-authenticated-encryption
+
+## Tweakable Encryption
+
+tweakable block cipher: https://crypto.stackexchange.com/questions/6185/what-is-a-tweakable-block-cipher
+
+XTS-aes tweakable block cipher: https://xilinx.github.io/Vitis_Libraries/security/2020.1/guide_L1/internals/xts.html

@@ -3109,10 +3109,10 @@ lengthOfRuneSlice := len([]rune(user.Name)) // Length of rune slice (code points
 长话短说，call用来调用那些不会改变合约自身状态的函数（只读）；transaction则与之相反。用foundry call函数时不需要private key，而transaction需要
 
 344. [Location](https://chovid99.github.io/posts/tcp1p-ctf-2023/#location)
-- solidity blockchain EVM slot。EVM中的每个合约都有persistent storage。每个合约中的字段都会按顺序放到storage slots里，直到当前slot已满（一个slot 32字节）。有些被标记immutable的字段除外，它们不被存储在任何slot里。可以用solc命令查看详细的storage slots信息：`solc test.sol --storage-layout`
+- solidity blockchain EVM slot。EVM中的每个合约都有persistent storage。每个合约中的字段都会按顺序放到storage slots里，直到当前slot已满（一个slot 32字节）。有些被标记immutable的字段除外，它们不被存储在任何slot里。可以用solc命令查看详细的storage slots信息：`solc test.sol --storage-layout`。也可以用remix查看slot。在remix里编译合约后查看STORAGELAYOUT（跟ABI在一样的地方）即可
 345. [VIP](https://chovid99.github.io/posts/tcp1p-ctf-2023/#vip)
 - 如何安装MetaMask并获取private key。在执行合约的transaction时必须有自己的wallet和私钥
-- foundry 与合约进行交互：call/transaction
+- foundry 与合约进行交互：call/transaction。foundry使用补充： https://themj0ln1r.github.io/posts/tcp1pctf
 346. [Invitation](https://chovid99.github.io/posts/tcp1p-ctf-2023/#invitation)
 - EVM内部有function selector，selector是一个以hex格式表示的长度为4个字节的标识符，从函数签名中得来。无法逆向selector，意味着无法在得到selector的情况下的得知该函数的签名；但是可以里用[网站](https://www.4byte.directory/)的数据库查询。可以从合约的bytecode里获取selector，关注下面这段汇编：
 ```
@@ -3127,4 +3127,25 @@ JUMPI
 - 版本小于等于rc12的[Nuxt.js](https://github.com/nuxt/framework)在dev mode运行时有路径穿越漏洞，参考 https://huntr.com/bounties/4849af83-450c-435e-bc0b-71705f5be440/ 。可用`/_nuxt/@fs/filename`读取任意文件
 349. [Latex](https://berliangabriel.github.io/post/tcp1p-ctf-2023/)
 - 尝试用latex读取文件，但是需要绕过黑名单。wp的做法利用`\catcode`改变字符的category code。比如\catcode`\@=0,将@字符的作用改成了\，以后需要用\的地方都可以用@代替。额外地，还可以利用这个方法将_改成13。因为flag里通常包含下划线，改成13后不会让latex报错
-- 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5
+- 其他做法: https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#latex
+350. [love card](https://github.com/4n86rakam1/writeup/blob/main/TCP1PCTF_2023/Web/love_card/index.md)
+- php利用[log_errors](https://www.php.net/manual/en/errorfunc.configuration.php#ini.log-errors)和[error_log](https://www.php.net/manual/en/errorfunc.configuration.php#ini.error-log)写内容至任意文件。log_errors为标记是否log error的bool值，error_log为error输出的文件名。可以用ini_set控制这两个值，如：
+```php
+foreach ($_GET as $key => $value) {
+  ini_set($key, $value);
+}
+```
+351. [PDFIFY](https://nightfury99.github.io/TCP1PCTF2023/PDFIFY)
+- php [knplabs/knp-snappy phar deserialization vulnerability](https://github.com/KnpLabs/snappy/security/advisories/GHSA-gq6w-q6wh-jggc)。当攻击者可控制Pdf对象的generateFromHtml函数的第二个参数“输出文件”时，可实现rce。首先往服务器上传一个a.phar，然后generateFromHtml("some content",'phar://a.phar')。a.phar反序列化时即可执行内部的代码。因为本质上是反序列化漏洞，内部代码的构造需要在项目里寻找反序列化的gadget。一个便捷的生成工具：[phpggc](https://github.com/ambionics/phpggc)。对于CodeIgniter4，也可以直接去 https://github.com/ambionics/phpggc/blob/master/gadgetchains/CodeIgniter4/RCE/2/gadgets.php 拿gadgets，然后[手动构造phar](https://nightfury99.github.io/notes/Php-Internal/phar-deser#how-to-use-phar-archive-)
+- php codeigniter4框架 sql注入。参考 https://www.youtube.com/watch?v=2vAr9K5chII&t=558s ，本质是因为直接将用户的data传进了where/getWhere函数：
+```php
+$data = $this->request->getPost();
+$user = $this->model->where($data)->first();
+```
+假设data为`param1=a&param2=b`，value处的a和b无法注入，但是参数处的param1和param2可以
+- php [Variables From External Sources](https://www.php.net/manual/en/language.variables.external.php)。例如`<input type="text" name="my.name"/>`，值需要通过`$_REQUEST["my_name"]`得到。除了`.`会被改成`_`，还有空格` `和方括号`[`
+- php绕过password_verify(bcrypt)。参考 https://bugs.php.net/bug.php?id=81744 和 https://github.com/php/php-src/security/advisories/GHSA-7fj2-8x79-rjf4 ，任何密码都可以用`$2x$08$00000$`或`$2y$10$am$2y$10$am`通过验证
+- [wkhtmltopdf SSRF漏洞](https://github.com/wkhtmltopdf/wkhtmltopdf/issues/4875)。任何可以用来加载外部资源的html标签都可以用来触发该漏洞
+- curl [URL globbing](https://everything.curl.dev/cmdline/globbing)。可用于绕过过滤，比如请求gopher：`curl {g}opher://localhost:80/_payload`
+- 小型python ftp server代码： https://gist.github.com/dkw72n/193cfec6572fb392b671 。允许匿名连接该服务器，无需密码
+- 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#pdfify
