@@ -73,6 +73,7 @@
 - [Largest 3-Same-Digit Number in String](./Easy/Largest%203-Same-Digit%20Number%20in%20String.md)
 - [Count of Matches in Tournament](./Easy/Count%20of%20Matches%20in%20Tournament.md)
 - [Calculate Money in Leetcode Bank](./Easy/Calculate%20Money%20in%20Leetcode%20Bank.md)
+- [Largest Odd Number in String](./Easy/Largest%20Odd%20Number%20in%20String.md)
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

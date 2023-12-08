@@ -3149,3 +3149,5 @@ $user = $this->model->where($data)->first();
 - curl [URL globbing](https://everything.curl.dev/cmdline/globbing)。可用于绕过过滤，比如请求gopher：`curl {g}opher://localhost:80/_payload`
 - 小型python ftp server代码： https://gist.github.com/dkw72n/193cfec6572fb392b671 。允许匿名连接该服务器，无需密码
 - 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#pdfify
+352. [Un Secure](https://github.com/RuiZha0/TCP1PCTF_2023)
+- php反序列化时不会记录字段的可访问性。需要手动添加（比如在两端添加`\0`来设置private属性），或者使用php的反射API

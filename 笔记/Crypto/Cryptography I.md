@@ -280,3 +280,7 @@ synthetic IV (SIV): https://crypto.stackexchange.com/questions/37069/why-is-synt
 tweakable block cipher: https://crypto.stackexchange.com/questions/6185/what-is-a-tweakable-block-cipher
 
 XTS-aes tweakable block cipher: https://xilinx.github.io/Vitis_Libraries/security/2020.1/guide_L1/internals/xts.html
+
+## Format Preserving Encryption
+
+Format Preserving Encryption: https://en.wikipedia.org/wiki/Format-preserving_encryption

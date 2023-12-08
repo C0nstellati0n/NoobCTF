@@ -1336,6 +1336,7 @@ ret
   - [预期解](https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#babysbx)使用mremap
 - [message](https://chovid99.github.io/posts/tcp1p-ctf-2023/#message)
   - 利用pwntools shellcraft生成open+getdents64+write shellcode获取当前目录下全部文件的文件名
+  - 更详细的解析： https://www.mspi.eu/blog/security/ctf/2023/10/15/tcp1p-ctf-writeups.html#message
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
