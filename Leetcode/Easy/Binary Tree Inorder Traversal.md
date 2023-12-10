@@ -120,3 +120,24 @@ Beats
 ```
 
 大致思路也差不多，不过这个解法把push node的操作一次完成，可能大体上更好理解一点。另外提一句，C#里的IList是一个接口，List实现于它。两者的对比具体可以看[这](https://stackoverflow.com/questions/400135/listt-or-ilistt)，这里返回List肯定是没问题的。
+
+9个月后又遇到了这题，感觉时间过得好快啊。又拿c++写了一遍
+```c++
+class Solution {
+public:
+    vector<int> ans;
+    vector<int> inorderTraversal(TreeNode* root) {
+        Traverse(root);
+        return ans;
+    }
+    void Traverse(TreeNode* node){
+        if(!node) return;
+        Traverse(node->left);
+        ans.push_back(node->val);
+        Traverse(node->right);
+    }
+};
+```
+bfs/dfs/morris traversal的c++解法： https://leetcode.com/problems/binary-tree-inorder-traversal/solutions/31231/c-iterative-recursive-and-morris 。评论区里有个Morris traversal的可视化ppt： https://docs.google.com/presentation/d/11GWAeUN0ckP7yjHrQkIB0WT9ZUhDBSa-WR0VsPU38fg/edit#slide=id.g61bfb572cf_0_16
+
+editorial也有全3种解法，不过只有java。对Morris traversal的解释也不错

@@ -284,3 +284,7 @@ XTS-aes tweakable block cipher: https://xilinx.github.io/Vitis_Libraries/securit
 ## Format Preserving Encryption
 
 Format Preserving Encryption: https://en.wikipedia.org/wiki/Format-preserving_encryption
+
+## Merkle Puzzles
+
+Merkle Puzzles: https://en.wikipedia.org/wiki/Merkle%27s_Puzzles
