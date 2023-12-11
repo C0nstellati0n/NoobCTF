@@ -3150,4 +3150,18 @@ $user = $this->model->where($data)->first();
 - 小型python ftp server代码： https://gist.github.com/dkw72n/193cfec6572fb392b671 。允许匿名连接该服务器，无需密码
 - 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#pdfify
 352. [Un Secure](https://github.com/RuiZha0/TCP1PCTF_2023)
-- php反序列化时不会记录字段的可访问性。需要手动添加（比如在两端添加`\0`来设置private属性），或者使用php的反射API
+- php反序列化时不会记录字段的可访问性。需要手动添加（比如在两端添加`\0`来设置private属性,参考 https://stackoverflow.com/questions/23986032/php-serialize-override-privateprotected-and-stdclass-reflection ），或者使用php的反射API
+353. [Calculator](https://github.com/RuiZha0/TCP1PCTF_2023)
+- js只使用Math相关函数的构造技巧：
+    - 构造数字：`Math.sin.name.length.valueOf()`，利用Math内置函数的名字的长度获取数字
+    - 构造字母：`Math.sin.name.length.toString()`。或者直接用构造器：`Math.sin.name.constructor(110)`。这些字符都是数字，字母的字符可以用`Math.sin.name.constructor.fromCharCode(35)`或`Math.sin.name.constructor.fromCharPoint(35)`。这里参数的数字可以参考wp的做法用`Math.floor(Math.log2(Math.exp(num)))`套娃构造
+    - js里给没有参数函数传参不会报错，无论怎么传也不会影响函数的结果
+    - js里重写的函数name属性是空。具体如下：
+    ```js
+    Math.random.name.toLowerCase()
+    'random'
+    Math.random=function(){}
+    Math.random.name.toLowerCase()
+    ''
+    ```
+    - deno环境读取文件的捷径：`return Deno.readTextFileSync('flag.txt')`，稍微复杂一点是`return (new TextDecoder("utf-8")).decode(Deno.readFileSync("flag.txt"))`

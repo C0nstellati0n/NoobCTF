@@ -288,3 +288,13 @@ Format Preserving Encryption: https://en.wikipedia.org/wiki/Format-preserving_en
 ## Merkle Puzzles
 
 Merkle Puzzles: https://en.wikipedia.org/wiki/Merkle%27s_Puzzles
+
+## The Diffie-Hellman Protocol
+
+Diffie–Hellman Protocol: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange
+
+## Public-Key Encryption
+
+Public-Key Encryption: https://en.wikipedia.org/wiki/Public-key_cryptography
+
+Public-Key Encryption下的semantic security：和之前差不多，adversary给chal $m_0,m_1$ ，只不过这回chal会生成一对密钥，包含公钥和私钥。返回用公钥加密任意一条信息后的密文。adversay需猜测被返回的密文是那个明文的加密，若advantage negligible就叫semantic security

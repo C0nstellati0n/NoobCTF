@@ -1656,3 +1656,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - lua jail。因为有黑名单过滤，所以思路是连接两次服务器，一次用来写另外的shell文件，一次用来执行刚才的shell文件
 203. [Another Discord](https://github.com/4n86rakam1/writeup/tree/main/TCP1PCTF_2023/Misc/Another_Discord)
 - 调用discord api获取channels list和guilds details
+204. [Nuclei](https://dev.to/edqe14/tcp1p-ctf-nuclei-18ad)
+- 分析[nuclei](https://docs.nuclei.sh/)的自定义templates yaml
