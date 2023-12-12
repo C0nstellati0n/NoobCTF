@@ -1019,3 +1019,37 @@ main()
   - https://www.youtube.com/watch?v=qA6ajf7qZtQ
 124. [What am I?](https://www.youtube.com/watch?v=-E3VTblFkKg)
 - dll文件可以当作压缩文件（archive）打开，`.rsrc`文件夹下可能有图片之类的资源
+125. [Intention](https://hackmd.io/@lawbyte/HJ3_3lT-a#Intention-356-pts)
+- `AndroidManifest.xml`中`android:exported="true"`属性标记该activity可被安装在同一个设备上的其他application调用
+- android api参考：
+    - 什么是intent： https://stackoverflow.com/questions/6578051/what-is-an-intent-in-android 。 an "intention" to perform an action，比如用来启动一个activity
+    - activity： https://developer.android.com/reference/android/app/Activity
+    - setResult： https://developer.android.com/reference/android/app/Activity#setResult(int,%20android.content.Intent) 。返回结果到调用当前activity的activity
+    - 如何用intent启动特定的activity并获取那个activity的返回结果
+    ```java
+    Intent intent = new Intent();
+    intent.setComponent(new ComponentName("com.kuro.intention", "com.kuro.intention.FlagSender")); //设置要发送intent的component
+    startActivityForResult(intent, 1337); //配合下面重写的onActivityResult接收返回结果
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //填获取data的具体步骤
+        //注意调用的activity内部要是没有调用finish()，需要手动按返回键返回之前的activity
+    }
+    ```
+- 其他wp： https://hackmd.io/@avila-pwn-notes/S1a16gqb6#Intention---356
+126. [Imagery](https://hackmd.io/@avila-pwn-notes/S1a16gqb6#Imagery---436)
+- android implicit intent拦截。构造intent时分两种，显示（explicit）intent和隐式（implicit）intent。显示intent类似指名道姓，指定要调用的activity。隐式则是指定了要调用的action，而不指定具体的activity。隐式intent有被安装在同设备的其他application拦截的风险。攻击者可在AndroidManifest.xml中添加intent-filter拦截隐式intent。拦截后可将intent原本的内容替换为自己构造的内容，顺便读取原本intent的内容。例如activity A->intent->被activity B拦截，篡改为_intent。处理后返回activityA->activity A在接下来的程序逻辑中使用恶意内容
+- 拦截后intent的代码：
+```kotlin
+val pwnIntent = Intent()
+pwnIntent.data = Uri.parse("file:///data/data/com.kuro.imagery/files/flag.txt") //本来是activity A内部的文件，现在篡改后攻击者可任意读取其内部文件
+Log.d("exploit", "sending payload")
+setResult(133337, pwnIntent)
+finish()
+```
+127. [Netsight](https://hackmd.io/@avila-pwn-notes/S1a16gqb6#Netsight---496)
+- export的activity不一定代表漏洞。但诸如webview的activity不应该被export，不然攻击者就可以打开任意的网页了
+- webview client内部中可能有些函数标记着`@JavascriptInterfaces`，表示这些函数可以在打开的网页内用js脚本调用
+- [Access to arbitrary components via WebView](https://blog.oversecured.com/Android-Access-to-app-protected-components/#access-to-arbitrary-components-via-webview):若攻击者可随意控制`Intent.parseUri`的参数，即可借此访问那些未被导出的component
+- intent.setFlags(1)表示`FLAG_GRANT_READ_URI_PERMISSION`，允许读取调用者application的file provider中的文件。`@xml/provider_paths.xml`文件中记录了file provider中可共享的文件。可以用`content://`协议读文件
