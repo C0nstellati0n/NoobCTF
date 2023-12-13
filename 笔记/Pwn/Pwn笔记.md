@@ -186,11 +186,6 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 8. pwn heap题模板
 
 这里暂时记录一些学习链接，等我有空了会把它们都看一遍然后写个总结（真的会吗？）
-
-- House of Apple
-1. https://www.roderickchan.cn/zh-cn/house-of-apple-%E4%B8%80%E7%A7%8D%E6%96%B0%E7%9A%84glibc%E4%B8%ADio%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95-1/
-2. https://www.roderickchan.cn/zh-cn/house-of-apple-%E4%B8%80%E7%A7%8D%E6%96%B0%E7%9A%84glibc%E4%B8%ADio%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95-2/
-3. https://www.roderickchan.cn/zh-cn/house-of-apple-%E4%B8%80%E7%A7%8D%E6%96%B0%E7%9A%84glibc%E4%B8%ADio%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95-3/
 - [house of pig](https://www.anquanke.com/post/id/242640)
 - [House OF Kiwi](https://www.anquanke.com/post/id/235598)
 - [House _OF _Emma](https://www.anquanke.com/post/id/260614)

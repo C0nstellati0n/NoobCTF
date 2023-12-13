@@ -1053,3 +1053,6 @@ finish()
 - webview client内部中可能有些函数标记着`@JavascriptInterfaces`，表示这些函数可以在打开的网页内用js脚本调用
 - [Access to arbitrary components via WebView](https://blog.oversecured.com/Android-Access-to-app-protected-components/#access-to-arbitrary-components-via-webview):若攻击者可随意控制`Intent.parseUri`的参数，即可借此访问那些未被导出的component
 - intent.setFlags(1)表示`FLAG_GRANT_READ_URI_PERMISSION`，允许读取调用者application的file provider中的文件。`@xml/provider_paths.xml`文件中记录了file provider中可共享的文件。可以用`content://`协议读文件
+128. [Internals](https://hackmd.io/@lawbyte/HJ3_3lT-a#Internals-499-pts)
+- [APKKiller](https://github.com/aimardcr/APKKiller):可以利用java的反射修改内部类以及字段。例如可以用[ActivityThread ](https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/app/ActivityThread.java)修改packageName字段
+- 如何提取apk文件中的dex文件
