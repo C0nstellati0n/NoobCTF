@@ -78,6 +78,7 @@
 - [Transpose Matrix](./Easy/Transpose%20Matrix.md). c++初始化二维vector
 - [Element Appearing More Than 25% In Sorted Array](./Easy/Element%20Appearing%20More%20Than%2025%25%20In%20Sorted%20Array.md). binary search
 - [Maximum Product of Two Elements in an Array](./Easy/Maximum%20Product%20of%20Two%20Elements%20in%20an%20Array.md)
+- [Special Positions in a Binary Matrix](./Easy/Special%20Positions%20in%20a%20Binary%20Matrix.md)
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

@@ -560,6 +560,12 @@ print(base64.b64encode(temp.encode()))
   )
   ```
 - 进入python的help()界面后，可以随便输入一个模块（如os）然后输入`:e [filename]`读取文件(默认使用less命令展示文档)
+- [PyMagic](https://github.com/TCP1P/TCP1P-CTF-2023-Challenges/tree/main/Misc/PyMagic)：禁`()'"0123456789 `字符，eval环境无`__builtins__`，但有一个空类
+  - 一些有助于构造payload的链接：
+    - https://codegolf.stackexchange.com/questions/264291/how-turing-complete-is-your-language
+    - https://sopython.com/wiki/Riddles
+    - https://github.com/b01lers/b01lers-ctf-2021/tree/main/misc/noparensjail ：覆盖`<`号为system
+  - 其他wp： https://github.com/SuperStormer/writeups/tree/master/tcp1pctf_2023/misc/pymagic
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

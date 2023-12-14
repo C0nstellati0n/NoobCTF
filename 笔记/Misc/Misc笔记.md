@@ -1654,6 +1654,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - debian OpenSSL漏洞： https://www.cr0.org/progs/sshfun/ 。这个漏洞导致openssl生成容易爆破的weak keys。可借助[ssh_kex_keygen](https://github.com/trou/ssh_kex_keygen)爆破密钥，再用[ssh_decoder](https://github.com/jjyg/ssh_decoder)从raw TCP dumps中解密ssh traffic
 202. [landbox](https://dev.to/edqe14/tcp1p-ctf-landbox-4h5b)
 - lua jail。因为有黑名单过滤，所以思路是连接两次服务器，一次用来写另外的shell文件，一次用来执行刚才的shell文件
+- 官方wp： https://github.com/TCP1P/TCP1P-CTF-2023-Challenges/tree/main/Misc/Landbox ，用字符串拼接的形式构造出execute，然后直接`os['execute']('/bin/sh')`,只用nc一次
 203. [Another Discord](https://github.com/4n86rakam1/writeup/tree/main/TCP1PCTF_2023/Misc/Another_Discord)
 - 调用discord api获取channels list和guilds details
 204. [Nuclei](https://dev.to/edqe14/tcp1p-ctf-nuclei-18ad)
