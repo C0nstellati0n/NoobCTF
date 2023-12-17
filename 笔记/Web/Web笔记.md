@@ -2504,7 +2504,7 @@ gambling_contract = web3.eth.contract(address='', abi=gambling_abi)
     - 使用php版本的[poc](https://github.com/positive-security/dompdf-rce)：https://github.com/spencerja/NahamConCTF_2023_Writeup/blob/main/Web/Stickers.md
     - 详细步骤： https://meashiri.github.io/ctf-writeups/posts/202306-nahamcon/#stickers ， https://v3he.io/posts/nahamcon-ctf-2023-stickers/
     - 视频讲解： https://www.youtube.com/watch?v=fUiHQS85vlQ&list=PLldZ8EeOcu7fbu4tdAzVxVxJBr0RLnloa&index=5
-246. [Marmalade 5](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Web/Marmalade_5.md)
+246. [Marmalade 5](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon-2023/Web/Marmalade_5.md)
 - jwt MD5_HMAC爆破
     - python字典无第三方库爆破。解析： https://github.com/Crypto-Cat/CTF/blob/main/ctf_events/nahamcon_23/web/marmalade_5.md
     - john 字典爆破jwt。 https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/web/marmalade5

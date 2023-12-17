@@ -298,3 +298,11 @@ Diffie–Hellman Protocol: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_
 Public-Key Encryption: https://en.wikipedia.org/wiki/Public-key_cryptography
 
 Public-Key Encryption下的semantic security：和之前差不多，adversary给chal $m_0,m_1$ ，只不过这回chal会生成一对密钥，包含公钥和私钥。返回用公钥加密任意一条信息后的密文。adversay需猜测被返回的密文是那个明文的加密，若advantage negligible就叫semantic security
+
+## PKCS 1
+
+假设RSA使用的 $N=2^n$ ，并且有一个oracle返回解密后密文的msb是否为1，可以按照以下步骤恢复明文 $x=c^d$ :
+- 向oracle发送c即可获取到msb(x)
+- 向oracle发送 $2^e\times c=(2x)^e$ 即可获取到 $msb(2x\mod N)=msb_2(x)$ 。关键在于乘以二等同于右移
+
+以此类推即可一个bit一个bit恢复整个x。算是[Bleichenbacher attack](https://medium.com/@c0D3M/bleichenbacher-attack-explained-bc630f88ff25)的简化版本（另一个不错的链接： https://crypto.stackexchange.com/questions/12688/can-you-explain-bleichenbachers-cca-attack-on-pkcs1-v1-5 ）
