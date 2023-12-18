@@ -306,3 +306,7 @@ Public-Key Encryption下的semantic security：和之前差不多，adversary给
 - 向oracle发送 $2^e\times c=(2x)^e$ 即可获取到 $msb(2x\mod N)=msb_2(x)$ 。关键在于乘以二等同于右移
 
 以此类推即可一个bit一个bit恢复整个x。算是[Bleichenbacher attack](https://medium.com/@c0D3M/bleichenbacher-attack-explained-bc630f88ff25)的简化版本（另一个不错的链接： https://crypto.stackexchange.com/questions/12688/can-you-explain-bleichenbachers-cca-attack-on-pkcs1-v1-5 ）
+
+## RSA in Practice
+
+这里介绍一个fault attack。在解密rsa时，常见的加速做法是，计算 $x_p=c^d\mod Z_p$ 和 $x_q=c^d\mod Z_q$ 。利用CRT将两者结合在一起即可获得 $x=c^d\mod Z_n$ 。假设在计算 $x_q$ 时出错了（记做 $x'_q$ ），而计算 $x_p$ 时则没有。那么CRT的结果x'满足 $x'=c^d\mod Z_p$ 但 $x'\not ={c^d}\mod Z_q$ 。于是 $(x')^e=c\mod Z_p$ ，但 $(x')^e\not ={c}\mod Z_q$ 。既然这个数模p等于0但模q不为0， $gcd((x')^e-c,N)=p$
