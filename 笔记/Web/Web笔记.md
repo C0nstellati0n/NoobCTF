@@ -3165,3 +3165,7 @@ $user = $this->model->where($data)->first();
     ''
     ```
     - deno环境读取文件的捷径：`return Deno.readTextFileSync('flag.txt')`，稍微复杂一点是`return (new TextDecoder("utf-8")).decode(Deno.readFileSync("flag.txt"))`
+- 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#calculator
+354. [fetcher](https://github.com/TCP1P/TCP1P-CTF-2023-Challenges/tree/main/Web/fetcher)
+- vm2沙盒逃逸。参考 https://github.com/snowflakedb/snowflake-connector-nodejs/issues/571 ， poc： https://gist.github.com/leesh3288/f693061e6523c97274ad5298eb2c74e9
+- 注意proxy-agent内部使用了vm2。如果可以控制proxyUrl参数，就能用`pac+data`协议注入payload并实现vm2沙盒逃逸，执行任意代码

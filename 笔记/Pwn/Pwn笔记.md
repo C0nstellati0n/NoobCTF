@@ -568,6 +568,7 @@ print(base64.b64encode(temp.encode()))
   - 其他wp： https://github.com/SuperStormer/writeups/tree/master/tcp1pctf_2023/misc/pymagic
 - [vampire](https://github.com/SuperStormer/writeups/tree/master/tcp1pctf_2023/misc/vampire)
   - 过滤数字和一些特殊字符。eval环境下有re模块，所以利用re实现rce
+  - 官方wp： https://github.com/TCP1P/TCP1P-CTF-2023-Challenges/tree/main/Misc/vampire
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

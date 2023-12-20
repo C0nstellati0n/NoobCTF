@@ -1525,6 +1525,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - Mozilla Firefox web browser存储文件夹`.mozilla` forensic.可用工具：
 - [Firefed](https://github.com/numirias/firefed)/[dumpzilla](https://github.com/Busindre/dumpzilla):通用工具
 - [Firefox Decrypt](https://github.com/unode/firefox_decrypt):extract passwords from profiles of Mozilla
+- 顺便记一下，chrome的web browser forensic工具： https://github.com/obsidianforensics/hindsight 。参考 https://forums.opera.com/topic/52472/where-are-stored-passwords-and-form-autofill-data/2 ，Saved passwords are stored in Login Data file. And auto fill data is in Web Data file
 156. [temu](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/temu),[wp](https://github.com/daeMOn63/ctf-writeups/tree/main/imaginary23/temu)
 - 利用[ReDoS](https://www.regular-expressions.info/redos.html)延长条件竞争的窗口期从而提高利用成功率。redos指的是程序使用了某些时间复杂度为指数级的正则表达式，导致程序运行/占用时间过长。可用[redos-checker](https://devina.io/redos-checker)检查
 157. [Forensics](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Forensics)
@@ -1657,5 +1658,6 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 官方wp： https://github.com/TCP1P/TCP1P-CTF-2023-Challenges/tree/main/Misc/Landbox ，用字符串拼接的形式构造出execute，然后直接`os['execute']('/bin/sh')`,只用nc一次
 203. [Another Discord](https://github.com/4n86rakam1/writeup/tree/main/TCP1PCTF_2023/Misc/Another_Discord)
 - 调用discord api获取channels list和guilds details
+- hidden channels可以用这个插件查看： https://github.com/JustOptimize/return-ShowHiddenChannels
 204. [Nuclei](https://dev.to/edqe14/tcp1p-ctf-nuclei-18ad)
 - 分析[nuclei](https://docs.nuclei.sh/)的自定义templates yaml
