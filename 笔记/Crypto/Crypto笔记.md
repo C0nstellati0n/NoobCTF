@@ -515,6 +515,8 @@ for i in range(1,e):
 - [Boneh-Durfee Attack](https://cryptohack.gitbook.io/cryptobook/untitled/low-private-component-attacks/boneh-durfee-attack):当d < $N^{0.292}$ 时，可利用该攻击方法恢复d
 - [Sus](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Sus):分解n=p\*q\*r,其中 $q=p^2+p+1$
 - [Wasteful](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Wasteful):给出`sz=2048;e_fast = getPrime(sz // 2);e_slow = e_fast + getPrime(sz // 3) * phi`,和2048位的公钥n，利用coppersmith获取p
+- [S_H](https://sovietbeast-writeups.gitbook.io/writeups/ctfs/fetch-the-flag-2023/cryptography/s_h)
+    - 尝试恢复部分被遮挡的SSH RSA private key。主要是要了解rsa private key的格式，确认没被遮挡的部分属于密钥的哪一部分。比如这题没被遮挡的部分为部分dq，完整dp和完整q。所以这题其实是“利用dp和e恢复p”
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。

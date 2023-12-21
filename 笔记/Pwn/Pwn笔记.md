@@ -1520,6 +1520,7 @@ r.send(payload) #new_rbp-0x40-0x30
 ```
 139. [💀](https://chovid99.github.io/posts/tcp1p-ctf-2023/#heading)
 - linux kernel pwn爆破kernel base+利用modprobe_path提权。利用任意地址读扫描`0xffffffff81000000`到`0xffffffffc0000000`，每次增加0x100000。当读取的内容里包含`/sbin/m`(即modprobe_path的开头)时，说明当前所在地址就是kernel base
+- 另外，IDT的地址不会被KASLR影响，所以在获取AAR的情况下直接读这块地址即可获取kbase。参考 https://github.com/TCP1P/TCP1P-CTF-2023-Challenges/tree/main/PWN/skull
 140. [tickery](https://chovid99.github.io/posts/tcp1p-ctf-2023/#tickery)
 - glibc 2.37 safe linking+tcache poisoning+environ泄露栈地址+gets读取任意大小ropchain
 - 可通过修改tcache metadata中的count字段修改tcache中各个大小堆块的数量。利用这点可以欺骗tcache让其以为某个bin满了，进而将堆块放入unsorted bin从而泄露地址。metadata位于堆内存的起始处，各个count字段的对应关系如下：
