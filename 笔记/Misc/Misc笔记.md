@@ -1661,3 +1661,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - hidden channels可以用这个插件查看： https://github.com/JustOptimize/return-ShowHiddenChannels
 204. [Nuclei](https://dev.to/edqe14/tcp1p-ctf-nuclei-18ad)
 - 分析[nuclei](https://docs.nuclei.sh/)的自定义templates yaml
+205. [gitleaks](https://github.com/gitleaks/gitleaks): 用于搜索github仓库内泄露的密钥
+206. [Finders Keepers](https://github.com/opabravo/security-writeups/blob/main/ctf/2023-10-27%20Fetch%20The%20Flag%202023.md#finders-keepers)
+- 当find具有SGID时可以进行权限提升，获取文件名以及文件内容
+- https://linuxhandbook.com/find-command-examples/

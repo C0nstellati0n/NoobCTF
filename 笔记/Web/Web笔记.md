@@ -3175,3 +3175,20 @@ $user = $this->model->where($data)->first();
 355. [GetHub](https://gist.github.com/mlashley/3f2fbadd307a43a40a8e69e0e83052e7#gethub---web-easy)
 - [gitPython RCE](https://security.snyk.io/vuln/SNYK-PYTHON-GITPYTHON-3113858)
 - 其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#gethub
+356. [Nine-One-Sixteen](https://gist.github.com/mlashley/3f2fbadd307a43a40a8e69e0e83052e7#nine-one-sixteen-warmup)
+- RFC9116中指定了security.txt，里面可能藏有flag
+357. [Protecting Camp](https://gist.github.com/mlashley/3f2fbadd307a43a40a8e69e0e83052e7#protecting-camp)
+- [nodejs parse-url SSRF](https://security.snyk.io/vuln/SNYK-JS-PARSEURL-2936249)
+358. [Sparky](https://gist.github.com/mlashley/3f2fbadd307a43a40a8e69e0e83052e7#sparky---web-easy)
+- apache spark command injection: https://github.com/HuskyHacks/cve-2022-33891
+359. [YSON](https://gist.github.com/mlashley/3f2fbadd307a43a40a8e69e0e83052e7#yson)
+- PyYamal反序列化RCE。可供使用的payload： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#yson
+360. [Zdir](https://github.com/opabravo/security-writeups/blob/main/ctf/2023-10-27%20Fetch%20The%20Flag%202023.md#zdir)
+- [zdir 3.2.0 file upload to RCE](https://github.com/helloxz/zdir/issues/90)
+361. [Ominous](https://github.com/opabravo/security-writeups/blob/main/ctf/2023-10-27%20Fetch%20The%20Flag%202023.md#ominous)
+- [OMI RCE](https://book.hacktricks.xyz/network-services-pentesting/5985-5986-pentesting-omi)
+362. [Common Nginx misconfigurations](https://blog.detectify.com/industry-insights/common-nginx-misconfigurations-that-leave-your-web-server-ope-to-attack/)
+363. [CRLF](https://i.geri.dev/6dce57c6d31ef535ae42da6b88c973.pdf)
+- 可通过注入使dos2unix将某个文件从不可访问的地方拷贝至可访问的地方： https://gtfobins.github.io/gtfobins/dos2unix/
+- 当flask的run里的debug选项为True时，若文件内引用的外部库或是文件本身发生变化，都会自动重启。利用这点可以对dependency进行投毒
+- sudo下的dosbox利用： https://gtfobins.github.io/gtfobins/dosbox/
