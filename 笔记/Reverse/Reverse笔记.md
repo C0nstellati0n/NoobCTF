@@ -1056,3 +1056,6 @@ finish()
 128. [Internals](https://hackmd.io/@lawbyte/HJ3_3lT-a#Internals-499-pts)
 - [APKKiller](https://github.com/aimardcr/APKKiller):可以利用java的反射修改内部类以及字段。例如可以用[ActivityThread ](https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/app/ActivityThread.java)修改packageName字段
 - 如何提取apk文件中的dex文件
+121. [ElectroNES](https://github.com/D13David/ctf-writeups/tree/main/udctf23/rev/electro_nes)
+- 使用[FCEUX](https://fceux.com/web/home.html)分析NES文件内存
+- [NES memory mapping](https://github.com/solidajenjo/NES-Emulator/blob/master/DragoNES/DragoNES/docs/nesmemorymapping.txt)

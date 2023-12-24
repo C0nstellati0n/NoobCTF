@@ -1665,3 +1665,4 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 206. [Finders Keepers](https://github.com/opabravo/security-writeups/blob/main/ctf/2023-10-27%20Fetch%20The%20Flag%202023.md#finders-keepers)
 - 当find具有SGID时可以进行权限提升，获取文件名以及文件内容
 - https://linuxhandbook.com/find-command-examples/
+207. [UTF-21](https://evanhahn.com/utf-21/)

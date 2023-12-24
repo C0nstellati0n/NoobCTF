@@ -3192,3 +3192,5 @@ $user = $this->model->where($data)->first();
 - 可通过注入使dos2unix将某个文件从不可访问的地方拷贝至可访问的地方： https://gtfobins.github.io/gtfobins/dos2unix/
 - 当flask的run里的debug选项为True时，若文件内引用的外部库或是文件本身发生变化，都会自动重启。利用这点可以对dependency进行投毒
 - sudo下的dosbox利用： https://gtfobins.github.io/gtfobins/dosbox/
+364. [Silent Cartographer](https://snyk.io/blog/snyk-fetch-the-flag-ctf-2023-writeup-silent-cartographer/)
+- Covenant C2 framework 0.5以前的版本默认使用同样的JWT secret key，可以参考[exp](https://www.exploit-db.com/exploits/51141)实现RCE。注意这个exp随机选择8000以上的端口进行绑定，如果题目环境不允许也可以修改源码使其强制绑定到某个端口
