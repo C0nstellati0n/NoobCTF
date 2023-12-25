@@ -3194,3 +3194,9 @@ $user = $this->model->where($data)->first();
 - sudo下的dosbox利用： https://gtfobins.github.io/gtfobins/dosbox/
 364. [Silent Cartographer](https://snyk.io/blog/snyk-fetch-the-flag-ctf-2023-writeup-silent-cartographer/)
 - Covenant C2 framework 0.5以前的版本默认使用同样的JWT secret key，可以参考[exp](https://www.exploit-db.com/exploits/51141)实现RCE。注意这个exp随机选择8000以上的端口进行绑定，如果题目环境不允许也可以修改源码使其强制绑定到某个端口
+365. [GeoGuessy](https://www.xanhacks.xyz/p/lakectf2023-geoguessy/)
+- `<%=`和`<%-`的区别： https://stackoverflow.com/questions/11024840/ejs-versus 。前者转义html，后者不转
+- domPurify不会过滤`<a>`标签
+- js的geolocation api获取用户坐标时，会提示用户尝试获取权限。由`puppeteer`操控的机器人则需要看其Chrome profile设置的`geolocation`权限是什么
+- 可以在iframe标签里`allow="geolocation *"`，即可在任意orgin获取定位
+- 其他wp： https://siunam321.github.io/ctf/LakeCTF-Quals-23/web/GeoGuessy/

@@ -1557,3 +1557,15 @@ tcachebins
 0x150 [ 17]: 0x0
 ```
 - 当seccomp只允许open，read，write时，仍然可以调用gets
+141. 利用ANSI字符在终端实现RCE： https://www.youtube.com/watch?v=3T2Al3jdY38 。通常见到的ANSI字符可以改变终端的字体颜色，一些恶意的ANSI字符甚至可以直接RCE。攻击者可以用恶意ANSI字符访问网站，这串ANSI字符会记到日志文件中。当运维人员cat日志文件时即触发RCE
+142. [tps_report](https://github.com/datajerk/ctf-write-ups/tree/master/redteamvillage2021/tps_report)
+- arm32 bss段格式化字符串漏洞覆盖got表getshell
+143. 利用scanf获取unsorted_bin chunk并泄露libc地址。参考 https://www.willsroot.io/2020/10/cuctf-2020-dr-xorisaurus-heap-writeup.html ，大致步骤如下：
+- 分配足够的fastbin大小堆块（足够指的是合并后可得到比后续scanf所malloc的chunk大的large bin）并几乎全部free，只留下一个用于防止与top chunk合并
+- 调用scanf，令scanf读取0x500个字节以上的数据。scanf内部会malloc一个0x500大小的chunk。由于这是个large bin，malloc时会触发malloc_consolidate，之前free的fastbin会整体合并并被放入unsorted_bin。malloc_consolidate之后继续scanf的malloc，又把合并后的chunk从unsorted bin中取出放进large bin。最后因为这个合并的chunk比scanf所要求的要大，于是割下0x500给scanf，剩下的放进unsorted bin
+- 最后再malloc一个chunk，这个chunk的头部有unsorted bin带上的libc地址
+144. [Not Malloc](https://github.com/nobodyisnobody/write-ups/tree/main/LakeCTF.Quals.2023/pwn/not.malloc)
+- 利用TLS-Storage dtor_list实现程序控制流劫持。效果为控制rip及rdi： https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc#5---code-execution-via-tls-storage-dtor_list-overwrite 。不过dtor_list是单向链表，可以将不同的函数串起来，每次都能用不同的参数。tls-storage一般在`ld-linux-x86-64.so.2`之前，有时候会在`libc.so.6`之前，因此只需一次对libc或ld.so的leak即可获取确切地址。要是执行的rop较长也可以根据wp的做法实现栈迁移
+145. [capture the flaaaaaaaaaaaaag](https://jiravvit.github.io/231106-lakectf2023-PWN/)
+- fread内部调用了malloc，用于存储读取的文件内容。当调用fclose时，这块内存被free，不过不会被清空
+- 当getline函数读取一个字符时，实际存储进内存的是3个字符：输入的字符，换行符加上`\x00`
