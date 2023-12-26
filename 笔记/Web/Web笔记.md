@@ -3200,3 +3200,6 @@ $user = $this->model->where($data)->first();
 - js的geolocation api获取用户坐标时，会提示用户尝试获取权限。由`puppeteer`操控的机器人则需要看其Chrome profile设置的`geolocation`权限是什么
 - 可以在iframe标签里`allow="geolocation *"`，即可在任意orgin获取定位
 - 其他wp： https://siunam321.github.io/ctf/LakeCTF-Quals-23/web/GeoGuessy/
+366. [OpenBio 2](https://zimzi.substack.com/p/cakectf-openbio-2)
+- python bleach库也是净化html的一个库，过滤`<script>`和`<img>`不过类似`<strong>`之类无害的tag。里面有个linkify函数可以自动生成链接，`a.co&`可以使其生成十倍长的字符串
+- 对已净化后的字符串截断并拼接上其他字符串是较为危险的做法

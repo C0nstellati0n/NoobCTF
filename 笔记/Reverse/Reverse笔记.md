@@ -971,6 +971,7 @@ main()
 - 当strings一个exe文件，发现里面有.NET字样时，说明这是个c#逆向题，可以用dnSpy反编译
 - dnSpy可以编辑代码然后继续编译，可以利用这点绕过反动调。有时候编辑后会报错，但是仍然可以正常应用修改
 114. z3使用案例
+- 有人说，cvc solver有时要比z3更快，还能解出一些z3解不出的题： https://www.youtube.com/watch?app=desktop&v=CNQwSXKBGgw
 - [Guardians of the Kernel](https://github.com/moabid42/CTF-Writeups/tree/master/SekaiCTF/Guardians%20of%20the%20kernel)
   - 如果在ghidra中看见类似`CONCAT17(buffer[7],CONCAT16(buffer[6],CONCAT15(buffer[5],CONCAT14(buffer[4],buffer._0_4_)`的CONCAT语句，z3里有现成的Concat函数(注意bit length，可以参考ghidra CONCAT函数的命名： https://stackoverflow.com/questions/69430800/what-does-concat15-and-concat412-mean-in-ghidra)
   - BitVecVal与BitVec的区别： https://stackoverflow.com/questions/49247323/what-is-the-difference-between-bitvec-and-bitvecval-in-z3 ,前者是常数，后者是要求解的symbol
