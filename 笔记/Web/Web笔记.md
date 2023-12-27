@@ -3203,3 +3203,12 @@ $user = $this->model->where($data)->first();
 366. [OpenBio 2](https://zimzi.substack.com/p/cakectf-openbio-2)
 - python bleach库也是净化html的一个库，过滤`<script>`和`<img>`不过类似`<strong>`之类无害的tag。里面有个linkify函数可以自动生成链接，`a.co&`可以使其生成十倍长的字符串
 - 对已净化后的字符串截断并拼接上其他字符串是较为危险的做法
+367. [AdBlog](https://www.youtube.com/watch?v=vXTltxDRNbM)
+- DOM Clobbering。js可以根据某个标签的id来获取那个标签,[setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)可以根据标签来执行内部的代码。如：
+```html
+<a id=showOverlay href="cid:function a() {console.log(`a`)}a()"></a>
+<script>
+    setTimeout(showOverlay, 1000);
+</script>
+```
+控制台会输出a。也可以参考官方wp的做法，用eval： https://github.com/theoremoon/cakectf2023-public/tree/master/web/adblog

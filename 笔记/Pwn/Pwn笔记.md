@@ -1569,3 +1569,8 @@ tcachebins
 145. [capture the flaaaaaaaaaaaaag](https://jiravvit.github.io/231106-lakectf2023-PWN/)
 - fread内部调用了malloc，用于存储读取的文件内容。当调用fclose时，这块内存被free，不过不会被清空
 - 当getline函数读取一个字符时，实际存储进内存的是3个字符：输入的字符，换行符加上`\x00`
+146. [unicomp](https://github.com/nobodyisnobody/write-ups/tree/main/CakeCTF.2023/sandbox/unicomp)
+- 可以利用在shellcode中间夹垃圾字节的方式绕过unicorn的逐地址指令检查
+- 其他做法：
+  - https://blog.akiym.com/entry/2023/11/12/200742 ：程序只检查不能出现`\x0f\x05`，但可以用`cs syscall`代替。另外，syscall本身是通过python调用的，所以内存映射本身是不同的，将`/bin/sh`放入堆栈并执行的常见shell代码将无法工作
+  - https://github.com/theoremoon/cakectf2023-public/tree/master/misc/unicomp ：使用`fs syscall`

@@ -1667,3 +1667,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 当find具有SGID时可以进行权限提升，获取文件名以及文件内容
 - https://linuxhandbook.com/find-command-examples/
 207. [UTF-21](https://evanhahn.com/utf-21/)
+208. [cranelift](https://github.com/theoremoon/cakectf2023-public/tree/master/misc/cranelift)
+- toy语言RCE代码
