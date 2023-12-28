@@ -1574,3 +1574,9 @@ tcachebins
 - 其他做法：
   - https://blog.akiym.com/entry/2023/11/12/200742 ：程序只检查不能出现`\x0f\x05`，但可以用`cs syscall`代替。另外，syscall本身是通过python调用的，所以内存映射本身是不同的，将`/bin/sh`放入堆栈并执行的常见shell代码将无法工作
   - https://github.com/theoremoon/cakectf2023-public/tree/master/misc/unicomp ：使用`fs syscall`
+147. [Seahorse Hide 'n' Seek](https://ctftime.org/writeup/38218)
+- 6502汇编阅读+虚拟机。此题在虚拟机环境下出现了缓冲区溢出，可覆盖代码段为shellcode
+- [Commodore 64 standard KERNAL functions](https://sta.c64.org/cbm64krnfunc.html):提供了FILE io SETLFS, SETNAM, LOAD，可用这些指令编写ORW shellcode
+- 更多6502汇编pwn相关题目：
+  - https://ctftime.org/writeup/38219 ：格式化字符串漏洞+ghidra里CONCAT的作用
+  - https://ctftime.org/writeup/38220 ：ret2win

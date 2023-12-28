@@ -1060,3 +1060,8 @@ finish()
 121. [ElectroNES](https://github.com/D13David/ctf-writeups/tree/main/udctf23/rev/electro_nes)
 - 使用[FCEUX](https://fceux.com/web/home.html)分析NES文件内存
 - [NES memory mapping](https://github.com/solidajenjo/NES-Emulator/blob/master/DragoNES/DragoNES/docs/nesmemorymapping.txt)
+122. [Dark Secrets](https://learn-cyber.net/writeup/Dark-Secrets)
+- RPG Maker游戏逆向。由RPG Maker所制作的游戏的进程名为`RGSS2 Player`
+- `.rgss2a`后缀文件存储着RPG Maker游戏的资源。可以用 https://github.com/uuksu/RPGMakerDecrypter 提取出被加密的资源。新建一个RPG Maker VX项目，将空项目的文件用提取出来的文件替换，即可用引擎将该游戏打开。打开后可以看见对话内容，修改敌人数据等
+123. [Virtual RAM](https://ctftime.org/writeup/38229)
+- Game Boy ROM image emulator:[BGB](https://bgb.bircd.org/)。这个模拟器可以查看vram

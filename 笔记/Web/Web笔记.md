@@ -3212,3 +3212,24 @@ $user = $this->model->where($data)->first();
 </script>
 ```
 控制台会输出a。也可以参考官方wp的做法，用eval： https://github.com/theoremoon/cakectf2023-public/tree/master/web/adblog
+
+368. [My Music](https://ctftime.org/writeup/38300)
+- burpsuite设置可以勾选`only show in-scope items`以及`filter by MIME type`下的其他文件类型。前者帮助过滤非目标之外的请求，后者让bp拦截更多类型的请求
+- [Server Side XSS (Dynamic PDF)](https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting/server-side-xss-dynamic-pdf)：应用不过滤用户输入就将其制成pdf，则攻击者可以注入js代码实现文件读取
+- 当可以控制page.pdf的[options](https://pptr.dev/api/puppeteer.pdfoptions)时，可以注入path选项将pdf输出到任意用户指定的路径
+- express middleware。下面这段逻辑是有问题的：
+```js
+try {
+    userData = JSON.parse(userData);
+    if (userData.isAdmin !== true) {
+        res.status(403);
+        res.send("Only admins can view this page");
+        return;
+    }
+} catch (e) {
+    console.log(e);
+}
+next();
+```
+当JSON.parse报错时，会进入catch分支，然后直接next，从而绕过if的检查admin权限逻辑
+- 视频wp： https://www.youtube.com/watch?v=JetPydd3ud4
