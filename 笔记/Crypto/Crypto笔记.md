@@ -517,6 +517,10 @@ for i in range(1,e):
 - [Wasteful](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Wasteful):给出`sz=2048;e_fast = getPrime(sz // 2);e_slow = e_fast + getPrime(sz // 3) * phi`,和2048位的公钥n，利用coppersmith获取p
 - [S_H](https://sovietbeast-writeups.gitbook.io/writeups/ctfs/fetch-the-flag-2023/cryptography/s_h)
     - 尝试恢复部分被遮挡的SSH RSA private key。主要是要了解rsa private key的格式，确认没被遮挡的部分属于密钥的哪一部分。比如这题没被遮挡的部分为部分dq，完整dp和完整q。所以这题其实是“利用dp和e恢复p”
+- [Missing Bits](https://meashiri.github.io/ctf-writeups/posts/202311-glacierctf/#missing-bits)
+    - ASN.1 DER格式私钥分析
+- [ARISAI](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/intro/ARISAI)
+    - 多素数rsa+利用crt加快解密过程
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。

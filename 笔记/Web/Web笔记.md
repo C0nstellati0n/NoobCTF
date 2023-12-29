@@ -3233,3 +3233,18 @@ next();
 ```
 当JSON.parse报错时，会进入catch分支，然后直接next，从而绕过if的检查admin权限逻辑
 - 视频wp： https://www.youtube.com/watch?v=JetPydd3ud4
+369. [GlacierCoin](https://themj0ln1r.github.io/posts/glacierctf23)
+- solidity blockchain Reentrancy attack
+- `(msg.sender).call`会调用msg.sender的fallback()函数。用receive()也行： https://github.com/Brivan-26/GlacierCTF2k23-SmartContracts-writeups
+- forge script使用
+370. [GlacierVault](https://themj0ln1r.github.io/posts/glacierctf23)
+- solidity blockchain [delegatecall使用](https://medium.com/@ajaotosinserah/mastering-delegatecall-in-solidity-a-comprehensive-guide-with-evm-walkthrough-6ddf027175c7)。简单来说，假设合约A使用delegatecall调用合约B的某个方法C，则执行方法C时内部所使用的storage是合约A而不是B的。也就是，本来方法C内部修改的是合约B的某些字段，假设在D处；但使用delegatecall后，实际修改的storage是合约A在D处的内存
+- 其他wp： https://github.com/Brivan-26/GlacierCTF2k23-SmartContracts-writeups?tab=readme-ov-file#02---glaciervault
+371. [ChairLift](https://themj0ln1r.github.io/posts/glacierctf23)
+- solidity blockchain erecover的特殊情况。erecover的函数签名如下：`ecrecover(digest, v, r, s)`，用于恢复签名者的地址。当v，r和s都是0时，会恢复出address(0)（这种情况表示签名invalid，代码中应该有检查签名是否valid然后revert的逻辑）
+- 其他wp： https://github.com/Brivan-26/GlacierCTF2k23-SmartContracts-writeups?tab=readme-ov-file#03---chairlift
+372. [Glacier Exchange](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/web/Glacier_Exchange)
+- python的浮点数有一些特殊值：inf，nan等，都大于任何实际上的数字。而且python里的浮点数也是有溢出的
+373. [Peak](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/web/Peak)
+- 将xss代码藏入jpg图片从而绕过CSP。工具： https://github.com/4n86rakam1/xss_injection_in_jpeg
+- xxe读本地文件

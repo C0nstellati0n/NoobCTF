@@ -572,6 +572,9 @@ print(base64.b64encode(temp.encode()))
 - [Python Jail](https://crusom.dev/posts/blue_hens_ctf_2023#challenge-python-jail)
   - 利用波浪线和减号获取任意数字： https://esolangs.org/wiki/Symbolic_Python
   - python内部有个`__doc__`属性，可以由此获取任意字符
+- [Avatar](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/misc/Avatar)
+  - 利用f string(`f'{}'`)构造字符并实现双eval RCE。`f"{97:c}"`输出为a
+  - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#avatar
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

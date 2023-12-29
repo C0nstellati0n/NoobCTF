@@ -1673,3 +1673,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 209. [Smiley Maze](https://learn-cyber.net/writeup/Smiley-Maze)
 - python [mazelib](https://github.com/john-science/mazelib)使用
 - https://ctftime.org/writeup/38225 ：python汇编字节码逆向
+210. [IcyRiffs](https://meashiri.github.io/ctf-writeups/posts/202311-glacierctf/#icyriffs)
+- clone hero游戏文件分析(`.chart`后缀)
