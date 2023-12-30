@@ -1347,6 +1347,11 @@ ret
 - [message](https://chovid99.github.io/posts/tcp1p-ctf-2023/#message)
   - 利用pwntools shellcraft生成open+getdents64+write shellcode获取当前目录下全部文件的文件名
   - 更详细的解析： https://www.mspi.eu/blog/security/ctf/2023/10/15/tcp1p-ctf-writeups.html#message
+- [FunChannel](https://www.youtube.com/watch?v=RaYU3hN88DA)
+  - pwntools编写shellcode+getdents获取文件名+openat/read（无write）侧信道读内容
+  - js socket+手写汇编： https://gist.github.com/adrian154/40df5ac94ed27a5e7b0b1e040863b50c
+- [Orxw](https://github.com/nobodyisnobody/write-ups/tree/main/Balsn.CTF.2021/pwn/orxw)
+  - 一种通过侧信道读取flag的手段。同样是只有read等函数没有write等输出函数。将要泄露的字符读到`/dev/ptmx`的后面，然后加上某个偏移。若偏移对了，`/dev/ptmx`的最后就是`\x00`，打开这个设备时程序会延时；而偏移错误则会导致设备名错误，程序立即终止
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
@@ -1583,3 +1588,10 @@ tcachebins
 - 更多6502汇编pwn相关题目：
   - https://ctftime.org/writeup/38219 ：格式化字符串漏洞+ghidra里CONCAT的作用
   - https://ctftime.org/writeup/38220 ：ret2win
+148. [lazynote](https://faraz.faith/2020-10-13-FSOP-lazynote/)
+- libc 2.27 fsop stdout任意地址读/任意地址写/RCE
+- 补充，任意地址读libc 2.38还能用： https://github.com/nobodyisnobody/docs/tree/main/using.stdout.as.a.read.primitive
+149. [Write Byte Where](https://github.com/nobodyisnobody/write-ups/tree/main/GlacierCTF.2023/pwn/Write.Byte.Where)
+- 任意地址写单字节。程序用setbuf() disable了stdin, stderr, 和 stdout的buffering。禁用后，stdin的buffer从`_IO_buf_base`到`_IO_buf_end`只有一个字节，位于stdin结构体中间。如果能覆盖`_IO_buf_end`的LSB，就能延伸buffer，从而覆盖stdin后续的内容
+- getchar函数会将读入的字符存放进stdin的buffer。注意不仅仅是一个char，而是输入的所有内容，只是函数只返回一个字符
+- stdout FSOP RCE。调用puts函数即可触发FSOP

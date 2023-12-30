@@ -518,7 +518,7 @@ for i in range(1,e):
 - [S_H](https://sovietbeast-writeups.gitbook.io/writeups/ctfs/fetch-the-flag-2023/cryptography/s_h)
     - 尝试恢复部分被遮挡的SSH RSA private key。主要是要了解rsa private key的格式，确认没被遮挡的部分属于密钥的哪一部分。比如这题没被遮挡的部分为部分dq，完整dp和完整q。所以这题其实是“利用dp和e恢复p”
 - [Missing Bits](https://meashiri.github.io/ctf-writeups/posts/202311-glacierctf/#missing-bits)
-    - ASN.1 DER格式私钥分析
+    - ASN.1 DER格式私钥分析： https://www.cem.me/20141221-cert-binaries.html
 - [ARISAI](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/intro/ARISAI)
     - 多素数rsa+利用crt加快解密过程
 ## Sagemath
@@ -1591,6 +1591,7 @@ r.interactive()
 - 类似题目：
     - [LCG](https://github.com/google/google-ctf/tree/master/2023/quals/crypto-lcg).这题只用了6个。详细解析文章： http://www.reteam.org/papers/e59.pdf
     - [Thermopolium](https://meashiri.github.io/ctf-writeups/posts/202307-odysseyctf/#thermopolium),脚本来自 https://tailcall.net/posts/cracking-rngs-lcgs/ 。发现5个竟然也可以（有人说理论上4个就够了）
+    - [LCG](https://flocto.github.io/writeups/2023/deadsecctf/lcg-writeup/).无法求逆元时的特殊情况。如果想求 $x=a*b^{-1}\mod n$ 且 g=gcd(a,gcd(b,n)), can divide a,b,n by g and then take the inverse
 42. 多种密码的python攻击脚本：https://github.com/jameslyons/python_cryptanalysis 。其中一个脚本可用于攻击变种维吉尼亚密码。
 ```python
 from chall_patched import Vigenot as Vigenere

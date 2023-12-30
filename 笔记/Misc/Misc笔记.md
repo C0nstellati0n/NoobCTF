@@ -1675,3 +1675,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - https://ctftime.org/writeup/38225 ：python汇编字节码逆向
 210. [IcyRiffs](https://meashiri.github.io/ctf-writeups/posts/202311-glacierctf/#icyriffs)
 - clone hero游戏文件分析(`.chart`后缀)
+211. [Glacier Military Daemon](https://ctftime.org/writeup/38298)
+- 可以使用ulimit限制用户进程的数量
+- strtol() will stop parsing once it hits the first non-integer character. So "2foo" is considered 2
+- exec有个-a选项，可以设置命令的第0个参数
+- 可以利用`echo foo > /dev/tcp/127.0.0.1/80`开启一个到localhost 80端口的tcp连接
