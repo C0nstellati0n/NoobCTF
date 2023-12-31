@@ -1595,3 +1595,9 @@ tcachebins
 - 任意地址写单字节。程序用setbuf() disable了stdin, stderr, 和 stdout的buffering。禁用后，stdin的buffer从`_IO_buf_base`到`_IO_buf_end`只有一个字节，位于stdin结构体中间。如果能覆盖`_IO_buf_end`的LSB，就能延伸buffer，从而覆盖stdin后续的内容
 - getchar函数会将读入的字符存放进stdin的buffer。注意不仅仅是一个char，而是输入的所有内容，只是函数只返回一个字符
 - stdout FSOP RCE。调用puts函数即可触发FSOP
+- 因为`_IO_buf_base`控制读入的字符被存到何处，所以写成函数的在栈上的返回地址即可执行rop： https://github.com/LosFuzzys/GlacierCTF2023_writeups/tree/main/pwn/WriteByteWhere
+150. [35ShadesOfWasm](https://github.com/LosFuzzys/GlacierCTF2023_writeups/tree/main/pwn/35ShadesOfWasm)
+- wasmtime[漏洞](https://github.com/advisories/GHSA-ff4p-7xrq-q5r8)，允许用户实现任意oob和oow
+- 有了oow之后就能针对`_dl_call_fini`实现RCE
+151. [flipper](https://github.com/LosFuzzys/GlacierCTF2023_writeups/tree/main/pwn/flipper)
+- 此题允许kernel内任意翻转一bit。和用户空间的类似挑战差不多，可以将程序逻辑内的jnz翻转为jz，获取无数次翻转bit的机会

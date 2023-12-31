@@ -1680,3 +1680,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - strtol() will stop parsing once it hits the first non-integer character. So "2foo" is considered 2
 - exec有个-a选项，可以设置命令的第0个参数
 - 可以利用`echo foo > /dev/tcp/127.0.0.1/80`开启一个到localhost 80端口的tcp连接
+212. [Free Proxy](https://github.com/Khonsu-CTF/2023-TUCTF)
+- MITM（中间人攻击）。攻击者作为两个互相交流的服务器之间的代理，将两者沟通时使用的RSA公钥换为自己的，即可窃听所有内容
+- 一个比较常见的做法是，两个服务器互相交换公钥，然后用公钥加密某个对称密码（如AES）的密钥，之后用AES的密钥进行沟通。实现MITM攻击时需要留意这点
+213. [Silly Registry](https://meashiri.github.io/ctf-writeups/posts/202312-tuctf/#silly-registry)
+- [Abusing exposed Docker Registry APIs](https://dreamlab.net/en/blog/post/abusing-exposed-docker-registry-apis/)。当开放docker的api且没加任何过滤时，攻击者可通过GET api获取docker内部的文件。有时候单纯GET报错可以加上`Authorization`
+214. [Toes Out](https://meashiri.github.io/ctf-writeups/posts/202312-tuctf/#toes-out)
+- [JK Flip Flop](https://electronics-course.com/jk-flip-flop). 特征为有`J, CLK,Q`等参数名

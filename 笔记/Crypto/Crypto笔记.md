@@ -2357,3 +2357,5 @@ c2=encrypt(k2,c1)
 122. [Keyshare](https://github.com/eylau-ucsd/ctf-sols/tree/main/LakeCTF/KeyShare)
 - ECC invalid curve attack。题目的oracle允许用户输入任意公钥（一个点的x和y坐标），并返回私钥（一个数）乘上公钥的结果。若oracle没有检查用户输入的点是否在程序自己定义的曲线上，即可使用invalid curve attack。攻击者可通过修改服务器上曲线的参数B来生成自己的曲线A，使离散对数在曲线A上的计算更加容易。曲线A的阶可以被分解成若干个小质数，在阶为小质数上的曲线计算离散对数要容易许多。获取多个小质数曲线的离散对数结果后可用CRT恢复原本大曲线上的离散对数。注意这些小质数的乘积要大于原本的大质数，若小于则有多个解，在可接受范围内一个一个试即可。对于这题,`b = 5432486176130386246309866246117127606417222221223493595694`非常光滑，只用一个就能恢复密钥
 - 获取私钥k后，根据kP计算P只需乘上k在曲线上的逆元即可
+123. [shuffled-aes](https://github.com/LosFuzzys/GlacierCTF2023_writeups/tree/main/crypto/shuffled-aes)
+- 如果先执行10轮的SubBytes, AddRoundKey再执行10轮的ShiftRows, MixColumns, AddRoundKey，AES就不再安全了。因为后10轮的操作完全线性可逆，前10轮的操作可以通过请求多组明文密文对搭建对照表格
