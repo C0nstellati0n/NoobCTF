@@ -1067,3 +1067,7 @@ finish()
 - Game Boy ROM image emulator:[BGB](https://bgb.bircd.org/)。这个模拟器可以查看vram
 124. [Skilift](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/intro/Skilift)
 - Verilog文件逆向（后缀`.v`）
+125. [Electric Byte](https://github.com/heftymouse/writeups/blob/main/TUCTF23/rev/electric-byte.md)
+- Electron app的ASAR文件可以用npx提取源代码
+- 安装Electron环境后可以用`--inspect`加上`chrome://inspect`调试程序。注意版本要对，用strings查看binary内字符串即可
+- 详细做法： https://www.youtube.com/watch?v=tMv671uPdZY

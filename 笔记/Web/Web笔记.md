@@ -160,6 +160,10 @@ for i in range(300,1000):
         r = HTTP.post(url, json: {"firstName": "test", "lastName": "test", "description": "test", "country": r_exp})
         puts r
         ```
+- [Aspiring Calculator](https://github.com/4n86rakam1/writeup/tree/main/TUCTF_2023/Web/Aspiring_Calculator)
+    - C# ASP.NET Razor engine SSTI
+- [My First Blog](https://github.com/4n86rakam1/writeup/blob/main/TUCTF_2023/Web/My_First_Blog)
+    - 过滤部分关键词后的python flask ssti
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
 1.  [浏览器设置编码](https://blog.csdn.net/jnx1142410525/article/details/55271037)。如果浏览器的编码不对就会出现乱码。
@@ -1728,6 +1732,7 @@ cd ../
 205. [certified1](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/certified1)
 - rust ImageMagick web应用漏洞：[CVE-2022-44268](https://www.metabaseq.com/imagemagick-zero-days/).当处理png时，可能会导致服务器上的任意文件读取。[poc](https://github.com/voidz0r/CVE-2022-44268)
   - 注意这个漏洞无法读取/proc下的文件，因为/proc下的文件不是真正意义上的文件：https://superuser.com/questions/619955/how-does-proc-work 。所以需要配合题目中自带的其他漏洞：[certified2](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/web/certified2)
+- 不是rust web应用也可以用，参考 https://pegimon.medium.com/tuctf-web-png-and-jelly-sandwich-28b2f0736467 。更多漏洞： https://www.metabaseq.com/imagemagick-zero-days/ ，工具 https://github.com/Sybil-Scan/imagemagick-lfi-poc
 206. [Lambda](https://hackmd.io/@Solderet/SomeWriteupForWaniCTF2023-XogSiA#Lambda---web)
 - AWS相关考点cheatsheet：https://github.com/pop3ret/AWSome-Pentesting/blob/main/AWSome-Pentesting-Cheatsheet.md
 - 此题给出了AWS相关凭证，要求获取其lambda函数(A lambda function is a piece of code that is executed whenever is triggered by an event from an event source)内容。以下代码获取lambda函数名称：

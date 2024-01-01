@@ -1685,5 +1685,19 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 一个比较常见的做法是，两个服务器互相交换公钥，然后用公钥加密某个对称密码（如AES）的密钥，之后用AES的密钥进行沟通。实现MITM攻击时需要留意这点
 213. [Silly Registry](https://meashiri.github.io/ctf-writeups/posts/202312-tuctf/#silly-registry)
 - [Abusing exposed Docker Registry APIs](https://dreamlab.net/en/blog/post/abusing-exposed-docker-registry-apis/)。当开放docker的api且没加任何过滤时，攻击者可通过GET api获取docker内部的文件。有时候单纯GET报错可以加上`Authorization`
+- 更多wp/参考链接
+    - https://book.hacktricks.xyz/network-services-pentesting/5000-pentesting-docker-registry
+    - https://github.com/4n86rakam1/writeup/tree/main/TUCTF_2023/Misc/Silly_Registry
+    - https://github.com/54toshi/writeups/blob/main/2023_tuctf/writeup.md#silly-registry .使用工具[DockerRegistryGrabber](https://github.com/Syzik/DockerRegistryGrabber)
 214. [Toes Out](https://meashiri.github.io/ctf-writeups/posts/202312-tuctf/#toes-out)
 - [JK Flip Flop](https://electronics-course.com/jk-flip-flop). 特征为有`J, CLK,Q`等参数名
+215. [A.R.K](https://github.com/4n86rakam1/writeup/tree/main/TUCTF_2023/Misc)
+- John the Ripper爆破系列题目
+    - SSH private key
+    - KeePassXC database。爆破完成后可以在KeePass内打开，某些被删除的文件可以在History里找到
+    - macOS keychain，以及Mac OS X Keychain Forensic Tool [Chainbreaker](https://github.com/n0fate/chainbreaker)的使用
+216. [State of the Git](https://nicklong.xyz/posts/tuctf23-state-of-the-git-forensics-challenge/)
+- git forensic
+- get a list of all the blobs on git: https://stackoverflow.com/questions/1595631/how-to-get-a-list-of-all-blobs-in-a-repository-in-git
+- 如果是找api keys相关的内容，可以用[trufflehog](https://github.com/trufflesecurity/trufflehog)
+217. [Markov decision process](https://en.wikipedia.org/wiki/Markov_decision_process)以及脚本： https://github.com/li-ch/mind/blob/master/scripts/MDP.py
