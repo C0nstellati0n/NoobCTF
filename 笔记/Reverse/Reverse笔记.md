@@ -1071,3 +1071,7 @@ finish()
 - Electron app的ASAR文件可以用npx提取源代码
 - 安装Electron环境后可以用`--inspect`加上`chrome://inspect`调试程序。注意版本要对，用strings查看binary内字符串即可
 - 详细做法： https://www.youtube.com/watch?v=tMv671uPdZY
+126. ghidra逆向xtensa的插件：
+- https://github.com/Ebiroll/ghidra-xtensa
+- https://github.com/yath/ghidra-xtensa
+- 11.0版本无需插件，默认支持

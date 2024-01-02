@@ -1701,3 +1701,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - get a list of all the blobs on git: https://stackoverflow.com/questions/1595631/how-to-get-a-list-of-all-blobs-in-a-repository-in-git
 - 如果是找api keys相关的内容，可以用[trufflehog](https://github.com/trufflesecurity/trufflehog)
 217. [Markov decision process](https://en.wikipedia.org/wiki/Markov_decision_process)以及脚本： https://github.com/li-ch/mind/blob/master/scripts/MDP.py
+218. [Escape from italy](https://nightxade.github.io/ctf-writeups/writeups/2023/Hackappatoi-CTF-2023/misc/escape-from-italy.html)
+- ruby jail（eval未被过滤）。知识点：
+    - `'' << 97 << 98 << 99`在ruby里会得到`abc`
+    - eval内部可以用`\157`之类的字符
+- 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#escape-from-italy

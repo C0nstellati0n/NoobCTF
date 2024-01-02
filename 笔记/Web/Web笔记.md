@@ -3253,3 +3253,14 @@ next();
 373. [Peak](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/web/Peak)
 - 将xss代码藏入jpg图片从而绕过CSP。工具： https://github.com/4n86rakam1/xss_injection_in_jpeg
 - xxe读本地文件
+374. https://www.youtube.com/watch?v=Marqe2SEYok
+- 原型链污染+xss。主要使用的媒介是旧版本有漏洞的jQuery+google reCAPTCHA。相关payload：
+    - https://github.com/BlackFan/client-side-prototype-pollution/blob/master/gadgets/recaptcha.md
+    - https://github.com/BlackFan/client-side-prototype-pollution/blob/master/gadgets/jquery.md
+- 在原型链污染时注意一点，如果网站本身已经设置了一个值，后续污染prototype就没用了。比如：
+```js
+window.recaptcha=true;
+```
+就算污染prototype为false，这个属性还是true。因为子物体设置的属性优先级要比prototype高。如果这个window.recaptcha是undefined就能污染了
+- domain名严格来说应该以`.`结尾。在domain后自己加个`.`不会影响网站的访问。注意此时js访问document.domain时末尾也会有个点
+- 可以污染chrome自带的Sanitizer()的config来允许某些标签（config内部记录了不会被过滤的标签）

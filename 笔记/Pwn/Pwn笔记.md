@@ -1601,3 +1601,7 @@ tcachebins
 - 有了oow之后就能针对`_dl_call_fini`实现RCE
 151. [flipper](https://github.com/LosFuzzys/GlacierCTF2023_writeups/tree/main/pwn/flipper)
 - 此题允许kernel内任意翻转一bit。和用户空间的类似挑战差不多，可以将程序逻辑内的jnz翻转为jz，获取无数次翻转bit的机会
+152. [go-sing-a-rop](https://www.youtube.com/watch?v=ANEz5TdS17w)
+- 64位go语言程序buffer overflow+rop。基本一样的原理，只是go语言的某些字符串对象在rop时被覆盖从而程序崩溃，需要用gdb尽可能复原那些字符串对象（和c++一样？）
+153. [fratm-carcerat](https://www.youtube.com/watch?v=ANEz5TdS17w)
+- libc 2.26下的consolidate attack（用于off by null的情况，似乎是[house_of_einherjar](https://github.com/shellphish/how2heap/blob/master/glibc_2.27/house_of_einherjar.c)）。作用是获取任意一处地址的内存
