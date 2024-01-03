@@ -3264,3 +3264,15 @@ window.recaptcha=true;
 就算污染prototype为false，这个属性还是true。因为子物体设置的属性优先级要比prototype高。如果这个window.recaptcha是undefined就能污染了
 - domain名严格来说应该以`.`结尾。在domain后自己加个`.`不会影响网站的访问。注意此时js访问document.domain时末尾也会有个点
 - 可以污染chrome自带的Sanitizer()的config来允许某些标签（config内部记录了不会被过滤的标签）
+375. [gatecrash](https://gist.github.com/JonasProgramz/2e92d2c7d95284cab066208128167017)
+- nim Httpclient header CRLF注入： https://consensys.io/diligence/vulnerabilities/nim-httpclient-header-crlf-injection/ 。若攻击者可以控制newHttpClient的userAgent，即可注入CRLF，插入自己想要的攻击payload。注意`Content-Length`要匹配插入的payload的长度
+- sql注入insert语句，往数据库里插入任意数据
+376. [Phantomfeed](https://blog.bi0s.in/2023/12/16/Web/Phantomfeed-HTBUniversityCTF2023/)
+- 当flask的`app.run`里选择了`threaded=True`，有可能可以利用条件竞争
+- 当攻击者可以完全控制 `bot.get("http://127.0.0.1:5000" + link)` 中的link，即可将bot重定向至任意网站。比如link写`@example.com`，拼接后再访问，bot就会被导向至example.com。同是127.0.0.1但是不一样的端口也可以：如link写 `@127.0.0.1:3000/phantomfeed` bot就会访问`127.0.0.1:3000/phantomfeed`
+- flask网站的response的默认Content-Type是`text/html`。如果能影响flask网站的response，将response换为html即可实现xss
+- python reportlab模块RCE漏洞： https://github.com/c53elyas/CVE-2023-33733
+377. [Nexus Void](https://blog.bi0s.in/2023/12/15/Web/NexusVoid-HTBUniversityCTF20232023/)
+- c# .NET反序列化RCE。只要`JsonConvert.DeserializeObject`的`JsonSerializerSettings`不是`TypeNameHandling.None`，都有漏洞的风险。利用方式和php的差不多，在源码内部找要序列化成的类/gadget即可
+- c#里面`false.ToString()`是`False`，与false不同
+- 拼接sql语句导致的sql注入

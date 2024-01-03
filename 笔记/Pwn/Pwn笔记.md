@@ -1605,3 +1605,8 @@ tcachebins
 - 64位go语言程序buffer overflow+rop。基本一样的原理，只是go语言的某些字符串对象在rop时被覆盖从而程序崩溃，需要用gdb尽可能复原那些字符串对象（和c++一样？）
 153. [fratm-carcerat](https://www.youtube.com/watch?v=ANEz5TdS17w)
 - libc 2.26下的consolidate attack（用于off by null的情况，似乎是[house_of_einherjar](https://github.com/shellphish/how2heap/blob/master/glibc_2.27/house_of_einherjar.c)）。作用是获取任意一处地址的内存
+154. [Apethanto](https://github.com/niTROCket51/uni-ctf-2023-writeup/tree/main/Apethanto)
+- nmap使用+如何修改/etc/hosts
+- Metabase pre-auth RCE： https://blog.assetnote.io/2023/07/22/pre-auth-rce-metabase/ 。注意poc的构造会根据要攻击的实例的设置的不同而不同，但只要使用的Metabase版本是有漏洞的，就可以自己根据文章里的poc自己调试出别的poc。其他类似但有区别的做法：
+  - https://sailingnn.github.io/htb-ctf-Apethanto/
+- 当运行id命令时发现当前用户处于sudo组，说明当前用户可以root身份运行命令，只是不知道密码。若满足 https://book.hacktricks.xyz/linux-hardening/privilege-escalation#reusing-sudo-tokens 提到的条件（可用[pspy](https://github.com/DominicBreuker/pspy)监控linux进程），即可使用[sudo_inject](https://github.com/nongiach/sudo_inject)用root身份执行命令
