@@ -2359,3 +2359,4 @@ c2=encrypt(k2,c1)
 - 获取私钥k后，根据kP计算P只需乘上k在曲线上的逆元即可
 123. [shuffled-aes](https://github.com/LosFuzzys/GlacierCTF2023_writeups/tree/main/crypto/shuffled-aes)
 - 如果先执行10轮的SubBytes, AddRoundKey再执行10轮的ShiftRows, MixColumns, AddRoundKey，AES就不再安全了。因为后10轮的操作完全线性可逆，前10轮的操作可以通过请求多组明文密文对搭建对照表格
+124. 当使用AES-CTR时，不要用同样的key-nonce pair加密多个明文。见 https://cedricvanrompay.gitlab.io/cryptopals/challenges/19-and-20.html 。因为CTR模式是用明文异或nonce的AES密文得到结果，如果多个明文用同一个nonce，结果就等于many time pad了。此时任意两个密文相异或等同于对应的两个明文异或；如果能猜测到其中一个明文，便能解码另一个明文

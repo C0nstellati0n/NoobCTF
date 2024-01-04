@@ -1075,3 +1075,6 @@ finish()
 - https://github.com/Ebiroll/ghidra-xtensa
 - https://github.com/yath/ghidra-xtensa
 - 11.0版本无需插件，默认支持
+127. [ZombieNet](https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/zombienet)
+- firmware(固件)分析。直接用 `binwalk -e` 可以得到不少有价值的内容
+- [CURLOPT codes](https://gist.github.com/jseidl/3218673)

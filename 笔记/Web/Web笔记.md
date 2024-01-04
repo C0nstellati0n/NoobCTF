@@ -3272,7 +3272,11 @@ window.recaptcha=true;
 - 当攻击者可以完全控制 `bot.get("http://127.0.0.1:5000" + link)` 中的link，即可将bot重定向至任意网站。比如link写`@example.com`，拼接后再访问，bot就会被导向至example.com。同是127.0.0.1但是不一样的端口也可以：如link写 `@127.0.0.1:3000/phantomfeed` bot就会访问`127.0.0.1:3000/phantomfeed`
 - flask网站的response的默认Content-Type是`text/html`。如果能影响flask网站的response，将response换为html即可实现xss
 - python reportlab模块RCE漏洞： https://github.com/c53elyas/CVE-2023-33733
+- 其他wp：
+    - https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/phantom-feed ：使用[ffuf](https://github.com/ffuf/ffuf)实现条件竞争。另外注意python有GIL，在匹配正则时不会执行任何代码，于是不能利用正则延长竞争窗口
 377. [Nexus Void](https://blog.bi0s.in/2023/12/15/Web/NexusVoid-HTBUniversityCTF20232023/)
 - c# .NET反序列化RCE。只要`JsonConvert.DeserializeObject`的`JsonSerializerSettings`不是`TypeNameHandling.None`，都有漏洞的风险。利用方式和php的差不多，在源码内部找要序列化成的类/gadget即可
 - c#里面`false.ToString()`是`False`，与false不同
 - 拼接sql语句导致的sql注入
+- 其他wp：
+    - https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/nexus-void ：`_configuration`可以在`appsettings.json`里找对应内容
