@@ -521,6 +521,8 @@ for i in range(1,e):
     - ASN.1 DER格式私钥分析： https://www.cem.me/20141221-cert-binaries.html
 - [ARISAI](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/intro/ARISAI)
     - 多素数rsa+利用crt加快解密过程
+- [Mayday Mayday](https://hackmd.io/@Giapppp/rJrKDLm8a)
+    - dp和dq均泄露一部分后分解n
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。

@@ -1640,3 +1640,6 @@ try {
 {{range.constructor("return process.binding('fs').readFileSync('/path_of_allow-fs-read/../flag', 0)")()}}
 ```
 - 其他wp： https://www.youtube.com/watch?v=NNqYDbLdTkg 。还讲了一些杂项内容，比如androidStudio模拟器的使用，如何用bp抓模拟器的包等
+157. [Zombiedote](https://7rocky.github.io/en/ctf/other/htb-unictf/zombiedote/)
+- [Code execution via TLS-Storage dtor_list overwrite](https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc#5---code-execution-via-tls-storage-dtor_list-overwrite)的变种。这题`dtor_list->func`的起始点在`tls-0x80+0x28`而不是文章里介绍时的`tls-0x80+0x30`。感觉具体偏移找到`tls-0x80`后隔着`_nl_C_LC_CTYPE_class+0x100`一个索引的地方就是`dtor_list->func`的位置。借这题也更加看清楚了这种技巧，具体只需要准备一个chunk，chunk里0x10个字节前8个字节填`要调用的函数<<17`，后8个字节填rdi的值；然后`dtor_list->func`处填那个chunk的地址；最后`PTR_MANGLE cookie`填为0即可
+- 如果分配一个很大的chunk（大于0x21000），这个chunk会位于libc.so.6和ld-2.34.so之间（使用mmap）。gdb调试时可能会看见前缀名为anon的两块空间，mmap出来的chunk就在这块。但是mmap chunk与libc之间有个guard page，因为两个anon空间之间的距离是随机的。这就导致mmap chunk与libc的偏移不固定，不过与ld.so之间的距离是固定的。有点要注意，guard page不一定存在，就算用patchelf改了libc版本也不一定能保证与远程机器一致。最好的办法还是用和远程一样的docker查看并确认是否有guard page（偏移是否一致）

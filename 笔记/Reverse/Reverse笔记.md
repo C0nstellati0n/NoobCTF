@@ -1078,3 +1078,6 @@ finish()
 127. [ZombieNet](https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/zombienet)
 - firmware(固件)分析。直接用 `binwalk -e` 可以得到不少有价值的内容
 - [CURLOPT codes](https://gist.github.com/jseidl/3218673)
+128. [BioBundle](https://www.partywave.site/show/ctf/HTB%20University%20CTF%202023%20-%20BioBundle)
+- 程序里打开的所有文件都可以在`/proc/[PID]/[fd]`里读取到。只要文件打开了有fd就行，比如`dlopen`函数
+- ghidra将bss段上的data转换为array
