@@ -1707,6 +1707,6 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - eval内部可以用`\157`之类的字符
 - 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#escape-from-italy
 219. [Shadow of the Undead](https://smyler.net/blog/htb-unictf-2023-shadow-of-the-undead/)
-- 解密Meterpreter的pcap traffic。解密需要密钥，假如有memory dump的话findaes在里面找可能的AES key
+- 解密Meterpreter的pcap traffic。解密需要密钥，假如有memory dump的话可以用findaes在里面找可能的AES key
 - windows shellcode动态分析。在一个windows vm里打开visual studio然后自己写个shellcode loader并用[Process Monitor](https://learn.microsoft.com/en-us/sysinternals/downloads/procmon)监控shellcode进程。如果遇到一些限制可以用x64dbg动态跳过。shellcode的入口点找法参考wp
 - windows的系统调用号每个版本都不一样，所以只能用标准库函数。获取库函数地址的细节参考 https://idafchev.github.io/exploit/2017/09/26/writing_windows_shellcode.html 。调试时只需注意GetProcAddress函数，该函数可用于在运行时获取任意函数地址。在这里下断点可以方便调试

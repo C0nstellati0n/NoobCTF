@@ -3273,7 +3273,7 @@ window.recaptcha=true;
 - flask网站的response的默认Content-Type是`text/html`。如果能影响flask网站的response，将response换为html即可实现xss
 - python reportlab模块RCE漏洞： https://github.com/c53elyas/CVE-2023-33733
 - 其他wp：
-    - https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/phantom-feed ：使用[ffuf](https://github.com/ffuf/ffuf)实现条件竞争。另外注意python有GIL，在匹配正则时不会执行任何代码，于是不能利用正则延长竞争窗口。但是今天看[官方wp](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/web/%5BHard%5D%20PhantomFeed)，又说可以用reDos……不太懂谁对
+    - https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/phantom-feed ：使用[ffuf](https://github.com/ffuf/ffuf)实现条件竞争。另外注意python有GIL，在匹配正则时不会执行任何代码，于是不能利用正则延长竞争窗口。但是今天看[官方wp](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/web/%5BHard%5D%20PhantomFeed)，又说可以用reDos……不太懂谁对。另外，官方wp里提到了nuxt的重定向漏洞： https://github.com/nuxt/nuxt/issues/9992 ，用三个斜线即可将用户重定向到任意网站
 377. [Nexus Void](https://blog.bi0s.in/2023/12/15/Web/NexusVoid-HTBUniversityCTF20232023/)
 - c# .NET反序列化RCE。只要`JsonConvert.DeserializeObject`的`JsonSerializerSettings`不是`TypeNameHandling.None`，都有漏洞的风险。利用方式和php的差不多，在源码内部找要序列化成的类/gadget即可
 - c#里面`false.ToString()`是`False`，与false不同

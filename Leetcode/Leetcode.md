@@ -307,3 +307,4 @@
 - [Number of Ways to Divide a Long Corridor](./Hard/Number%20of%20Ways%20to%20Divide%20a%20Long%20Corridor.md)。组合学（Combinatorics）
 - [Minimum One Bit Operations to Make Integers Zero](./Hard/Minimum%20One%20Bit%20Operations%20to%20Make%20Integers%20Zero.md). [Gray code](https://en.wikipedia.org/wiki/Gray_code)
 - [Minimum Difficulty of a Job Schedule](./Hard/Minimum%20Difficulty%20of%20a%20Job%20Schedule.md). 二维dp
+- [Maximum Profit in Job Scheduling](./Hard/Maximum%20Profit%20in%20Job%20Scheduling.md). dp

@@ -1076,8 +1076,22 @@ finish()
 - https://github.com/yath/ghidra-xtensa
 - 11.0版本无需插件，默认支持
 127. [ZombieNet](https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/zombienet)
-- firmware(固件)分析。直接用 `binwalk -e` 可以得到不少有价值的内容
+- firmware(固件)分析。直接用 `binwalk -e` 可以得到不少有价值的内容。需确保安装[sasquatch](https://github.com/devttys0/sasquatch)
 - [CURLOPT codes](https://gist.github.com/jseidl/3218673)
+- openwrt的boot process中的init部分步骤：
+```
+1. init reads /etc/inittab for the "sysinit" entry (default is "::sysinit:/etc/init.d/rcS S boot")
+2. init calls /etc/init.d/rcS S boot
+3. rcS executes the symlinks to the actual startup scripts located in /etc/rc.d/S##xxxxxx with option "start":
+4. after rcS finishes, system should be up and running
+```
+- [官方wp](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/forensics/%5BMedium%5D%20ZombieNet)使用了qemu-mipsel模拟执行MIPS程序
 128. [BioBundle](https://www.partywave.site/show/ctf/HTB%20University%20CTF%202023%20-%20BioBundle)
+- 逆向动态加载的库（dynamically loaded libary）
 - 程序里打开的所有文件都可以在`/proc/[PID]/[fd]`里读取到。只要文件打开了有fd就行，比如`dlopen`函数
 - ghidra将bss段上的data转换为array
+129. [RiseFromTheDead](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/rev/%5BHard%5D%20RiseFromTheDead)
+- 使用pwntools Corefile分析core dump文件
+- 个人做这题时是用gdb手动找的……参考 https://stackoverflow.com/questions/8305866/how-do-i-analyze-a-programs-core-dump-file-with-gdb-when-it-has-command-line-pa
+130. [One Step Closer](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/forensics/%5BEasy%5D%20One%20Step%20Closer)
+- 使用`cscript.exe`+visual studio动态调试vbs脚本
