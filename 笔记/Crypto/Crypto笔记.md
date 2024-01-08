@@ -521,8 +521,8 @@ for i in range(1,e):
     - ASN.1 DER格式私钥分析： https://www.cem.me/20141221-cert-binaries.html
 - [ARISAI](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/intro/ARISAI)
     - 多素数rsa+利用crt加快解密过程
-- [Mayday Mayday](https://hackmd.io/@Giapppp/rJrKDLm8a)
-    - dp和dq均泄露一部分后分解n
+- [Mayday Mayday](https://hackmd.io/@Giapppp/rJrKDLm8a),[官方wp](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/crypto/%5BMedium%5D%20Mayday%20Mayday)
+    - dp和dq均泄露一部分后（MSB）分解n。LSB的题型见[grhkm's babyrsa](https://gist.github.com/maple3142/96b790553050b6bed5571694c2e764c0)
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
@@ -555,6 +555,9 @@ for i in range(1,e):
 - [sqrt](https://github.com/C4T-BuT-S4D/bricsctf-2023-stage1/tree/master/tasks/crp/sqrt):计算Permutations(256)中某个元素的平方根。注意一个元素的平方根可能有很多个
     - [to_cycles](https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/permutation.html#sage.combinat.permutation.Permutation.to_cycles)
     - [sage.combinat.permutation.from_cycles](https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/permutation.html#sage.combinat.permutation.from_cycles)
+- [Zombie Rolled](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/crypto/%5BHard%5D%20Zombie%20Rolled)。这题啥都有，包含RSA，ECC还有lattice。暂记一些能看出来的知识点
+    - 利用椭圆曲线上的rational point求解丢番图方程。参考 https://www.quora.com/How-do-you-find-the-positive-integer-solutions-to-frac-x-y+z-+-frac-y-z+x-+-frac-z-x+y-4
+    - 利用Groebner basis求解方程组
 
 ## Lattice(格)
 
@@ -2362,3 +2365,5 @@ c2=encrypt(k2,c1)
 123. [shuffled-aes](https://github.com/LosFuzzys/GlacierCTF2023_writeups/tree/main/crypto/shuffled-aes)
 - 如果先执行10轮的SubBytes, AddRoundKey再执行10轮的ShiftRows, MixColumns, AddRoundKey，AES就不再安全了。因为后10轮的操作完全线性可逆，前10轮的操作可以通过请求多组明文密文对搭建对照表格
 124. 当使用AES-CTR时，不要用同样的key-nonce pair加密多个明文。见 https://cedricvanrompay.gitlab.io/cryptopals/challenges/19-and-20.html 。因为CTR模式是用明文异或nonce的AES密文得到结果，如果多个明文用同一个nonce，结果就等于many time pad了。此时任意两个密文相异或等同于对应的两个明文异或；如果能猜测到其中一个明文，便能解码另一个明文
+125. [MSS](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/crypto/%5BEasy%5D%20MSS)
+- [Mignotte Secret Sharing](https://en.wikipedia.org/wiki/Secret_sharing_using_the_Chinese_remainder_theorem#Mignotte_threshold_secret_sharing_scheme)。一种利用CRT的秘密共享方式

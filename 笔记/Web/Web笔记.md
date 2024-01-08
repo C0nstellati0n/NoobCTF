@@ -3280,3 +3280,14 @@ window.recaptcha=true;
 - 拼接sql语句导致的sql注入
 - 其他wp：
     - https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/nexus-void ：`_configuration`可以在`appsettings.json`里找对应内容
+378. 路径穿越相关payload
+- `/robot/../flag/.`
+- `..././flag`
+- `././flag`
+- `/robot/../flag/ss/..`
+- `/flag/ss/..`
+- `/robot/../flag/..`
+- `/robot/..././flag/.../.`
+- `flag/.`
+379. [pocket-app](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#pocket-app) 
+- pocketbase js SDK使用

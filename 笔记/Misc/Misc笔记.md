@@ -1707,6 +1707,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - eval内部可以用`\157`之类的字符
 - 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#escape-from-italy
 219. [Shadow of the Undead](https://smyler.net/blog/htb-unictf-2023-shadow-of-the-undead/)
-- 解密Meterpreter的pcap traffic。解密需要密钥，假如有memory dump的话可以用findaes在里面找可能的AES key
+- 解密Meterpreter的pcap traffic。解密需要密钥，假如有memory dump的话可以用findaes/[Bulk Extractor](https://github.com/simsong/bulk_extractor)在里面找可能的AES key
 - windows shellcode动态分析。在一个windows vm里打开visual studio然后自己写个shellcode loader并用[Process Monitor](https://learn.microsoft.com/en-us/sysinternals/downloads/procmon)监控shellcode进程。如果遇到一些限制可以用x64dbg动态跳过。shellcode的入口点找法参考wp
-- windows的系统调用号每个版本都不一样，所以只能用标准库函数。获取库函数地址的细节参考 https://idafchev.github.io/exploit/2017/09/26/writing_windows_shellcode.html 。调试时只需注意GetProcAddress函数，该函数可用于在运行时获取任意函数地址。在这里下断点可以方便调试
+- windows的系统调用号每个版本都不一样，所以只能用标准库函数。获取库函数地址的细节参考 https://idafchev.github.io/exploit/2017/09/26/writing_windows_shellcode.html 。调试时只需注意GetProcAddress函数，该函数可用于在运行时获取任意函数地址。在这里下断点可以方便调试。或者用[speakeasy](https://github.com/mandiant/speakeasy),可以根据工具的报告分析出程序用了什么dll。如果模拟运行时出错，可以参考官方wp的做法，用hook自行支持部分API Handlers（hook函数内部可以读取内存）
+- [官方wp](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/forensics/%5BHard%5D%20Shadow%20of%20the%20Undead)详细介绍了meterpreter_reverse_tcp所使用的TLV packet格式。该格式可用[REW-sploit](https://github.com/REW-sploit/REW-sploit)处理并解密。wp还提了一嘴shellcode injection：攻击者分配一个内存段，改权限为RWX，然后创建新进程并往里面注入shellcode最后运行
