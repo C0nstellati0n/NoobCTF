@@ -1095,3 +1095,5 @@ finish()
 - 个人做这题时是用gdb手动找的……参考 https://stackoverflow.com/questions/8305866/how-do-i-analyze-a-programs-core-dump-file-with-gdb-when-it-has-command-line-pa
 130. [One Step Closer](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/forensics/%5BEasy%5D%20One%20Step%20Closer)
 - 使用`cscript.exe`+visual studio动态调试vbs脚本
+131. [Il2CppDumper](https://github.com/Perfare/Il2CppDumper)
+- Unity IL2CPP编译打包的游戏的逆向工具。暂时不清楚和一般用dnSpy逆向`Assembly-CSharp.dll`的题目有什么区别
