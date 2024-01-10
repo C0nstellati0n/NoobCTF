@@ -3174,6 +3174,7 @@ $user = $this->model->where($data)->first();
 - 类似题目：
     - https://sekai.team/blog/intigriti-0823/writeup/
     - https://blog.huli.tw/2023/08/29/intigriti-0823-author-writeup/
+    - https://gist.github.com/egonny/4dbf5151f99059ae58cf9390c7cc3830
 354. [fetcher](https://github.com/TCP1P/TCP1P-CTF-2023-Challenges/tree/main/Web/fetcher)
 - vm2沙盒逃逸。参考 https://github.com/snowflakedb/snowflake-connector-nodejs/issues/571 ， poc： https://gist.github.com/leesh3288/f693061e6523c97274ad5298eb2c74e9
 - 注意proxy-agent内部使用了vm2。如果可以控制proxyUrl参数，就能用`pac+data`协议注入payload并实现vm2沙盒逃逸，执行任意代码

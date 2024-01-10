@@ -1097,3 +1097,5 @@ finish()
 - 使用`cscript.exe`+visual studio动态调试vbs脚本
 131. [Il2CppDumper](https://github.com/Perfare/Il2CppDumper)
 - Unity IL2CPP编译打包的游戏的逆向工具。暂时不清楚和一般用dnSpy逆向`Assembly-CSharp.dll`的题目有什么区别
+132. [noodle-nightmare](https://meashiri.github.io/ctf-writeups/posts/202312-pingctf/#noodle-nightmare)
+- 有时候源代码复杂的逆向题编译后看汇编或动调反而会简单一点。还可以参考wp的做法，编译时保存C++ preprocessor的输出，逻辑也会简单很多

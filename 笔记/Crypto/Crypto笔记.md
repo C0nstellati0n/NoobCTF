@@ -1492,26 +1492,9 @@ for i in range(len(power)):
         byt.append(power[i]) 
 print(msg)
 ```
-37. enigma爆破。在知道大部分解密参数后可以尝试爆破完整参数。
-
-```python
-from enigma.machine import EnigmaMachine
-ciphertext = ""
-for a in range(1, 26):
-    for b in range(1, 26):
-       for c in range(1, 26):
-          machine = EnigmaMachine.from_key_sheet(
-              rotors="I II III",
-              reflector="B",
-              ring_settings=[a, b, c],
-              plugboard_settings="AT BS DE FM IR KN LZ OW PV XY"
-          )
-          plaintext = machine.process_text(ciphertext).lower()
-          print(f"Testing configuration: {[a, b, c]} Decrypted message: {plaintext}")
-          if "flag" in plaintext:
-              print(f"Decrypted message: {plaintext}")
-              exit()
-```
+37. [scherbius-machine](https://meashiri.github.io/ctf-writeups/posts/202312-pingctf/#scherbius-machine)
+- enigma爆破。在知道大部分解密参数后可以尝试爆破完整参数
+- https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#scherbius-machine
 38. [quoted-printable](http://web.chacuo.net/charsetquotedprintable)编码。如果flag包含中文，cyberchef可能解密出乱码，用给的网站链接并把字符集选为utf8即可。
 39. 当铺密码。
 ```python
