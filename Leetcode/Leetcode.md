@@ -242,6 +242,7 @@
 - [Design a Food Rating System](./Medium/Design%20a%20Food%20Rating%20System.md)
 - [Decode Ways](./Medium/Decode%20Ways.md)
 - [Longest Increasing Subsequence](./Medium/Longest%20Increasing%20Subsequence.md). dp/binary search/BIT(binary indexed tree), Segment Tree
+- [Amount of Time for Binary Tree to Be Infected](./Medium/Amount%20of%20Time%20for%20Binary%20Tree%20to%20Be%20Infected.md). 计算二叉树内部任意一个node和与之最远的node的距离
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。

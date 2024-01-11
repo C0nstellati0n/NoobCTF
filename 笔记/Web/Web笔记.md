@@ -3292,3 +3292,10 @@ window.recaptcha=true;
 - `flag/.`
 379. [pocket-app](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#pocket-app) 
 - pocketbase js SDK使用
+380. [Warmup](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#warmup---web)
+- 利用chrome调试前端混淆js代码逻辑
+- 文件包含漏洞：php filter的利用。如果黑名单禁掉了一些关键词，可以用某些较为冷门的filter，比如wp使用的zlib.deflate。完整filter目录： https://www.php.net/manual/en/filters.php
+381. [Pet Store Viewer](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#pet-store-viewer)
+- python中的格式化字符串漏洞。若str.format执行之前str本身包含用户可控制的内容，则可以注入出全局变量等内容。参考 https://security.stackexchange.com/questions/238338/are-there-any-security-concerns-to-using-python-f-strings-with-user-input/239661
+382. [My First AI Project](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#my-first-ai-project)
+- python pickle反序列化漏洞。不仅是最明显的pickle.load会触发这类漏洞，`numpy.load(file, allow_pickle=True)`也会。wp所使用的payload利用了shutil库复制文件

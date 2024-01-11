@@ -523,6 +523,8 @@ for i in range(1,e):
     - 多素数rsa+利用crt加快解密过程
 - [Mayday Mayday](https://hackmd.io/@Giapppp/rJrKDLm8a),[官方wp](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/crypto/%5BMedium%5D%20Mayday%20Mayday)
     - dp和dq均泄露一部分后（MSB）分解n。LSB的题型见[grhkm's babyrsa](https://gist.github.com/maple3142/96b790553050b6bed5571694c2e764c0)
+- [N-less RSA](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#n-less-rsa)
+    - 已知phi，e和c，获取m
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
@@ -1002,8 +1004,7 @@ for i in range(len(c)):
     plaintext+=alpha[((alpha.index(c[i])-keyb[i%len_b])*gmpy2.invert(keya[i%len_a],26))%26]
 print(plaintext)
 ```
-
-22. lfsr爆破mask。例题:[LittLe_FSR](../../CTF/moectf/Crypto/LittLe_FSR.md)
+22. lfsr爆破mask。例题:[LittLe_FSR](../../CTF/moectf/2022/Crypto/LittLe_FSR.md)
 23. [Schmidt-Samoa 密码体系](https://www.ruanx.net/schmidt-samoa/)。
 24. 求斐波那契数列大数取模值可利用[皮萨诺周期](https://blog.csdn.net/caozhk/article/details/53407845)。例题:[[INSHack2019]Crunchy](https://www.bilibili.com/read/cv13950329)
 25. [希尔密码](https://hstar.me/2020/08/hill-cipher-study/)（hill cipher，线性替换密码）。例题：[hill-hard](../../CTF/LA%20CTF/Crypto/hill-hard.md)

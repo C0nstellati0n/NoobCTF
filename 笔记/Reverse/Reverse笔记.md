@@ -1099,3 +1099,6 @@ finish()
 - Unity IL2CPP编译打包的游戏的逆向工具。暂时不清楚和一般用dnSpy逆向`Assembly-CSharp.dll`的题目有什么区别
 132. [noodle-nightmare](https://meashiri.github.io/ctf-writeups/posts/202312-pingctf/#noodle-nightmare)
 - 有时候源代码复杂的逆向题编译后看汇编或动调反而会简单一点。还可以参考wp的做法，编译时保存C++ preprocessor的输出，逻辑也会简单很多
+133. [Warmup - Game](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#warmup---game)
+- unity逆向题一般会给出游戏本体exe文件以及几个文件夹，内置dll文件。如果只见到一个exe文件，仍然可以尝试用dnSpy加载该exe文件，检查是否有packer存在,例如[Appacker](https://github.com/SerGreen/Appacker)。可以在unpack函数处下一个断点查看工具将文件解压到了哪个文件夹，然后去那个文件夹拿到解压后的全部文件
+- [UABEA](https://github.com/nesrak1/UABEA): Unity asset extraction tool
