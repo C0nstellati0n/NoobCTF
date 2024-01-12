@@ -1102,3 +1102,6 @@ finish()
 133. [Warmup - Game](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#warmup---game)
 - unity逆向题一般会给出游戏本体exe文件以及几个文件夹，内置dll文件。如果只见到一个exe文件，仍然可以尝试用dnSpy加载该exe文件，检查是否有packer存在,例如[Appacker](https://github.com/SerGreen/Appacker)。可以在unpack函数处下一个断点查看工具将文件解压到了哪个文件夹，然后去那个文件夹拿到解压后的全部文件
 - [UABEA](https://github.com/nesrak1/UABEA): Unity asset extraction tool
+134. [Defeat_the_Boss](https://github.com/jasonpeh373/Wargame2023-RE)
+- 利用 https://www.saveeditonline.com/ 修改RPGMaker制作的游戏的存档文件
+- 游戏中出现的部分对话可以在游戏exe文件中通过strings得到内容及相关上下文

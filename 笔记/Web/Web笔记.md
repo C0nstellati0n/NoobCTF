@@ -3296,6 +3296,13 @@ window.recaptcha=true;
 - 利用chrome调试前端混淆js代码逻辑
 - 文件包含漏洞：php filter的利用。如果黑名单禁掉了一些关键词，可以用某些较为冷门的filter，比如wp使用的zlib.deflate。完整filter目录： https://www.php.net/manual/en/filters.php
 381. [Pet Store Viewer](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#pet-store-viewer)
-- python中的格式化字符串漏洞。若str.format执行之前str本身包含用户可控制的内容，则可以注入出全局变量等内容。参考 https://security.stackexchange.com/questions/238338/are-there-any-security-concerns-to-using-python-f-strings-with-user-input/239661
-382. [My First AI Project](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#my-first-ai-project)
-- python pickle反序列化漏洞。不仅是最明显的pickle.load会触发这类漏洞，`numpy.load(file, allow_pickle=True)`也会。wp所使用的payload利用了shutil库复制文件
+- python中的格式化字符串漏洞。若str.format执行之前str本身包含用户可控制的内容，则可以注入出全局变量等内容
+- python格式化字符串漏洞参考链接：
+    - https://www.geeksforgeeks.org/vulnerability-in-str-format-in-python/
+    - https://lucumr.pocoo.org/2016/12/29/careful-with-str-format/
+    - https://security.stackexchange.com/questions/238338/are-there-any-security-concerns-to-using-python-f-strings-with-user-input/239661
+382. [My First AI Project](https://github.com/4n86rakam1/writeup/tree/main/Wargames.MY_2023_CTF/WEB/My_First_AI_Project)
+- python pickle反序列化漏洞。不仅是最明显的pickle.load会触发这类漏洞，`numpy.load(file, allow_pickle=True)`也会。另一个[wp](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#my-first-ai-project)所使用的payload利用了shutil库复制文件
+383. [Truco](https://github.com/4n86rakam1/writeup/tree/main/Wargames.MY_2023_CTF/WEB/Truco)
+- 若php处于版本小于等于7.4.21的开发版本服务器（PHP Development Server <= 7.4.21），则可以通过向php文件发送特殊的GET请求来获取该文件的源码。参考 https://blog.projectdiscovery.io/php-http-server-source-disclosure/ 。若使用bp发送请求，需要关闭Update Content-Length
+- php的extract函数可用于覆盖变量的值，如`_POST[func]`
