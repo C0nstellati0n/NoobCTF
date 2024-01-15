@@ -3294,7 +3294,7 @@ window.recaptcha=true;
 - pocketbase js SDK使用
 380. [Warmup](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#warmup---web)
 - 利用chrome调试前端混淆js代码逻辑
-- 文件包含漏洞：php filter的利用。如果黑名单禁掉了一些关键词，可以用某些较为冷门的filter，比如wp使用的zlib.deflate。完整filter目录： https://www.php.net/manual/en/filters.php
+- 文件包含漏洞：php filter的利用。如果黑名单禁掉了一些关键词，可以用某些较为冷门的filter，比如wp使用的zlib.deflate。完整filter目录： https://www.php.net/manual/en/filters.php 。另一篇[wp](https://d0ublew.github.io/posts/wgmy2023/web/warmup/)更清晰地展示了如何利用PHP PEARCMD从文件包含到getshell。参考 https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#lfi-to-rce-via-php-pearcmd
 381. [Pet Store Viewer](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#pet-store-viewer)
 - python中的格式化字符串漏洞。若str.format执行之前str本身包含用户可控制的内容，则可以注入出全局变量等内容
 - python格式化字符串漏洞参考链接：
@@ -3306,3 +3306,20 @@ window.recaptcha=true;
 383. [Truco](https://github.com/4n86rakam1/writeup/tree/main/Wargames.MY_2023_CTF/WEB/Truco)
 - 若php处于版本小于等于7.4.21的开发版本服务器（PHP Development Server <= 7.4.21），则可以通过向php文件发送特殊的GET请求来获取该文件的源码。参考 https://blog.projectdiscovery.io/php-http-server-source-disclosure/ 。若使用bp发送请求，需要关闭Update Content-Length
 - php的extract函数可用于覆盖变量的值，如`_POST[func]`
+384. [Status](https://github.com/4n86rakam1/writeup/tree/main/Wargames.MY_2023_CTF/WEB/Status)
+- 利用文件包含漏洞进行Kubernetes信息收集
+    - 从/etc/hosts中收集后端的机器名（pod running on a Kubernetes (k8s) cluster）
+    - 获取Service Account Token（参考 https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Kubernetes ）。获取token后，可以用nmap扫出Kubernetes的api端口（常用步骤见 https://cloud.hacktricks.xyz/pentesting-cloud/kubernetes-security/pentesting-kubernetes-services  ）
+    - 参考 https://cloud.hacktricks.xyz/pentesting-cloud/kubernetes-security/kubernetes-enumeration ，利用api端口获取information about the Deployment named `<name>` and its related resources
+    - kubectl本地使用参考 https://d0ublew.github.io/posts/wgmy2023/web/status/
+- Nginx Alias Misconfiguration。下面的配置：
+```
+      location /static {
+        alias       /usr/share/nginx/html/;
+        add_header  Cache-Control "private, max-age=3600";
+      }
+```
+可以用`/static../foo.txt`绕过，进而访问`/usr/share/nginx`下的文件。参考 https://labs.hakaioffsec.com/nginx-alias-traversal/
+385. [Secret](https://d0ublew.github.io/posts/wgmy2023/web/secret/)
+- kubernetes+[HashiCorp Vault](https://zhuanlan.zhihu.com/p/30983205)。可下载[工具](https://developer.hashicorp.com/vault/install#Linux)并设置环境变量VAULT_ADDR为vault的地址然后尝试登录
+- 有些时候vault内保存的密码等敏感内容会被inject进kubernetes（参考 https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-sidecar ）。这时候文件可直接在`/vault/secrets`目录下读取

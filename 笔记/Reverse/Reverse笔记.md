@@ -1076,7 +1076,7 @@ finish()
 - https://github.com/yath/ghidra-xtensa
 - 11.0版本无需插件，默认支持
 127. [ZombieNet](https://jorianwoltjer.com/blog/p/ctf/htb-university-ctf-2023/zombienet)
-- firmware(固件)分析。直接用 `binwalk -e` 可以得到不少有价值的内容。需确保安装[sasquatch](https://github.com/devttys0/sasquatch)
+- firmware(固件)分析。直接用 `binwalk -e` 可以得到不少有价值的内容。需确保安装[squashfs-tools](https://github.com/plougher/squashfs-tools)。可直接用`sudo apt install squashfs-tools`安装
 - [CURLOPT codes](https://gist.github.com/jseidl/3218673)
 - openwrt的boot process中的init部分步骤：
 ```
