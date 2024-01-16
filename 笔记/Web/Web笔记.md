@@ -3293,7 +3293,7 @@ window.recaptcha=true;
 379. [pocket-app](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#pocket-app) 
 - pocketbase js SDK使用
 380. [Warmup](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#warmup---web)
-- 利用chrome调试前端混淆js代码逻辑
+- 利用chrome调试前端混淆js代码逻辑。可用api： https://developer.chrome.com/docs/devtools/console/utilities?hl=zh-cn#debug-function
 - 文件包含漏洞：php filter的利用。如果黑名单禁掉了一些关键词，可以用某些较为冷门的filter，比如wp使用的zlib.deflate。完整filter目录： https://www.php.net/manual/en/filters.php 。另一篇[wp](https://d0ublew.github.io/posts/wgmy2023/web/warmup/)更清晰地展示了如何利用PHP PEARCMD从文件包含到getshell。参考 https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#lfi-to-rce-via-php-pearcmd
 381. [Pet Store Viewer](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#pet-store-viewer)
 - python中的格式化字符串漏洞。若str.format执行之前str本身包含用户可控制的内容，则可以注入出全局变量等内容
@@ -3301,6 +3301,7 @@ window.recaptcha=true;
     - https://www.geeksforgeeks.org/vulnerability-in-str-format-in-python/
     - https://lucumr.pocoo.org/2016/12/29/careful-with-str-format/
     - https://security.stackexchange.com/questions/238338/are-there-any-security-concerns-to-using-python-f-strings-with-user-input/239661
+    - https://podalirius.net/en/articles/python-format-string-vulnerabilities/
 382. [My First AI Project](https://github.com/4n86rakam1/writeup/tree/main/Wargames.MY_2023_CTF/WEB/My_First_AI_Project)
 - python pickle反序列化漏洞。不仅是最明显的pickle.load会触发这类漏洞，`numpy.load(file, allow_pickle=True)`也会。另一个[wp](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#my-first-ai-project)所使用的payload利用了shutil库复制文件
 383. [Truco](https://github.com/4n86rakam1/writeup/tree/main/Wargames.MY_2023_CTF/WEB/Truco)

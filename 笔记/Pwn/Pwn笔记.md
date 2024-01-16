@@ -1646,3 +1646,5 @@ try {
 - [官方wp](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/pwn/%5BHard%5D%20Zombiedote)使用了2.34下的一种FSOP。要求控制一个堆块并知晓其地址，且libc基地址已知。然后伪造一个FILE结构，偏移0处（`_flags`）为rdi；偏移0x20处（`_IO_write_base`）为1；偏移0x28处（`_IO_write_ptr`）为2（ptr大于base即可）；偏移0xc4+20（vtable？）处为`__GI__IO_file_jumps`，是libc里可以查到的符号。最后`__GI__IO_file_jumps+0x18`处覆盖为system，`_IO_list_all`处覆盖为刚刚伪造的FILE结构地址，触发exit即可
 158. [dangle-me](https://github.com/C0d3-Bre4k3rs/PingCTF2023-writeups/tree/main/dangle-me)
 - 栈上的悬空指针（dangle pointer）。栈上的指针顾名思义，指向栈上的一块内存，当前函数退出时便被销毁。但是当函数内部递归调用另一个函数时，问题就出现了：每次递归调用都会往栈上多加一个栈帧，如果递归次数足够多，总会覆盖到那个指针指向的内存的。根据指针所指向内存的内容的不同，可以泄露程序基址或者libc地址。如果更进一步，可以直接在无缓冲区溢出的情况下通过指针往buffer填充rop链来控制程序流
+159. [Free Juice](https://zeynarz.github.io/posts/wgmy23/#free-juice-pwn)
+- 格式化字符串漏洞。此题格式化字符串的payload用scanf读入字符串的方式接受，一旦遇到null字符就会终止。pwntools自动生成payload的fmtstr_payload函数便不能用。只需把地址放在payload的最后，一个字节一个字节覆盖即可

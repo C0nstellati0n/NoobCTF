@@ -1713,9 +1713,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [官方wp](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/forensics/%5BHard%5D%20Shadow%20of%20the%20Undead)详细介绍了meterpreter_reverse_tcp所使用的TLV packet格式。该格式可用[REW-sploit](https://github.com/REW-sploit/REW-sploit)处理并解密。wp还提了一嘴shellcode injection：攻击者分配一个内存段，改权限为RWX，然后创建新进程并往里面注入shellcode最后运行
 220. [Compromised](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#compromised)
 - RDP Bitmap Cache forensic。RDP Bitmap Cache文件一般存储于`AppData --> local --> Microsoft --> Terminal Client Server --> Cache`，遵循命名规律`Cachexxxx.bin`，且文件头为`52 44 50 38 62 6d 70`(RDP8bmp)。参考文章 https://www.linkedin.com/pulse/blind-forensics-rdp-bitmap-cache-ronald-craft/ ，可以从该文件中恢复出桌面图片的碎片
-- 工具/其他wp： 
+- 工具/其他wp/参考链接： 
     - [Remote-Desktop-Caching-](https://github.com/Viralmaniar/Remote-Desktop-Caching-)
     - [BMC-Tools](https://github.com/ANSSI-FR/bmc-tools)
     - [rdpieces](https://github.com/brimorlabs/rdpieces)
     - [RdpCacheStitcher](https://github.com/BSI-Bund/RdpCacheStitcher)
     - https://github.com/ItsZer01/CTF-Writeup/blob/main/2023/Wgmy2023.md
+    - https://www.allthingsdfir.com/do-you-even-bitmap-cache-bro/
