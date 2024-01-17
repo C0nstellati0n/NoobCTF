@@ -1105,3 +1105,5 @@ finish()
 134. [Defeat_the_Boss](https://github.com/jasonpeh373/Wargame2023-RE)
 - 利用 https://www.saveeditonline.com/ 修改RPGMaker制作的游戏的存档文件
 - 游戏中出现的部分对话可以在游戏exe文件中通过strings得到内容及相关上下文
+135. [ezandroid](../../CTF/moectf/2023/Reverse/ezandroid.md)
+- apk lib文件逆向。如果在JNI_OnLoad中发现了RegisterNatives字样，说明存在动态注册逻辑。ida内部动态注册所使用的FindClass函数类似这样：`sub_17F0(v4, (__int64)"com/doctor3/ezandroid/MainActivity");`,v4可能是jni_env

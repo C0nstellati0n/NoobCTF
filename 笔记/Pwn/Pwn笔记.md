@@ -559,7 +559,7 @@ print(base64.b64encode(temp.encode()))
   """
   )
   ```
-- 进入python的help()界面后，可以随便输入一个模块（如os）然后输入`:e [filename]`读取文件(默认使用less命令展示文档)
+- 进入python的help()界面后，可以随便输入一个模块（如os）然后输入`:e [filename]`读取文件(默认使用less命令展示文档)。有些时候远程机器开启了socat，这时help函数后在控制台打`!sh`即可getshell。参考 https://zhuanlan.zhihu.com/p/578986988 。help函数还可以用来泄露变量，如进入help函数后使用`__main__`
 - [PyMagic](https://github.com/TCP1P/TCP1P-CTF-2023-Challenges/tree/main/Misc/PyMagic)：禁`()'"0123456789 `字符，eval环境无`__builtins__`，但有一个空类
   - 一些有助于构造payload的链接：
     - https://codegolf.stackexchange.com/questions/264291/how-turing-complete-is-your-language
@@ -575,6 +575,7 @@ print(base64.b64encode(temp.encode()))
 - [Avatar](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/misc/Avatar)
   - 利用f string(`f'{}'`)构造字符并实现双eval RCE。`f"{97:c}"`输出为a
   - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#avatar
+- eval里不能用=号定义变量或给变量赋值，但是用海象运算符`:=`可以
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

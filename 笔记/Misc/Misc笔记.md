@@ -1720,3 +1720,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - [RdpCacheStitcher](https://github.com/BSI-Bund/RdpCacheStitcher)
     - https://github.com/ItsZer01/CTF-Writeup/blob/main/2023/Wgmy2023.md
     - https://www.allthingsdfir.com/do-you-even-bitmap-cache-bro/
+221. [烫烫烫](../../CTF/moectf/2023/Misc/烫烫烫.md)
+- Utf-7编码，形如`+j9k-+Zi8-+T2A-+doQ-`。可以用cyberchef也可以用 https://www.novel.tools/decode/UTF-7 。假如cyberchef使用Decode text recipe解码含有中文字符的内容，需要在右下角把输出编码改为UTF-8
+222. [尊嘟假嘟？](../../CTF/moectf/2023/Misc/尊嘟假嘟？.md)
+- [zdjd语](https://github.com/SnailSword/zdjd)与在线翻译器 https://zdjd.vercel.app/
+- base58check编码（bitcoin address所使用的）可用 https://www.better-converter.com/Encoders-Decoders/Base58Check-to-Hexadecimal-Decoder 解码
