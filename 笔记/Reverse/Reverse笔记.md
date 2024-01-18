@@ -960,6 +960,8 @@ main()
 - `int.from_bytes(b, 'big')`的本质是`b[0] * 2 ** 24 + b[1] * 2 ** 16 + b[2] * 2 ** 8 + b[3]`
 109. [unwind](../../CTF/moectf/2023/Reverse/unwind.md)
 - windows SEH程序动态调试。参考 https://reverseengineering.stackexchange.com/questions/18192/stepping-into-exception-handler ，将断点下在`ntdll!ExecuteHandler2`的`call ecx`指令处，然后就能跟进看到接下来调用了什么函数了。若找不到`ntdll!ExecuteHandler2`这个symbol，可以x32/x64dbg ctrl+f搜指令`call ecx`。这个指令程序里不多，一个一个排除即可
+- 静态分析做法： https://github.com/XDSEC/MoeCTF_2023/tree/main/WriteUps/chitaotao/re/unwind
+- SEH详解+wp： https://blog.littflower.top/posts/moectf2023-unwind-and-a-little-windows-seh/
 110. [ilovepython](https://github.com/cewau/ctf-writeups/blob/main/20230805-litctf/REV_ilovepython.md)
 - python高级类型推断（逆变、协变）。这题非常复杂，看懂了python的类型就懂了（但是我看不懂，后面再遇到的话再看吧）
 111. [What Is It](https://learn-cyber.net/writeup/What-Is-It)
@@ -1107,3 +1109,6 @@ finish()
 - 游戏中出现的部分对话可以在游戏exe文件中通过strings得到内容及相关上下文
 135. [ezandroid](../../CTF/moectf/2023/Reverse/ezandroid.md)
 - apk lib文件逆向。如果在JNI_OnLoad中发现了RegisterNatives字样，说明存在动态注册逻辑。ida内部动态注册所使用的FindClass函数类似这样：`sub_17F0(v4, (__int64)"com/doctor3/ezandroid/MainActivity");`,v4可能是jni_env
+136. [天网](https://github.com/XDSEC/MoeCTF_2023/blob/main/WriteUps/constellation/Reverse/%E2%80%9C%E5%A4%A9%E7%BD%91%E2%80%9D.md)
+- c# .NET逆向。这类程序通常较大，因为除了程序本身还有运行时库需要打包。有些时候DnSpy无法正常识别程序，这时可以尝试用ILSpy
+- c#中有个AppDomain.CurrentDomain.UnhandledException event，可注册委托函数，当程序发生异常时转入委托函数执行

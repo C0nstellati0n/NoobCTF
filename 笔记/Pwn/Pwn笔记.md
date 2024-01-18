@@ -1649,3 +1649,5 @@ try {
 - 栈上的悬空指针（dangle pointer）。栈上的指针顾名思义，指向栈上的一块内存，当前函数退出时便被销毁。但是当函数内部递归调用另一个函数时，问题就出现了：每次递归调用都会往栈上多加一个栈帧，如果递归次数足够多，总会覆盖到那个指针指向的内存的。根据指针所指向内存的内容的不同，可以泄露程序基址或者libc地址。如果更进一步，可以直接在无缓冲区溢出的情况下通过指针往buffer填充rop链来控制程序流
 159. [Free Juice](https://zeynarz.github.io/posts/wgmy23/#free-juice-pwn)
 - 格式化字符串漏洞。此题格式化字符串的payload用scanf读入字符串的方式接受，一旦遇到null字符就会终止。pwntools自动生成payload的fmtstr_payload函数便不能用。只需把地址放在payload的最后，一个字节一个字节覆盖即可
+160. [shellcode level3](https://github.com/XDSEC/MoeCTF_2023/blob/main/WriteUps/RocketDev_Pwn/shellcode_level3.md)
+- 字节码`e8`,`e9`后跟偏移的计算。`跳转时指令所在地址-目标跳转地址+5`

@@ -291,7 +291,7 @@ m = pow(c, d, n)
 flag = p - m
 print(long_to_bytes(flag))
 ```
-已知phi分解n也是这个考点。本身已知e和d分解n就是为了凑phi的倍数，现在如果有phi直接分解即可。[factorize_me!](../../CTF/moectf/2023/Crypto/factorize_me!.md)
+已知phi分解n也是这个考点。本身已知e和d分解n就是为了凑phi的倍数，现在如果有phi直接分解即可。[factorize_me!](../../CTF/moectf/2023/Crypto/factorize_me!.md)。更好的脚本（给定n和phi直接返回n的全部因子，无论n是多少个质数的乘积）： https://github.com/XDSEC/MoeCTF_2023/blob/main/WriteUps/Orac1e/Crypto_Writeup.md#factorize_me
 
 - p高位泄露（coppersmith），可直接根据泄露的高位p，n和e求出p。需使用sagemath运行。
 

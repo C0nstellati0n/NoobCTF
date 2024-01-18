@@ -1538,7 +1538,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - torrent的文件结构: https://en.wikipedia.org/wiki/Torrent_file ,结构查看： https://chocobo1.github.io/bencode_online/
 - qBittorrent有pad文件，用于将文件长度pad成piece length(16384)。文件的填充内容是`\x00`
 160. [EZ Conv](../../CTF/moectf/2023/AI/EZ%20Conv.md)
-- python pytorch卷积。参考 https://www.geeksforgeeks.org/apply-a-2d-convolution-operation-in-pytorch/ 和 https://stackoverflow.com/questions/49768306/pytorch-tensor-to-numpy-array
+- python pytorch卷积。参考 https://www.geeksforgeeks.org/apply-a-2d-convolution-operation-in-pytorch/ 和 https://stackoverflow.com/questions/49768306/pytorch-tensor-to-numpy-array 。[官方wp](https://github.com/XDSEC/MoeCTF_2023/blob/main/Official_Writeup/AI.md#ez-conv)没有使用内置的api而是自己实现了卷积;另一个[wp](https://github.com/XDSEC/MoeCTF_2023/blob/main/WriteUps/Cain-AI-WP/Cain-moectf-AI.pdf)所使用的api也有些许不同
 161. [MCELLA](https://xhacka.github.io/posts/writeup/2023/07/29/MCELLA/)
 - [steg86](https://github.com/woodruffw/steg86):用于将信息隐写进x86和AMD64 binary的工具
 162. [Device Info](https://www.youtube.com/watch?v=sZAVLJTHtj4)
@@ -1725,3 +1725,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 222. [尊嘟假嘟？](../../CTF/moectf/2023/Misc/尊嘟假嘟？.md)
 - [zdjd语](https://github.com/SnailSword/zdjd)与在线翻译器 https://zdjd.vercel.app/
 - base58check编码（bitcoin address所使用的）可用 https://www.better-converter.com/Encoders-Decoders/Base58Check-to-Hexadecimal-Decoder 解码
+223. [A very happy MLP](https://github.com/XDSEC/MoeCTF_2023/blob/main/Official_Writeup/AI.md#a-very-happy-mlp)
+- python torch AI全连接神经网络前向传播运算。其实就是逆向操作。这题forward函数包含torch.nn.Linear(30, 20)和sigmoid。sigmoid的逆向很容易搜到，但torch.nn.Linear的逆向个人做的时候没搜到。其实就是简单的线代，不过要注意需要减去默认的bias，以及乘的是转置后的矩阵。使用torch.pinverse函数
+224. [Classification](https://github.com/XDSEC/MoeCTF_2023/blob/main/Official_Writeup/AI.md#classification)
+- 使用Resnet（图像分类网络）对图片序列进行分类。需要将model设置为eval模式才能获取输出： https://stackoverflow.com/questions/60018578/what-does-model-eval-do-in-pytorch
+225. [Visual Hacker](https://github.com/XDSEC/MoeCTF_2023/blob/main/Official_Writeup/AI.md#visual-hacker)
+- Gaze Estimation模型(L2CS网络)的应用。该模型/网络用于估计眼睛的视线方位
