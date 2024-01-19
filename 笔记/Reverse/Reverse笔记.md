@@ -1112,3 +1112,5 @@ finish()
 136. [天网](https://github.com/XDSEC/MoeCTF_2023/blob/main/WriteUps/constellation/Reverse/%E2%80%9C%E5%A4%A9%E7%BD%91%E2%80%9D.md)
 - c# .NET逆向。这类程序通常较大，因为除了程序本身还有运行时库需要打包。有些时候DnSpy无法正常识别程序，这时可以尝试用ILSpy
 - c#中有个AppDomain.CurrentDomain.UnhandledException event，可注册委托函数，当程序发生异常时转入委托函数执行
+137. [Sl4ydroid](https://sl4y3r-07.github.io/posts/BackdoorCTF'23-Writeups/#revsl4ydroid)
+- 可以用jadx+adb调试Android apk应用程序

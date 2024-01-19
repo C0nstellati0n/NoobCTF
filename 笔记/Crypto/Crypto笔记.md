@@ -2353,3 +2353,9 @@ c2=encrypt(k2,c1)
 124. 当使用AES-CTR时，不要用同样的key-nonce pair加密多个明文。见 https://cedricvanrompay.gitlab.io/cryptopals/challenges/19-and-20.html 。因为CTR模式是用明文异或nonce的AES密文得到结果，如果多个明文用同一个nonce，结果就等于many time pad了。此时任意两个密文相异或等同于对应的两个明文异或；如果能猜测到其中一个明文，便能解码另一个明文
 125. [MSS](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/crypto/%5BEasy%5D%20MSS)
 - [Mignotte Secret Sharing](https://en.wikipedia.org/wiki/Secret_sharing_using_the_Chinese_remainder_theorem#Mignotte_threshold_secret_sharing_scheme)。一种利用CRT的秘密共享方式
+126. [Knapsack](https://meashiri.github.io/ctf-writeups/posts/202312-backdoorctf/#knapsack)
+- 当density of the matrix太高时，LLL无法解决这类knapsack问题。不过要是本身供选择的数字集合中的数字较少，可以考虑使用MITM攻击。除了subset sum，subset product也可以用MITM攻击，原理差不多，见subset product题型的[wp](https://tsumiiiiiiii.github.io/fh_crypto/#primes-festival)。设ans为要求的subset sum，将数字集合分为两半，在前一半尝试所有组合的可能性，并用一个字典记录值（记做s1，为key）和对应所使用的数字（为value）。然后尝试后一半所有组合的可能性，记为s2。计算ans-s2，若该键在字典里存在，即找到了目标
+- 其他方法：若density只是稍微高了一点，可以随机选择几个数字，将其替换为subset sum里绝对不可能出现的数字。此时矩阵density下降，就能直接使用LLL了；或者爆破几个数字，拿剩下的数字构造density较小的矩阵。或者换种方式用LLL，再或者用BKZ方法: https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#knapsack
+    - 有“BKZ可以解出某些LLL解不出来的题”的说法。以下是aparker314159的解释：BKZ is better at finding the shortest vectors than LLL, but it takes longer to run. You can change the BKZ block size parameter to adjust the tradeoff (higher block size means slower but more likely to find shortest vector; LLL is BKZ with block size 2)
+127. [Drunk](https://meashiri.github.io/ctf-writeups/posts/202312-backdoorctf/#drunk)
+- [Fernet](https://zweilosec.gitbook.io/hackers-rest/os-agnostic/cryptography-and-encryption#fernet)对称加密密码。其key和cipher均与base64相似

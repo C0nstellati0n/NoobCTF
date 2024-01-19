@@ -1651,3 +1651,6 @@ try {
 - 格式化字符串漏洞。此题格式化字符串的payload用scanf读入字符串的方式接受，一旦遇到null字符就会终止。pwntools自动生成payload的fmtstr_payload函数便不能用。只需把地址放在payload的最后，一个字节一个字节覆盖即可
 160. [shellcode level3](https://github.com/XDSEC/MoeCTF_2023/blob/main/WriteUps/RocketDev_Pwn/shellcode_level3.md)
 - 字节码`e8`,`e9`后跟偏移的计算。`跳转时指令所在地址-目标跳转地址+5`
+161. [Master Formatter](https://fallingraindrop.moe/2023/12/24/backdoorctf-2023-formatter-brief-writeup-got-of-glibc/)
+- 除了environ，libc里还有个`__libc_argv`可以用来泄露栈地址。不过`__libc_argv`不在导出符号表里，需要用pwndbg（leakfind）/gef（scan）尝试寻找libc里的stack地址（看来其他找到的地址也可以用来泄露stack）
+- 通过覆盖glibc的GOT表来getshell。参考 https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc/#1---targetting-libc-got-entries 。很多常见的函数（如puts）内部会调用其他函数，从而调用got表。例如strdup() 调用 strlen() 和 memcpy()，可以选择覆盖memcpy的got表为one_gadget（似乎写ropchain也可以），接下来调用strdup就能getshell了。 https://github.com/nobodyisnobody/write-ups/tree/main/RCTF.2022/pwn/bfc#code-execution-inferno 补充了如果one_gadget使用条件不满足时的做法：`__GI___printf_fp_l+5607`处有个清空要求寄存器并调用memcpy的gadget。于是把任意一个libc函数的got改为这个gadget，再把one_gadget写入memcpy的got即可
