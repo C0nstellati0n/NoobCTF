@@ -525,6 +525,8 @@ for i in range(1,e):
     - dp和dq均泄露一部分后（MSB）分解n。LSB的题型见[grhkm's babyrsa](https://gist.github.com/maple3142/96b790553050b6bed5571694c2e764c0)
 - [N-less RSA](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#n-less-rsa)
     - 已知phi，e和c，获取m
+- [easy-rsa](https://github.com/C0d3-Bre4k3rs/PingCTF2023-writeups/tree/main/easy-rsa)
+    - 获知`q&p`和`q&(p<<1)`后分解n。或者说，在得知p和q的随机个bit后尝试恢复p和q：[Random known bits of p and q](https://eprint.iacr.org/2020/1506.pdf#page=23)。这题Z3可解
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
@@ -883,7 +885,7 @@ for KEYSIZE, _ in normalized_distances[:5]:
 ```python
 #重合指数的应用:
 import gmpy2
-c=open('/Users/constellation/Desktop/encrypted_message','r').read()
+c=open('cipher','r').read()
 best_index=0.065
 sum=0
 dic_index={'a': 0.08167,'b': 0.01492,'c': 0.02782,'d':0.04253,'e': 0.12702,'f':0.02228,'g': 0.02015,'h':0.06094,'i':0.06966,'j':0.00153,'k':0.00772,'l':0.04025,'m':0.02406,'n':0.06749,'o':0.07507,'p':0.01929,'q':0.00095,'r':0.05987,'s':0.06327,'t':0.09056,'u':0.02758,'v':0.00978,'w':0.02360,'x':0.00150,'y':0.01974,'z':0.00074}
@@ -2337,7 +2339,7 @@ print(hex(random.getrandbits(256)))
 119. [Jack’s Worst Trials](https://berliangabriel.github.io/post/tcp1p-ctf-2023/)
 - 当python网站使用`jwt.decode()`而没有指定具体使用的算法时，代表可能可以用公钥伪造JWT，然后用HS256算法验证。参考CVE-2017-11424，enables symmetric/asymmetric key confusion attacks against users using the PKCS1 PEM encoded public keys。利用工具 https://github.com/silentsignal/rsa_sign2n 可从两个jwt中计算公钥，然后伪造jwt
 120. [Final Consensus](https://berliangabriel.github.io/post/tcp1p-ctf-2023/)
-- Meet in the Middle attack,常用于double encryption scheme：
+- Meet in the Middle attack(MITM),常用于double encryption scheme：
 ```
 c1=encrypt(k1,plaintext)
 c2=encrypt(k2,c1)
