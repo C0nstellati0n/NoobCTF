@@ -1652,10 +1652,12 @@ try {
 160. [shellcode level3](https://github.com/XDSEC/MoeCTF_2023/blob/main/WriteUps/RocketDev_Pwn/shellcode_level3.md)
 - 字节码`e8`,`e9`后跟偏移的计算。`跳转时指令所在地址-目标跳转地址+5`
 161. [Master Formatter](https://fallingraindrop.moe/2023/12/24/backdoorctf-2023-formatter-brief-writeup-got-of-glibc/)
-- 除了environ，libc里还有个`__libc_argv`可以用来泄露栈地址。不过`__libc_argv`不在导出符号表里，需要用pwndbg（leakfind）/gef（scan）尝试寻找libc里的stack地址（看来其他找到的地址也可以用来泄露stack）
+- 除了environ，libc里还有个`__libc_argv`可以用来泄露栈地址。不过`__libc_argv`不在导出符号表里，需要用pwndbg（leakfind）/gef（scan）尝试寻找libc里的stack地址（看来其他找到的地址也可以用来泄露stack）。不止一个libc地址里存储着栈地址，找法参考 https://www.youtube.com/watch?v=qVLXHNqxpkE
 - 通过覆盖glibc的GOT表来getshell。参考 https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc/#1---targetting-libc-got-entries 。很多常见的函数（如puts）内部会调用其他函数，从而调用got表。例如strdup() 调用 strlen() 和 memcpy()，可以选择覆盖memcpy的got表为one_gadget（似乎写ropchain也可以），接下来调用strdup就能getshell了。 https://github.com/nobodyisnobody/write-ups/tree/main/RCTF.2022/pwn/bfc#code-execution-inferno 补充了如果one_gadget使用条件不满足时的做法：`__GI___printf_fp_l+5607`处有个清空要求寄存器并调用memcpy的gadget。于是把任意一个libc函数的got改为这个gadget，再把one_gadget写入memcpy的got即可
-162. 格式化字符串漏洞利用中，若`%p`被禁用，还可以用`%<offset>$#lX`泄露地址
+- 顺便记一下，自己做这道题的时候成功泄露了一个栈地址，但似乎是因为泄露的地址与函数的返回地址太远了，两者偏移不同，导致找不到正确的返回地址。之前没遇见过这种情况，只能猜测是不在同一页/stack frame的地址没法这样做，或者本地环境不同（patch了libc也无济于事）？总之以后留个心眼，泄露与目标地址近的栈地址即可
+162. 格式化字符串漏洞利用中，若`%p`被禁用，还可以用`%<offset>$lX`/`%s`/`%o`泄露地址
 163. [Konsolidator](https://github.com/MarcoPellero/writeups/tree/main/backdoor/konsolidator)
 - （libc 2.31）假如暂时无已泄漏的地址但可以修改tcache中某个chunk的fd指针，尝试partial overwrite LSB，有机率让fd指向heap起始处的chunk。这块区域存储着tcache结构体，包含bin_counters（各个bin里的free chunk数量）和first_chunk（每个bin中单项链表的起始chunk）。pwndbg里可用bins查看，方括号里是counter，每个bin里最左边的指针为first_chunk。修改这个结构的counter和first_chunk即可实现任意地址分配。最重要的是，first_chunk指针未被mangled
 164. [pizzeria](https://github.com/MarcoPellero/writeups/tree/main/backdoor/pizzeria)
 - libc 2.35 [fastbin dup](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/fastbin_dup.c)(double free)。how2heap里展示时用的是calloc，因为calloc可以跳过tcache直接从fastbin里取chunk。如果题目中只能用malloc，参考wp的做法
+  - [house of botcake](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/house_of_botcake.c)没用calloc，这俩有共通点。更详细的解析wp： https://www.youtube.com/watch?v=qVLXHNqxpkE

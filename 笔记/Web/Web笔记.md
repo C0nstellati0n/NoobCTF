@@ -3332,3 +3332,8 @@ window.recaptcha=true;
 - nodejs vite transformIndexHtml xss[漏洞](https://github.com/vitejs/vite/security/advisories/GHSA-92r3-m2mg-pj97?cve=title)。transformIndexHtml的使用方法为`transformIndexHtml(url,template)`，其中url为请求时的url。若该url未做过滤，攻击者可直接在该页面上获取xss（无关渲染的template）
 389. [BabyBlackJack](https://github.com/n0kto/ctf-writeups/tree/main/BackdoorCTF/BabyBlackJack)
 - solidity有关`block.number`的知识：one block contains one transaction which can contain multiple call (with all the same block number)
+390. [Rocket Explorer](https://ireland.re/posts/Backdoor_CTF_2023_Web/#webrocket-explorer)
+- 若Spring Boot Actuator泄露(POST `/actuator/env`能得到内容，详细参考 https://spaceraccoon.dev/remote-code-execution-in-three-acts-chaining-exposed-actuators-and-h2-database/  )，攻击者可获取RCE。payload： https://github.com/spaceraccoon/spring-boot-actuator-h2-rce
+391. [VulnChain](https://github.com/n0kto/ctf-writeups/tree/main/BackdoorCTF/VulnChain),[wp](https://oboembus.tech/blog/backdoor-ctf)
+- 一个比较奇怪的题型，要求`ERC721InvalidSender`被调用。这个函数根据[源码](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol)，当`_mint` token时某个tokenId的previousOwner不为0时调用。即不能mint之前出现过的tokenId
+- 使用Foundry获取被释放的合约地址
