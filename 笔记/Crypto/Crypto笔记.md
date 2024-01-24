@@ -2364,3 +2364,4 @@ c2=encrypt(k2,c1)
 - [Fernet](https://zweilosec.gitbook.io/hackers-rest/os-agnostic/cryptography-and-encryption#fernet)对称加密密码。其key和cipher均与base64相似
 128. [Curvy_Curves](https://connor-mccartney.github.io/cryptography/other/BackdoorCTF-2023-writeups#curvy_curves)
 - William's p+1 factorisation
+- 题目文件在[这里](https://tsumiiiiiiii.github.io/bdoorctf/#curvy-curves)可以找到。感觉像ECC上的RSA，同样是分解n后求逆元

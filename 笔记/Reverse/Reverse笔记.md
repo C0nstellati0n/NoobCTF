@@ -1114,6 +1114,8 @@ finish()
 - c#中有个AppDomain.CurrentDomain.UnhandledException event，可注册委托函数，当程序发生异常时转入委托函数执行
 137. [Sl4ydroid](https://sl4y3r-07.github.io/posts/BackdoorCTF'23-Writeups/#revsl4ydroid)
 - 可以用jadx+adb调试Android apk应用程序
+- 这篇[wp](https://gr007.tech/writeups/2023/backdoor/index.html#baby-ebpf)使用了[GameGuardian](https://gameguardian.net/forum/files/),可以查看内存。像是apk界的cheat engine
 138. [Baby-ebpf](https://gr007.tech/writeups/2023/backdoor/index.html#baby-ebpf)
 - ebpf文件逆向。ghidra似乎无法分析，直接`objdump -d`可以获取汇编
 - 一个用来trace ebpf文件执行的脚本： https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#baby-ebpf
+- IDA pro ebpf插件： https://github.com/zandi/eBPF_processor
