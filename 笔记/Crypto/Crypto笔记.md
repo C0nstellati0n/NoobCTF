@@ -2021,7 +2021,8 @@ print(AES.Decrypt("CTR",ct,key,nonce))
     - 允许交互。攻击者输入明文，服务器返回对应的密文
     - 加密时的密钥固定。目标为利用有限的交互次数+fault破解使用的密钥
 61. [signed_jeopardy](https://notateamserver.xyz/nahamcon-2023-crypto/#signed-jeopardy)
-- ECDSA（椭圆曲线，ecc） nonce（k值）重用（reuse）导致的[签名伪造](https://billatnapier.medium.com/ecdsa-weakness-where-nonces-are-reused-2be63856a01a)。感觉和58条[signature-ii](https://github.com/BCACTF/bcactf-4.0/tree/main/signature-ii)类似，不过这题有不同的脚本。
+- ECDSA（椭圆曲线，ecc） nonce（k值）重用（reuse）导致的[签名伪造](https://billatnapier.medium.com/ecdsa-weakness-where-nonces-are-reused-2be63856a01a)。感觉和58条[signature-ii](https://github.com/BCACTF/bcactf-4.0/tree/main/signature-ii)类似，不过这题有不同的脚本
+    - 继续补充看到的其他脚本：[Double-Whammy](https://mindflayer02-ctf-sec-notes.gitbook.io/mindflayer02-bisher-mohammads-ctf-writeups/nitectf-23/double-whammy)
 62. [Just One More](https://notateamserver.xyz/nahamcon-2023-crypto/#just-one-more)
 - 利用矩阵与阶梯形矩阵解线性方程组。sagemath里构造出矩阵后，可用Matrix.rref()获取阶梯形矩阵。注意如果矩阵的阶数和未知数的数量不一样的话，结果的阶梯形矩阵会有差别。详情见wp。
 - 也可用sympy linsolve： https://github.com/nzec/ctf-notes/tree/master/NahamCon23/Just%20One%20More

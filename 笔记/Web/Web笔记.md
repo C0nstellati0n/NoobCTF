@@ -3337,3 +3337,10 @@ window.recaptcha=true;
 391. [VulnChain](https://github.com/n0kto/ctf-writeups/tree/main/BackdoorCTF/VulnChain),[wp](https://oboembus.tech/blog/backdoor-ctf)
 - 一个比较奇怪的题型，要求`ERC721InvalidSender`被调用。这个函数根据[源码](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol)，当`_mint` token时某个tokenId的previousOwner不为0时调用。即不能mint之前出现过的tokenId
 - 使用Foundry获取被释放的合约地址
+392. [ERaaS](https://lenoctambule.dev/post/nitectf-2023-eraas)/[CaaS](https://lenoctambule.dev/post/nitectf-2023-caas)/[caas_renewed](https://heckintosh.github.io/competitions/nitectf2023/)
+- 命令注入技巧：可以用`$()`提前获取命令的输出
+- 可以将\`\`或者`$()`放在两个字母之间，起到绕过某些多字母过滤词的作用，如en\`\`v。若`.`被过滤，可以用`${ls -a | sed '2q;d'}`获取`..`，配合cd就能去到任意的上级目录
+- 可用`pwd|c'u't${IFS}-c1`获取字符`/`
+- 其他做法：
+    - https://github.com/satoki/ctf_writeups/tree/master/niteCTF_2023/caas_renewed ：利用base64绕过黑名单
+    - https://github.com/daffainfo/ctf-writeup/tree/main/2023/niteCTF%202023/caas%20renewed :命令之间加`$@`不会影响命令执行

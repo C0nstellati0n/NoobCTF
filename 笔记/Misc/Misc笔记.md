@@ -429,6 +429,8 @@ flag.export("./flag.mp3", format="mp3")
     - linux.proc has a dump option, `linux.proc --pid <pid> --dump`
 - [Not supported](https://pakcyberbot.github.io/CTF-Writeups/posts/BHME-NotSupported/)
     - `vol -f file.mem windows.memmap.Memmap --pid <num> --dump`:dump pid为num的进程的内容。有意思的地方在于，Memdumps are essentially RAM moment captures，可以将dump出来的文件后缀改成.data放进GIMP，能看到内存的图片，包括字符串形式的flag。参考 https://www.youtube.com/watch?v=-E3VTblFkKg
+- [conqueror](https://github.com/daffainfo/ctf-writeup/tree/main/2023/niteCTF%202023/conqueror)
+    - `vol -f ctf.mem windows.hashdump.Hashdump`:dump用户及其md5 hash
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。动图解释：https://zhuanlan.zhihu.com/p/63362804
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
 
@@ -1735,3 +1737,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 使用Resnet（图像分类网络）对图片序列进行分类。需要将model设置为eval模式才能获取输出： https://stackoverflow.com/questions/60018578/what-does-model-eval-do-in-pytorch
 225. [Visual Hacker](https://github.com/XDSEC/MoeCTF_2023/blob/main/Official_Writeup/AI.md#visual-hacker)
 - Gaze Estimation模型(L2CS网络)的应用。该模型/网络用于估计眼睛的视线方位
+226. [DecryptaQuest](https://github.com/daffainfo/ctf-writeup/tree/main/2023/niteCTF%202023/DecryptaQuest)
+- 利用SSLKEYLOGFILE在wireshark里解码TLS / SSL流。这个文件能看见`CLIENT_HANDSHAKE_TRAFFIC_SECRET`的字样
