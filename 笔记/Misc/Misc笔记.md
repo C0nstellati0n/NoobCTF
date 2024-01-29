@@ -1739,3 +1739,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - Gaze Estimation模型(L2CS网络)的应用。该模型/网络用于估计眼睛的视线方位
 226. [DecryptaQuest](https://github.com/daffainfo/ctf-writeup/tree/main/2023/niteCTF%202023/DecryptaQuest)
 - 利用SSLKEYLOGFILE在wireshark里解码TLS / SSL流。这个文件能看见`CLIENT_HANDSHAKE_TRAFFIC_SECRET`的字样
+227. [What the Beep](https://writeup.gldanoob.dev/what-the-beep/)
+- 利用平方反比公式（[inverse square law](https://en.wikipedia.org/wiki/Inverse-square_law)）根据不同方位处声音的大小计算声源
+228. [Radio Hijacking](https://binarybossoms-vsadygv-06d6d41fd2dbe33e31656047498f678ca9eaabdc6.gitlab.io/)
+- 使用[Universal Radio Hacker](https://github.com/jopohl/urh)检查无线电频率（radio frequency）。signal view的spectrogram模式可以隐藏analog模式下看不见的东西

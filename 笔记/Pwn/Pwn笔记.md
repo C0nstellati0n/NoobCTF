@@ -576,6 +576,9 @@ print(base64.b64encode(temp.encode()))
   - 利用f string(`f'{}'`)构造字符并实现双eval RCE。`f"{97:c}"`输出为a
   - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#avatar
 - eval里不能用=号定义变量或给变量赋值，但是用海象运算符`:=`可以
+- [least ELOistic fish](https://github.com/Cryptonite-MIT/niteCTF-2023/tree/main/misc/least%20ELOistic%20fish)
+  - 利用多重getattr套娃和bytearray绕过过滤
+  - 这题本身是python stockfish（国际象棋分析库）的使用，因为输入未被过滤，可以直接跳过当前输入，让stockfish自己和自己下棋
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

@@ -636,7 +636,6 @@ print(x)
 ```
 
 5. 海明码（汉明码）问题。例题：[H■m■i■g](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Misc/H%E2%96%A0m%E2%96%A0i%E2%96%A0g.md)。今天又遇见一道题：[鸡藕椒盐味](https://buuoj.cn/challenges#%E9%B8%A1%E8%97%95%E6%A4%92%E7%9B%90%E5%91%B3)，也是海明码，没想到直接用当时写的脚本就能出答案。
-
 ```python
 import hashlib
 def hamming_correct(bitblock):
@@ -657,7 +656,7 @@ md.update(c.encode("utf8"))
 flag = md.hexdigest()
 print(flag)                   
 ```
-
+以及其他人的脚本：[PARtly bintastic](https://github.com/Cryptonite-MIT/niteCTF-2023/tree/main/crypto/partly_bintastic)
 6. rsa题目时要看清楚密文即证书的格式。有些题密文和n等信息会以文件的形式给出，有可能是bytes形式，可以直接long_to_bytes，但也有可能是base64编码后的形式。解密前注意这些细节，能省去很多怀疑人生的时间。
 7. polybius方阵密码爆破。常见的方阵密码用数字1，2，3，4，5表示，不过任何5个元素都能表示polybius密文，比如aeiou。这里有个思维惯性，可能会下意识认为方阵排列形式就是aeiou，但可能并不是这样，aioue也不是不行。不同的排列组合会影响解密的结果。故需要爆破，利用下面的脚本：
 
@@ -2023,6 +2022,7 @@ print(AES.Decrypt("CTR",ct,key,nonce))
 61. [signed_jeopardy](https://notateamserver.xyz/nahamcon-2023-crypto/#signed-jeopardy)
 - ECDSA（椭圆曲线，ecc） nonce（k值）重用（reuse）导致的[签名伪造](https://billatnapier.medium.com/ecdsa-weakness-where-nonces-are-reused-2be63856a01a)。感觉和58条[signature-ii](https://github.com/BCACTF/bcactf-4.0/tree/main/signature-ii)类似，不过这题有不同的脚本
     - 继续补充看到的其他脚本：[Double-Whammy](https://mindflayer02-ctf-sec-notes.gitbook.io/mindflayer02-bisher-mohammads-ctf-writeups/nitectf-23/double-whammy)
+    - 自动工具： https://github.com/Hungary23/ecc_cryptanalysis/
 62. [Just One More](https://notateamserver.xyz/nahamcon-2023-crypto/#just-one-more)
 - 利用矩阵与阶梯形矩阵解线性方程组。sagemath里构造出矩阵后，可用Matrix.rref()获取阶梯形矩阵。注意如果矩阵的阶数和未知数的数量不一样的话，结果的阶梯形矩阵会有差别。详情见wp。
 - 也可用sympy linsolve： https://github.com/nzec/ctf-notes/tree/master/NahamCon23/Just%20One%20More
