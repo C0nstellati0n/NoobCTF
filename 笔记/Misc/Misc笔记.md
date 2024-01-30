@@ -1743,3 +1743,22 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 利用平方反比公式（[inverse square law](https://en.wikipedia.org/wiki/Inverse-square_law)）根据不同方位处声音的大小计算声源
 228. [Radio Hijacking](https://binarybossoms-vsadygv-06d6d41fd2dbe33e31656047498f678ca9eaabdc6.gitlab.io/)
 - 使用[Universal Radio Hacker](https://github.com/jopohl/urh)检查无线电频率（radio frequency）。signal view的spectrogram模式可以隐藏analog模式下看不见的东西
+- 也可以使用gqrx
+229. [Not Just Media](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Forensics/Not_Just_Media)
+- 使用[MKVToolNix](https://mkvtoolnix.download/)分析mkv文件
+- 这个工具可以提取出mkv文件内诸如font之类的文件。注意一定要用专门读取字体文件的工具打开，光strings可能出不来东西
+230. [skat's SD Card](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Forensics/skat's_SD_Card)
+- linux挂载Linux rev 1.0 ext4 filesystem data
+- git clone可以clone github上的私有repo（无法在github上通过url得到），需要使用ssh密钥
+- john爆破ssh密钥
+231. [Investigator Alligator](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Forensics/Investigator_Alligator)
+- linux里有个`/etc/skel/.bashrc`文件，创建新用户时该文件内容会拷贝至家目录下的`.bashrc`（参考 https://askubuntu.com/questions/1045946/bashrc-vs-etc-skel-bashrc-why-are-there-two-bashrcs ）。可通过比对两个文件找出不同进而作为入手点
+232. [Where's skat?](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Networks/Where's_skat%3F)
+- 使用WiGLE api：利用wifi的SSID找地点
+233. [skat's Network History](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Networks/skat's_Network_History)
+- linux的`/etc/NetworkManager/system-connections/`文件夹下含有各wifi的连接信息，`psk=`后即为WPA-PSK的密码，在wireshark里配合SSID可以解密通信流
+234. [Spicy Sines](https://meashiri.github.io/ctf-writeups/posts/202401-irisctf/#spicy-sines)
+- 图像曼彻斯特编码（Manchester encoding）解码脚本
+- 曼彻斯特编码分Thomas和IEEE Manchester,两者的0和1是反过来的
+235. [Sir Scope](https://meashiri.github.io/ctf-writeups/posts/202401-irisctf/#sir-scope)
+- 电路信号流阅读（Data/Rest/Clock），注意数据按LSB first传输
