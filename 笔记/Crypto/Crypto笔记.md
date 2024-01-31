@@ -2366,3 +2366,5 @@ c2=encrypt(k2,c1)
 128. [Curvy_Curves](https://connor-mccartney.github.io/cryptography/other/BackdoorCTF-2023-writeups#curvy_curves)
 - William's p+1 factorisation
 - 题目文件在[这里](https://tsumiiiiiiii.github.io/bdoorctf/#curvy-curves)可以找到。感觉像ECC上的RSA，同样是分解n后求逆元
+129. [Accessible Sesamum Indicum](https://pshegger.github.io/posts/irisctf-2024/#accessible-sesamum-indicum)
+- de Bruijn sequence([德布鲁因序列](https://halfrost.com/go_s2_de_bruijn/))。该序列满足任何其期望长度的substring都不会重复（例如期望长度为4，该字符串内任意一个长度为4的substring都不会重复。不同期望长度的德布鲁因序列的构造不同）。可用pwntools的cyclic_gen获取序列

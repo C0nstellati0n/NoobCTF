@@ -1747,10 +1747,12 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 229. [Not Just Media](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Forensics/Not_Just_Media)
 - 使用[MKVToolNix](https://mkvtoolnix.download/)分析mkv文件
 - 这个工具可以提取出mkv文件内诸如font之类的文件。注意一定要用专门读取字体文件的工具打开，光strings可能出不来东西
+- mkvextract及[辅助脚本](https://gist.github.com/konfou/05db32e11ee84efde0adba2ac34331f4)使用:`./mkvextract-helper.sh -f chal.mkv -tavsc`
 230. [skat's SD Card](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Forensics/skat's_SD_Card)
 - linux挂载Linux rev 1.0 ext4 filesystem data
-- git clone可以clone github上的私有repo（无法在github上通过url得到），需要使用ssh密钥
-- john爆破ssh密钥
+- git clone可以使用ssh url clone github上的私有repo（无法在github上通过url得到），需要使用ssh密钥
+- john爆破ssh密钥。m1 mac装john： https://gist.github.com/securisec/c332939963438b41b392669b8901232b
+- `.git/objects/pack/`下的文件可以用[packfile_reader](https://github.com/robisonsantos/packfile_reader)提取：`packfile_reader -e -o . pack.pack`
 231. [Investigator Alligator](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Forensics/Investigator_Alligator)
 - linux里有个`/etc/skel/.bashrc`文件，创建新用户时该文件内容会拷贝至家目录下的`.bashrc`（参考 https://askubuntu.com/questions/1045946/bashrc-vs-etc-skel-bashrc-why-are-there-two-bashrcs ）。可通过比对两个文件找出不同进而作为入手点
 232. [Where's skat?](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Networks/Where's_skat%3F)
@@ -1762,3 +1764,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 曼彻斯特编码分Thomas和IEEE Manchester,两者的0和1是反过来的
 235. [Sir Scope](https://meashiri.github.io/ctf-writeups/posts/202401-irisctf/#sir-scope)
 - 电路信号流阅读（Data/Rest/Clock），注意数据按LSB first传输
+236. [Corrupted World](https://hackmd.io/@9x14S/IrisCTF2024#Corrupted-World-solved-by-Havel29)
+- 如果minecraft中用于存储世界的文件部分损坏但chunk数据保留完整，可以新建世界后，找到world下region文件夹，将内容替换为期望的chunk数据即可打开世界
+- https://seall.dev/posts/irisctf2024/#forensicscorrupted-world-28-solves 是此题的预期解。首先用[工具](https://minecraft.tools/en/coordinate-calculator.php)找到题目给出的坐标对应哪个region文件，然后读取NBT数据。题目作者通过修改chunk file文件头的长度字段导致游戏内无法正常读取，用提供的脚本找到错误处，修改后自行读取即可
+- 其他可供参考的脚本： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#corrupted-world
+237. [Copper Selachimorpha](https://seall.dev/posts/irisctf2024/#networkscopper-selachimorpha-27-solves)
+- 802.11 (WiFi) traffic密码破解还可以用hashcat。使用[工具](https://hashcat.net/cap2hashcat/)直接将pcap转为hash后运行`hashcat -a 0 -m 22000 hash rockyou.txt`即可
