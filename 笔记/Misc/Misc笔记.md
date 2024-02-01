@@ -1748,6 +1748,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 使用[MKVToolNix](https://mkvtoolnix.download/)分析mkv文件
 - 这个工具可以提取出mkv文件内诸如font之类的文件。注意一定要用专门读取字体文件的工具打开，光strings可能出不来东西
 - mkvextract及[辅助脚本](https://gist.github.com/konfou/05db32e11ee84efde0adba2ac34331f4)使用:`./mkvextract-helper.sh -f chal.mkv -tavsc`
+- ffmpeg做法： https://pshegger.github.io/posts/irisctf-2024/#not-just-media
 230. [skat's SD Card](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Forensics/skat's_SD_Card)
 - linux挂载Linux rev 1.0 ext4 filesystem data
 - git clone可以使用ssh url clone github上的私有repo（无法在github上通过url得到），需要使用ssh密钥
@@ -1770,3 +1771,6 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 其他可供参考的脚本： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#corrupted-world
 237. [Copper Selachimorpha](https://seall.dev/posts/irisctf2024/#networkscopper-selachimorpha-27-solves)
 - 802.11 (WiFi) traffic密码破解还可以用hashcat。使用[工具](https://hashcat.net/cap2hashcat/)直接将pcap转为hash后运行`hashcat -a 0 -m 22000 hash rockyou.txt`即可
+238. [Sharing is Caring](https://justinapplegate.me/2024/irisctf-sharingiscaring/)
+- 一种多设备同时传输信号的网络协议：[CDMA](http://www.wirelesscommunication.nl/reference/chaptr05/cdma/dscdma.htm)。传输时每个设备都有一个特殊的码，可叫PN，PRN码甚至是key。每发送1 bit信息就将码乘上信息。如key `-1, 1, 1`，1就照常发送，0就发送其相反数`1, -1, -1`。效率取决于码的长度
+- 多设备在同一channel传输时，其amplitude会互相碰撞（相加）。比如获取到了0，不一定是两方都没发送，也有可能是一个传了1，另一个传了-1

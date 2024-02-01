@@ -1664,3 +1664,9 @@ try {
 164. [pizzeria](https://github.com/MarcoPellero/writeups/tree/main/backdoor/pizzeria)
 - libc 2.35 [fastbin dup](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/fastbin_dup.c)(double free)。how2heap里展示时用的是calloc，因为calloc可以跳过tcache直接从fastbin里取chunk。如果题目中只能用malloc，参考wp的做法
   - [house of botcake](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/house_of_botcake.c)没用calloc，这俩有共通点。更详细的解析wp： https://www.youtube.com/watch?v=qVLXHNqxpkE
+165. [Sequilitis](https://gold3nb0y.github.io/blog/posts/irisctf/)
+- sqlite3相关pwn。攻击者可修改sql查询语句的bytecode
+- wp内包含的sqlite3相关知识
+  - sql查询语句经过处理后，会被编译进bytecode，接着该bytecode会被VDBE或Virtual Database Engine处理，bytecode的结构是特定的，可用explain查看哪些opcode被调用
+  - select语句内存结构。修改指向查询内容的堆指针即可泄漏任意地址
+  - 使用Function opcode调用用户函数并实现RCE。一些复杂的select语句内部会使用该opcode。需要重点伪造sqlite3_context和FuncDef结构中的一两个指针，其他的直接抄内存里原本的结构即可。rdi的控制似乎会出现问题，可使用one_gadget。操控sqlite3_context结构体后可以控制rdx
