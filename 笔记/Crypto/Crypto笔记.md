@@ -2368,3 +2368,6 @@ c2=encrypt(k2,c1)
 - 题目文件在[这里](https://tsumiiiiiiii.github.io/bdoorctf/#curvy-curves)可以找到。感觉像ECC上的RSA，同样是分解n后求逆元
 129. [Accessible Sesamum Indicum](https://pshegger.github.io/posts/irisctf-2024/#accessible-sesamum-indicum)
 - de Bruijn sequence([德布鲁因序列](https://halfrost.com/go_s2_de_bruijn/))。该序列满足任何其期望长度的substring都不会重复（例如期望长度为4，该字符串内任意一个长度为4的substring都不会重复。不同期望长度的德布鲁因序列的构造不同）。可用pwntools的cyclic_gen获取序列
+130. [Integral Communication](https://nightxade.github.io/ctf-writeups/writeups/2024/Iris-CTF-2024/crypto/integral-communication.html)
+- AES CBC翻转字节攻击。修改第i个块的解密结果后，第i-1块会解密出乱码。基本这种方式只能改一块，因为上一块的解密结果未知。除非以某种方式得知了修改当前块后上一块的解密结果（如题目特殊的oracle）。如修改第二块会影响第一块的解密结果，这时如果也想修改第一块，就要获取其被影响后的解密结果，然后改IV
+- 更详细的解析wp： https://amateurs.team/writeups/IrisCTF-2024/integral-communication

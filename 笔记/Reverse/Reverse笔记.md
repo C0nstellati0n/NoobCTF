@@ -988,6 +988,9 @@ main()
 - [Secure Computing](https://hackmd.io/@lunashci/SJuEkctd6#Secure-Computing)
   - 个人之前没见过的逆向方式。题目在init_array里多加了一个函数，函数内部调用了seccomp syscall，flag为SECCOMP_SET_MODE_FILTER。使用seccomp添加filter后，今后所有调用的syscall都会经过这些filter。需要从binary中自行提取出filter内容，然后用seccomp-tools反编译出内容：`seccomp-tools disasm --no-bpf export > chunk1`。比较特别的地方在于，filter内部可以写复杂的针对syscall number的运算汇编
   - 此题的z3部分在于根据filter内容编写合适的脚本
+  - 另一个[wp](https://the-m3chanic.github.io/2024/01/26/Writeup-Secure-Computing-IRIS-CTF-2024/)讲得更详细。补充知识点：
+    - seccomp-tools大部分情况下都可以使用ptrace自动dump出filter，意味着若程序里已有ptrace调用，需要patch掉后再dump。默认只会dump一个filter，加上`-l` flag可dump出完整的flag
+    - [KLEE](https://klee.github.io/) Symbolic Virtual Machine (Solver)的安装及使用。可直接在C/C++语言文件上实现符号执行
 115. [Conquest of Camelot](https://black-frost.github.io/posts/sekai2023/)
 - OCaml语言binary逆向。这种语言的函数调用约定比较奇怪，ida可能无法生成伪代码。另外，这种语言对数组的操作会自动添加大量的bound checking，函数体会看起来很复杂但逻辑可能很简单
 - 參考 https://mcfx.us/posts/2023-09-01-sekaictf-2023-writeup/#conquest-of-camelot ，（ida里）calling convection应该为`__int64 __usercall func<rax>(__int64 arg0@<rax>, __int64 arg1@<rax>, __int64 arg2@<rdi>)`

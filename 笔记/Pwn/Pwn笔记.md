@@ -1670,3 +1670,7 @@ try {
   - sql查询语句经过处理后，会被编译进bytecode，接着该bytecode会被VDBE或Virtual Database Engine处理，bytecode的结构是特定的，可用explain查看哪些opcode被调用
   - select语句内存结构。修改指向查询内容的堆指针即可泄漏任意地址
   - 使用Function opcode调用用户函数并实现RCE。一些复杂的select语句内部会使用该opcode。需要重点伪造sqlite3_context和FuncDef结构中的一两个指针，其他的直接抄内存里原本的结构即可。rdi的控制似乎会出现问题，可使用one_gadget。操控sqlite3_context结构体后可以控制rdx
+166. [Memory](https://scavengersecurity.com/posts/memory/)
+- kernel相关pwn。get_user函数从用户页地址处获取一个变量。当提供的地址有效且可读时，耗时会比不可读的无效地址短上不少。可利用这点实现基于时间的测信道攻击。wp提供了一种C语言获取时间戳并实现测信道攻击的方式
+- 官方解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#memory 。利用被cache后的地址访问速度会更快的特点实现测信道攻击
+- 调试kernel可以用[kgdb](https://www.kernel.org/doc/html/latest/dev-tools/kgdb.html)

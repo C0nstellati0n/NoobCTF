@@ -1764,7 +1764,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 图像曼彻斯特编码（Manchester encoding）解码脚本
 - 曼彻斯特编码分Thomas和IEEE Manchester,两者的0和1是反过来的
 235. [Sir Scope](https://meashiri.github.io/ctf-writeups/posts/202401-irisctf/#sir-scope)
-- 电路信号流阅读（Data/Rest/Clock），注意数据按LSB first传输
+- 电路信号流阅读（oscilloscope(示波器),Data/Rest/Clock），注意数据按LSB first传输
 236. [Corrupted World](https://hackmd.io/@9x14S/IrisCTF2024#Corrupted-World-solved-by-Havel29)
 - 如果minecraft中用于存储世界的文件部分损坏但chunk数据保留完整，可以新建世界后，找到world下region文件夹，将内容替换为期望的chunk数据即可打开世界
 - https://seall.dev/posts/irisctf2024/#forensicscorrupted-world-28-solves 是此题的预期解。首先用[工具](https://minecraft.tools/en/coordinate-calculator.php)找到题目给出的坐标对应哪个region文件，然后读取NBT数据。题目作者通过修改chunk file文件头的长度字段导致游戏内无法正常读取，用提供的脚本找到错误处，修改后自行读取即可
