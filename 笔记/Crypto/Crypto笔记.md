@@ -1755,7 +1755,7 @@ print("The flag is: %s" % flag)
   - [The Effects of the Omission of Last Round's MixColumns on AES](https://www.sciencedirect.com/science/article/pii/S0020019010000335)
   - [On the security of inclusion or omission of MixColumns in AES cipher](https://www.semanticscholar.org/paper/On-the-security-of-inclusion-or-omission-of-in-AES-AlMarashda-Alsalami/e13e7d71861290e218b57307a09dda040978375f)
 46. [DSA签名算法](https://ctf-wiki.org/en/crypto/signature/dsa/)需要在每次签名时使用不同的明文或不同的公钥。如果一直使用相同的公钥签名相同的明文，仅让私钥x随机变化，会导致攻击者获取多个签名后相互减，并取gcd即可获取的明文。[DSA?](https://github.com/wani-hackase/wanictf2023-writeup/tree/main/cry/dsa)
-47. [SHA256-CTR](https://github.com/AVDestroyer/CTF-Writeups/blob/main/sdctf/sha256-ctr.md)
+47. [SHA256-CTR](https://github.com/AVDestroyer/CTF-Writeups/blob/main/sdctf2023/sha256-ctr.md)
 - 使用sha256作为AES-CTR模式下counter的加密函数：有出现[hash length extension attack](https://en.wikipedia.org/wiki/Length_extension_attack)的风险（很多hash类函数都有这个漏洞，包括md5）
   - hash length extension attack简述：已知Hash(message1)和message1的长度（无需确切知道message1的内容），且可控制接下来的message2。那么就能获得Hash(message1||message2)的值，其中||表示拼接两条信息。
   - 注意实施攻击时需要有特殊的padding。当计算Hash(secret)时，需要将secret的长度pad成56字节的倍数，接着再在后面加上8字节。遵循以下规则：
@@ -2371,3 +2371,5 @@ c2=encrypt(k2,c1)
 130. [Integral Communication](https://nightxade.github.io/ctf-writeups/writeups/2024/Iris-CTF-2024/crypto/integral-communication.html)
 - AES CBC翻转字节攻击。修改第i个块的解密结果后，第i-1块会解密出乱码。基本这种方式只能改一块，因为上一块的解密结果未知。除非以某种方式得知了修改当前块后上一块的解密结果（如题目特殊的oracle）。如修改第二块会影响第一块的解密结果，这时如果也想修改第一块，就要获取其被影响后的解密结果，然后改IV
 - 更详细的解析wp： https://amateurs.team/writeups/IrisCTF-2024/integral-communication
+131. [manykey](https://connor-mccartney.github.io/cryptography/ecc/manykey-IrisCTF-2024)
+- ECDSA私钥伪造。给出一条明文及其签名和对应的公钥，构造一个可通过验证的私钥。验签公式如下： $(\frac{h}{s}\*G+\frac{r}{s}\*Q).x\equiv r\mod n$ 。r和s是签名的一部分，h是要验证的消息hash，G是选择的curve generator，Q是私钥指数d乘上G的结果。补充链接： https://toadstyle.org/cryptopals/61.txt

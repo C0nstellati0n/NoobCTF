@@ -1756,6 +1756,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - `.git/objects/pack/`下的文件可以用[packfile_reader](https://github.com/robisonsantos/packfile_reader)提取：`packfile_reader -e -o . pack.pack`
 231. [Investigator Alligator](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Forensics/Investigator_Alligator)
 - linux里有个`/etc/skel/.bashrc`文件，创建新用户时该文件内容会拷贝至家目录下的`.bashrc`（参考 https://askubuntu.com/questions/1045946/bashrc-vs-etc-skel-bashrc-why-are-there-two-bashrcs ）。可通过比对两个文件找出不同进而作为入手点
+- 可以用volatility3的`linux.openssh_sessionkeys.SSHKeys`插件解码pcap里的SSH session。注意这个插件仅可在<= Vol3 1.1.0的版本中使用。参考：
+    - https://blog.fox-it.com/2020/11/11/decrypting-openssh-sessions-for-fun-and-profit/
+    - https://github.com/fox-it/OpenSSH-Session-Key-Recovery/
+    - https://github.com/fox-it/OpenSSH-Network-Parser
 232. [Where's skat?](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Networks/Where's_skat%3F)
 - 使用WiGLE api：利用wifi的SSID找地点
 233. [skat's Network History](https://github.com/4n86rakam1/writeup/tree/main/IrisCTF_2024/Networks/skat's_Network_History)
@@ -1774,3 +1778,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 238. [Sharing is Caring](https://justinapplegate.me/2024/irisctf-sharingiscaring/)
 - 一种多设备同时传输信号的网络协议：[CDMA](http://www.wirelesscommunication.nl/reference/chaptr05/cdma/dscdma.htm)。传输时每个设备都有一个特殊的码，可叫PN，PRN码甚至是key。每发送1 bit信息就将码乘上信息。如key `-1, 1, 1`，1就照常发送，0就发送其相反数`1, -1, -1`。效率取决于码的长度
 - 多设备在同一channel传输时，其amplitude会互相碰撞（相加）。比如获取到了0，不一定是两方都没发送，也有可能是一个传了1，另一个传了-1
+239. [Voice Lock](https://github.com/IrisSec/IrisCTF-2024-Challenges/tree/main/voicelock)
+- 使用在线工具克隆/生成指定声音：
+    - https://play.ht/use-cases/character-voice-generator/
+    - https://vocloner.com/
+    - ttps://myvoice.speechify.com/
+240. [Secret Message 2](https://github.com/Apzyte-Gamer/UofTCTF-2024/tree/main/Forensics/Secret%20Message%202)
+- 如果某段文字使用像素化隐藏，可用[unredacter](https://github.com/BishopFox/unredacter)通过像素化的图片恢复文字

