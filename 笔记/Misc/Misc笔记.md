@@ -1234,7 +1234,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [gum](https://github.com/charmbracelet/gum)用法案例。注意`guess_date=$(gum input --placeholder $guess_date)`并不安全，用户仍然能随意控制guess_date的值。
 - root用户的ssh私钥：`/root/.ssh/id_rsa`。有了这个私钥，ssh时就能以root身份连接
 115. [Fetch](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon2023/Forensics/Fetch.md)
-- windows imaging image(WIM) forensic。使用wimtools（sudo apt-get install wimtools）挂载image后可能看到一些prefetch文件（后缀.pf）。参考这篇[文章](https://www.hackingarticles.in/forensic-investigation-prefetch-file/)，可用[WinPrefetch View](https://www.nirsoft.net/utils/win_prefetch_view.html)/FTK imager，[PECmd](https://github.com/EricZimmerman/PECmd)(https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/forensics/fetch)(`PECmd.exe -d D:\CTF\nahamcon\fetch_output_dir | findstr /i "flag"`)等工具。
+- windows imaging image(WIM) forensic。使用wimtools（sudo apt-get install wimtools）挂载image后可能看到一些prefetch文件（后缀.pf）。参考这篇[文章](https://www.hackingarticles.in/forensic-investigation-prefetch-file/)，可用[WinPrefetch View](https://www.nirsoft.net/utils/win_prefetch_view.html)/FTK imager，[PECmd](https://github.com/EricZimmerman/PECmd)（参考[wp](https://github.com/D13David/ctf-writeups/tree/main/nahamcon23/forensics/fetch),使用命令`PECmd.exe -d D:\CTF\nahamcon\fetch_output_dir | findstr /i "flag"`）等工具。
 - WIM文件用7z解压也能获取到prefetch文件。或者用dism( https://0xoffset.github.io/2023/06/18/NahamCon-CTF-2023-Forensics-Writeups.html#fetch-easy-166-solves )：
     - `mkdir fetch_output_dir`
     - `dism /mount-wim /wimfile:D:\CTF\nahamcon\fetch /index:1 /mountdir:D:\CTF\nahamcon\fetch_output_dir`
@@ -1785,3 +1785,15 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - ttps://myvoice.speechify.com/
 240. [Secret Message 2](https://github.com/Apzyte-Gamer/UofTCTF-2024/tree/main/Forensics/Secret%20Message%202)
 - 如果某段文字使用像素化隐藏，可用[unredacter](https://github.com/BishopFox/unredacter)通过像素化的图片恢复文字
+241. [Illusion](https://ireland.re/posts/UofTCTF_2024/#forensicsillusion-writeup)
+- [TrevorC2](https://nasbench.medium.com/understanding-detecting-c2-frameworks-trevorc2-2a9ce6f1f425)框架分析。[C2](https://zhuanlan.zhihu.com/p/54810155)全称为Command and Control，个人理解为恶意软件与攻击者之间的交流方式。直接交流太明显，所以TrevorC2框架的做法是clone一个常见的可浏览的网站，默认利用`/images?guid`回传给攻击者服务器数据；攻击者默认用`oldcss=`将要带给被攻击者的数据藏在网页里。交流时的数据经过base64和AES加密，AES的key可以在C2 Server的配置里找到
+242. [Out of the Bucket 2](https://seall.dev/posts/uoftctf2024#miscellaneousout-of-the-bucket-2-122-solves)
+- gcloud工具使用：
+    - `gsutil ls`：查看bucket里的内容
+    - `gsutil -m cp "gs://path/*" dest/`:将bucket某文件夹下的全部文件拷贝到本地文件夹
+    - `gcloud services list --enabled`: what can be enumerated in this account
+243. [EnableMe](https://seall.dev/posts/uoftctf2024#forensicsenableme-150-solves)
+- docm后缀文件宏提取工具：[oletools](https://github.com/decalage2/oletools)
+244. [Hourglass](https://medium.com/@mando_elnino/university-of-toronto-ctf-writeups-f5a5f30b46d9)
+- `Users/<username>/AppData/Local/ConnectedDevicesPlatform/L.analyst/ActiveCache.db`：history of what application was used and any files that were made
+- 另一个[wp](https://medium.com/@refaim643/uoftctf-forensics-writeup-40fdf89b38f0)使用了`$Extend\$USNJrnl`文件（参考 https://www.orionforensics.com/forensics-tools/ntfs-journal-viewer-jv/ ），可用[MFTECmd](https://github.com/EricZimmerman/MFTECmd)将该文件处理成csv，然后再用[Timeline Explorer](https://ericzimmerman.github.io/#!index.md打开)

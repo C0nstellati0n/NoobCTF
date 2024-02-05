@@ -2373,3 +2373,5 @@ c2=encrypt(k2,c1)
 - 更详细的解析wp： https://amateurs.team/writeups/IrisCTF-2024/integral-communication
 131. [manykey](https://connor-mccartney.github.io/cryptography/ecc/manykey-IrisCTF-2024)
 - ECDSA私钥伪造。给出一条明文及其签名和对应的公钥，构造一个可通过验证的私钥。验签公式如下： $(\frac{h}{s}\*G+\frac{r}{s}\*Q).x\equiv r\mod n$ 。r和s是签名的一部分，h是要验证的消息hash，G是选择的curve generator，Q是私钥指数d乘上G的结果。补充链接： https://toadstyle.org/cryptopals/61.txt
+132. [Burrows–Wheeler Transform](https://www.dcode.fr/burrows-wheeler-transform):密文长得很像栅栏
+133. [Music Sheet Cipher](https://www.dcode.fr/music-sheet-cipher):密文类似五线谱里的音符

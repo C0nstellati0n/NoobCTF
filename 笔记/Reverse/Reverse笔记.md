@@ -1125,3 +1125,10 @@ finish()
 - ebpf文件逆向。ghidra似乎无法分析，直接`objdump -d`可以获取汇编
 - 一个用来trace ebpf文件执行的脚本： https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#baby-ebpf
 - IDA pro ebpf插件： https://github.com/zandi/eBPF_processor
+139. [CSS Password](https://seall.dev/posts/uoftctf2024#reverse-engineeringcss-password-148-solves)
+- 逆向CSS逻辑
+- 补充wp：
+  - https://vulnx.github.io/posts/UofTCTF/#reverse-engineeringcss-password
+  - https://github.com/jjchoNC/ctf-writeups/tree/main/UofTCTF%202024/rev/CSS%20Password
+140. [All Worbled Up](https://hackmd.io/@khoavnpsc/HkxcT5MY6)
+- python bytecode assembly(字节码)手动反编译例题
