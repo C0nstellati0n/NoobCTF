@@ -1674,3 +1674,7 @@ try {
 - kernel相关pwn。get_user函数从用户页地址处获取一个变量。当提供的地址有效且可读时，耗时会比不可读的无效地址短上不少。可利用这点实现基于时间的测信道攻击。wp提供了一种C语言获取时间戳并实现测信道攻击的方式
 - 官方解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#memory 。利用被cache后的地址访问速度会更快的特点实现测信道攻击
 - 调试kernel可以用[kgdb](https://www.kernel.org/doc/html/latest/dev-tools/kgdb.html)
+167. javascript jail合集
+- [Baby JS Blacklist](https://github.com/daffainfo/ctf-writeup/tree/main/2024/UofTCTF%202024/Baby%20JS%20Blacklist)
+  - 使用babel库将输入代码转为Abstract Syntax Tree (AST)，并检查是否有函数调用。参考 https://gist.github.com/arkark/a31f57c271e4aca4516c5a7072845aca 里的做法可以绕过babel的检测。不过wp里使用的是`process.binding`而不是`process.mainModule.require`来获取flag。个人做这题时发现，高版本的nodejs里默认没有require了，必须要导入模块才能使用。于是只能用binding实现RCE（binding也可以用来调用C++函数）
+  - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#baby-js-blacklist
