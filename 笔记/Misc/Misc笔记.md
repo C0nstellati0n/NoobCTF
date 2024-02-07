@@ -1801,3 +1801,6 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 245. [Baby's First IoT Flag 4](https://t0pn0xch.gitbook.io/uoftctf-2024/uoftctf-2024/category-iot/babys-first-iot-flag-4-500-points)
 - `printenv`:获取U-Boot环境变量值
 - `bootargs=${bootargs} init=/bin/sh`:修改bootargs，使其在boot阶段spawn一个shell
+246. [Prediction API](https://github.com/UofTCTF/uoftctf-2024-chals-public/tree/master/Miscellaneous/Prediction%20API)
+- random noise model extraction：利用一些输入窃取AI模型的weight
+- 使用现成MINST dataset获取模型weight： https://github.com/jakub-gierus/CTF-writeups/blob/main/Prediction%20API.md

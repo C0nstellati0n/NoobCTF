@@ -2375,3 +2375,5 @@ c2=encrypt(k2,c1)
 - ECDSA私钥伪造。给出一条明文及其签名和对应的公钥，构造一个可通过验证的私钥。验签公式如下： $(\frac{h}{s}\*G+\frac{r}{s}\*Q).x\equiv r\mod n$ 。r和s是签名的一部分，h是要验证的消息hash，G是选择的curve generator，Q是私钥指数d乘上G的结果。补充链接： https://toadstyle.org/cryptopals/61.txt
 132. [Burrows–Wheeler Transform](https://www.dcode.fr/burrows-wheeler-transform):密文长得很像栅栏
 133. [Music Sheet Cipher](https://www.dcode.fr/music-sheet-cipher):密文类似五线谱里的音符
+134. [export-grade-cipher](https://github.com/UofTCTF/uoftctf-2024-chals-public/tree/master/Cryptography/export-grade-cipher)
+- wp参考 https://kanzya.github.io/posts/UofTCTF/ 和 https://hackmd.io/@Wrth/UofTCTF-2024-EGC 。据出题人所说，此题为 https://web.archive.org/web/20000302000206/http://www.dvd-copy.com/news/cryptanalysis_of_contents_scrambling_system.htm 里提到的一种经典攻击，专门针对数据打乱类型的密码（Contents Scrambling System）

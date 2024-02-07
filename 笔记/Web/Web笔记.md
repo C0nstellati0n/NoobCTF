@@ -3349,5 +3349,5 @@ window.recaptcha=true;
 393. [LiteLibrary v2](https://github.com/Cryptonite-MIT/niteCTF-2023/tree/main/web/litelibrary_v2)
 - openlibrary JSONP端口利用。若题目允许注入html但CSP限制了default-src为`openlibrary.org`，可以用iframe的srcdoc配合openlibrary的JSONP绕过
 394. [Jay’s Bank](https://ireland.re/posts/UofTCTF_2024/#webjays-bank)
-- `İ`本身在js里的长度为1，经过`toLowerCase()`函数后其长度会变为2
+- `İ`本身在js里的长度为1，经过`toLowerCase()`函数后其长度会变为2。其他拥有类似特性的unicode字符： https://design215.com/toolbox/utf8-4byte-characters.php
 - sql里定义table里的字段时也会定义最长长度，超过这个长度的内容会被截断，不会被录入数据库

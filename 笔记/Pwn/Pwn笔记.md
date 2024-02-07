@@ -1678,3 +1678,8 @@ try {
 - [Baby JS Blacklist](https://github.com/daffainfo/ctf-writeup/tree/main/2024/UofTCTF%202024/Baby%20JS%20Blacklist)
   - 使用babel库将输入代码转为Abstract Syntax Tree (AST)，并检查是否有函数调用。参考 https://gist.github.com/arkark/a31f57c271e4aca4516c5a7072845aca 里的做法可以绕过babel的检测。不过wp里使用的是`process.binding`而不是`process.mainModule.require`来获取flag。个人做这题时发现，高版本的nodejs里默认没有require了，必须要导入模块才能使用。于是只能用binding实现RCE（binding也可以用来调用C++函数）
   - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#baby-js-blacklist
+- [js_blacklist](https://github.com/UofTCTF/uoftctf-2024-chals-public/tree/master/Jail/js_blacklist)
+  - 利用jsfuck绕过过滤
+  - Add a `, []` at the end of the payload to form a sequence expression. Babel's `path.evaluate()` ignores expressions in a sequence expression except the last one, allowing us to bypass the static evaluation check.
+- [js_evaluator](https://github.com/UofTCTF/uoftctf-2024-chals-public/tree/master/Jail/js_evaluator)
+  - discord里`molenzwiebel`的补充解析： The only ways to trigger function calls are `[String/Number/Math].[identifier](...)`, `[literal].[identifier](...)` and `{ valueOf: [function] } + 1`. We need a function call to get any kind of arbitrary code execution. We can get a reference to Function or eval through the patch, but we still need to be able to call it with an arbitrary argument, which rules out the valueOf approach. That results in just two options left, we can just enumerate them to find one that takes a callback in which we can (partially) control the arguments. One such function is String.prototype.replace. Combine everything: `"console.log(1)".replace("console.log(1)", eval)`
