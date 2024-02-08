@@ -2377,3 +2377,6 @@ c2=encrypt(k2,c1)
 133. [Music Sheet Cipher](https://www.dcode.fr/music-sheet-cipher):密文类似五线谱里的音符
 134. [export-grade-cipher](https://github.com/UofTCTF/uoftctf-2024-chals-public/tree/master/Cryptography/export-grade-cipher)
 - wp参考 https://kanzya.github.io/posts/UofTCTF/ 和 https://hackmd.io/@Wrth/UofTCTF-2024-EGC 。据出题人所说，此题为 https://web.archive.org/web/20000302000206/http://www.dvd-copy.com/news/cryptanalysis_of_contents_scrambling_system.htm 里提到的一种经典攻击，专门针对数据打乱类型的密码（Contents Scrambling System）
+135. [What Next II](https://github.com/rhaeyx/ctf/tree/main/mapnactf/what-next-2)
+- [randcrack](https://github.com/tna0y/Python-random-module-cracker)通过输入32bit的随机数来预测MT19937。如果获取的是256bit的数字(`getrandbits(256)`)，可以用[Extend MT19937 Predictor](https://github.com/NonupleBroken/ExtendMT19937Predictor)直接预测，无需手动将其分解为多个32bit随机数
+- 这篇[wp](https://nolliv22.com/writeups/mapna%20ctf%202023/what-next-2)使用randcrack
