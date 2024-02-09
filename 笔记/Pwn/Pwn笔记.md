@@ -1356,6 +1356,9 @@ ret
   - js socket+手写汇编： https://gist.github.com/adrian154/40df5ac94ed27a5e7b0b1e040863b50c
 - [Orxw](https://github.com/nobodyisnobody/write-ups/tree/main/Balsn.CTF.2021/pwn/orxw)
   - 一种通过侧信道读取flag的手段。同样是只有read等函数没有write等输出函数。将要泄露的字符读到`/dev/ptmx`的后面，然后加上某个偏移。若偏移对了，`/dev/ptmx`的最后就是`\x00`，打开这个设备时程序会延时；而偏移错误则会导致设备名错误，程序立即终止
+- [Protector](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#Protector-12-solves)
+  - 32位rop+shellcode。使用rop爆破ASLR末端字节并覆盖read的got表为mprotect，mprotect修改bss段执行权限后栈迁移到bss段执行shellcode（open+getdents+read+write+exit）
+  - 在高版本的linux机器下，ASLR似乎被削弱了。参考 https://zolutal.github.io/aslrnt/ ，结论是在ext4, ext2, btrfs, xfs和fuse文件系统下，大于2MB的64位binary的ASLR位数从28降到了19；大于2MB的32位binary直接失去了ASLR
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
@@ -1683,3 +1686,5 @@ try {
   - Add a `, []` at the end of the payload to form a sequence expression. Babel's `path.evaluate()` ignores expressions in a sequence expression except the last one, allowing us to bypass the static evaluation check.
 - [js_evaluator](https://github.com/UofTCTF/uoftctf-2024-chals-public/tree/master/Jail/js_evaluator)
   - discord里`molenzwiebel`的补充解析： The only ways to trigger function calls are `[String/Number/Math].[identifier](...)`, `[literal].[identifier](...)` and `{ valueOf: [function] } + 1`. We need a function call to get any kind of arbitrary code execution. We can get a reference to Function or eval through the patch, but we still need to be able to call it with an arbitrary argument, which rules out the valueOf approach. That results in just two options left, we can just enumerate them to find one that takes a callback in which we can (partially) control the arguments. One such function is String.prototype.replace. Combine everything: `"console.log(1)".replace("console.log(1)", eval)`
+168. [U2S](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#U2S-2-solves)
+- lua pwn入门。通过lua数组负索引溢出获取任意地址读写并实现RCE。lua上可以使用堆喷，然后利用负索引溢出修改lua内置object元数据。具体可参考 https://ricercasecurity.blogspot.com/2023/07/fuzzing-farm-4-hunting-and-exploiting-0.html

@@ -1804,3 +1804,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 246. [Prediction API](https://github.com/UofTCTF/uoftctf-2024-chals-public/tree/master/Miscellaneous/Prediction%20API)
 - random noise model extraction：利用一些输入窃取AI模型的weight
 - 使用现成MINST dataset获取模型weight： https://github.com/jakub-gierus/CTF-writeups/blob/main/Prediction%20API.md
+247. [Mitrek](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#Mitrek-2-solves)
+- [Kermit Protocol](https://www.kermitproject.org/kpackets.html) udp流pcap分析
+248. [PLC II](https://seall.dev/posts/mapnactf2024#forensicsplc-ii--11-solves)
+- [S7comm](https://wiki.wireshark.org/S7comm) pcap分析

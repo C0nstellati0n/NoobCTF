@@ -3351,3 +3351,6 @@ window.recaptcha=true;
 394. [Jay’s Bank](https://ireland.re/posts/UofTCTF_2024/#webjays-bank)
 - `İ`本身在js里的长度为1，经过`toLowerCase()`函数后其长度会变为2。其他拥有类似特性的unicode字符： https://design215.com/toolbox/utf8-4byte-characters.php
 - sql里定义table里的字段时也会定义最长长度，超过这个长度的内容会被截断，不会被录入数据库
+395. [Advanced JSON Cutifier](https://seall.dev/posts/mapnactf2024#webadvanced-json-cutifier-74-solves)
+- [go-jsonnet](https://github.com/google/go-jsonnet)库文件读取语法：
+    - `(importstr "filepath") % { foo: "bar" }`

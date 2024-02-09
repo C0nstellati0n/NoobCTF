@@ -527,6 +527,7 @@ for i in range(1,e):
     - 已知phi，e和c，获取m
 - [easy-rsa](https://github.com/C0d3-Bre4k3rs/PingCTF2023-writeups/tree/main/easy-rsa)
     - 获知`q&p`和`q&(p<<1)`后分解n。或者说，在得知p和q的随机个bit后尝试恢复p和q：[Random known bits of p and q](https://eprint.iacr.org/2020/1506.pdf#page=23)。这题Z3可解
+    - 又遇到了类似考点的题：[Shibs](https://kanzya.github.io/posts/MAPNACTF/)。这题wp作者用了多线程（python multiprocessing）配合z3。个人做这道题时倒是用了easy-rsa里的方法: https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#shibs 。我发现这种类型的题只需要找到题目里p和q的bit之间的关系,结合backtrack的思想即可解出。p和q之间的关系用于backtrack设置bit及检查是否返回的条件。注意backtrack设置完bit并递归完后一定要取消刚才设置的bit
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
@@ -562,6 +563,8 @@ for i in range(1,e):
 - [Zombie Rolled](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/crypto/%5BHard%5D%20Zombie%20Rolled)。这题啥都有，包含RSA，ECC还有lattice。暂记一些能看出来的知识点
     - 利用椭圆曲线上的rational point求解丢番图方程。参考 https://www.quora.com/How-do-you-find-the-positive-integer-solutions-to-frac-x-y+z-+-frac-y-z+x-+-frac-z-x+y-4
     - 利用Groebner basis求解方程组
+- [GLNQ](https://kanzya.github.io/posts/MAPNACTF/#glnq-crypto-13-solve)
+    - 计算矩阵上的离散对数。若矩阵的阶为光滑数，就可以用pohlig-hellman配合sagemath解出
 
 ## Lattice(格)
 
