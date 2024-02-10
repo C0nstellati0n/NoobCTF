@@ -579,6 +579,18 @@ for i in range(1,e):
 - [Hohoho 2 Continue](https://mechfrog88.github.io/wargames-2023#hohoho-2-continue)
     - LCG。这题要求预测一个LCG的值，LCG的各个参数都知道，但要预测的项未知（不知道要预测第几个输出）。初始的x可以随意输入，但必须包含一个固定短语。做的时候傻了，后来发现可以找一个包含短语的x，并让其满足 $x=(ax+b)\mod n$ 即可。找的时候使用LLL（从wp里似乎摸到一点格的门道了，但是先不记，还有地方不懂，不想误导未来的自己）。类似的题目（也用了格，还有不错的介绍）：[Onelinecrypto](https://nush.app/blog/2023/06/21/see-tf-2023/)
 
+## Elliptic Curves(椭圆曲线)
+
+是的我需要一个椭圆曲线题分类。我对这玩意的了解比格还少，只是记录下来方便未来的我复习(相信后人的智慧)
+- [Isogenies](https://hackmd.io/_D7hNf_wQ7qq0PArYPWjSQ)
+    - 3-torsion point
+    - isogeny
+    - montgomery coefficients
+    - j-invariants
+    - [Modular polynomials](https://math.mit.edu/~drew/ClassicalModPolys.html)
+    - [Division polynomials](https://en.wikipedia.org/wiki/Division_polynomials)
+    - [Resultant](https://en.wikipedia.org/wiki/Resultant)
+
 ## 其他
 
 1. Crypto库根据已有信息构建私钥并解密
