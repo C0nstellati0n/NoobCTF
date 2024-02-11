@@ -409,12 +409,12 @@ flag.export("./flag.mp3", format="mp3")
 101. volatility3使用。关于volatility的教程大多都是volatility2的，记录一些平时看到的命令。注意镜像（如img后缀）和内存（如mem）后缀是不同的，工具不能混用。比如volatility就不能用来分析镜像。(volatility3似乎没有找profile的插件，只能用volatility2找：`python2 vol.py -f ctf.raw imageinfo`)
 - python3 vol.py -f Memdump.raw windows.filescan.FileScan
   - 搜寻Memdump.raw中的文件,会给出文件对应的偏移
-- python3 vol.py -f Memdump.raw windows.dumpfiles.DumpFiles --virtaddr 0xc88f21961af0
+- python3 vol.py -f Memdump.raw windows.dumpfiles.DumpFiles --virtaddr(`--physaddr`) 0xc88f21961af0
   - 根据文件偏移提取文件
 - python3 vol.py -f mem.raw windows.cmdline.CmdLine
   - cmd中运行的命令
 - python3 vol.py -f mem.raw windows.info
-  - 显示windows镜像信息
+  - 显示windows镜像信息。用例： https://j-0k3r.github.io/2024/01/23/KnightCTF%202024/
 - python3 vol.py -f mem.raw windows.netstat
   - 查看网络连接状况（可用于获取本机ip）
 - python3 vol.py -f mem.raw windows.registry.hivelist.HiveList
@@ -431,6 +431,7 @@ flag.export("./flag.mp3", format="mp3")
     - `vol -f file.mem windows.memmap.Memmap --pid <num> --dump`:dump pid为num的进程的内容。有意思的地方在于，Memdumps are essentially RAM moment captures，可以将dump出来的文件后缀改成.data放进GIMP，能看到内存的图片，包括字符串形式的flag。参考 https://www.youtube.com/watch?v=-E3VTblFkKg
 - [conqueror](https://github.com/daffainfo/ctf-writeup/tree/main/2023/niteCTF%202023/conqueror)
     - `vol -f ctf.mem windows.hashdump.Hashdump`:dump用户及其md5 hash
+- [LovelyMem](https://github.com/Tokeii0/LovelyMem):一个图形界面取证工具
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。动图解释：https://zhuanlan.zhihu.com/p/63362804
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
 
@@ -1378,6 +1379,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
         - print list of loaded dlls for each process
     - `vol.py -f ctf.vmem --profile=profile psscan`
         - obtain the pid and ppid of processes
+- https://github.com/warlocksmurf/onlinectf-writeups/blob/main/KnightCTF24/forensics.md
+    - `vol.py -f mem.dmp --profile=profile consoles`
+    - `vol.py --plugins volatility-autoruns-master -f mem.dmp autoruns`
 131. [Attaaaaack4](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack4)
 - 时刻注意那些名字类似windows内置文件的文件，它们可能是伪装的恶意病毒。如`runddl.exe`。它的名字类似`rundll.exe`,但是后者用于run Dynamic Link Library (DLLs) on the Windows operating system，而前者是恶意文件。
 132. [Attaaaaack8](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack8)

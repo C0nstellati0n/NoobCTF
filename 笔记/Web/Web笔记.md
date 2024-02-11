@@ -3354,3 +3354,8 @@ window.recaptcha=true;
 395. [Advanced JSON Cutifier](https://seall.dev/posts/mapnactf2024#webadvanced-json-cutifier-74-solves)
 - [go-jsonnet](https://github.com/google/go-jsonnet)库文件读取语法：
     - `(importstr "filepath") % { foo: "bar" }`
+396. [Gimme-Content-Type](https://gist.github.com/parrot409/61822d4b55f335bae5aaeba6938ef52b)
+- 利用pdf实现xss。chrome里的pdf由pdfium渲染，可在pdf里插入js代码，可绕过CSP。不过不能做类似fetch之类的东西，pdfium有自己的api。类似思路： https://portswigger.net/research/portable-data-exfiltration
+- CSP `sec-fetch-mode=navigate`限制了无法使用script标签只能考虑frames和`window.open()`。Cookies若为None则表示iframe navigations contain cookies
+397. [Fluxx](https://colleirose.github.io/influxdb-injection-nosql-injection-knightctf-2024)
+- [InfluxDB NoSQL盲注](https://rafa.hashnode.dev/influxdb-nosql-injection)
