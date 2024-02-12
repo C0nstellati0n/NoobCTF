@@ -3359,3 +3359,14 @@ window.recaptcha=true;
 - CSP `sec-fetch-mode=navigate`限制了无法使用script标签只能考虑frames和`window.open()`。Cookies若为None则表示iframe navigations contain cookies
 397. [Fluxx](https://colleirose.github.io/influxdb-injection-nosql-injection-knightctf-2024)
 - [InfluxDB NoSQL盲注](https://rafa.hashnode.dev/influxdb-nosql-injection)
+398. [LordGPT](https://hackmd.io/@vow/HyNTcwSqp)
+- 如果登录Microsoft账号时发现url包含`/oauth2/v2.0/`，且发现登录时报错`Selected user account does not exist in tenant ...`，可以将登录url中的tenant部分改为common，就可以用任意账号登录，而不仅仅局限于某个特定tenant的账号了
+- [snowflake ID](https://abheist.com/blogs/twitter-snowflake-for-unique-ids)预测：获取多个seed后，可以得到Machine ID，再配合machine sequence ID就可以预测未来的id生成
+- [nOAuth Microsoft Azure AD Vulnerability](https://www.descope.com/blog/post/noauth)：攻击者可自行注册一个Microsoft Azure账号，并修改账号的email为受害者的邮箱，这样登录时两者账号会被合并，即可登录上受害者的账号
+399. [Hello from API GW](https://ctf.edwinczd.com/2024/tetctf-2024/hello-from-api-gw)
+- js eval读文件payload。有些时候可以通过读环境变量来获取有关AWS的配置
+- AWS相关渗透所需命令，及工具[enumerate-iam](https://github.com/andresriancho/enumerate-iam)（用于列举AWS IAM登录凭证对应的权限）的使用
+400. [Microservices](https://ctf.edwinczd.com/2024/tetctf-2024/microservices)
+- cloud AWS渗透（获取RCE及泄漏敏感信息）
+401. [X Et Et](https://hackmd.io/@Solderet/HJ52F9496)
+- js electron RCE。若electron内`new BrowserWindow`时设置了`sandbox: false`和`contextIsolation: false`，就能利用原型链污染获取RCE。类似技巧见 https://github.com/maple3142/My-CTF-Challenges/tree/master/HITCON%20CTF%202023/Harmony#rce-using-client-side-prototype-pollution
