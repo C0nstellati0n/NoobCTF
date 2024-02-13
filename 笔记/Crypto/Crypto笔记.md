@@ -2395,3 +2395,5 @@ c2=encrypt(k2,c1)
 135. [What Next II](https://github.com/rhaeyx/ctf/tree/main/mapnactf/what-next-2)
 - [randcrack](https://github.com/tna0y/Python-random-module-cracker)通过输入32bit的随机数来预测MT19937。如果获取的是256bit的数字(`getrandbits(256)`)，可以用[Extend MT19937 Predictor](https://github.com/NonupleBroken/ExtendMT19937Predictor)直接预测，无需手动将其分解为多个32bit随机数
 - 这篇[wp](https://nolliv22.com/writeups/mapna%20ctf%202023/what-next-2)使用randcrack
+136. [adapt](https://mystiz.hk/posts/2024/2024-02-03-tetctf-adapt/)
+- immutable AVL tree：[cosmos/iavl](https://github.com/cosmos/iavl) （v0.19.7）下的proof伪造。可通过构造特殊node获取一个假的proof，用于证明某个特定的node在tree中不存在（但实际存在）

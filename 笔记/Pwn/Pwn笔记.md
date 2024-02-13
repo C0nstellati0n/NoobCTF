@@ -1688,3 +1688,6 @@ try {
   - discord里`molenzwiebel`的补充解析： The only ways to trigger function calls are `[String/Number/Math].[identifier](...)`, `[literal].[identifier](...)` and `{ valueOf: [function] } + 1`. We need a function call to get any kind of arbitrary code execution. We can get a reference to Function or eval through the patch, but we still need to be able to call it with an arbitrary argument, which rules out the valueOf approach. That results in just two options left, we can just enumerate them to find one that takes a callback in which we can (partially) control the arguments. One such function is String.prototype.replace. Combine everything: `"console.log(1)".replace("console.log(1)", eval)`
 168. [U2S](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#U2S-2-solves)
 - lua pwn入门。通过lua数组负索引溢出获取任意地址读写并实现RCE。lua上可以使用堆喷，然后利用负索引溢出修改lua内置object元数据。具体可参考 https://ricercasecurity.blogspot.com/2023/07/fuzzing-farm-4-hunting-and-exploiting-0.html
+169. [CoolPool](https://ajomix.hashnode.dev/pwn-coolpool-tetctf2024)
+- windows kernel pwn:利用UAF漏洞，堆喷和NamedPipe结构体实现任意读写功能（NonPaged Pool Exploitation），并获取system权限（怎么也没想到人生第一次看见的windows相关pwn题竟然是内核，炸了）
+- NonPaged Pool Exploitation介绍： https://github.com/vp777/Windows-Non-Paged-Pool-Overflow-Exploitation

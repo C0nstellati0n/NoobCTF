@@ -3370,3 +3370,10 @@ window.recaptcha=true;
 - cloud AWS渗透（获取RCE及泄漏敏感信息）
 401. [X Et Et](https://hackmd.io/@Solderet/HJ52F9496)
 - js electron RCE。若electron内`new BrowserWindow`时设置了`sandbox: false`和`contextIsolation: false`，就能利用原型链污染获取RCE。类似技巧见 https://github.com/maple3142/My-CTF-Challenges/tree/master/HITCON%20CTF%202023/Harmony#rce-using-client-side-prototype-pollution
+402. [Stress Release Service](https://medium.com/@s4r7h4k/7-characters-php-tetctf-2024-5f43ee0c7293)
+- 利用7个非字母数字的字符在php内实现eval内代码执行。wp内列举了几个phpfuck相关的网站，不过这类网站给出的payload通常较长。php内可以将字符串看作函数执行：`'function_name'()`，所以可以利用这个特点加上异或获取字符执行任意代码
+- 类似题及参考链接：
+    - https://ctftime.org/writeup/36079
+    - https://github.com/b-viguier/PhpFk
+    - https://www.cnblogs.com/hetianlab/p/14143480.html 。利用里面提到的最后一种方法的wp： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#stress-release-service
+403. Nepxion/Discovery[漏洞](https://securitylab.github.com/advisories/GHSL-2022-033_GHSL-2022-034_Discovery/)：SpEL注入以及SSRF
