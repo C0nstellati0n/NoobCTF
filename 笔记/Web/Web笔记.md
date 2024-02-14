@@ -3377,3 +3377,10 @@ window.recaptcha=true;
     - https://github.com/b-viguier/PhpFk
     - https://www.cnblogs.com/hetianlab/p/14143480.html 。利用里面提到的最后一种方法的wp： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#stress-release-service
 403. Nepxion/Discovery[漏洞](https://securitylab.github.com/advisories/GHSL-2022-033_GHSL-2022-034_Discovery/)：SpEL注入以及SSRF
+404. [ChatterBox](https://vozec.fr/writeups/chatterbox-realworld-ctf-2024/)
+- PostgreSQL sql注入
+    - PostgreSQL可以用`$`创建字符串，参考 https://www.postgresql.org/docs/8.1/sql-syntax.html 中的`4.1.2.2`，如`$tag$u$tag$`在查询语句里和`"u"`一致。利用这个符号可以创造出小写有效但大写无效的sql语句:`$u$foo$U$ a $U$bar$u$`，小写情况下`$u$`会被看作tag，得到字符串`"foo$U$ a username=$U$bar"`；大写情况下`$U$`会被看作tag，结果就不一样了
+    - 可以在查询内容后添加`::json`，将内容强制转换为json。若报错即可爆出内容。超过7个字符的内容需要用substr
+    - 利用query_to_xml和十六进制编码绕过过滤并实现任意文件读取；利用query_to_xml+lo_from_bytea+lo_export实现任意文件写入
+    - pg_ls_dir可用于列举目录
+- java thymeleaf模板注入获取RCE

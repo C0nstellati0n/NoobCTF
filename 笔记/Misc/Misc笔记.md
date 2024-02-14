@@ -1812,3 +1812,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [Kermit Protocol](https://www.kermitproject.org/kpackets.html) udp流pcap分析
 248. [PLC II](https://seall.dev/posts/mapnactf2024#forensicsplc-ii--11-solves)
 - [S7comm](https://wiki.wireshark.org/S7comm) pcap分析
+249. [Long Range 2](https://blog.nanax.fr/post/2024-01-28-hardware-longrange2/)
+- file命令有时候会误判文件类型，可以用binwalk再查一遍。诸如Espressif ESP32 flash的文件，可以去file命令的[github](https://github.com/file/file/blob/FILE5_45/magic/Magdir/firmware#L71-L133)找到和该文件相关的文件头定义(magic)，用binwalk即可获取文件内部的partition table：`binwalk ./dump -m ./esp32.magic`。然后即可用dd分割出各个partition
+- Meshtastic固件（firmware）信息收集：在Espressif ESP32 flash的各个partition中：
+    - 可以通过strings获取固件（firmware）的名称
+    - 通常会有一个partition保存SPIFFS文件系统。可用[mkspiffs](https://github.com/igrr/mkspiffs)提取。Meshtastic固件使用的文件系统为LittleFS，可用[littlefs-python](https://github.com/jrast/littlefs-python)提取
+- Meshtastic使用的加密方式是AES256-CTR，获取key后即可用来解码内部的LoRa消息，nonce的计算可在源码里找到（wp也提供了）。最终解码可以借助工具 https://github.com/rpp0/gr-lora 或 https://github.com/jkadbear/gr-lora
+- `.proto`后缀文件可用`protoc --decode_raw < db.proto`解码。如果想要解码结果有相应的结构，需要获取proto文件所对应的Protobuf定义，使用定义解码的命令参考wp
