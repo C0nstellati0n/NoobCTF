@@ -1691,3 +1691,6 @@ try {
 169. [CoolPool](https://ajomix.hashnode.dev/pwn-coolpool-tetctf2024)
 - windows kernel pwn:利用UAF漏洞，堆喷和NamedPipe结构体实现任意读写功能（NonPaged Pool Exploitation），并获取system权限（怎么也没想到人生第一次看见的windows相关pwn题竟然是内核，炸了）
 - NonPaged Pool Exploitation介绍： https://github.com/vp777/Windows-Non-Paged-Pool-Overflow-Exploitation
+170. [Corrupted GI](https://xz.aliyun.com/t/13473)
+- cJSON早期版本中存在堆溢出漏洞，可利用house of orange在程序无free的情况下构造fastbin attack修改程序内置的函数指针，跳转到rop后获得rce
+- cjson会跳过所有ascii值小于等于0x20的字符，pcre2的`\s`只会匹配空白字符（`\n`, `\r`, `\t`, 空格等）。可利用该解析差异绕过一些waf

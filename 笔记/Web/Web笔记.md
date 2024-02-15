@@ -3384,3 +3384,6 @@ window.recaptcha=true;
     - 利用query_to_xml和十六进制编码绕过过滤并实现任意文件读取；利用query_to_xml+lo_from_bytea+lo_export实现任意文件写入
     - pg_ls_dir可用于列举目录
 - java thymeleaf模板注入获取RCE
+405. [SafeBridge](https://chovid99.github.io/posts/real-world-ctf-2024/)
+- 两个blockchain网络之间无法通信，需要借助bridge来在两者之间传输资源。遇见的第一个环境内有多个blockchain的题目
+- foundry CLI工具使用+如何创建自己的简易token并deploy。注意自己的token若想给别的合约使用需要调用approve函数
