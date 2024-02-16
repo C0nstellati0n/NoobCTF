@@ -579,6 +579,8 @@ print(base64.b64encode(temp.encode()))
 - [least ELOistic fish](https://github.com/Cryptonite-MIT/niteCTF-2023/tree/main/misc/least%20ELOistic%20fish)
   - 利用多重getattr套娃和bytearray绕过过滤
   - 这题本身是python stockfish（国际象棋分析库）的使用，因为输入未被过滤，可以直接跳过当前输入，让stockfish自己和自己下棋
+- [LLM Sanitizer](https://1-day.medium.com/llm-sanitizer-real-world-ctf-2024-walkthrough-233dbdb0b90f)
+    - 绕语言模型过滤。其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#llm-sanitizer
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

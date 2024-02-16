@@ -3387,3 +3387,7 @@ window.recaptcha=true;
 405. [SafeBridge](https://chovid99.github.io/posts/real-world-ctf-2024/)
 - 两个blockchain网络之间无法通信，需要借助bridge来在两者之间传输资源。遇见的第一个环境内有多个blockchain的题目
 - foundry CLI工具使用+如何创建自己的简易token并deploy。注意自己的token若想给别的合约使用需要调用approve函数
+- 其他wp（使用solidity+forge）：
+    - https://github.com/iczc/rwctf-6th-safebridge/tree/main/project/script
+    - https://github.com/Kaiziron/real-world-ctf-6th-writeups
+    - https://hodl.page/entry/RealWorldCTF-2023-blockchainsafebridge
