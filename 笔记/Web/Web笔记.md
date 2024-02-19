@@ -3384,6 +3384,11 @@ window.recaptcha=true;
     - 利用query_to_xml和十六进制编码绕过过滤并实现任意文件读取；利用query_to_xml+lo_from_bytea+lo_export实现任意文件写入
     - pg_ls_dir可用于列举目录
 - java thymeleaf模板注入获取RCE
+- 其他wp/解法：
+    - https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/chatterbox ：
+        - `COPY (SELECT '') TO PROGRAM '/readflag';--`可以执行`/readflag`，以及一些PostgreSQL sql语句构造技巧
+        - 可以利用字符串拼接绕过[JSql](https://jsqlparser.sourceforge.net/)的AST过滤
+        - 利用thymeleaf SSTI+postgres实现RCE，参考 https://book.hacktricks.xyz/network-services-pentesting/pentesting-postgresql#rce-to-program
 405. [SafeBridge](https://chovid99.github.io/posts/real-world-ctf-2024/)
 - 两个blockchain网络之间无法通信，需要借助bridge来在两者之间传输资源。遇见的第一个环境内有多个blockchain的题目
 - foundry CLI工具使用+如何创建自己的简易token并deploy。注意自己的token若想给别的合约使用需要调用approve函数
@@ -3391,3 +3396,6 @@ window.recaptcha=true;
     - https://github.com/iczc/rwctf-6th-safebridge/tree/main/project/script
     - https://github.com/Kaiziron/real-world-ctf-6th-writeups
     - https://hodl.page/entry/RealWorldCTF-2023-blockchainsafebridge
+406. [minioday](https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/minioday)
+- minio CVE-2023-28434漏洞利用，可在minio服务器上执行任意代码
+- 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#minioday

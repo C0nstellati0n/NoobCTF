@@ -1361,6 +1361,8 @@ ret
 - [Protector](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#Protector-12-solves)
   - 32位rop+shellcode。使用rop爆破ASLR末端字节并覆盖read的got表为mprotect，mprotect修改bss段执行权限后栈迁移到bss段执行shellcode（open+getdents+read+write+exit）
   - 在高版本的linux机器下，ASLR似乎被削弱了。参考 https://zolutal.github.io/aslrnt/ ，结论是在ext4, ext2, btrfs, xfs和fuse文件系统下，大于2MB的64位binary的ASLR位数从28降到了19；大于2MB的32位binary直接失去了ASLR
+- [Hoshmonstar](https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/hoshmonstar)
+  - 计算shellcode本身的HMAC-CRC64值，且可同时在RISC-V, AARCH64 和 x86-64下运行。技巧是利用[Barrett reduction](https://en.wikipedia.org/wiki/Barrett_reduction)缩减模运算所需要的代码长度。官方做法： https://gist.github.com/Riatre/e8eb949da91b650ea27ed6dbebeb3912
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
@@ -1696,3 +1698,5 @@ try {
 170. [Corrupted GI](https://xz.aliyun.com/t/13473)
 - cJSON早期版本中存在堆溢出漏洞，可利用house of orange在程序无free的情况下构造fastbin attack修改程序内置的函数指针，跳转到rop后获得rce
 - cjson会跳过所有ascii值小于等于0x20的字符，pcre2的`\s`只会匹配空白字符（`\n`, `\r`, `\t`, 空格等）。可利用该解析差异绕过一些waf
+171. [Let's party in the house](https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/lets_party_in_the_house)
+- Synology固件漏洞pwn，可获取RCE。参考 https://www.synology.com/en-us/security/advisory/Synology_SA_23_15 和 https://teamt5.org/en/posts/teamt5-pwn2own-contest-experience-sharing-and-vulnerability-demonstration/
