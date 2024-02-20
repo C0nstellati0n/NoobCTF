@@ -3384,11 +3384,12 @@ window.recaptcha=true;
     - 利用query_to_xml和十六进制编码绕过过滤并实现任意文件读取；利用query_to_xml+lo_from_bytea+lo_export实现任意文件写入
     - pg_ls_dir可用于列举目录
 - java thymeleaf模板注入获取RCE
-- 其他wp/解法：
+- 其他wp/解法/sql注入或模板注入payload：
     - https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/chatterbox ：
         - `COPY (SELECT '') TO PROGRAM '/readflag';--`可以执行`/readflag`，以及一些PostgreSQL sql语句构造技巧
         - 可以利用字符串拼接绕过[JSql](https://jsqlparser.sourceforge.net/)的AST过滤
         - 利用thymeleaf SSTI+postgres实现RCE，参考 https://book.hacktricks.xyz/network-services-pentesting/pentesting-postgresql#rce-to-program
+    - https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#chatterbox
 405. [SafeBridge](https://chovid99.github.io/posts/real-world-ctf-2024/)
 - 两个blockchain网络之间无法通信，需要借助bridge来在两者之间传输资源。遇见的第一个环境内有多个blockchain的题目
 - foundry CLI工具使用+如何创建自己的简易token并deploy。注意自己的token若想给别的合约使用需要调用approve函数
@@ -3399,3 +3400,13 @@ window.recaptcha=true;
 406. [minioday](https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/minioday)
 - minio CVE-2023-28434漏洞利用，可在minio服务器上执行任意代码
 - 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#minioday
+407. [another-csp](https://blog.huli.tw/2024/02/12/dicectf-2024-writeup/)
+- 在iframe的sandbox全开（无法使用script标签），csp `defeault-src 'none'`（禁止引入任何外部资源），不能执行任何JavaScript，也无法透过meta重新导向的情况下leak同网页下的token。因css开了unsafe-inline，加上可以得知bot正在访问的网页是否关闭，故利用html+css使Chromium崩溃（相关[issue](https://issues.chromium.org/issues/41490764)）或使网页载入变慢，进而加快/拖慢bot的执行时间
+- 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#another-csp
+408. [safestlist](https://blog.huli.tw/2024/02/12/dicectf-2024-writeup/#webx2fsafestlist-2-solves)
+- 浏览器对网址长度有限制，可以利用一些特殊格式构造长的url：`http://${'a'.repeat(1000000)}}:pwd@localhost:3000`，其中那些a为用户名，pwd为密码，尝试对localhost:3000执行验证。过长的重定向后会触发错误，新打开的界面为`about:blank`
+409. [burnbin](https://blog.huli.tw/2024/02/12/dicectf-2024-writeup/#webx2fburnbin-1-solve)
+- 若上传的文件名为`.png`，在旧版的fastify static中就不会有mime type
+- 利用dom clobbering修改document.defaultView使得react渲染攻击者指定的页面，从而在任意页面注入HTML跟CSS
+- chrome connection pool利用
+- 利用meta标签的connect-src CSP阻止请求
