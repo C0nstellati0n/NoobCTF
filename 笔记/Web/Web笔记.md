@@ -167,6 +167,9 @@ for i in range(300,1000):
     - C# ASP.NET Razor engine SSTI
 - [My First Blog](https://github.com/4n86rakam1/writeup/blob/main/TUCTF_2023/Web/My_First_Blog)
     - 过滤部分关键词后的python flask ssti
+- [gpwaf](https://nanimokangaeteinai.hateblo.jp/entry/2024/02/06/051003#Web-115-gpwaf-180-solves)
+    - ejs模板注入。题目增加了一个绕过gpt过滤的环节。这种用gpt做过滤的题之前没见过，做的时候发现只要payload带有ejs注入必须的`<%`就报错，完全不知道怎么绕过。后面看了wp意识到这是gpt，不是黑/白名单之类的过滤，在payload前加几句干扰gpt的指令即可（以及不用`<%`的纯ejs注入确实不可能）
+    - 其他解法（干扰gpt语句+ejs注入payload）： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#gpwaf
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
 1.  [浏览器设置编码](https://blog.csdn.net/jnx1142410525/article/details/55271037)。如果浏览器的编码不对就会出现乱码。
@@ -3410,3 +3413,11 @@ window.recaptcha=true;
 - 利用dom clobbering修改document.defaultView使得react渲染攻击者指定的页面，从而在任意页面注入HTML跟CSS
 - chrome connection pool利用
 - 利用meta标签的connect-src CSP阻止请求
+410. [Calculator](https://learn-cyber.net/writeup/Calculator)
+- typescript中，假如某个函数只允许返回某个特定类型，可以将其他类型cast成any来绕过。例如只允许返回number类型，用`"a" as any`即可绕过类型检查，返回a
+- typescript的ESLint可以用注释绕过：`/* eslint-disable-line */`。加了这句注释的ts代码不会被eslint检查
+- 其他解法（此题目标为让单句代码通过eval返回xss payload）： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#calculator-1
+411. [calculator-2](https://nanimokangaeteinai.hateblo.jp/entry/2024/02/06/051003#Web-135-calculator-2-33-solves)
+- 类似Calculator，但是禁止加注释和使用as与any。解法是利用eval覆盖函数，使返回的数字类型实际上是字符串（更详细内容参考 https://one3147.tistory.com/77 ）
+- 利用window.name缩短xss payload长度
+- 其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#calculator-2 ，Calculator的其他解法中也有部分可适用于这道题

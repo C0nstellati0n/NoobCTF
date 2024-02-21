@@ -1823,3 +1823,6 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [domato](https://github.com/googleprojectzero/domato): an open-source fuzzer made to test DOM engines。若攻击者可指定fuzzing时使用的grammar，即可执行任意python代码
 251. [The Truth of Plain](https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/the_truth_of_plain)
 - [lightsocks](https://github.com/gwuhaolin/lightsocks)流量分析
+252. [unipickle](https://nanimokangaeteinai.hateblo.jp/entry/2024/02/06/051003)
+- pickle反序列化漏洞利用：构造不包含空白字符及换行符且经过str.encode不会报错的RCE payload。pickle反序列化时其内部实现与堆栈上的虚拟机相似，按顺序执行pickle的指令。因此将程序默认的pickle指令换为其他的符合要求的指令即可
+- 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#unipickle
