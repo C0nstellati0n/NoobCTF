@@ -580,7 +580,13 @@ print(base64.b64encode(temp.encode()))
   - 利用多重getattr套娃和bytearray绕过过滤
   - 这题本身是python stockfish（国际象棋分析库）的使用，因为输入未被过滤，可以直接跳过当前输入，让stockfish自己和自己下棋
 - [LLM Sanitizer](https://1-day.medium.com/llm-sanitizer-real-world-ctf-2024-walkthrough-233dbdb0b90f)
-    - 绕语言模型过滤。其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#llm-sanitizer
+  - 绕语言模型过滤。其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#llm-sanitizer
+- [Diligent Auditor](https://ur4ndom.dev/posts/2024-02-11-dicectf-quals-diligent-auditor/)
+  - 在只能使用import导入一个名称不含下划线及`.`模块且大部分builtins被删除，添加audithook的情况下实现RCE/读文件
+  - FileFinder内部的`_path_cache`缓存着文件夹下的所有文件名称，意味着即使不知道flag完整的文件名（只知道名称包含flag），也能通过`_path_cache`找到完整的文件名并读取
+  - 使用readline类读取文件。open会被audit hook监视，但用readline读文件则不会触发audit hook
+  - 一些利用ctypes绕过audit hook逃脱pyjail并获取RCE的技巧
+  - 其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#diligent-auditor
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -1712,3 +1718,8 @@ try {
 - crash postgres可获取stack trace，内部会泄露libc地址
 - postgres内部使用malloc来分配内存存储query string。若query string过长，malloc会调用mmap，mmap的内存的偏移与libc是固定的（计算方式见wp）
 - 利用libc setcontext函数进行stack pivot
+173. [boogie-woogie](https://heinen.dev/dicectf-quals-2024/boogie-woogie/)
+- 可以利用`__dso_handle`（位于PIE + 0xf008）泄露程序基地址
+- x86/64 Linux环境下，堆起始通常位于程序结尾地址后0到8192整数页（随机）的位置。若程序里完全无法泄漏地址，1/8192的爆破概率也是可以接受的。优化后的爆破方式：随便尝试一个偏移，若该偏移为heap上有效的偏移，回去找tcache perthread header（`\x91`开头）即可
+- scanf会在函数执行过程中分配一个heap chunk，最后free。正常情况下这个chunk free后会与前一个free chunk合并（之前也见过类似的技巧，不过都是大量输入导致分配large bin。目前确定的是，对于大量输入，scanf会根据输入大小分配相应的chunk）
+- 可通过将top chunk的size改小，然后再申请一个大于修改size后的top chunk的chunk。这样程序就会分配新的top chunk进而free原先的旧top chunk。感觉是house of orange的技巧
