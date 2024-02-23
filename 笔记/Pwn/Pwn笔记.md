@@ -1,5 +1,70 @@
 # Pwn笔记
 
+## Shellcode题合集
+
+测试shellcode时可以尝试用c inline assembly（参考 https://stackoverflow.com/questions/61341/is-there-a-way-to-insert-assembly-code-into-c ），语法大致相同，就是引用寄存器时要加个%，如%rdx；每行后面还要加`\n\t`
+
+- [lcode](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/lcode)：可使用最多20种不同byte，且每个byte都是单数；开启沙盒故目标是写orw shellcode。非预期解是写一个获取堆地址的shellcode，然后往那里读rop chain
+```
+mov bl, 1
+xchg eax, ebx
+mov bl, 1
+xchg edi, ebx
+mov bl, 0xdf
+mov bh, 0x05
+lea edx, [ebx]
+mov r15, rsp
+lea rsi, [r15]
+syscall
+xor ebx, ebx
+xchg eax, ebx
+xor ebx, ebx
+xchg edi, ebx
+syscall
+ret
+```
+- [Inj](https://github.com/qLuma/TFC-CTF-2023/tree/main/Inj),[wp](https://xa21.netlify.app/blog/tfcctf-2023/inj/)
+  - 可以在64位程序里使用`int 0x80`调用32位的系统调用（遵守32位系统调用的调用号和参数传递，有些seccomp会禁掉，只允许64位）。利用`BPF_JUMP`和`BPF_STMT`设置沙盒时也可以分32位和64位系统调用分别设置
+  - 只有open和read无write调用时可以通过测信道的方式读取flag。读取flag后，一位一位地遍历flag。若为0，让程序崩溃；若为1，让程序延时（执行另一个read或者执行一个很长的loop）
+- [the great escape](https://gerrardtai.com/coding/ductf#the-great-escape)
+  - 利用read,openat,nanosleep时间测信道获取flag
+- [saas](https://github.com/cscosu/buckeyectf-2023-public/tree/master/pwn-saas),[wp](https://github.com/HAM3131/hacking/tree/main/BuckeyeCTF/pwn/saas)
+  - arm Self-modifying shellcode
+  - 一些arm学习链接： https://www.davespace.co.uk/arm/introduction-to-arm/immediates.html
+- [Babysbx](https://github.com/nobodyisnobody/write-ups/tree/main/Blackhat.MEA.CTF.Finals.2023/pwn/babysbx)
+  - xmm系列寄存器里存有大量地址，包括heap，libc和程序。例如从xmm0里拿堆地址：`movd rax, xmm0`
+  - 利用seccomp entry value找到堆上的seccomp rule并确定动态地址。seccomp没法检查具体内存地址处的内容，只能保证调用syscall时参数用的是某个地址A。PIE下A的地址随机，但是仍然可以借助搜索seccomp entry value `0x0000000200240015`找到确定的地址
+  - 利用shmget和shmat remap内存。效果为修改某段内存的权限。比较冷门的做法， mmap, mprotect, munmap, ptrace都禁掉后还可用这种
+  - 汇编引用标签字符串。wp的shellcode里出现了之前没见过的语法：
+  ```
+  ...
+  mov rbx,cmd[rip]
+  mov [rdi],rbx
+  mov rbx,cmd+8[rip]
+  mov [rdi+8],rbx
+  ...
+
+  cmd:
+    .string "/readflag"
+  ```
+  这个`cmd[rip]`和`cmd+8[rip]`不懂什么意思，调试后发现执行时分别变成了`mov rbx, qword ptr [rip + 0x19]`和`mov rbx, qword ptr [rip + 0x17]`。似乎是一种根据rip来引用字符串的固定做法？
+  - [预期解](https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#babysbx)使用mremap
+- [message](https://chovid99.github.io/posts/tcp1p-ctf-2023/#message)
+  - 利用pwntools shellcraft生成open+getdents64+write shellcode获取当前目录下全部文件的文件名
+  - 更详细的解析： https://www.mspi.eu/blog/security/ctf/2023/10/15/tcp1p-ctf-writeups.html#message
+- [FunChannel](https://www.youtube.com/watch?v=RaYU3hN88DA)
+  - pwntools编写shellcode+getdents获取文件名+openat/read（无write）侧信道读内容
+  - js socket+手写汇编： https://gist.github.com/adrian154/40df5ac94ed27a5e7b0b1e040863b50c
+- [Orxw](https://github.com/nobodyisnobody/write-ups/tree/main/Balsn.CTF.2021/pwn/orxw)
+  - 一种通过侧信道读取flag的手段。同样是只有read等函数没有write等输出函数。将要泄露的字符读到`/dev/ptmx`的后面，然后加上某个偏移。若偏移对了，`/dev/ptmx`的最后就是`\x00`，打开这个设备时程序会延时；而偏移错误则会导致设备名错误，程序立即终止
+- [Protector](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#Protector-12-solves)
+  - 32位rop+shellcode。使用rop爆破ASLR末端字节并覆盖read的got表为mprotect，mprotect修改bss段执行权限后栈迁移到bss段执行shellcode（open+getdents+read+write+exit）
+  - 在高版本的linux机器下，ASLR似乎被削弱了。参考 https://zolutal.github.io/aslrnt/ ，结论是在ext4, ext2, btrfs, xfs和fuse文件系统下，大于2MB的64位binary的ASLR位数从28降到了19；大于2MB的32位binary直接失去了ASLR
+- [Hoshmonstar](https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/hoshmonstar)
+  - 计算shellcode本身的HMAC-CRC64值，且可同时在RISC-V, AARCH64 和 x86-64下运行。技巧是利用[Barrett reduction](https://en.wikipedia.org/wiki/Barrett_reduction)缩减模运算所需要的代码长度。其他做法： 
+    - https://gist.github.com/Riatre/e8eb949da91b650ea27ed6dbebeb3912
+    - https://gist.github.com/TethysSvensson/067589b37c473ce2dce9270a64c8624d
+
 1. 程序关闭标准输出会导致getshell后无法得到cat flag的输出。这时可以用命令`exec 1>&0`将标准输出重定向到标准输入，再执行cat flag就能看见了。因为默认打开一个终端后，0，1，2（标准输入，标准输出，标准错误）都指向同一个位置也就是当前终端。详情见这篇[文章](https://blog.csdn.net/xirenwang/article/details/104139866)。例题：[wustctf2020_closed](https://buuoj.cn/challenges#wustctf2020_closed)
 2. 做菜单类堆题时，添加堆块的函数一般是最重要的，需要通过分析函数来构建出程序对堆块的安排。比如有些笔记管理题会把笔记名称放一个堆中，笔记内容放另一个堆中，再用一个列表记录指针。了解程序是怎么安排堆后才能根据漏洞制定利用计划。如果分析不出来，用gdb调试对着看会好很多。例题：[babyfengshui](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/babyfengshui.md)
 3. 32位利用A和%p计算格式化字符串偏移+$hn按字节改got表。例题：[axb_2019_fmt32](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/axb_2019_fmt32.md)
@@ -33,7 +98,7 @@ else:
 
 6. pwn 栈题模板
 
-### 64位
+## 64位
 
 - ret2libc+格式化字符串绕canary:[bjdctf_2020_babyrop2](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/bjdctf_2020_babyrop2.md)。
 
@@ -72,7 +137,7 @@ p.sendafter(">",payload)
 p.interactive()
 ```
 
-### 32位
+## 32位
 
 - ret2libc:[pwn-200](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/4%E7%BA%A7/Pwn/pwn-200.md)。
 
@@ -191,7 +256,7 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 - [House _OF _Emma](https://www.anquanke.com/post/id/260614)
 - [House of Muney](https://maxwelldulin.com/BlogPost/House-of-Muney-Heap-Exploitation)
 
-### 64位
+## 64位
 
 - unsorted bin attack:[hitcontraining_magicheap](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/hitcontraining_magicheap.md)
 - Chunk Extend and Overlapping+off by one:[hitcontraining_heapcreator](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/hitcontraining_heapcreator.md)
@@ -205,7 +270,7 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 - off by null+Chunk Extend and Overlapping+tcache dup。例题:[hitcon_2018_children_tcache](../../CTF/BUUCTF/Pwn/hitcon_2018_children_tcache.md)
 - house of orange+FSOP。例题:[houseoforange_hitcon_2016](../../CTF/BUUCTF/Pwn/houseoforange_hitcon_2016.md)
 
-### 32位
+## 32位
 
 - uaf更改heap数组函数指针:[hacknote](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/hacknote.md)
 - uaf修改程序功能函数指针。例题：[ciscn_2019_n_3](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Pwn/ciscn_2019_n_3.md)
@@ -1310,67 +1375,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 - [Egghunter Shellcode](https://anubissec.github.io/Egghunter-Shellcode/)([64位](https://pentesterslife.blog/2017/11/24/x64-egg-hunting-in-linux-systems/))构造。这类shellcode用于在内存中找指定内容同时避免访问无效地址。目标通常开头有特殊字符串，shellcode便利用access测试某个内存页是否可访问，能访问就在当前内存页搜寻特殊字符串，不能访问就切换下一页。这样一直重复直到找到目标
 113. [generic-rop-challenge](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/generic-rop-challenge)
 - arm rop下binary自带的泄露libc通用gadget+libc里控制x0，x1，x2的gadget。部分gadget在 https://cor.team/posts/zh3r0-ctf-v2-complete-pwn-writeups/ 也有介绍。rop为orw
-114. shellcode题集合。忘记给这种常见题开集合了。之前记的零零散散的就放那吧，改的话序号全乱了。测试shellcode时可以尝试用c inline assembly（参考 https://stackoverflow.com/questions/61341/is-there-a-way-to-insert-assembly-code-into-c ），语法大致相同，就是引用寄存器时要加个%，如%rdx；每行后面还要加`\n\t`
-- [lcode](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/lcode)：可使用最多20种不同byte，且每个byte都是单数；开启沙盒故目标是写orw shellcode。非预期解是写一个获取堆地址的shellcode，然后往那里读rop chain
-```
-mov bl, 1
-xchg eax, ebx
-mov bl, 1
-xchg edi, ebx
-mov bl, 0xdf
-mov bh, 0x05
-lea edx, [ebx]
-mov r15, rsp
-lea rsi, [r15]
-syscall
-xor ebx, ebx
-xchg eax, ebx
-xor ebx, ebx
-xchg edi, ebx
-syscall
-ret
-```
-- [Inj](https://github.com/qLuma/TFC-CTF-2023/tree/main/Inj),[wp](https://xa21.netlify.app/blog/tfcctf-2023/inj/)
-  - 可以在64位程序里使用`int 0x80`调用32位的系统调用（遵守32位系统调用的调用号和参数传递，有些seccomp会禁掉，只允许64位）。利用`BPF_JUMP`和`BPF_STMT`设置沙盒时也可以分32位和64位系统调用分别设置
-  - 只有open和read无write调用时可以通过测信道的方式读取flag。读取flag后，一位一位地遍历flag。若为0，让程序崩溃；若为1，让程序延时（执行另一个read或者执行一个很长的loop）
-- [the great escape](https://gerrardtai.com/coding/ductf#the-great-escape)
-  - 利用read,openat,nanosleep时间测信道获取flag
-- [saas](https://github.com/cscosu/buckeyectf-2023-public/tree/master/pwn-saas),[wp](https://github.com/HAM3131/hacking/tree/main/BuckeyeCTF/pwn/saas)
-  - arm Self-modifying shellcode
-  - 一些arm学习链接： https://www.davespace.co.uk/arm/introduction-to-arm/immediates.html
-- [Babysbx](https://github.com/nobodyisnobody/write-ups/tree/main/Blackhat.MEA.CTF.Finals.2023/pwn/babysbx)
-  - xmm系列寄存器里存有大量地址，包括heap，libc和程序。例如从xmm0里拿堆地址：`movd rax, xmm0`
-  - 利用seccomp entry value找到堆上的seccomp rule并确定动态地址。seccomp没法检查具体内存地址处的内容，只能保证调用syscall时参数用的是某个地址A。PIE下A的地址随机，但是仍然可以借助搜索seccomp entry value `0x0000000200240015`找到确定的地址
-  - 利用shmget和shmat remap内存。效果为修改某段内存的权限。比较冷门的做法， mmap, mprotect, munmap, ptrace都禁掉后还可用这种
-  - 汇编引用标签字符串。wp的shellcode里出现了之前没见过的语法：
-  ```
-  ...
-  mov rbx,cmd[rip]
-  mov [rdi],rbx
-  mov rbx,cmd+8[rip]
-  mov [rdi+8],rbx
-  ...
-
-  cmd:
-    .string "/readflag"
-  ```
-  这个`cmd[rip]`和`cmd+8[rip]`不懂什么意思，调试后发现执行时分别变成了`mov rbx, qword ptr [rip + 0x19]`和`mov rbx, qword ptr [rip + 0x17]`。似乎是一种根据rip来引用字符串的固定做法？
-  - [预期解](https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#babysbx)使用mremap
-- [message](https://chovid99.github.io/posts/tcp1p-ctf-2023/#message)
-  - 利用pwntools shellcraft生成open+getdents64+write shellcode获取当前目录下全部文件的文件名
-  - 更详细的解析： https://www.mspi.eu/blog/security/ctf/2023/10/15/tcp1p-ctf-writeups.html#message
-- [FunChannel](https://www.youtube.com/watch?v=RaYU3hN88DA)
-  - pwntools编写shellcode+getdents获取文件名+openat/read（无write）侧信道读内容
-  - js socket+手写汇编： https://gist.github.com/adrian154/40df5ac94ed27a5e7b0b1e040863b50c
-- [Orxw](https://github.com/nobodyisnobody/write-ups/tree/main/Balsn.CTF.2021/pwn/orxw)
-  - 一种通过侧信道读取flag的手段。同样是只有read等函数没有write等输出函数。将要泄露的字符读到`/dev/ptmx`的后面，然后加上某个偏移。若偏移对了，`/dev/ptmx`的最后就是`\x00`，打开这个设备时程序会延时；而偏移错误则会导致设备名错误，程序立即终止
-- [Protector](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#Protector-12-solves)
-  - 32位rop+shellcode。使用rop爆破ASLR末端字节并覆盖read的got表为mprotect，mprotect修改bss段执行权限后栈迁移到bss段执行shellcode（open+getdents+read+write+exit）
-  - 在高版本的linux机器下，ASLR似乎被削弱了。参考 https://zolutal.github.io/aslrnt/ ，结论是在ext4, ext2, btrfs, xfs和fuse文件系统下，大于2MB的64位binary的ASLR位数从28降到了19；大于2MB的32位binary直接失去了ASLR
-- [Hoshmonstar](https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/hoshmonstar)
-  - 计算shellcode本身的HMAC-CRC64值，且可同时在RISC-V, AARCH64 和 x86-64下运行。技巧是利用[Barrett reduction](https://en.wikipedia.org/wiki/Barrett_reduction)缩减模运算所需要的代码长度。其他做法： 
-    - https://gist.github.com/Riatre/e8eb949da91b650ea27ed6dbebeb3912
-    - https://gist.github.com/TethysSvensson/067589b37c473ce2dce9270a64c8624d
+114. shellcode题集合。已移至顶端
 115. [minimal](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimal),[minimaler](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Pwn/minimaler)
 - 极小elf rop题目。源码只有简单的：
 ```c
@@ -1723,3 +1728,7 @@ try {
 - x86/64 Linux环境下，堆起始通常位于程序结尾地址后0到8192整数页（随机）的位置。若程序里完全无法泄漏地址，1/8192的爆破概率也是可以接受的。优化后的爆破方式：随便尝试一个偏移，若该偏移为heap上有效的偏移，回去找tcache perthread header（`\x91`开头）即可
 - scanf会在函数执行过程中分配一个heap chunk，最后free。正常情况下这个chunk free后会与前一个free chunk合并（之前也见过类似的技巧，不过都是大量输入导致分配large bin。目前确定的是，对于大量输入，scanf会根据输入大小分配相应的chunk）
 - 可通过将top chunk的size改小，然后再申请一个大于修改size后的top chunk的chunk。这样程序就会分配新的top chunk进而free原先的旧top chunk。感觉是house of orange的技巧
+174. [baby-talk](https://7rocky.github.io/en/ctf/other/dicectf/baby-talk/)
+- libc 2.27 off by null(House of Einherjar)+tcache poisoning。感觉这个是目前看过最好的House of Einherjar图文教程。步骤大概如下：两个chunk A和B，A可通过off by null将chunk B的size的最后一个字节改成`\x00`（这种构造下chunk B的prev size字段与chunk A的用户数据段重叠，所以可以直接伪造）。在A内部伪造一个fake chunk，大小和位置与伪造的prev size一致，同时满足unlink的检查。最后free chunk B，chunk B与chunk A内的fake chunk合并。此时fake chunk与chunk A重叠，且与chunk B合并后大了不少。此时分配几个tcache大小的chunk就会从这个chunk切割内存，chunk A的用户数据区刚好可以修改这些chunk的fd字段。在无edit功能的heap题下可以在执行攻击前free chunk A，等到修改fd那一步时再申请出来
+- read读取输入字符时只会读取参数指定的字节数。函数本身不会在字符串末尾添上`\x00`
+- strtok函数会修改原本的字符串，将指定的分割符替换为null字节。结合上一条以及字符串一定以null字符结尾的特点，可以利用这个函数将size的末尾字节改为`\x00`

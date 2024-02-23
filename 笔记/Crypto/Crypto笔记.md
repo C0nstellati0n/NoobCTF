@@ -579,7 +579,7 @@ for i in range(1,e):
 - [Hohoho 2 Continue](https://mechfrog88.github.io/wargames-2023#hohoho-2-continue)
     - LCG。这题要求预测一个LCG的值，LCG的各个参数都知道，但要预测的项未知（不知道要预测第几个输出）。初始的x可以随意输入，但必须包含一个固定短语。做的时候傻了，后来发现可以找一个包含短语的x，并让其满足 $x=(ax+b)\mod n$ 即可。找的时候使用LLL（从wp里似乎摸到一点格的门道了，但是先不记，还有地方不懂，不想误导未来的自己）。类似的题目（也用了格，还有不错的介绍）：[Onelinecrypto](https://nush.app/blog/2023/06/21/see-tf-2023/)
 
-## Elliptic Curves(椭圆曲线)
+## Elliptic Curves(ECC,椭圆曲线)
 
 是的我需要一个椭圆曲线题分类。我对这玩意的了解比格还少，只是记录下来方便未来的我复习(相信后人的智慧)
 - [Isogenies](https://hackmd.io/_D7hNf_wQ7qq0PArYPWjSQ)
@@ -590,6 +590,15 @@ for i in range(1,e):
     - [Modular polynomials](https://math.mit.edu/~drew/ClassicalModPolys.html)
     - [Division polynomials](https://en.wikipedia.org/wiki/Division_polynomials)
     - [Resultant](https://en.wikipedia.org/wiki/Resultant)
+- [yaonet](https://7rocky.github.io/en/ctf/other/dicectf/yaonet/)
+    - OpenSSH格式ECDSA私钥恢复。给出损坏的私钥文件，文件内部包含缺少5个字节（3个前缀字节2个尾字节）私钥d，尝试恢复d并构造原本的私钥文件。利用Baby-step Giant-step算法及Meet-in-the-middle思想。难点在于当缺失的字节不连续时如何构造公式并从两端入手
+## Z3使用
+
+开一个新的合集，用于记录那些和z3有关的crypto题目。但是优先级较低，记录在这里的题不能包含上面的RSA，格等内容（除非两者都有）
+
+- [rps-casino](https://7rocky.github.io/en/ctf/other/dicectf/rps-casino/)
+    - LFSR的另类实现（选取异或的bit时使用位移，一次更新4轮，输出4个bit）,以及其对应的z3实现
+    - 模运算通常会破坏线性。例如本题输出的4bit的数字会模3，导致只能用z3强行解初始state
 
 ## 其他
 
@@ -2397,3 +2406,5 @@ c2=encrypt(k2,c1)
 - 这篇[wp](https://nolliv22.com/writeups/mapna%20ctf%202023/what-next-2)使用randcrack
 136. [adapt](https://mystiz.hk/posts/2024/2024-02-03-tetctf-adapt/)
 - immutable AVL tree：[cosmos/iavl](https://github.com/cosmos/iavl) （v0.19.7）下的proof伪造。可通过构造特殊node获取一个假的proof，用于证明某个特定的node在tree中不存在（但实际存在）
+137. [winter](https://7rocky.github.io/en/ctf/other/dicectf/winter/)
+- Winternitz One-Time Signature (WOTS)签名伪造。这是一个单次签名算法，一个私钥只能签名一条信息。若同时签两条，攻击者可以通过第一条消息的签名伪造第二条消息的签名。只需构造一个字符串，使该字符串的sha256输出的每一个字节都大于等于第一条消息的sha256输出的相应字节即可。相似考点在59条winterfactory时就已见过，实际做题时也想到了这个做法，但是没找到符合要求的两条消息……wp作者的做法更聪明，与其随机生成两条消息并比对它们的hash，不如设定一个阈值，让第一条消息的hash值的每个字节都大于这个阈值，而第二条消息的hash值的每个字节都小于这个阈值。或者使用c++爆破hash脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#winter
