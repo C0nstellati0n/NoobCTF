@@ -249,6 +249,7 @@
 - [Longest Common Subsequence](./Medium/Longest%20Common%20Subsequence.md). dp
 - [Perfect Squares](https://leetcode.com/problems/perfect-squares/solutions/71488/summary-of-4-different-solutions-bfs-dp-static-dp-and-mathematics)。输出某个数字是多少个完全平方数的和。dp题，也可用相关数学定理：[Legendre's three-square theorem](https://en.wikipedia.org/wiki/Legendre%27s_three-square_theorem),[Sum of two squares theorem](https://en.wikipedia.org/wiki/Sum_of_two_squares_theorem)
 - [Palindromic Substrings](./Medium/Palindromic%20Substrings.md)
+- [Cheapest Flights Within K Stops](./Medium/Cheapest%20Flights%20Within%20K%20Stops.md). dijkstra/多源bfs
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
