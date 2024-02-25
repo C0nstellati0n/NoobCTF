@@ -318,3 +318,4 @@
 - [Maximum Profit in Job Scheduling](./Hard/Maximum%20Profit%20in%20Job%20Scheduling.md). dp
 - [Arithmetic Slices II - Subsequence](./Hard/Arithmetic%20Slices%20II%20-%20Subsequence.md). dp
 - [K Inverse Pairs Array](./Hard/K%20Inverse%20Pairs%20Array.md). dp+Triangle of Mahonian numbers
+- [Find All People With Secret](./Hard/Find%20All%20People%20With%20Secret.md). union find/bfs/dfs

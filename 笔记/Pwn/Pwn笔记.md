@@ -1725,12 +1725,18 @@ try {
 - 利用libc setcontext函数进行stack pivot
 173. [boogie-woogie](https://heinen.dev/dicectf-quals-2024/boogie-woogie/)
 - 可以利用`__dso_handle`（位于PIE + 0xf008）泄露程序基地址
-- x86/64 Linux环境下，堆起始通常位于程序结尾地址后0到8192整数页（随机）的位置。若程序里完全无法泄漏地址，1/8192的爆破概率也是可以接受的。优化后的爆破方式：随便尝试一个偏移，若该偏移为heap上有效的偏移，回去找tcache perthread header（`\x91`开头）即可
+- x86/64 Linux环境下，堆起始通常位于程序结尾地址后0到8192整数页（随机）的位置。若程序里完全无法泄漏地址，1/8192的爆破概率也是可以接受的。优化后的爆破方式：随便尝试一个偏移，若该偏移为heap上有效的偏移，回去找tcache perthread header（size为0x291）即可
 - scanf会在函数执行过程中分配一个heap chunk，最后free。正常情况下这个chunk free后会与前一个free chunk合并（之前也见过类似的技巧，不过都是大量输入导致分配large bin。目前确定的是，对于大量输入，scanf会根据输入大小分配相应的chunk）
 - 可通过将top chunk的size改小，然后再申请一个大于修改size后的top chunk的chunk。这样程序就会分配新的top chunk进而free原先的旧top chunk。感觉是house of orange的技巧
-- 其他wp： https://itaybel.github.io/dicectf-quals-2024/#boogie-woogie
+- 其他wp：
+  - https://itaybel.github.io/dicectf-quals-2024/#boogie-woogie
+  - https://chovid99.github.io/posts/dicectf-2024-quals/#boogie-woogie ：利用link_map实现RCE
 174. [baby-talk](https://7rocky.github.io/en/ctf/other/dicectf/baby-talk/)
 - libc 2.27 off by null(House of Einherjar)+tcache poisoning。感觉这个是目前看过最好的House of Einherjar图文教程。步骤大概如下：两个chunk A和B，A可通过off by null将chunk B的size的最后一个字节改成`\x00`（这种构造下chunk B的prev size字段与chunk A的用户数据段重叠，所以可以直接伪造）。在A内部伪造一个fake chunk，大小和位置与伪造的prev size一致，同时满足unlink的检查。最后free chunk B，chunk B与chunk A内的fake chunk合并。此时fake chunk与chunk A重叠，且与chunk B合并后大了不少。此时分配几个tcache大小的chunk就会从这个chunk切割内存，chunk A的用户数据区刚好可以修改这些chunk的fd字段。在无edit功能的heap题下可以在执行攻击前free chunk A，等到修改fd那一步时再申请出来
 - read读取输入字符时只会读取参数指定的字节数。函数本身不会在字符串末尾添上`\x00`
 - strtok函数会修改原本的字符串，将指定的分割符替换为null字节。结合上一条以及字符串一定以null字符结尾的特点，可以利用这个函数将size的末尾字节改为`\x00`
 - 其他wp： https://itaybel.github.io/dicectf-quals-2024/ ，具体实现方式稍微有点不一样
+175. [hop](https://chovid99.github.io/posts/dicectf-2024-quals/)
+- SerenityOS LibJS JIT pwn。向`/Userland/Libraries/LibJIT/X86_64/Assembler.h`引入patch后导致攻击者可以控制jmp short语句往之前的代码块跳
+- 将`serenity/Userland/Libraries/LibJS/JIT/Compiler.cpp`文件里的DUMP_JIT_DISASSEMBLY设置为1，这样当执行js代码时，js engine触发JIT compilation，引擎会输出JIT-compiled代码
+- 通过这题发现JIT汇编代码（不确定是不是其实所有的汇编都这样）挺奇怪的。js可以return多个返回值，这些return的值便全部堆在代码段的某个地址处，一直向下延伸。一直以为数据是不能放在代码段的
