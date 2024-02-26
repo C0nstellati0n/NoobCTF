@@ -652,6 +652,8 @@ print(base64.b64encode(temp.encode()))
   - 使用readline类读取文件。open会被audit hook监视，但用readline读文件则不会触发audit hook
   - 一些利用ctypes绕过audit hook逃脱pyjail并获取RCE的技巧
   - 其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#diligent-auditor
+- [IRS](https://maplebacon.org/2024/02/dicectf2024-irs/)
+  - 算是上面那道题的究极升级版（加了ast以及其他乱七八糟的过滤），甚至利用到了python内部的uaf。没有简略总结因为全篇都是知识点
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -1740,3 +1742,5 @@ try {
 - SerenityOS LibJS JIT pwn。向`/Userland/Libraries/LibJIT/X86_64/Assembler.h`引入patch后导致攻击者可以控制jmp short语句往之前的代码块跳
 - 将`serenity/Userland/Libraries/LibJS/JIT/Compiler.cpp`文件里的DUMP_JIT_DISASSEMBLY设置为1，这样当执行js代码时，js engine触发JIT compilation，引擎会输出JIT-compiled代码
 - 通过这题发现JIT汇编代码（不确定是不是其实所有的汇编都这样）挺奇怪的。js可以return多个返回值，这些return的值便全部堆在代码段的某个地址处，一直向下延伸。一直以为数据是不能放在代码段的
+176. [C(OOO)RCPU](https://github.com/dicegang/dicectf-quals-2024-challenges/tree/main/pwn/cooorcpu),[wp](https://surg.dev/dice24q/)
+- RISC-V Privileged Execution+Verilator(verilog模拟器) 0 day。又是完全看不懂的一题

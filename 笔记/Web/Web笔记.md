@@ -3423,3 +3423,5 @@ window.recaptcha=true;
 - 类似Calculator，但是禁止加注释和使用as与any。解法是利用eval覆盖函数，使返回的数字类型实际上是字符串（更详细内容参考 https://one3147.tistory.com/77 ）
 - 利用window.name缩短xss payload长度
 - 其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#calculator-2 ，Calculator的其他解法中也有部分可适用于这道题
+412. [floordrop](https://hodl.page/entry/DiceCTF-2024-Quals-floordropblockchain)
+- (完全看不懂)solidity blockchain frontrunning。唯一明白的点是提高gas price让服务器先执行我们要的函数再执行其他函数。作者还提到了一个bomb的概念，用bomb将一个block内所有的gas消耗完毕，剩下的调用会推迟到下一个block执行

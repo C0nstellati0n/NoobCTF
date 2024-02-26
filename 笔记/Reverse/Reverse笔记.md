@@ -1132,3 +1132,6 @@ finish()
   - https://github.com/jjchoNC/ctf-writeups/tree/main/UofTCTF%202024/rev/CSS%20Password
 140. [All Worbled Up](https://hackmd.io/@khoavnpsc/HkxcT5MY6)
 - python bytecode assembly(字节码)手动反编译例题
+141. [dicequest](https://github.com/digitaldisarray/writeups/blob/main/2024_2_2dicectf_quals_dicequest.md)
+- 利用[scanmem & GameConqueror](https://github.com/scanmem/scanmem)扫描linux游戏内存并修改。可以用`kill -STOP pid`命令暂停某个进程；用`kill -CONT pid`继续
+- 命令行版本工具使用： https://ctf.krauq.com/dicectf-2024#dicequest-107-solves

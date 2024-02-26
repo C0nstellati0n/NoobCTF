@@ -1826,3 +1826,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 252. [unipickle](https://nanimokangaeteinai.hateblo.jp/entry/2024/02/06/051003)
 - pickle反序列化漏洞利用：构造不包含空白字符及换行符且经过str.encode不会报错的RCE payload。pickle反序列化时其内部实现与堆栈上的虚拟机相似，按顺序执行pickle的指令。因此将程序默认的pickle指令换为其他的符合要求的指令即可
 - 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#unipickle
+253. [Zshfuck](https://ctf.krauq.com/dicectf-2024#zshfuck-107-solves)
+- 使用6个字符获取某个可执行文件的路径并执行。递归展示当前目录下的所有文件：
+    - `grep -r g`
+    - `ls -R`
+- 调用可执行文件： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#zshfuck 。重难点在于如何不使用黑名单里的字符匹配可执行文件的名称
