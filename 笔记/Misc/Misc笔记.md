@@ -1023,6 +1023,8 @@ git pre-commit //运行触发hook
     List the contents of the flag file :)
     git show <hash>
     ```
+- 类似题目：[GitMeow](https://github.com/zAbuQasem/MyChallenges/tree/main/0xL4ugh-CTF-2024/git)
+    - 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#gitmeow
 - 本地运行一个host服务器，然后把payload传给题目：https://github.com/TJCSec/tjctf-2023-challenges/tree/main/misc/gish
 159. [New Website](https://github.com/daffainfo/ctf-writeup/tree/main/BxMCTF%202023/New%20Website)
 - 使用[dig](https://cloud.tencent.com/developer/article/1618605)命令解析dns记录.如`dig domain TXT`只输出TXT相关记录。当访问网站出现`DNS_PROBE_FINISHED_NXDOMAIN`时，可以用该命令收集网站运行时的信息。
@@ -1830,4 +1832,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 使用6个字符获取某个可执行文件的路径并执行。递归展示当前目录下的所有文件：
     - `grep -r g`
     - `ls -R`
+    - `find /`
 - 调用可执行文件： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#zshfuck 。重难点在于如何不使用黑名单里的字符匹配可执行文件的名称
+254. [TerraMeow](https://github.com/zAbuQasem/MyChallenges/tree/main/0xL4ugh-CTF-2024/terraform)
+- IAC（Infrastructure as Code）工具Terraform基础（读文件，获取环境变量，一些绕过过滤的手段）

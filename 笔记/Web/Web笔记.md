@@ -3407,6 +3407,7 @@ window.recaptcha=true;
 - 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#minioday
 407. [another-csp](https://blog.huli.tw/2024/02/12/dicectf-2024-writeup/)
 - 在iframe的sandbox全开（无法使用script标签），csp `defeault-src 'none'`（禁止引入任何外部资源），不能执行任何JavaScript，也无法透过meta重新导向的情况下leak同网页下的token。因css开了unsafe-inline，加上可以得知bot正在访问的网页是否关闭，故利用html+css使Chromium崩溃（相关[issue](https://issues.chromium.org/issues/41490764)）或使网页载入变慢，进而加快/拖慢bot的执行时间
+- 利用dns-prefetch绕过CSP的详细介绍/相关链接： https://www.cse.chalmers.se/research/group/security/pdf/data-exfiltration-in-the-face-of-csp.pdf ， https://github.com/w3c/webappsec-csp/issues/542
 - 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#another-csp
 408. [safestlist](https://blog.huli.tw/2024/02/12/dicectf-2024-writeup/#webx2fsafestlist-2-solves)
 - 浏览器对网址长度有限制，可以利用一些特殊格式构造长的url：`http://${'a'.repeat(1000000)}}:pwd@localhost:3000`，其中那些a为用户名，pwd为密码，尝试对localhost:3000执行验证。过长的重定向后会触发错误，新打开的界面为`about:blank`
@@ -3418,6 +3419,7 @@ window.recaptcha=true;
 410. [Calculator](https://learn-cyber.net/writeup/Calculator)
 - typescript中，假如某个函数只允许返回某个特定类型，可以将其他类型cast成any来绕过。例如只允许返回number类型，用`"a" as any`即可绕过类型检查，返回a
 - typescript的ESLint可以用注释绕过：`/* eslint-disable-line */`。加了这句注释的ts代码不会被eslint检查
+- 有助于理解typescript类型的文章： https://medium.com/free-code-camp/typescript-and-its-types-f509d799947d#14d9
 - 其他解法（此题目标为让单句代码通过eval返回xss payload）： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#calculator-1
 411. [calculator-2](https://nanimokangaeteinai.hateblo.jp/entry/2024/02/06/051003#Web-135-calculator-2-33-solves)
 - 类似Calculator，但是禁止加注释和使用as与any。解法是利用eval覆盖函数，使返回的数字类型实际上是字符串（更详细内容参考 https://one3147.tistory.com/77 ）
@@ -3425,3 +3427,7 @@ window.recaptcha=true;
 - 其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#calculator-2 ，Calculator的其他解法中也有部分可适用于这道题
 412. [floordrop](https://hodl.page/entry/DiceCTF-2024-Quals-floordropblockchain)
 - (完全看不懂)solidity blockchain frontrunning。唯一明白的点是提高gas price让服务器先执行我们要的函数再执行其他函数。作者还提到了一个bomb的概念，用bomb将一个block内所有的gas消耗完毕，剩下的调用会推迟到下一个block执行
+413. [Micro](https://github.com/abdoghazy2015/CTF-Write-Ups/tree/main/0xL4ughCTF2024/Web/Micro)
+- php与python flask的解析差异。post传参时，若遇见重复的值，php取最后一个，flask取第一个
+414. [Simple WAF](https://github.com/abdoghazy2015/CTF-Write-Ups/tree/main/0xL4ughCTF2024/Web/Simple%20WAF)
+- php preg_match在执行失败时会返回false。可以用`phpinfo()`查看php pcre的匹配上限，超过上限后便会匹配失败
