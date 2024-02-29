@@ -2581,7 +2581,8 @@ index.html又有个peerdomain参数，用于设置交流的网页的域名。所
 - CSP bypass: https://terjanq.medium.com/arbitrary-parentheses-less-xss-e4a1cf37c13d . The idea is to find a subpage without a CSP and execute the payload there. A trick that usually works is to open a page with a very long url that will be blocked on the intermediate proxy side because of the overlong headers. Embedding sbx-anything.postviewer2-web.2023.ctfcompetition.com/AAAAA....AAA would work fine for a long sequence of A's.
 -  A window can redirect another window if they are in openee-opener relationship. The trick is to call open('URL', 'iframe') that will create such a relationship with an iframe named iframe (e.g. `<iframe name='iframe'>`). This allows the iframe to redirect its opener without user-interaction.
 253. [Under Construction](https://github.com/google/google-ctf/tree/master/2023/web-under-construction)
-- HTTP parameter pollution. A HTTP query like a=1&a=2 will be interpreted differently by Flask and PHP running on an Apache HTTP Server. In Flask, the parameter will be 1 (first occurence) while in PHP it will be 2 (last occurence).
+- HTTP parameter pollution. A HTTP query like a=1&a=2 will be interpreted differently by Flask and PHP running on an Apache HTTP Server. In Flask, the parameter will be 1 (first occurence) while in PHP it will be 2 (last occurence). php与python flask的解析差异。post传参时，若遇见重复的值，php取最后一个，flask取第一个
+- 类似题目：[Micro](https://github.com/abdoghazy2015/CTF-Write-Ups/tree/main/0xL4ughCTF2024/Web/Micro)
 254. [Veggie Soda](https://github.com/google/google-ctf/tree/master/2023/web-vegsoda)
 - 在[Oak](https://github.com/oakserver/oak/tree/main)应用程序中，HEAD请求会被看作GET请求。
 - typescript反序列化链（[SuperSerial](https://github.com/denostack/superserial)）利用。类似php的反序列化链，在程序中现成的类中找相同函数名但内容截然不同的类组合在一起。
@@ -3427,7 +3428,5 @@ window.recaptcha=true;
 - 其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#calculator-2 ，Calculator的其他解法中也有部分可适用于这道题
 412. [floordrop](https://hodl.page/entry/DiceCTF-2024-Quals-floordropblockchain)
 - (完全看不懂)solidity blockchain frontrunning。唯一明白的点是提高gas price让服务器先执行我们要的函数再执行其他函数。作者还提到了一个bomb的概念，用bomb将一个block内所有的gas消耗完毕，剩下的调用会推迟到下一个block执行
-413. [Micro](https://github.com/abdoghazy2015/CTF-Write-Ups/tree/main/0xL4ughCTF2024/Web/Micro)
-- php与python flask的解析差异。post传参时，若遇见重复的值，php取最后一个，flask取第一个
-414. [Simple WAF](https://github.com/abdoghazy2015/CTF-Write-Ups/tree/main/0xL4ughCTF2024/Web/Simple%20WAF)
+413. [Simple WAF](https://github.com/abdoghazy2015/CTF-Write-Ups/tree/main/0xL4ughCTF2024/Web/Simple%20WAF)
 - php preg_match在执行失败时会返回false。可以用`phpinfo()`查看php pcre的匹配上限，超过上限后便会匹配失败

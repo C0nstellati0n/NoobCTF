@@ -1135,3 +1135,16 @@ finish()
 141. [dicequest](https://github.com/digitaldisarray/writeups/blob/main/2024_2_2dicectf_quals_dicequest.md)
 - 利用[scanmem & GameConqueror](https://github.com/scanmem/scanmem)扫描linux游戏内存并修改。可以用`kill -STOP pid`命令暂停某个进程；用`kill -CONT pid`继续
 - 命令行版本工具使用： https://ctf.krauq.com/dicectf-2024#dicequest-107-solves
+142. [nano](https://matth.dmz42.org/posts/2024/ptrace_based_self_debugging_binaries/)
+- patch JZ/JNZ花指令
+- ptrace在程序里的利用。ptrace系统调用可让一个进程跟进/调试另一个进程，且调试的进程可以读/写被调试进程的内存和CPU context。ptrace也可以作为一个反调试的手段，因为一个进程只可被一个进程trace（调试器同样利用了ptrace）。可以用waitpid查看被调试进程的状态，进而决定下一步（例如读取寄存器，存储寄存器等）。可以选择静态分析这类binary，或者尝试用strace命令trace父进程，即事先没有被trace的进程
+- 不要相信反编译器。有些会触发segfault的指令在反编译出来的代码里看不到，只能读汇编
+143. [dance](https://matth.dmz42.org/posts/2024/ptrace_based_self_debugging_binaries/#2-dance)
+- 与上面那道题类似的思路，利用ptrace增加逆向难度。这次是用ptrace修改子进程的代码
+- 一些反逆向手段：
+  - 动态构造混淆lib文件并加载，运行时才一个指令一个指令解码。解码当前指令后销毁之前的指令，防止攻击者直接到最后提取完整lib
+  - 对main函数代码实行checksum，若patch后程序直接退出
+  - 使用syscall调用ptrace和exit而不是使用libc函数，防止攻击者通过hook LD_PRELOAD泄露信息
+144. [MyVault](https://alisayed37.github.io/posts/myvault-writeup/)
+- AndroidManifest.xml文件中的activity数量为程序screen的数量
+- apk逆向题还是运行一下为好，有些信息光看代码看不出来。例如这题要求输入数字，运行程序会知道只能输入4位数字，但代码里看不出来

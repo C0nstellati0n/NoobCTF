@@ -2411,3 +2411,5 @@ c2=encrypt(k2,c1)
 137. [winter](https://7rocky.github.io/en/ctf/other/dicectf/winter/)
 - Winternitz One-Time Signature (WOTS)签名伪造。这是一个单次签名算法，一个私钥只能签名一条信息。若同时签两条，攻击者可以通过第一条消息的签名伪造第二条消息的签名。只需构造一个字符串，使该字符串的sha256输出的每一个字节都大于等于第一条消息的sha256输出的相应字节即可。相似考点在59条winterfactory时就已见过，实际做题时也想到了这个做法，但是没找到符合要求的两条消息……wp作者的做法更聪明，与其随机生成两条消息并比对它们的hash，不如设定一个阈值，让第一条消息的hash值的每个字节都大于这个阈值，而第二条消息的hash值的每个字节都小于这个阈值。或者使用c++爆破hash脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#winter
 - 其他wp： https://sylvainpelissier.gitlab.io/posts/2024-02-04-dicectf-winter/ 。利用已知的bitcoin hash加快爆破。这类有特殊性质的hash还可以在 https://beneri.se/hashgame/ 找到
+138. [RSA-GCD](https://nolliv22.com/writeups/0xl4ugh%20ctf%202024/rsagcd)
+- [modular binomial](https://www.ctfrecipes.com/cryptography/general-knowledge/maths/modular-arithmetic/modular-binomial)的运用

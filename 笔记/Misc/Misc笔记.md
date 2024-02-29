@@ -1836,3 +1836,6 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 调用可执行文件： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#zshfuck 。重难点在于如何不使用黑名单里的字符匹配可执行文件的名称
 254. [TerraMeow](https://github.com/zAbuQasem/MyChallenges/tree/main/0xL4ugh-CTF-2024/terraform)
 - IAC（Infrastructure as Code）工具Terraform基础（读文件，获取环境变量，一些绕过过滤的手段）
+255. [WordPress](https://nolliv22.com/writeups/0xl4ugh%20ctf%202024/wordpress-1-4)
+- WordPress攻击traffic分析
+- 其他wp： https://medium.com/@Sphinky/0xl4ughctf-wordpress-forensics-writeups-7733b306028a

@@ -320,3 +320,8 @@
 - [K Inverse Pairs Array](./Hard/K%20Inverse%20Pairs%20Array.md). dp+Triangle of Mahonian numbers
 - [Find All People With Secret](./Hard/Find%20All%20People%20With%20Secret.md). union find/bfs/dfs
 - [Greatest Common Divisor Traversal](./Hard/Greatest%20Common%20Divisor%20Traversal.md). union find/寻找质数列表及质因数分解/bfs/dfs
+
+## Others
+
+其他地方（例如编程比赛，有机会的话CTF里的编程题也会放在这里）见到的题
+- [Riceboard](../Leetcode/Others/Riceboard.md). 计算等比数列的和模上任意一个数字后的结果，单拎出来作为计算等比数列和的算法也不错
