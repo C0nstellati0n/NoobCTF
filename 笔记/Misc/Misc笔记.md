@@ -1839,3 +1839,15 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 255. [WordPress](https://nolliv22.com/writeups/0xl4ugh%20ctf%202024/wordpress-1-4)
 - WordPress攻击traffic分析
 - 其他wp： https://medium.com/@Sphinky/0xl4ughctf-wordpress-forensics-writeups-7733b306028a
+256. [Gamer](https://smyler.net/blog/0xl4ugh-2024-gamer/)
+- windows forensic及[Autopsy](https://www.autopsy.com/)使用
+- discord相关forensic
+    - `C:\Users\username\AppData\Discord`为discord系统文件夹，可在该文件夹下找到discord版本号，cache等相关内容。还可以自行下载discord，将自己的文件夹替换为题目里的文件夹。若session没有过期，就能直接以取证对象的身份登录
+    - discord使用[electron](https://www.electronjs.org/)搭建，意味着使用了[chromium technologies](https://www.chromium.org/chromium-projects/)，包括其[cache系统](https://www.chromium.org/developers/design-documents/network-stack/disk-cache/)。Autopsy默认支持parse这种类型的cache，但只会在已知的[几个地点](https://github.com/sleuthkit/autopsy/blob/develop/RecentActivity/src/org/sleuthkit/autopsy/recentactivity/Chromium.java#L125)进行parse。可将discord的cache拷贝到其中任意一个地方即可让autopsy parse cache数据
+    - 参考 https://abrignoni.blogspot.com/2018/03/finding-discord-app-chats-in-windows.html
+- 反混淆batch脚本以及后续分析。混淆脚本除了各种代码上的技巧，还可以从编码中入手，只有选择正确的编码才可以正确显示。反混淆工具： https://github.com/DissectMalware/batch_deobfuscator
+- Autopsy使用
+    - 可导出event log，再用Windows event viewer打开，可获取下载文件的的位置，大小等信息
+    - 选项OS Accounts可获取系统上账号的创建时间等内容
+- [USN journal](https://en.wikipedia.org/wiki/USN_Journal)文件记录了NTFS文件系统上的改动，可用工具[MFTECmd](https://ericzimmerman.github.io/#!index.md)处理
+- https://abdelrahme.github.io/posts/0xl4ugh2024/ 使用了[MagnetAxiom](https://www.magnetforensics.com/products/magnet-axiom/)

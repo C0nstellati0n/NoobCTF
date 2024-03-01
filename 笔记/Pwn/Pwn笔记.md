@@ -1744,3 +1744,5 @@ try {
 - 通过这题发现JIT汇编代码（不确定是不是其实所有的汇编都这样）挺奇怪的。js可以return多个返回值，这些return的值便全部堆在代码段的某个地址处，一直向下延伸。一直以为数据是不能放在代码段的
 176. [C(OOO)RCPU](https://github.com/dicegang/dicectf-quals-2024-challenges/tree/main/pwn/cooorcpu),[wp](https://surg.dev/dice24q/)
 - RISC-V Privileged Execution+Verilator(verilog模拟器) 0 day。又是完全看不懂的一题
+177. [Pwn1](https://fyrepaw13.github.io/2024/02/10/0xL4ughCTF2024-pwn-pwn1.html)
+- 回 归 原 始。就是个libc 2.31上的uaf，tcache poisoning可以直接用（以为不能用，其实直接uaf篡改fd即可），甚至出题人还贴心的给了个堆溢出。但是做题的时候脑子抽了，只free了两个堆块就开始写fd，关键改的还是tm链表末尾的chunk我真的是服了。一定不要改链表末尾的chunk的fd，这样做的话在pwndbg里可以看到那块内存被链入tcache，但是取出时会报错。怕之后又抽了，附带个别人的脚本： https://gist.github.com/lb5tr/5c74cac9967a1760ca5416de0fbd3eb4

@@ -528,6 +528,9 @@ for i in range(1,e):
 - [easy-rsa](https://github.com/C0d3-Bre4k3rs/PingCTF2023-writeups/tree/main/easy-rsa)
     - 获知`q&p`和`q&(p<<1)`后分解n。或者说，在得知p和q的随机个bit后尝试恢复p和q：[Random known bits of p and q](https://eprint.iacr.org/2020/1506.pdf#page=23)。这题Z3可解
     - 又遇到了类似考点的题：[Shibs](https://kanzya.github.io/posts/MAPNACTF/)。这题wp作者用了多线程（python multiprocessing）配合z3。个人做这道题时倒是用了easy-rsa里的方法: https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#shibs 。我发现这种类型的题只需要找到题目里p和q的bit之间的关系,结合backtrack的思想即可解出。p和q之间的关系用于backtrack设置bit及检查是否返回的条件。注意backtrack设置完bit并递归完后一定要取消刚才设置的bit
+- [L4ugh](https://berliangabriel.github.io/post/0xl4ugh-ctf-2024/)
+    - 利用LLL实现[Common Private Exponent](https://www.ijcsi.org/papers/IJCSI-9-2-1-311-314.pdf)攻击。特征为多组公钥共享一个私钥。这种攻击比较简短的解释： https://connor-mccartney.github.io/cryptography/rsa/L4ugh-0xl4ughCTF-2024
+    - AES翻转bit攻击（控制iv）
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
