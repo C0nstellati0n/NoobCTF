@@ -325,3 +325,4 @@
 
 其他地方（例如编程比赛，有机会的话CTF里的编程题也会放在这里）见到的题
 - [Riceboard](../Leetcode/Others/Riceboard.md). 计算等比数列的和模上任意一个数字后的结果，单拎出来作为计算等比数列和的算法也不错
+- [The big party](../Leetcode/Others/The%20big%20party.md). 2d dijkstra(2d dist数组)的复杂情况

