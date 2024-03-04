@@ -3429,3 +3429,8 @@ window.recaptcha=true;
 - (完全看不懂)solidity blockchain frontrunning。唯一明白的点是提高gas price让服务器先执行我们要的函数再执行其他函数。作者还提到了一个bomb的概念，用bomb将一个block内所有的gas消耗完毕，剩下的调用会推迟到下一个block执行
 413. [Simple WAF](https://github.com/abdoghazy2015/CTF-Write-Ups/tree/main/0xL4ughCTF2024/Web/Simple%20WAF)
 - php preg_match在执行失败时会返回false。可以用`phpinfo()`查看php pcre的匹配上限，超过上限后便会匹配失败
+414. [DisLaugh](https://omakmoh.me/dislaugh/)
+- 用ElectronJS搭建的程序源代码可在`resources/app.asar`拿到。可用工具[asar](https://github.com/electron/asar)从该后缀文件中提取源代码
+- jquery的`jQuery.append()`不能用于未经过滤的用户输入，有xss的风险
+- 极小xss payload： https://trustedsec.com/blog/cross-site-smallish-scripting-xsss
+- 若js脚本内部nodeIntegration的值为true，意味着“Integrate Node.js features to be accessible directly from your page scripts”

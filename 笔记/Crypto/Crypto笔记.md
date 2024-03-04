@@ -531,6 +531,8 @@ for i in range(1,e):
 - [L4ugh](https://berliangabriel.github.io/post/0xl4ugh-ctf-2024/)
     - 利用LLL实现[Common Private Exponent](https://www.ijcsi.org/papers/IJCSI-9-2-1-311-314.pdf)攻击。特征为多组公钥共享一个私钥。这种攻击比较简短的解释： https://connor-mccartney.github.io/cryptography/rsa/L4ugh-0xl4ughCTF-2024
     - AES翻转bit攻击（控制iv）
+- [Baby RSA](https://writeup.gldanoob.dev/bitsctf/)
+    - 矩阵上的RSA。参考 https://www.gcsu.edu/sites/files/page-assets/node-808/attachments/pangia.pdf 第9页的3.3案例
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
@@ -2416,3 +2418,6 @@ c2=encrypt(k2,c1)
 - 其他wp： https://sylvainpelissier.gitlab.io/posts/2024-02-04-dicectf-winter/ 。利用已知的bitcoin hash加快爆破。这类有特殊性质的hash还可以在 https://beneri.se/hashgame/ 找到
 138. [RSA-GCD](https://nolliv22.com/writeups/0xl4ugh%20ctf%202024/rsagcd)
 - [modular binomial](https://www.ctfrecipes.com/cryptography/general-knowledge/maths/modular-arithmetic/modular-binomial)的运用
+134. [Combinatorial Conundrum](https://github.com/Pamdi8888/My_CTF_Chals/tree/main/Combinatorial%20Conundrum)
+- 假如要求满足`sum(x1+...+xN) = R`解的数量，其中0<=x<=R，公式为(N+R-1) 选 (R)；若Li<=x<=R，则：”subtract Li from each limit and also subtract sum(Li) from R, then apply the same formula“
+- dp解法： https://writeup.gldanoob.dev/bitsctf/

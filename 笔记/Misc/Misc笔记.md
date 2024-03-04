@@ -431,6 +431,9 @@ flag.export("./flag.mp3", format="mp3")
     - `vol -f file.mem windows.memmap.Memmap --pid <num> --dump`:dump pid为num的进程的内容。有意思的地方在于，Memdumps are essentially RAM moment captures，可以将dump出来的文件后缀改成.data放进GIMP，能看到内存的图片，包括字符串形式的flag。参考 https://www.youtube.com/watch?v=-E3VTblFkKg
 - [conqueror](https://github.com/daffainfo/ctf-writeup/tree/main/2023/niteCTF%202023/conqueror)
     - `vol -f ctf.mem windows.hashdump.Hashdump`:dump用户及其md5 hash
+- [Bypassing Transport Layer](https://odintheprotector.github.io/2024/02/17/bitsctf2024-dfir.html)
+    - `vol.py -f ctf.mem windows.netscan`:查看网络连接情况
+    - HTTP2协议的requests和responses都是加密的，解密需要密钥。若找到类似keylog.pcapng的文件也可以解密
 - [LovelyMem](https://github.com/Tokeii0/LovelyMem):一个图形界面取证工具
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。动图解释：https://zhuanlan.zhihu.com/p/63362804
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
@@ -1613,6 +1616,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 可以用guestmount在linux上挂载windows的vmdk
 183. [Initial Access](https://github.com/D13David/ctf-writeups/tree/main/csaw23/ir/initial_access)
 - Outlook Data Files on windows contain your email messages, calendar, tasks:`Documents\Outlook Files`。可用[libpst](https://www.kali.org/tools/libpst/)工具处理
+- 参考[MogamBro’s guilty pleasure](https://odintheprotector.github.io/2024/02/17/bitsctf2024-dfir.html),也可能在`username\Documents\Outlook`文件夹下。这题还有个垃圾邮件“密码”的考点。这种密码的特征为，其一般是作为邮件内容，但内容完全没有任何意义。在线解码网站：[Spammimic](https://www.spammimic.com/decode.shtml)
 184. [Disguised Source Control](https://0xryuk.gitlab.io/posts/ctf/winjactf2023/#disguised-source-control)
 - 获取一个repo的token后，即可利用clone命令cloneprivate repo。private repo在github上会显示404，但是用git clone就会提示需要密码，密码就是token
 185. [Sheep loves Maths](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_sheep-loves-maths)
@@ -1851,3 +1855,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - 选项OS Accounts可获取系统上账号的创建时间等内容
 - [USN journal](https://en.wikipedia.org/wiki/USN_Journal)文件记录了NTFS文件系统上的改动，可用工具[MFTECmd](https://ericzimmerman.github.io/#!index.md)处理
 - https://abdelrahme.github.io/posts/0xl4ugh2024/ 使用了[MagnetAxiom](https://www.magnetforensics.com/products/magnet-axiom/)
+257. [CID](https://github.com/Pamdi8888/My_CTF_Chals/tree/main/CID)
+- `.ged`后缀文件分析。可用 http://www.drawmyfamilytree.co.uk/gedcom_viewer.php 打开这类文件
+258. [0.69 Day](https://odintheprotector.github.io/2024/02/17/bitsctf2024-dfir.html)
+- 和winRAR有关的漏洞：[CVE-2023-38831](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/exploring-winrar-vulnerability-cve-2023-38831/)
+259. [Lottery](https://odintheprotector.github.io/2024/02/17/bitsctf2024-dfir.html)
+- python的tempfile.TemporaryFile生成的临时文件一般在Temp文件夹下（windows），且名称中带有tmp

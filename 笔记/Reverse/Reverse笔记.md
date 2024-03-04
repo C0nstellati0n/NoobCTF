@@ -337,7 +337,7 @@ flag在汇编代码里就很明显了。
 39. xxtea逆向。例题:[xx](../../CTF/攻防世界/6级/Reverse/xx.md)
 40. c++函数名修饰+二叉树变换动调解法。例题:[[2019红帽杯]childRE](../../CTF/BUUCTF/Reverse/[2019红帽杯]childRE.md)
 41. ollydbg动调解题。例题:[[SWPU2019]ReverseMe](https://blog.nowcoder.net/n/aa8086cbf8c54e3b8dd49c52e2fcefe0)
-42. [Pyinstaller extractor](https://sourceforge.net/projects/pyinstallerextractor/)脱壳。例题:[[羊城杯 2020]login](https://blog.csdn.net/yhfgs/article/details/120556096)
+42. [Pyinstaller extractor](https://github.com/extremecoders-re/pyinstxtractor)脱壳。例题:[[羊城杯 2020]login](https://blog.csdn.net/yhfgs/article/details/120556096)
 43. SM4加密算法。例题:[[安洵杯 2019]crackMe](https://shijingtian.github.io/2020/03/17/ctf/%E5%AE%89%E6%B4%B5%E6%9D%AF%202019-crackMe/)
 44. [WebAssembly](https://zhuanlan.zhihu.com/p/68048524)+Android。例题:[丛林的秘密](https://bbs.pediy.com/thread-252374.htm#msg_header_h1_0)。webAssembly可以被看作是web层面的汇编编译目标，可用[wasm2c](https://github.com/WebAssembly/wabt/blob/main/wasm2c/README.md)将wasm文件转为c语言。
 45. 如果程序的验证逻辑是很多if语句，可以用爆破解时，[angr](https://www.anquanke.com/post/id/212816#h2-8)符号执行也是一种选择。例题:[[WUSTCTF2020]funnyre](https://blog.csdn.net/ytj00/article/details/107735151)
@@ -1148,3 +1148,6 @@ finish()
 144. [MyVault](https://alisayed37.github.io/posts/myvault-writeup/)
 - AndroidManifest.xml文件中的activity数量为程序screen的数量
 - apk逆向题还是运行一下为好，有些信息光看代码看不出来。例如这题要求输入数字，运行程序会知道只能输入4位数字，但代码里看不出来
+145. [Touch Grass](https://github.com/jjchoNC/ctf-writeups/tree/main/BITS%20CTF%202024/rev/Touch%20Grass)
+- 利用apktool解包apk并patch汇编再打包。重新打包的apk需要用[Uber Apk Signer](https://github.com/patrickfav/uber-apk-signer)或者类型签名工具签名后才能安装
+- 和传感器及相关插件（accelerometer，pedometer，sensor_plus）有关的题目可以从onSensorChanged事件下手
