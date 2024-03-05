@@ -3434,3 +3434,6 @@ window.recaptcha=true;
 - jquery的`jQuery.append()`不能用于未经过滤的用户输入，有xss的风险
 - 极小xss payload： https://trustedsec.com/blog/cross-site-smallish-scripting-xsss
 - 若js脚本内部nodeIntegration的值为true，意味着“Integrate Node.js features to be accessible directly from your page scripts”
+415. [JWT Decoder](https://domdom.tistory.com/492)
+- 小于3.1.7版本的ejs有RCE漏洞（需获取原型链污染）： https://security.snyk.io/vuln/SNYK-JS-EJS-2803307 ，但是根据这篇wp，似乎在调用ejs.render时直接传入object也可以触发
+- [cookie-parser](https://www.npmjs.com/package/cookie-parser)特性:In addition, this module supports special "JSON cookies". These are cookie where the value is prefixed with `j:`. When these values are encountered, the value will be exposed as the result of JSON.parse. If parsing fails, the original value will remain. 以`j:`开头的cookie将会以parse后的json对象形式返回

@@ -598,6 +598,9 @@ for i in range(1,e):
 - [yaonet](https://7rocky.github.io/en/ctf/other/dicectf/yaonet/)
     - OpenSSH格式ECDSA私钥恢复。给出损坏的私钥文件，文件内部包含缺少5个字节（3个前缀字节2个尾字节）私钥d，尝试恢复d并构造原本的私钥文件。利用Baby-step Giant-step算法及Meet-in-the-middle思想。难点在于当缺失的字节不连续时如何构造公式并从两端入手
     - 其他wp： https://connor-mccartney.github.io/cryptography/ecc/yaonet-DiceCTF-2024
+- [not-suspicious-agency](https://www.youtube.com/watch?v=8Cbz1e3motE)
+    - [Dual_EC_DRBG](https://en.wikipedia.org/wiki/Dual_EC_DRBG)（基于椭圆曲线的随机数生成器,有时候题目名称/描述会和NSA有关系）的[后门利用](https://crypto.stackexchange.com/questions/10417/explaining-weakness-of-dual-ec-drbg-to-wider-audience)。类似题目： https://github.com/cscosu/ctf-writeups/tree/master/2021/utctf/Sleeves
+    - 如何在椭圆曲线下求乘法逆元：`inverse(a,E.order())`
 ## Z3使用
 
 开一个新的合集，用于记录那些和z3有关的crypto题目。但是优先级较低，记录在这里的题不能包含上面的RSA，格等内容（除非两者都有）

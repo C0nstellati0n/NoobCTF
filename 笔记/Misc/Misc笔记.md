@@ -1,5 +1,11 @@
 # Misc笔记
 
+# Digital Forensics and Incident Response(DFIR)
+
+开个新的分类，用于存储这个困扰我很久的题目类型:(
+- https://github.com/slaee/ret-CTF-writeups/tree/main/2024/bitsCTF/DFIR
+    - 题目情景为`.ad`后缀文件+mem文件+pcap文件。使用工具volatility3,FTK Imager
+
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -77,7 +83,7 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
   - binwalk可能会提取出一些Zlib compressed data，有时候flag会藏在里面。
 - foremost(有时候即使binwalk没有提示任何文件，foremost也能提取出东西。所以binwalk提示没有问题时，也不要忘记试foremost)
 - outguess，例题：[Avatar](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/4%E7%BA%A7/Misc/Avatar.md)。注意有时候outguess会需要密码，密码可能藏在exif里。例题:[[ACTF新生赛2020]outguess](https://blog.csdn.net/mochu7777777/article/details/108936734)
-- [F5隐写](https://github.com/matthewgao/F5-steganography)，例题：[刷新过的图片](https://blog.csdn.net/destiny1507/article/details/102079695)
+- [F5隐写](https://github.com/matthewgao/F5-steganography)，例题：[刷新过的图片](https://blog.csdn.net/destiny1507/article/details/102079695)。另一个更详细的F5隐写变种题:[Refresh!](https://github.com/Aryvd/Aryvd/tree/main/Refresh!)
 - stegsolve
 - NtfsStreamsEditor,用于处理NTFS流隐藏文件。例题：[[SWPU2019]我有一只马里奥](https://blog.csdn.net/mochu7777777/article/details/108934265)。当题目涉及到NTFS流时，题目文件都需要用Win RAR解压。
 - [SilentEye](https://achorein.github.io/silenteye/)（音频隐写工具）
@@ -433,7 +439,7 @@ flag.export("./flag.mp3", format="mp3")
     - `vol -f ctf.mem windows.hashdump.Hashdump`:dump用户及其md5 hash
 - [Bypassing Transport Layer](https://odintheprotector.github.io/2024/02/17/bitsctf2024-dfir.html)
     - `vol.py -f ctf.mem windows.netscan`:查看网络连接情况
-    - HTTP2协议的requests和responses都是加密的，解密需要密钥。若找到类似keylog.pcapng的文件也可以解密
+    - TLS流的requests和responses都是加密的，解密需要密钥。若找到类似keylog.pcapng的文件也可以解密
 - [LovelyMem](https://github.com/Tokeii0/LovelyMem):一个图形界面取证工具
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。动图解释：https://zhuanlan.zhihu.com/p/63362804
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)

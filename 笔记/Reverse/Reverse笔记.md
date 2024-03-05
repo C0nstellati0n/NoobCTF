@@ -1149,5 +1149,6 @@ finish()
 - AndroidManifest.xml文件中的activity数量为程序screen的数量
 - apk逆向题还是运行一下为好，有些信息光看代码看不出来。例如这题要求输入数字，运行程序会知道只能输入4位数字，但代码里看不出来
 145. [Touch Grass](https://github.com/jjchoNC/ctf-writeups/tree/main/BITS%20CTF%202024/rev/Touch%20Grass)
+- flutter apk逆向。参考 https://medium.com/@mohammadolimat/bitsctf-2024-reverse-writeup-0f15f28c342f
 - 利用apktool解包apk并patch汇编再打包。重新打包的apk需要用[Uber Apk Signer](https://github.com/patrickfav/uber-apk-signer)或者类型签名工具签名后才能安装
 - 和传感器及相关插件（accelerometer，pedometer，sensor_plus）有关的题目可以从onSensorChanged事件下手
