@@ -601,6 +601,10 @@ for i in range(1,e):
 - [not-suspicious-agency](https://www.youtube.com/watch?v=8Cbz1e3motE)
     - [Dual_EC_DRBG](https://en.wikipedia.org/wiki/Dual_EC_DRBG)（基于椭圆曲线的随机数生成器,有时候题目名称/描述会和NSA有关系）的[后门利用](https://crypto.stackexchange.com/questions/10417/explaining-weakness-of-dual-ec-drbg-to-wider-audience)。类似题目： https://github.com/cscosu/ctf-writeups/tree/master/2021/utctf/Sleeves
     - 如何在椭圆曲线下求乘法逆元：`inverse(a,E.order())`
+- [budget bag](https://connor-mccartney.github.io/cryptography/ecc/budget-bag-LACTF-2024)
+    - 通过曲线上的两个点恢复参数a和b
+    - 带有elliptic cusp（a和b均为0）的椭圆曲线上的离散对数比较好求，参考 https://crypto.stackexchange.com/questions/61302/how-to-solve-this-ecdlp
+    - 利用离散对数将曲线上点的加法转换为线性方程（wp里说是背包问题，我菜到看不出来）。假设有一些已知的点，各个点的系数未知，整体加起来为曲线上的另一个点S。可以取已知的点中任意一个点作“生成点G”，那么剩下的点一定是G的倍数（具体多少倍求离散对数可得）。求G对于S的离散对数（不确定这样表达有没有问题，求S是G的多少倍），那么之前求的G相对于已知点集里各个点的离散对数结果与G对S的离散对数构成模曲线质数p的方程（各个离散对数结果记为 $d_i$ ,G对S的离散对数记为D那么 $d_ix+d_{i+1}y+...=D\mod p$ 。解这种模某个数的线性方程的脚本参考wp）
 ## Z3使用
 
 开一个新的合集，用于记录那些和z3有关的crypto题目。但是优先级较低，记录在这里的题不能包含上面的RSA，格等内容（除非两者都有）
