@@ -102,6 +102,8 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
     - bmp/png文件隐写工具，需要密码
 - [PuzzleSolver](https://github.com/Byxs20/PuzzleSolver)
     - 能干的事情很多，不止隐写。不过我认识到这个工具是因为里面有个python3频率盲水印，用其他的脚本提取不出来
+- [discord events](https://hackmd.io/@lamchcl/SJIdwQb3a#miscdiscord-events)
+    - [Steg Cloak](https://stegcloak.surge.sh/)的解码。被Steg Cloak加密的文字会包含不可见字符
 1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)。不同版本的zip加密位不一样,例如有些zip需要将第7个字节的09改成00。如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
 3.   numpy.loadtxt读取坐标文件+基本matplotlib图像绘制。例题:[梅花香之苦寒来](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Misc/%E6%A2%85%E8%8A%B1%E9%A6%99%E4%B9%8B%E8%8B%A6%E5%AF%92%E6%9D%A5.md)
@@ -1867,3 +1869,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 和winRAR有关的漏洞：[CVE-2023-38831](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/exploring-winrar-vulnerability-cve-2023-38831/)
 259. [Lottery](https://odintheprotector.github.io/2024/02/17/bitsctf2024-dfir.html)
 - python的tempfile.TemporaryFile生成的临时文件一般在Temp文件夹下（windows），且名称中带有tmp
+260. [one by one](https://hackmd.io/@lamchcl/SJIdwQb3a#miscone-by-one)
+- 泄漏google form的答案。查看google form的源代码，form的内容可以在`FB_PUBLIC_LOAD_DATA_`里找到（题目，选项等）。对于包含选项的form，正确的选项的id与其他错误选项不同，所以可以利用这点泄漏正确选项
+261. [my smart git](https://hackmd.io/@lamchcl/SJIdwQb3a#miscmy-smart-git)
+- 有些时候直接访问网站的`.git`会返回403。git默认使用一种名叫dumb的smart protocol，只能用clone访问（若直接clone还是不行，尝试添加`--depth`选项）
+- dumb协议分析。用wireshark抓包可发现`git-upload-pack`路径，用于指定要获取的commit的id

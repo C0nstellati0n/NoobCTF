@@ -1152,3 +1152,7 @@ finish()
 - flutter apk逆向。参考 https://medium.com/@mohammadolimat/bitsctf-2024-reverse-writeup-0f15f28c342f
 - 利用apktool解包apk并patch汇编再打包。重新打包的apk需要用[Uber Apk Signer](https://github.com/patrickfav/uber-apk-signer)或者类型签名工具签名后才能安装
 - 和传感器及相关插件（accelerometer，pedometer，sensor_plus）有关的题目可以从onSensorChanged事件下手
+146. [flag-finder](https://hackmd.io/@lamchcl/SJIdwQb3a#revflag-finder)
+- `.win`,`.unx`后缀游戏文件修改工具:[UndertaleModTool](https://github.com/UnderminersTeam/UndertaleModTool)使用
+147. [technically-correct](https://hackmd.io/@lamchcl/SJIdwQb3a#revtechnically-correct)
+- 有些时候可以通过修改elf文件的header，使反编译器无法读取elf文件。解决办法是自行用readelf看一遍文件，寻找有没有不符合头部定义的内容（大端/小端？32/64？）

@@ -583,6 +583,8 @@ for i in range(1,e):
 - [Geometry Hash](https://connor-mccartney.github.io/cryptography/other/Geometry-Hash-Balsn-CTF-2023)。这题的格构造与三角形的Centroid，Circumcenter和Incenter有关
 - [Hohoho 2 Continue](https://mechfrog88.github.io/wargames-2023#hohoho-2-continue)
     - LCG。这题要求预测一个LCG的值，LCG的各个参数都知道，但要预测的项未知（不知道要预测第几个输出）。初始的x可以随意输入，但必须包含一个固定短语。做的时候傻了，后来发现可以找一个包含短语的x，并让其满足 $x=(ax+b)\mod n$ 即可。找的时候使用LLL（从wp里似乎摸到一点格的门道了，但是先不记，还有地方不懂，不想误导未来的自己）。类似的题目（也用了格，还有不错的介绍）：[Onelinecrypto](https://nush.app/blog/2023/06/21/see-tf-2023/)
+- [any% ssg](https://hackmd.io/@lamchcl/SJIdwQb3a#cryptoany-ssg)
+    - 利用LLL获取类似minecraft的生成地图seed。格白学了，还是看不懂这格是怎么表示的
 
 ## Elliptic Curves(ECC,椭圆曲线)
 

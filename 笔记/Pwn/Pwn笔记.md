@@ -1705,6 +1705,14 @@ try {
   - Add a `, []` at the end of the payload to form a sequence expression. Babel's `path.evaluate()` ignores expressions in a sequence expression except the last one, allowing us to bypass the static evaluation check.
 - [js_evaluator](https://github.com/UofTCTF/uoftctf-2024-chals-public/tree/master/Jail/js_evaluator)
   - discord里`molenzwiebel`的补充解析： The only ways to trigger function calls are `[String/Number/Math].[identifier](...)`, `[literal].[identifier](...)` and `{ valueOf: [function] } + 1`. We need a function call to get any kind of arbitrary code execution. We can get a reference to Function or eval through the patch, but we still need to be able to call it with an arbitrary argument, which rules out the valueOf approach. That results in just two options left, we can just enumerate them to find one that takes a callback in which we can (partially) control the arguments. One such function is String.prototype.replace. Combine everything: `"console.log(1)".replace("console.log(1)", eval)`
+- [jsfudge](https://hackmd.io/@lamchcl/SJIdwQb3a#miscjsfudge)
+  - 仅用`()+[]!`获取代码执行，且toString被覆盖。解决办法是用JSFuck的变种(patch JSFuck生成脚本)，将JSFuck里利用toString构造字母数字的方法换成其他的。一些wp里提到的构造技巧：
+    - 利用拼接构造字符串数字，如`[1]+[0]`，会触发toString
+    - 可用`+![]`,`+[]`构造0；,`+!![]`，`+!+[]`构造1，但注意后者都会触发toString
+    - `false+[]`可得`"false"`，会触发toString
+    - `([false]+undefined)[10]`,`(undefined+[])[5]`,可得字符`i`,前者会触发toString
+    - `[[]].concat([[]])+[]`可得字符`,`
+  - nodeJS里的全局object： https://nodejs.org/api/globals.html
 168. [U2S](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#U2S-2-solves)
 - lua pwn入门。通过lua数组负索引溢出获取任意地址读写并实现RCE。lua上可以使用堆喷，然后利用负索引溢出修改lua内置object元数据。具体可参考 https://ricercasecurity.blogspot.com/2023/07/fuzzing-farm-4-hunting-and-exploiting-0.html
 169. [CoolPool](https://ajomix.hashnode.dev/pwn-coolpool-tetctf2024)
