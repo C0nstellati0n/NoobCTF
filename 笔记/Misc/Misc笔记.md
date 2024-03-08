@@ -102,7 +102,7 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
     - bmp/png文件隐写工具，需要密码
 - [PuzzleSolver](https://github.com/Byxs20/PuzzleSolver)
     - 能干的事情很多，不止隐写。不过我认识到这个工具是因为里面有个python3频率盲水印，用其他的脚本提取不出来
-- [discord events](https://hackmd.io/@lamchcl/SJIdwQb3a#miscdiscord-events)
+- [discord events](https://dothidden.xyz/la_ctf_2024/discord_events/)
     - [Steg Cloak](https://stegcloak.surge.sh/)的解码。被Steg Cloak加密的文字会包含不可见字符
 1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)。不同版本的zip加密位不一样,例如有些zip需要将第7个字节的09改成00。如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节

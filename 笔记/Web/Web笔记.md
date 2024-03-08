@@ -3437,3 +3437,16 @@ window.recaptcha=true;
 415. [JWT Decoder](https://domdom.tistory.com/492)
 - 小于3.1.7版本的ejs有RCE漏洞（需获取原型链污染）： https://security.snyk.io/vuln/SNYK-JS-EJS-2803307 ，但是根据这篇wp，似乎在调用ejs.render时直接传入object也可以触发
 - [cookie-parser](https://www.npmjs.com/package/cookie-parser)特性:In addition, this module supports special "JSON cookies". These are cookie where the value is prefixed with `j:`. When these values are encountered, the value will be exposed as the result of JSON.parse. If parsing fails, the original value will remain. 以`j:`开头的cookie将会以parse后的json对象形式返回
+416. [quickstyle](https://sheeptester.github.io/longer-tweets/lactf/#webquickstyle)
+- 利用form实现dom clobbering覆盖原本document里的函数（如`document.querySelectorAll`）。覆盖函数后程序内部无法调用该函数
+- CSP较为严格的情况下可以考虑利用CSS泄漏页面指定信息。这种技巧一般只需要一个字符一个字符地泄漏，即创建多个css泄露固定的一个信息；但这题要求一个css一次泄露完整的信息。如果覆盖所有可能性的话会导致payload过长，可以考虑3个字符3个字符地泄漏。构造payload时需要借助CSS变量，防止多种规则同时生效时被覆盖。一些CSP和CSS利用的分析和总结也可以参考wp：
+    - `[attr="value"]`:Whether the attribute is exactly the string.
+    - `[attr^="value"]`:Whether the attribute starts with a string.
+    - `[attr$="value"]`:Whether the attribute ends with a string.
+    - `[attr*="value"]`:Whether the attribute contains the string anywhere, at least once.
+    - `[attr*="value" i]`:Adding i at the end makes the comparison case insensitive.
+    - `[attr|="value"]`:This also can compare strings, but it has a special behavior that allows lang="en" and lang="en-US" to be treated similarly. It’s not particularly useful for anything but the lang attribute.
+    - CSS可做大小写不敏感的匹配
+- 生日悖论（birthday paradox）的应用以及如何找De Bruijn graph里的Eulerian path。这种图可用来解决“给定几组相邻的子字符组，重建原本的字符串“的问题
+417. [Penguin-Login](https://dothidden.xyz/la_ctf_2024/penguin-login/)
+- 仅能使用`a-zA-Z0-9{_}`且不能使用LIKE的PostgreSQL盲注。LIKE的功能可以用BETWEEN代替

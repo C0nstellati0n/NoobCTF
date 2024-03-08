@@ -2430,3 +2430,5 @@ c2=encrypt(k2,c1)
 134. [Combinatorial Conundrum](https://github.com/Pamdi8888/My_CTF_Chals/tree/main/Combinatorial%20Conundrum)
 - 假如要求满足`sum(x1+...+xN) = R`解的数量，其中0<=x<=R，公式为(N+R-1) 选 (R)；若Li<=x<=R，则：”subtract Li from each limit and also subtract sum(Li) from R, then apply the same formula“
 - dp解法： https://writeup.gldanoob.dev/bitsctf/
+135. [selamat pagi](https://sheeptester.github.io/longer-tweets/lactf/#cryptoselamat-pagi)
+- 针对印度尼西亚语（Indonesian）的字母替换密码的分析及破解。可用工具： https://www.dcode.fr/monoalphabetic-substitution

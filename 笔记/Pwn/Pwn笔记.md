@@ -1713,6 +1713,8 @@ try {
     - `([false]+undefined)[10]`,`(undefined+[])[5]`,可得字符`i`,前者会触发toString
     - `[[]].concat([[]])+[]`可得字符`,`
   - nodeJS里的全局object： https://nodejs.org/api/globals.html
+  - 其他wp： https://sheeptester.github.io/longer-tweets/lactf/#miscjsfudge
+    - 同样是一些js里的字符串构造技巧，以及技巧的解析。附带一个绕过沙盒执行代码的漏洞利用： https://security.snyk.io/vuln/SNYK-JS-SAFEEVAL-3373064
 168. [U2S](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#U2S-2-solves)
 - lua pwn入门。通过lua数组负索引溢出获取任意地址读写并实现RCE。lua上可以使用堆喷，然后利用负索引溢出修改lua内置object元数据。具体可参考 https://ricercasecurity.blogspot.com/2023/07/fuzzing-farm-4-hunting-and-exploiting-0.html
 169. [CoolPool](https://ajomix.hashnode.dev/pwn-coolpool-tetctf2024)
