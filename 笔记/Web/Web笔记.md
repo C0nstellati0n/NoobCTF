@@ -1,6 +1,36 @@
 # Web笔记
 
-越来越认识到什么是“好记性不如烂笔头”。
+越来越认识到什么是“好记性不如烂笔头”
+
+## SQL注入
+
+之前开过一个SQL分区，感觉之后的还是放在这里比较好
+- [Penguin-Login](https://dothidden.xyz/la_ctf_2024/penguin-login/)
+    - 仅能使用`a-zA-Z0-9{_}`且不能使用LIKE的PostgreSQL盲注。LIKE的功能可以用BETWEEN代替
+    - 其他wp（做法）： https://siunam321.github.io/ctf/LA-CTF-2024/web/penguin-login/ ，用`SIMILAR TO`和正则匹配代替LIKE。但是注意`{x}`在正则里表示匹配前一个字符x次，匹配带有`{}`的flag时可以去掉flag格式再匹配
+
+## XSS
+
+觉得是时候给xss建个分类了。最近见到的xss题目越来越多了(个人觉得仅利用CSS的也算广义上的“xss”)
+- [quickstyle](https://sheeptester.github.io/longer-tweets/lactf/#webquickstyle)
+    - 利用form实现dom clobbering覆盖原本document里的函数（如`document.querySelectorAll`）。覆盖函数后程序内部无法调用该函数
+    - CSP较为严格的情况下可以考虑利用CSS泄漏页面指定信息。这种技巧一般只需要一个字符一个字符地泄漏，即创建多个css泄露固定的一个信息；但这题要求一个css一次泄露完整的信息。如果覆盖所有可能性的话会导致payload过长，可以考虑3个字符3个字符地泄漏。构造payload时需要借助CSS变量，防止多种规则同时生效时被覆盖。一些CSP和CSS利用的分析和总结也可以参考wp：
+        - `[attr="value"]`:Whether the attribute is exactly the string.
+        - `[attr^="value"]`:Whether the attribute starts with a string.
+        - `[attr$="value"]`:Whether the attribute ends with a string.
+        - `[attr*="value"]`:Whether the attribute contains the string anywhere, at least once.
+        - `[attr*="value" i]`:Adding i at the end makes the comparison case insensitive.
+        - `[attr|="value"]`:This also can compare strings, but it has a special behavior that allows lang="en" and lang="en-US" to be treated similarly. It’s not particularly useful for anything but the lang attribute.
+        - CSS可做大小写不敏感的匹配
+    - 生日悖论（birthday paradox）的应用以及如何找De Bruijn graph里的Eulerian path。这种图可用来解决“给定几组相邻的子字符组，重建原本的字符串“的问题
+    - 其他wp： https://raltheo.fr/p/quickstyle/ ，使用了非预期解法。DOM Clobbering的部分相同，但是利用了bfache（浏览器的后退/前进缓存），使本该变化的密码不再变化，就能利用传统方式一个字符一个字符地泄漏了
+- [ctf-wiki](https://blog.bawolff.net/2024/02/la-ctf-write-up-ctf-wiki.html)
+    - 当CSP里有`SameSite=Lax`时，使用`<iframe>`加载不同域的网页时不会获取到cookie。cookie只会在top-level GET navigation中加载
+    - 域名后添加一个`.`，如`lac.tf`和`lac.tf.`不会影响指向的网页（两者都会指向同一个网页），但浏览器会将两者视为不同网站，进而拥有不同的cookie，两者之间cookie不共通，无法互用。同时，位于`lac.tf.`的网页无法获取`lac.tf`上的内容，因为违反了same origin策略
+    - 这题的设置比较特殊，要求利用xss时同时拥有cookie而且又没有cookie，在访问一个页面时，无cookie的情况下是查看内容，有cookie的情况下是编辑内容。一种解决办法是利用弹窗（Popup windows），用`<iframe>`加载网页，因上述的CSP原因，cross-site iframe无法获取的cookie，因此iframe内部是没有cookie的。这时若加载的网页里有xss漏洞，就能在内部执行脚本，调用`window.open()`开启一个弹窗。弹窗属于top-level GET navigation，所以能获取的cookie，于是弹窗内部又是拥有cookie的状态。不过现代浏览器通常都有弹窗拦截器，只能由用户交互弹出弹窗，脚本本身是不行的。除非题目用的admin bot关闭了弹窗拦截器
+    - 浏览器的Cache partitioning机制：某个域下的`<iframe>`与该域的`top level navigation`网页的cache是分开的，包括那些可用于控制同域上其他网页的api和cookie。这个机制用于阻止第三方iframes和网站的通信。具体参考[文档](https://developers.google.com/privacy-sandbox/3pcd/storage-partitioning)。[blob](https://developer.mozilla.org/docs/Web/API/Blob) URL是这个机制的例外
+    - blob URL简述就是对网页上某段内容的引用。blob url与创建自身的网页同源（same origin），不会应用Cache partitioning机制，而且可以在第三方情境下工作（work across third-party contexts），甚至可以做top-level navigation（与`data:` url区分）
+    - 利用blob和iframe实现“同时拥有cookie而且又没有cookie”。创建一个iframe，里面包含构造的xss payload；xss payload内部将要泄漏的页面包装到blob url里。此时blob url内部是有cookie的，而iframe里则没有。注意创建iframe时，sandbox属性要为`allow-top-navigation allow-scripts allow-same-origin`
 
 ## SSTI
 
@@ -3437,16 +3467,5 @@ window.recaptcha=true;
 415. [JWT Decoder](https://domdom.tistory.com/492)
 - 小于3.1.7版本的ejs有RCE漏洞（需获取原型链污染）： https://security.snyk.io/vuln/SNYK-JS-EJS-2803307 ，但是根据这篇wp，似乎在调用ejs.render时直接传入object也可以触发
 - [cookie-parser](https://www.npmjs.com/package/cookie-parser)特性:In addition, this module supports special "JSON cookies". These are cookie where the value is prefixed with `j:`. When these values are encountered, the value will be exposed as the result of JSON.parse. If parsing fails, the original value will remain. 以`j:`开头的cookie将会以parse后的json对象形式返回
-416. [quickstyle](https://sheeptester.github.io/longer-tweets/lactf/#webquickstyle)
-- 利用form实现dom clobbering覆盖原本document里的函数（如`document.querySelectorAll`）。覆盖函数后程序内部无法调用该函数
-- CSP较为严格的情况下可以考虑利用CSS泄漏页面指定信息。这种技巧一般只需要一个字符一个字符地泄漏，即创建多个css泄露固定的一个信息；但这题要求一个css一次泄露完整的信息。如果覆盖所有可能性的话会导致payload过长，可以考虑3个字符3个字符地泄漏。构造payload时需要借助CSS变量，防止多种规则同时生效时被覆盖。一些CSP和CSS利用的分析和总结也可以参考wp：
-    - `[attr="value"]`:Whether the attribute is exactly the string.
-    - `[attr^="value"]`:Whether the attribute starts with a string.
-    - `[attr$="value"]`:Whether the attribute ends with a string.
-    - `[attr*="value"]`:Whether the attribute contains the string anywhere, at least once.
-    - `[attr*="value" i]`:Adding i at the end makes the comparison case insensitive.
-    - `[attr|="value"]`:This also can compare strings, but it has a special behavior that allows lang="en" and lang="en-US" to be treated similarly. It’s not particularly useful for anything but the lang attribute.
-    - CSS可做大小写不敏感的匹配
-- 生日悖论（birthday paradox）的应用以及如何找De Bruijn graph里的Eulerian path。这种图可用来解决“给定几组相邻的子字符组，重建原本的字符串“的问题
-417. [Penguin-Login](https://dothidden.xyz/la_ctf_2024/penguin-login/)
-- 仅能使用`a-zA-Z0-9{_}`且不能使用LIKE的PostgreSQL盲注。LIKE的功能可以用BETWEEN代替
+416. [jason-web-token](https://siunam321.github.io/ctf/LA-CTF-2024/web/jason-web-token/)
+- python的float计算缺陷（Floating point type confusion）。任何数与python里的float上限`1.8e+308`相加都会返回inf
