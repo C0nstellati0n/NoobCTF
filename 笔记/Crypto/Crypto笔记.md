@@ -584,7 +584,7 @@ for i in range(1,e):
 - [Hohoho 2 Continue](https://mechfrog88.github.io/wargames-2023#hohoho-2-continue)
     - LCG。这题要求预测一个LCG的值，LCG的各个参数都知道，但要预测的项未知（不知道要预测第几个输出）。初始的x可以随意输入，但必须包含一个固定短语。做的时候傻了，后来发现可以找一个包含短语的x，并让其满足 $x=(ax+b)\mod n$ 即可。找的时候使用LLL（从wp里似乎摸到一点格的门道了，但是先不记，还有地方不懂，不想误导未来的自己）。类似的题目（也用了格，还有不错的介绍）：[Onelinecrypto](https://nush.app/blog/2023/06/21/see-tf-2023/)
 - [any% ssg](https://hackmd.io/@lamchcl/SJIdwQb3a#cryptoany-ssg)
-    - 利用LLL获取类似minecraft的生成地图seed。格白学了，还是看不懂这格是怎么表示的
+    - 利用LLL爆破类似minecraft的生成地图seed。参考官方[wp](https://github.com/AVDestroyer/CTF-Writeups/tree/main/lactf2024/any-percent-ssg)和wp里提到的视频[系列](https://www.youtube.com/playlist?list=PLke4P_1UHlmB8sB1oGdcea4SeBH0yZy5B) （另外这也是个不错的格入门视频），这题的知识点更准确地说，应该是“找到LCG的初始seed，使接下来的12个连续输出满足 $min\leq seed_i\leq max$ 的不等式“
 
 ## Elliptic Curves(ECC,椭圆曲线)
 
@@ -2431,4 +2431,4 @@ c2=encrypt(k2,c1)
 - 假如要求满足`sum(x1+...+xN) = R`解的数量，其中0<=x<=R，公式为(N+R-1) 选 (R)；若Li<=x<=R，则：”subtract Li from each limit and also subtract sum(Li) from R, then apply the same formula“
 - dp解法： https://writeup.gldanoob.dev/bitsctf/
 135. [selamat pagi](https://sheeptester.github.io/longer-tweets/lactf/#cryptoselamat-pagi)
-- 针对印度尼西亚语（Indonesian）的字母替换密码的分析及破解。可用工具： https://www.dcode.fr/monoalphabetic-substitution
+- 针对印度尼西亚语（Indonesian）的字母替换密码的分析及破解。可用工具： https://www.dcode.fr/monoalphabetic-substitution 。其他wp： https://docs.google.com/document/d/19YJiUPCGInwjKSYJaAApLTyc43-Ck_P11GqYTdXIQRI
