@@ -1756,3 +1756,6 @@ try {
 - RISC-V Privileged Execution+Verilator(verilog模拟器) 0 day。又是完全看不懂的一题
 177. [Pwn1](https://fyrepaw13.github.io/2024/02/10/0xL4ughCTF2024-pwn-pwn1.html)
 - 回 归 原 始。就是个libc 2.31上的uaf，tcache poisoning可以直接用（以为不能用，其实直接uaf篡改fd即可），甚至出题人还贴心的给了个堆溢出。但是做题的时候脑子抽了，只free了两个堆块就开始写fd，关键改的还是tm链表末尾的chunk我真的是服了。一定不要改链表末尾的chunk的fd，这样做的话在pwndbg里可以看到那块内存被链入tcache，但是取出时会报错。怕之后又抽了，附带个别人的脚本： https://gist.github.com/lb5tr/5c74cac9967a1760ca5416de0fbd3eb4
+178. [53-card-monty](https://www.alexyzhang.dev/write-ups/lactf-2024/53-card-monty/)
+- funny loop:指`__libc_start_main`内部（Fedora上叫`__libc_start_main_impl`）代码的编排。`__libc_start_call_main`是一个不会返回的函数，但编译器仍然会把一部分代码放到调用这个函数的地址后。例如这个函数按顺序是ABCD四个部分，程序会从A跳到D，再从D跳到B，最后C处调用`__libc_start_call_main`。如果某个函数带着`__libc_start_call_main`的函数栈帧返回，效果等同于`__libc_start_call_main`本身返回，然后根据代码的顺序再执行一次
+- 这题的漏洞为OOB，可用OOB将范围内地址处的数据与数组内容交换。思路是利用交换覆盖返回地址，错开函数执行时的栈帧，效果是利用funny loop获取多次执行并使fgets覆盖当前rbp

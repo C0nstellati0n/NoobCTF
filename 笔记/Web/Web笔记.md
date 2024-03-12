@@ -3467,5 +3467,6 @@ window.recaptcha=true;
 415. [JWT Decoder](https://domdom.tistory.com/492)
 - 小于3.1.7版本的ejs有RCE漏洞（需获取原型链污染）： https://security.snyk.io/vuln/SNYK-JS-EJS-2803307 ，但是根据这篇wp，似乎在调用ejs.render时直接传入object也可以触发
 - [cookie-parser](https://www.npmjs.com/package/cookie-parser)特性:In addition, this module supports special "JSON cookies". These are cookie where the value is prefixed with `j:`. When these values are encountered, the value will be exposed as the result of JSON.parse. If parsing fails, the original value will remain. 以`j:`开头的cookie将会以parse后的json对象形式返回
-416. [jason-web-token](https://siunam321.github.io/ctf/LA-CTF-2024/web/jason-web-token/)
+416. [jason-web-token](https://hackmd.io/@vow/rJrgz1xn6)
 - python的float计算缺陷（Floating point type confusion）。任何数与python里的float上限`1.8e+308`相加都会返回inf
+- python里的int_parsing_size错误：当整数过大时，将其转为字符串会报错。这题的预期解正是利用这点尝试猜测出x+b中x的值（b可控）
