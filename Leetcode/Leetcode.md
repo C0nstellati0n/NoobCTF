@@ -250,6 +250,7 @@
 - [Perfect Squares](https://leetcode.com/problems/perfect-squares/solutions/71488/summary-of-4-different-solutions-bfs-dp-static-dp-and-mathematics)。输出某个数字是多少个完全平方数的和。dp题，也可用相关数学定理：[Legendre's three-square theorem](https://en.wikipedia.org/wiki/Legendre%27s_three-square_theorem),[Sum of two squares theorem](https://en.wikipedia.org/wiki/Sum_of_two_squares_theorem)
 - [Palindromic Substrings](./Medium/Palindromic%20Substrings.md)
 - [Cheapest Flights Within K Stops](./Medium/Cheapest%20Flights%20Within%20K%20Stops.md). dijkstra/多源bfs
+- [Remove Zero Sum Consecutive Nodes from Linked List](./Medium/Remove%20Zero%20Sum%20Consecutive%20Nodes%20from%20Linked%20List.md). prefix sum/单向链表删除指定范围内的node
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
@@ -324,7 +325,7 @@
 ## Others
 
 其他地方（例如编程比赛，有机会的话CTF里的编程题也会放在这里）见到的题
-- [Riceboard](../Leetcode/Others/Riceboard.md). 计算等比数列的和模上任意一个数字后的结果，单拎出来作为计算等比数列和的算法也不错
-- [The big party](../Leetcode/Others/The%20big%20party.md). 2d dijkstra(2d dist数组)的复杂情况
-- [ROPChain](../Leetcode/Others/ROPChain.md). dp,计算一个字符串最少需要用多少个提供的字符串组合得到
-- [Seat exchange](../Leetcode/Others/Seat%20exchange.md). 快速计算k次[置换](https://oi-wiki.org/math/permutation/) (permutations)
+- [Riceboard](./Others/Riceboard.md). 计算等比数列的和模上任意一个数字后的结果，单拎出来作为计算等比数列和的算法也不错
+- [The big party](./Others/The%20big%20party.md). 2d dijkstra(2d dist数组)的复杂情况
+- [ROPChain](./Others/ROPChain.md). dp,计算一个字符串最少需要用多少个提供的字符串组合得到
+- [Seat exchange](./Others/Seat%20exchange.md). 快速计算k次[置换](https://oi-wiki.org/math/permutation/) (permutations)，directed graph cycles
