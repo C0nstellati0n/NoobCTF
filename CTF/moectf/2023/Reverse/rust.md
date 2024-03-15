@@ -2,6 +2,7 @@
 
 没读懂逻辑，但是隐隐约约觉得flag是一个字符一个字符检查的，可以直接爆破（能side channel谁逆向啊？）
 ```py
+from pwn import *
 from string import ascii_lowercase, ascii_uppercase
 flag='moectf{'
 def Debug(p,file,breakpoints):
