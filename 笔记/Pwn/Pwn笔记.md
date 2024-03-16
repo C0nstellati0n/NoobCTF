@@ -1743,6 +1743,9 @@ try {
 - 其他wp：
   - https://itaybel.github.io/dicectf-quals-2024/#boogie-woogie
   - https://chovid99.github.io/posts/dicectf-2024-quals/#boogie-woogie ：利用link_map实现RCE
+- 此题利用相对于全局变量的任意两个地址处的byte交换实现RCE；[woogie-boogie](https://enzo.run/posts/lactf2024/)则是相对于栈上变量。需要利用envp上地址的错位（某个以0xa或0x2结尾的地址）加上stdout的`_IO_write_ptr`字段+fwrite+fflush。其他做法/wp：
+  - https://github.com/J-jaeyoung/CTF/tree/main/2024/LA%20CTF/woogie-boogie ：TLS里有ror再xor解码function pointer的操作，利用byte的交换，使其demangle成onegadget的地址
+  - https://ctftime.org/writeup/38681
 174. [baby-talk](https://7rocky.github.io/en/ctf/other/dicectf/baby-talk/)
 - libc 2.27 off by null(House of Einherjar)+tcache poisoning。感觉这个是目前看过最好的House of Einherjar图文教程。步骤大概如下：两个chunk A和B，A可通过off by null将chunk B的size的最后一个字节改成`\x00`（这种构造下chunk B的prev size字段与chunk A的用户数据段重叠，所以可以直接伪造）。在A内部伪造一个fake chunk，大小和位置与伪造的prev size一致，同时满足unlink的检查。最后free chunk B，chunk B与chunk A内的fake chunk合并。此时fake chunk与chunk A重叠，且与chunk B合并后大了不少。此时分配几个tcache大小的chunk就会从这个chunk切割内存，chunk A的用户数据区刚好可以修改这些chunk的fd字段。在无edit功能的heap题下可以在执行攻击前free chunk A，等到修改fd那一步时再申请出来
 - read读取输入字符时只会读取参数指定的字节数。函数本身不会在字符串末尾添上`\x00`
