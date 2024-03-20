@@ -1,4 +1,4 @@
-# Remix+Metamask配置
+# Remix+Metamask配置/Web3学习
 
 今天终于做出来了人生第一道blockchain入门题。漏洞实在太明显了，我这种没有啥经验的都能一眼看出来，所以不记录题目内容。卡了我很久的反而是“怎么deploy我的攻击合约啊“？翻看我的笔记，大佬们都用foundry/cast，但是我怎么样都配置不好……最后从笔记里翻出了这篇[wp](https://github.com/skabdulhaq/CTF-learnings/blob/main/CTF-writeups/BytesbanditCTF/blockchain-GuessTheName.md)，使用remix+metamask的配置。简单好上手，个人认为是最适合入门的
 
@@ -13,3 +13,5 @@ print(web3.eth.chain_id)
 然后就可以去[Remix](https://remix.ethereum.org)了。点击倒数第二个图标（Deploy & run transactioins），最上方的ENVIRONMENT选择Inject Provider - MetaMask。绑定账号时一定要选那个有钱的账号，原因之前提过了。如果不小心绑定了没钱的账号，个人当时（本经验不来自于网络）直接重装了metamask，后面想想应该清除cookie就行了。另外提醒一点，metamask里导入的账户可以随时删除，但是自己创建的不能，要想删除的话只能重装插件（我在官网看到这句话时人都傻了）
 
 这样应该就可以了，后面正常写攻击合约正常deploy并调用函数即可，用大白话说就是“Remix该怎么用咱们就怎么用”。顺便再说一句，开头提到的那篇wp确实是最适合初学者入门的，包括里面攻击合约的编写也是最基础的
+
+这里是一个blockchain（solidity）的javascript web3开发教程： https://www.youtube.com/watch?v=gyMwXuJrbJQ
