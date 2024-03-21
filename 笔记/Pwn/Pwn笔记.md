@@ -254,7 +254,6 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 - [house of pig](https://www.anquanke.com/post/id/242640)
 - [House OF Kiwi](https://www.anquanke.com/post/id/235598)
 - [House _OF _Emma](https://www.anquanke.com/post/id/260614)
-- [House of Muney](https://maxwelldulin.com/BlogPost/House-of-Muney-Heap-Exploitation)
 
 ## 64位
 
@@ -1305,7 +1304,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
 - When performing allocations with malloc, any allocation greater than MMAP_THRESHOLD_MIN, which is set to 128kb by default, malloc will use mmap instead of its internal heap. The second mmap will always be exactly below the libc in memory. This means that if we can control the size field of a mmapped chunk, we can unmap part of the libc.
 - If we inspect the section layout of the libc in memory(`readelf -l libc.so.6`), the .dynsym and .dynstr sections are located underneath the .text section. The .dynsym and .dynstr are used in lazy symbol resolution. If a external function called fgets is called in a binary compiled with lazy linking (indicated by PARTIAL RELRO), the linker will search shared libraries for a symbol defined with the name fgets and use the symbol information to retrieve the function address.
   - After unmapping part of the libc, we can perform another mmap to remap the lower part of the libc with data that we control. We can exploit this to provide malicious values for symbols in the libc to hijack lazy symbol resolution.
-  - 感觉unmap libc效果有点像覆盖got表？两者都是劫持函数。只不过got表那个在程序里改，这个直接把libc给改了
+  - 感觉unmap libc效果有点像覆盖got表？两者都是劫持函数。只不过got表那个在程序里改，这个直接把libc给改了。其实就是准备要学的[House of Muney](https://maxwelldulin.com/BlogPost/House-of-Muney-Heap-Exploitation)
 - 其他做法： https://github.com/aparker314159/ctf-writeups/blob/main/AmateursCTF2023/simple-heap-v1.md
 105. [Frog Math](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/pwn/frog-math),[wp](https://github.com/5kuuk/CTF-writeups/tree/main/amateurs-2023/frogmath)
 - on modern x64 processors, mmx registers maps the 64 lsb of the x87 80bit registers. This means that accesses to the mmx registers modify the st(n) registers and vice versa. https://www.cs.utexas.edu/users/moore/acl2/manuals/current/manual/index-seo.php/X86ISA____MMX-REGISTERS-READS-AND-WRITES
@@ -1763,3 +1762,8 @@ try {
 178. [53-card-monty](https://www.alexyzhang.dev/write-ups/lactf-2024/53-card-monty/)
 - funny loop:指`__libc_start_main`内部（Fedora上叫`__libc_start_main_impl`）代码的编排。`__libc_start_call_main`是一个不会返回的函数，但编译器仍然会把一部分代码放到调用这个函数的地址后。例如这个函数按顺序是ABCD四个部分，程序会从A跳到D，再从D跳到B，最后C处调用`__libc_start_call_main`。如果某个函数带着`__libc_start_call_main`的函数栈帧返回，效果等同于`__libc_start_call_main`本身返回，然后根据代码的顺序再执行一次
 - 这题的漏洞为OOB，可用OOB将范围内地址处的数据与数组内容交换。思路是利用交换覆盖返回地址，错开函数执行时的栈帧，效果是利用funny loop获取多次执行并使fgets覆盖当前rbp
+179. [flipma](https://theromanxpl0.it/ctf_lactf2024/2024/02/18/flipma.html)
+- 相对于stdin(libc内)的地址进行4次bit翻转。这种翻转bit的题目找如何泄漏地址可以利用fuzz的技巧，即爆破所有可能的偏移和bit位，看什么输入可以泄漏地址
+- 利用FILE struct exploitation技巧泄漏libc，PIE和栈地址，比如利用vtable表函数错位将puts函数内部调用的函数错位成其他函数
+- read/write系统调用在不同的系统上有不同的大小限制，输出的内容超过限制会导致输出失败
+- 官方wp： https://enzo.run/posts/lactf2024/#flipma ,以及关于FSOP和Exit Handler Demangling更好的解析： https://www.youtube.com/watch?v=DQ9yLCdmt-s

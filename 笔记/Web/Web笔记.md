@@ -6,7 +6,7 @@
 
 之前开过一个SQL分区，感觉之后的还是放在这里比较好
 - [Penguin-Login](https://dothidden.xyz/la_ctf_2024/penguin-login/)
-    - 仅能使用`a-zA-Z0-9{_}`且不能使用LIKE的PostgreSQL盲注。LIKE的功能可以用BETWEEN代替
+    - 仅能使用`a-zA-Z0-9{_}`且不能使用LIKE和注释符的PostgreSQL盲注。LIKE的功能可以用BETWEEN代替
     - 其他wp（做法）： https://siunam321.github.io/ctf/LA-CTF-2024/web/penguin-login/ ，用`SIMILAR TO`和正则匹配代替LIKE。但是注意`{x}`在正则里表示匹配前一个字符x次，匹配带有`{}`的flag时可以去掉flag格式再匹配
 
 ## XSS
@@ -24,6 +24,7 @@
         - CSS可做大小写不敏感的匹配
     - 生日悖论（birthday paradox）的应用以及如何找De Bruijn graph里的Eulerian path。这种图可用来解决“给定几组相邻的子字符组，重建原本的字符串“的问题
     - 其他wp： https://raltheo.fr/p/quickstyle/ ，使用了非预期解法。DOM Clobbering的部分相同，但是利用了bfache（浏览器的后退/前进缓存），使本该变化的密码不再变化，就能利用传统方式一个字符一个字符地泄漏了
+    - 一个关于CSS Injection/exil strategies + DOM Clobbering的讲解视频： https://www.youtube.com/watch?v=DQ9yLCdmt-s
 - [ctf-wiki](https://blog.bawolff.net/2024/02/la-ctf-write-up-ctf-wiki.html)
     - 当CSP里有`SameSite=Lax`时，使用`<iframe>`加载不同域的网页时不会获取到cookie。cookie只会在top-level GET navigation中加载
     - 域名后添加一个`.`，如`lac.tf`和`lac.tf.`不会影响指向的网页（两者都会指向同一个网页），但浏览器会将两者视为不同网站，进而拥有不同的cookie，两者之间cookie不共通，无法互用。同时，位于`lac.tf.`的网页无法获取`lac.tf`上的内容，因为违反了same origin策略
@@ -31,6 +32,7 @@
     - 浏览器的Cache partitioning机制：某个域下的`<iframe>`与该域的`top level navigation`网页的cache是分开的，包括那些可用于控制同域上其他网页的api和cookie。这个机制用于阻止第三方iframes和网站的通信。具体参考[文档](https://developers.google.com/privacy-sandbox/3pcd/storage-partitioning)。[blob](https://developer.mozilla.org/docs/Web/API/Blob) URL是这个机制的例外
     - blob URL简述就是对网页上某段内容的引用。blob url与创建自身的网页同源（same origin），不会应用Cache partitioning机制，而且可以在第三方情境下工作（work across third-party contexts），甚至可以做top-level navigation（与`data:` url区分）
     - 利用blob和iframe实现“同时拥有cookie而且又没有cookie”。创建一个iframe，里面包含构造的xss payload；xss payload内部将要泄漏的页面包装到blob url里。此时blob url内部是有cookie的，而iframe里则没有。注意创建iframe时，sandbox属性要为`allow-top-navigation allow-scripts allow-same-origin`
+    - 其他wp： https://github.com/abhishekg999/CTFWriteups/tree/main/LACTF2024/ctf-wiki ，利用WebRTC配合DNS绕过CSP `connect-uri`，以及不用WebRTC的做法
 
 ## SSTI
 
@@ -3469,6 +3471,6 @@ window.recaptcha=true;
 - [cookie-parser](https://www.npmjs.com/package/cookie-parser)特性:In addition, this module supports special "JSON cookies". These are cookie where the value is prefixed with `j:`. When these values are encountered, the value will be exposed as the result of JSON.parse. If parsing fails, the original value will remain. 以`j:`开头的cookie将会以parse后的json对象形式返回
 416. [jason-web-token](https://hackmd.io/@vow/rJrgz1xn6)
 - python的float计算缺陷（Floating point type confusion）。任何数与python里的float上限`1.8e+308`相加都会返回inf
-- python里的int_parsing_size错误：当整数过大时，将其转为字符串会报错。这题的预期解正是利用这点尝试猜测出x+b中x的值（b可控）
+- python里的int_parsing_size错误：当整数过大时，将其转为字符串会报错。这题的预期解正是利用这点尝试猜测出x+b中x的值（b可控），见 https://www.youtube.com/watch?v=DQ9yLCdmt-s 的介绍
 417. [Filters](../../CTF/ShaktiCTF/ShaktiCTF.md)
 - 绕过php对eval输入的过滤并执行系统命令/读文件
