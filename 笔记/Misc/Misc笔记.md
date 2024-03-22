@@ -1874,3 +1874,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 261. [my smart git](https://hackmd.io/@lamchcl/SJIdwQb3a#miscmy-smart-git)
 - 有些时候直接访问网站的`.git`会返回403。git默认使用一种名叫dumb的smart protocol，只能用clone访问（若直接clone还是不行，尝试添加`--depth`选项）
 - dumb协议分析。用wireshark抓包可发现`git-upload-pack`路径，用于指定要获取的commit的id
+262. [mixed signals](https://github.com/uclaacm/lactf-archive/tree/main/2024/misc/mixed-signals)
+- demodulate [amplitude modulation](https://en.wikipedia.org/wiki/Amplitude_modulation)操作

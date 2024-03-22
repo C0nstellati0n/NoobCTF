@@ -23,8 +23,9 @@
         - `[attr|="value"]`:This also can compare strings, but it has a special behavior that allows lang="en" and lang="en-US" to be treated similarly. It’s not particularly useful for anything but the lang attribute.
         - CSS可做大小写不敏感的匹配
     - 生日悖论（birthday paradox）的应用以及如何找De Bruijn graph里的Eulerian path。这种图可用来解决“给定几组相邻的子字符组，重建原本的字符串“的问题
-    - 其他wp： https://raltheo.fr/p/quickstyle/ ，使用了非预期解法。DOM Clobbering的部分相同，但是利用了bfache（浏览器的后退/前进缓存），使本该变化的密码不再变化，就能利用传统方式一个字符一个字符地泄漏了
+    - 其他wp： https://raltheo.fr/p/quickstyle/ ，https://gist.github.com/arkark/5787676037003362131f30ca7c753627 ，使用了非预期解法。DOM Clobbering的部分相同，但是利用了bfache（浏览器的后退/前进缓存），使本该变化的密码不再变化，就能利用传统方式一个字符一个字符地泄漏了。关于chrome的cache机制： https://blog.arkark.dev/2022/11/18/seccon-en/#Step-1-Understanding-cache-behavior-in-Google-Chrome
     - 一个关于CSS Injection/exil strategies + DOM Clobbering的讲解视频： https://www.youtube.com/watch?v=DQ9yLCdmt-s
+    - 官方wp： https://github.com/uclaacm/lactf-archive/tree/main/2024/web/quickstyle
 - [ctf-wiki](https://blog.bawolff.net/2024/02/la-ctf-write-up-ctf-wiki.html)
     - 当CSP里有`SameSite=Lax`时，使用`<iframe>`加载不同域的网页时不会获取到cookie。cookie只会在top-level GET navigation中加载
     - 域名后添加一个`.`，如`lac.tf`和`lac.tf.`不会影响指向的网页（两者都会指向同一个网页），但浏览器会将两者视为不同网站，进而拥有不同的cookie，两者之间cookie不共通，无法互用。同时，位于`lac.tf.`的网页无法获取`lac.tf`上的内容，因为违反了same origin策略
@@ -3474,3 +3475,5 @@ window.recaptcha=true;
 - python里的int_parsing_size错误：当整数过大时，将其转为字符串会报错。这题的预期解正是利用这点尝试猜测出x+b中x的值（b可控），见 https://www.youtube.com/watch?v=DQ9yLCdmt-s 的介绍
 417. [Filters](../../CTF/ShaktiCTF/ShaktiCTF.md)
 - 绕过php对eval输入的过滤并执行系统命令/读文件
+418. [Flaglang](https://github.com/uclaacm/lactf-archive/tree/main/2024/web/flaglang)
+- yaml中，NO可被看作是布尔值。yaml里还有很多奇怪的布尔值表示，参考 https://www.bram.us/2022/01/11/yaml-the-norway-problem/

@@ -25,3 +25,6 @@ knapsack问题可概括为“从数集里选数字”。给定n个数字 $a_1...
 个人感觉t不一定在格里。在这些题目内t与x分量大量重复的原因是，格在成为格之前首先是个矩阵，符合矩阵与向量乘法。通常解题时格的构造方式都比较特殊，使一个向量乘上矩阵后向量的各个分量可在结果向量里找到。按照一般的线性代数，tB=x，想知道t或者x，总得知道另外的两个。但是格不一样，它让x为B的一部分，t与x基本重合。这样就能在仅知道B的情况下知道其他两个了
 
 然后继续做题（ [any% ssg](https://github.com/AVDestroyer/CTF-Writeups/tree/main/lactf2024/any-percent-ssg) ）发现格不止于此。有时候要求的东西不一定要就是规约后的格基，也可以利用格基规约使格的结构好一点，后续爆破更有利
+
+顺便在这里记一些没有例题，纯粹是见到的论文：
+- [IMPROVED LOW-DENSITY SUBSET SUM ALGORITHMS](https://www.di.ens.fr/~fouque/ens-rennes/sac-LLL.pdf)
