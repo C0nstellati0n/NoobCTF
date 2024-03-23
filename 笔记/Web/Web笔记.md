@@ -3477,3 +3477,8 @@ window.recaptcha=true;
 - 绕过php对eval输入的过滤并执行系统命令/读文件
 418. [Flaglang](https://github.com/uclaacm/lactf-archive/tree/main/2024/web/flaglang)
 - yaml中，NO可被看作是布尔值。yaml里还有很多奇怪的布尔值表示，参考 https://www.bram.us/2022/01/11/yaml-the-norway-problem/
+419. [empty execution](https://github.com/tahdjao/writeup/blob/main/braekerctf/empty_execution_en.md)
+- 不使用`/`和`..`的命令注入
+- 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#empty-execution
+420. [stuffy](https://github.com/tahdjao/writeup/blob/main/braekerctf/stuffy_en.md)
+- python `http.request`请求走私（request smuggling）。重点在于不要让用户控制`http.request`的header名和内容以及请求内容

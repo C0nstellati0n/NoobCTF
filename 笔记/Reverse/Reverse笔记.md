@@ -1159,3 +1159,8 @@ finish()
 - `.win`,`.unx`后缀游戏文件修改工具:[UndertaleModTool](https://github.com/UnderminersTeam/UndertaleModTool)使用
 147. [technically-correct](https://hackmd.io/@lamchcl/SJIdwQb3a#revtechnically-correct)
 - 有些时候可以通过修改elf文件的header，使反编译器无法读取elf文件。解决办法是自行用readelf看一遍文件，寻找有没有不符合头部定义的内容（大端/小端？32/64？）
+148. [Injecting Commands](https://intrigus.org/research/2024/03/03/braeker-ctf-2024-injecting-commands-writeup/)
+- Mach-O binary(macOS)逆向。binary的代码用特殊格式隐藏在了文件里，Ghidra无法直接分析。可以用[ImHex](https://github.com/WerWolv/ImHex)内置的pattern分析文件，出错后也可以自行修改pattern
+- Mach-O binary中，程序入口点由LC_UNIXTHREAD决定（新版在LC_MAIN）
+- 利用GitHub Actions调试不同平台的程序:[action-tmate](https://github.com/mxschmitt/action-tmate),otool，lldb分析程序信息
+- 使用Unicorn模拟运行程序
