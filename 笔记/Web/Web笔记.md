@@ -3482,3 +3482,5 @@ window.recaptcha=true;
 - 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#empty-execution
 420. [stuffy](https://github.com/tahdjao/writeup/blob/main/braekerctf/stuffy_en.md)
 - python `http.request`请求走私（request smuggling）。重点在于不要让用户控制`http.request`的header名和内容以及请求内容
+421. [Node Calculator](https://www.yuque.com/misery333/sz1apr/uql4i9gbouggz75d#gYuTS)
+- java JAXB(java to xml)反序列化漏洞。若某一个类使用了`@XmlAccessorType(XmlAccessType.PROPERTY)`，则若序列化后的XML里存在`<constructor></constructor>`标签，setConstructor就会被调用

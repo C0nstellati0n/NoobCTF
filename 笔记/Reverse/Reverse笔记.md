@@ -1164,3 +1164,5 @@ finish()
 - Mach-O binary中，程序入口点由LC_UNIXTHREAD决定（新版在LC_MAIN）
 - 利用GitHub Actions调试不同平台的程序:[action-tmate](https://github.com/mxschmitt/action-tmate),otool，lldb分析程序信息
 - 使用Unicorn模拟运行程序
+149. [binaryshrink](https://mahmoudelfawair.medium.com/breakerctf-24-binaryshrink-4cc9feae0259)
+- radare2调试binary，获取指定内存处地址。有时候ghidra和ida都无法识别的binary radare2可以

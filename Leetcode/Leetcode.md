@@ -253,6 +253,7 @@
 - [Cheapest Flights Within K Stops](./Medium/Cheapest%20Flights%20Within%20K%20Stops.md). dijkstra/多源bfs
 - [Remove Zero Sum Consecutive Nodes from Linked List](./Medium/Remove%20Zero%20Sum%20Consecutive%20Nodes%20from%20Linked%20List.md). prefix sum/单向链表删除指定范围内的node
 - [Minimum Number of Arrows to Burst Balloons](./Medium/Minimum%20Number%20of%20Arrows%20to%20Burst%20Balloons.md). greedy/[Overlapping Interval Problem](https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/solutions/93735/a-concise-template-for-overlapping-interval-problem)
+- [Reorder List](./Medium/Reorder%20List.md). slow&fast pointer+reverse linked list+交替合并（merge）一段linked list的两头
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。

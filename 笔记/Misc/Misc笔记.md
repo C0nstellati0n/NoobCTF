@@ -1876,3 +1876,5 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - dumb协议分析。用wireshark抓包可发现`git-upload-pack`路径，用于指定要获取的commit的id
 262. [mixed signals](https://github.com/uclaacm/lactf-archive/tree/main/2024/misc/mixed-signals)
 - demodulate [amplitude modulation](https://en.wikipedia.org/wiki/Amplitude_modulation)操作
+263. [eye doctor](https://seall.dev/posts/eyedoctorbraekerctf2024)
+- [SmartDeblur](http://smartdeblur.net/)使用：清晰化模糊的图片

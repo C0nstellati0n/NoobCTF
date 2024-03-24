@@ -94,7 +94,7 @@ else:
     print(asm(shellcode))
 ```
 
-- 32位9字节read shellcode：`xor eax,eax;xor edi,edi;mov rdx,r10;syscall`,结果是`b'\x82QN".\x08\xc3e\x95'`。
+- 64位9字节read shellcode：`xor eax,eax;xor edi,edi;mov rdx,r10;syscall`,结果是`b'\x82QN".\x08\xc3e\x95'`。
 
 6. pwn 栈题模板
 
@@ -759,10 +759,10 @@ int main(int argc, char *argv[]) {
 ```
 
 56. [更换程序使用的libc](https://bbs.kanxue.com/thread-271583.htm)。如果题目提供了libc但本地运行程序默认使用的libc却不是题目的，可以更换掉。libc可以在[这里](https://github.com/matrix1001/glibc-all-in-one)找。
-```
-patchelf --set-interpreter ld-2.27.so pwn
-patchelf --replace-needed libc.so.6 libc-2.27.so pwn
-patchelf --set-rpath . pwn
+```sh
+sudo apt install patchelf
+patchelf --set-interpreter ~/glibc-all-in-one/libs/2.35-0ubuntu3.4_amd64/ld-linux-x86-64.so.2 $1
+patchelf --replace-needed libc.so.6 ~/glibc-all-in-one/libs/2.35-0ubuntu3.4_amd64/libc.so.6
 ```
 - 很多时候题目会给出libc但没有ld.so。此时可以使用[pwninit](https://github.com/io12/pwninit)自动下载对应版本的ld.so并patch。不过个人使用发现还是有点问题，建议配合[glibc-all-in-one](https://github.com/matrix1001/glibc-all-in-one)。使用前确保有zstd，下载：`sudo apt install zstd`
 57. [360chunqiu2017_smallest](https://www.anquanke.com/post/id/217081)
