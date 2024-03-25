@@ -1802,7 +1802,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - https://vocloner.com/
     - ttps://myvoice.speechify.com/
 240. [Secret Message 2](https://github.com/Apzyte-Gamer/UofTCTF-2024/tree/main/Forensics/Secret%20Message%202)
-- 如果某段文字使用像素化隐藏，可用[unredacter](https://github.com/BishopFox/unredacter)通过像素化的图片恢复文字。参考 https://bishopfox.com/blog/unredacter-tool-never-pixelation
+- 如果某段文字使用像素化隐藏，可用[unredacter](https://github.com/BishopFox/unredacter)或[depix](https://github.com/spipm/Depix)通过像素化的图片恢复文字。参考 https://bishopfox.com/blog/unredacter-tool-never-pixelation
 - 注意截图像素化部分时一定注意不要把白色像素与背景搞混，否则工具找不到答案。参考 https://github.com/HashemSalhi/CTF-Writeups/tree/main/UofTCTF%202024/Forensics/Secret%20Message%202
 241. [Illusion](https://ireland.re/posts/UofTCTF_2024/#forensicsillusion-writeup)
 - [TrevorC2](https://nasbench.medium.com/understanding-detecting-c2-frameworks-trevorc2-2a9ce6f1f425)框架分析。[C2](https://zhuanlan.zhihu.com/p/54810155)全称为Command and Control，个人理解为恶意软件与攻击者之间的交流方式。直接交流太明显，所以TrevorC2框架的做法是clone一个常见的可浏览的网站，默认利用`/images?guid`回传给攻击者服务器数据；攻击者默认用`oldcss=`将要带给被攻击者的数据藏在网页里。交流时的数据经过base64和AES加密，AES的key可以在C2 Server的配置里找到
@@ -1878,3 +1878,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - demodulate [amplitude modulation](https://en.wikipedia.org/wiki/Amplitude_modulation)操作
 263. [eye doctor](https://seall.dev/posts/eyedoctorbraekerctf2024)
 - [SmartDeblur](http://smartdeblur.net/)使用：清晰化模糊的图片
+- 也可以用 https://github.com/opencv/opencv/blob/3.2.0/samples/python/deconvolution.py 逆向模糊化操作
+264. [e](https://github.com/D13David/ctf-writeups/tree/main/braekerctf24/misc)
+- 浮点数运算特性：
+    - 溢出
+    - 精度误差
+    - https://stackoverflow.com/questions/22186589/why-does-adding-a-small-float-to-a-large-float-just-drop-the-small-one

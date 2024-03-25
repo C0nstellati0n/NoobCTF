@@ -1767,3 +1767,5 @@ try {
 - 利用FILE struct exploitation技巧泄漏libc，PIE和栈地址，比如利用vtable表函数错位将puts函数内部调用的函数错位成其他函数
 - read/write系统调用在不同的系统上有不同的大小限制，输出的内容超过限制会导致输出失败
 - 官方wp： https://enzo.run/posts/lactf2024/#flipma ,以及关于FSOP和Exit Handler Demangling更好的解析： https://www.youtube.com/watch?v=DQ9yLCdmt-s
+180. [Embryobot](https://github.com/D13David/ctf-writeups/tree/main/braekerctf24/rev/embryobot)
+- [tinyELF](https://nathanotterness.com/2021/10/tiny_elf_modernized.html)分析。这种binary连header里都可能有运行时的指令，一般的反编译器都没法分析，需要自行nop掉header中无法改变的区域，再使用objdump查看反编译指令
