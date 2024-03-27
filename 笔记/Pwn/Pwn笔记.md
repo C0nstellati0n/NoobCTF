@@ -1,5 +1,13 @@
 # Pwn笔记
 
+## Kernel
+
+kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇气
+
+- [Virtio-note](https://github.com/nobodyisnobody/write-ups/tree/main/bi0sCTF.2024/pwn/virtio-note)
+  - 细分下来应该算qemu逃逸（qemu escape），不过这题pwn的是qemu内置的VirtIO drivers(VirtIO驱动，VirtIO drivers offer a more efficient and direct method of accessing host hardware resources compared to emulated drivers, leading to better performance and lower overhead in virtualized environments)中的作者自定义部分。需要自行写一个在qemu vm里运行的kernel模块，其与virtio backend交互，最终执行shellcode，将flag发回攻击者监听的端口
+  - 题目里的bug是OOB读写，bug还是该怎么利用怎么利用，不过除了泄漏heap地址以外，还要泄漏和qemu binary有关的地址（如`qobject_input_type_null`），来计算qemu binary映射基地址。qemu bss段的`tcg_qemu_tb_exec`变量指向qemu内部用来生成jit代码的RWX段，用来写shellcode很方便
+
 ## Shellcode题合集
 
 测试shellcode时可以尝试用c inline assembly（参考 https://stackoverflow.com/questions/61341/is-there-a-way-to-insert-assembly-code-into-c ），语法大致相同，就是引用寄存器时要加个%，如%rdx；每行后面还要加`\n\t`
@@ -1769,3 +1777,5 @@ try {
 - 官方wp： https://enzo.run/posts/lactf2024/#flipma ,以及关于FSOP和Exit Handler Demangling更好的解析： https://www.youtube.com/watch?v=DQ9yLCdmt-s
 180. [Embryobot](https://github.com/D13David/ctf-writeups/tree/main/braekerctf24/rev/embryobot)
 - [tinyELF](https://nathanotterness.com/2021/10/tiny_elf_modernized.html)分析。这种binary连header里都可能有运行时的指令，一般的反编译器都没法分析，需要自行nop掉header中无法改变的区域，再使用objdump查看反编译指令
+181. [Tallocator](https://owl-a.github.io/ctf/2024/03/03/bi0sctf-tallocator/)
+- 自定义堆内存分配器pwn。题目以apk的webview `@JavascriptInterface`作为载体，编写exp时需要使用js。具体做法是利用自定义堆内存分配器的漏洞分配任意地址，注入“读取flag并将flag发送至远程端口”的shellcode后执行

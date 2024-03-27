@@ -3484,3 +3484,9 @@ window.recaptcha=true;
 - python `http.request`请求走私（request smuggling）。重点在于不要让用户控制`http.request`的header名和内容以及请求内容
 421. [Node Calculator](https://www.yuque.com/misery333/sz1apr/uql4i9gbouggz75d#gYuTS)
 - java JAXB(java to xml)反序列化漏洞。若某一个类使用了`@XmlAccessorType(XmlAccessType.PROPERTY)`，则若序列化后的XML里存在`<constructor></constructor>`标签，setConstructor就会被调用
+422. [BAD NOTES](https://github.com/bengsky13/CTF-WriteUp/tree/main/bi0s/bad_notes)
+- python flask的`render_template`函数在执行后会保存文件的内容。这个函数加载某个template文件后会将其保存至cache，今后调用就返回cache里的内容。即使用什么别的方法修改了template文件的内容，也不会影响cache里的内容
+423. [required notes](https://siunam321.github.io/ctf/bi0sCTF-2024/Web-Exploitation/required-notes/)
+- [protobuf.js](https://github.com/protobufjs/protobuf.js) Prototype Pollution CVE： https://www.code-intelligence.com/blog/cve-protobufjs-prototype-pollution-cve-2023-36665 。要求攻击者可控制`.proto` schema文件的属性（或注入自己的属性。`.schema`文件在用户输入未被过滤的情况下，直接拼接也会发生注入）
+- js的`glob.sync()`函数允许用Bash shell的语法查找文件
+- 可利用原型链污染，污染`req.connection`的`_peername.address`属性，从而影响到`req.connection.remoteAddress`

@@ -2,9 +2,22 @@
 
 # Digital Forensics and Incident Response(DFIR)
 
-开个新的分类，用于存储这个困扰我很久的题目类型:(
+开个新的分类，用于存储这个困扰我很久的题目类型:(。顺便把disk，mem类型的forensic题也放这
 - https://github.com/slaee/ret-CTF-writeups/tree/main/2024/bitsCTF/DFIR
     - 题目情景为`.ad`后缀文件+mem文件+pcap文件。使用工具volatility3,FTK Imager
+- [verboten](https://github.com/warlocksmurf/onlinectf-writeups/blob/main/bi0sCTF24/forensics.md)
+    - USB registries信息（serial_number，usb插入时间）位于registry的`HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\USBSTOR`，参考 https://www.cybrary.it/blog/usb-forensics-find-the-history-of-every-connected-usb-device-on-your-computer
+    - chrome浏览器历史查看
+    - slack应用目录位置在`C:\Users\<username>\AppData\Roaming\`。参考这篇[文章](https://medium.com/@jeroenverhaeghe/forensics-finding-slack-chat-artifacts-d5eeffd31b9c)，可用[Nirsoft Chrome Cache Viewer](https://www.nirsoft.net/utils/chrome_cache_view.html)查看cached data中各文件的md5值。直接对IndexedDB中的blob文件使用grep可获取到聊天内容，或者用[Slack-Parser](https://github.com/0xHasanM/Slack-Parser)
+    - [Google Drive forensics](https://amgedwageh.medium.com/drivefs-sleuth-investigating-google-drive-file-streams-disk-artifacts-0b5ea637c980)：可用[DriveFS Sleuth](https://github.com/AmgdGocha/DriveFS-Sleuth)处理Google Drive File Stream disk artifacts，并辨认已删除的文件
+    - AnyDesk（帮助远程控制计算机的软件）软件所在目录以及[AnyDesk forensics](https://medium.com/@tylerbrozek/anydesk-forensics-anydesk-log-analysis-b77ea37b90f1)。成功的AnyDesk连接存储于ad.trace日志文件。只需在文件内搜索incoming即可获取连接的详情（时间，user id）
+    - 已删除的可执行文件的详细信息（如运行时间）可在prefetch文件中找到
+    - 重置windows密码的安全问题的答案和内容可在SAM hive的ResetData entry中找到
+    - [Clipboard Forensics](https://www.inversecos.com/2022/05/how-to-perform-clipboard-forensics.html):获取剪贴板的信息以及复制内容时的时间。位于ActivitiesCache.db文件
+    - 其他wp： https://seall.dev/posts/verbotenbi0sctf2024
+        - [USB Detective](https://usbdetective.com/)：用于查找usb相关信息；[RegCool](https://kurtzimmermann.com/regcoolext_en.html)：Registry相关信息
+        - [Hindsight](https://github.com/obsidianforensics/hindsight):查看chrome记录
+        - [SecurityQuestionsView](https://xfnirsoft.net/utils/security_questions_view.html):查看windows安全问题及答案
 
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
