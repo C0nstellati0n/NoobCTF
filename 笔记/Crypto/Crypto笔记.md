@@ -570,6 +570,8 @@ for i in range(1,e):
     - 利用Groebner basis求解方程组
 - [GLNQ](https://kanzya.github.io/posts/MAPNACTF/#glnq-crypto-13-solve)
     - 计算矩阵上的离散对数。若矩阵的阶为光滑数，就可以用pohlig-hellman配合sagemath解出
+- [lalala](https://berliangabriel.github.io/post/bi0s-ctf-2024/)
+    - 求解大型矩阵与向量的线性方程组。继续暴露我的无知。参考 https://tanglee.top/2024/02/27/bi0sCTF-2024-Crypto-Writeups/ ，这题的方程组中每个方程的结构是 $\Sigma a_i+\Sigma_i x_{b_i}^2x_{c_i}^3$ 。a，b和c均已知， $x_i$ 是要求的变量，共10个；方程总数共100个； $a_i,b_i,c_i$ 随机生成，共1000个。然后我傻了。我想着“啊啊啊啊怎么是两个变量的乘积啊”，就懵了。有没有一种可能，初中就学过，可以把两个变量看成一个？将 $x_{b_i}^2x_{c_i}^3$ 整体看成线性方程组要求的变量即可。毕竟10个变量无论怎么搭配也只有100种可能，正好有100个方程，直接解就完事。不过sagemath里排列矩阵和向量还是有点绕的
 
 ## Lattice(格)
 
@@ -608,6 +610,14 @@ for i in range(1,e):
     - 通过曲线上的两个点恢复参数a和b
     - 带有elliptic cusp（a和b均为0）的椭圆曲线上的离散对数比较好求，参考 https://crypto.stackexchange.com/questions/61302/how-to-solve-this-ecdlp
     - 利用离散对数将曲线上点的加法转换为线性方程（wp里说是背包问题，我菜到看不出来）。假设有一些已知的点，各个点的系数未知，整体加起来为曲线上的另一个点S。可以取已知的点中任意一个点作“生成点G”，那么剩下的点一定是G的倍数（具体多少倍求离散对数可得）。求G对于S的离散对数（不确定这样表达有没有问题，求S是G的多少倍），那么之前求的G相对于已知点集里各个点的离散对数结果与G对S的离散对数构成模曲线质数p的方程（各个离散对数结果记为 $d_i$ ,G对S的离散对数记为D那么 $d_ix+d_{i+1}y+...=D\mod p$ 。解这种模某个数的线性方程的脚本参考wp）
+
+## AES
+
+AES是很能出题的
+
+- [t0y-b0x](https://blog.bi0s.in/2024/03/03/RE/t0y-b0x-bi0sCTF2024/)
+    - Linear Cryptanalysis (AES with linearly dependent SBOX)。相关漏洞学习参考 https://hackmd.io/@vishiswoz/r10P7knwj 和 https://kevinliu.me/posts/linear-cryptanalysis/ 。SBOX是aes中唯一非线性的运算，如果SBOX操作线性了，就能使用线性相关的攻击
+
 ## Z3使用
 
 开一个新的合集，用于记录那些和z3有关的crypto题目。但是优先级较低，记录在这里的题不能包含上面的RSA，格等内容（除非两者都有）

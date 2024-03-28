@@ -1169,3 +1169,7 @@ finish()
 - 参考 https://github.com/D13David/ctf-writeups/tree/main/braekerctf24/rev/binary_shrink ，也可以用objdump
 150. [The mainframe speaks](https://github.com/D13David/ctf-writeups/tree/main/braekerctf24/rev/mainframe)
 - Rexx(Regina Rexx)混淆脚本分析
+151. [beehive](https://blog.bi0s.in/2024/03/02/RE/beehive-bi0sCTF2024/)
+- eBPF程序基础知识及逆向。可以用`llvm-objdump`获取汇编代码
+- ida eBPF程序分析插件使用:[eBPF_processor](https://github.com/cylance/eBPF_processor)
+- 加载eBPF程序到kernel内并与之交互，调用eBPF程序hook的自定义syscall

@@ -3487,6 +3487,8 @@ window.recaptcha=true;
 422. [BAD NOTES](https://github.com/bengsky13/CTF-WriteUp/tree/main/bi0s/bad_notes)
 - python flask的`render_template`函数在执行后会保存文件的内容。这个函数加载某个template文件后会将其保存至cache，今后调用就返回cache里的内容。即使用什么别的方法修改了template文件的内容，也不会影响cache里的内容
 423. [required notes](https://siunam321.github.io/ctf/bi0sCTF-2024/Web-Exploitation/required-notes/)
-- [protobuf.js](https://github.com/protobufjs/protobuf.js) Prototype Pollution CVE： https://www.code-intelligence.com/blog/cve-protobufjs-prototype-pollution-cve-2023-36665 。要求攻击者可控制`.proto` schema文件的属性（或注入自己的属性。`.schema`文件在用户输入未被过滤的情况下，直接拼接也会发生注入）
+- [protobuf.js](https://github.com/protobufjs/protobuf.js) Prototype Pollution CVE： https://www.code-intelligence.com/blog/cve-protobufjs-prototype-pollution-cve-2023-36665 。要求攻击者可控制`.proto` schema文件的属性（或注入自己的属性。`.schema`文件在用户输入未被过滤的情况下，直接拼接也会发生注入，即Protobuf Schema Injection）
 - js的`glob.sync()`函数允许用Bash shell的语法查找文件
 - 可利用原型链污染，污染`req.connection`的`_peername.address`属性，从而影响到`req.connection.remoteAddress`
+- 其他wp： https://hackmd.io/@r2dev2/Hkj7IhP3T
+    - 参考 https://github.com/carlospolop/hacktricks/blob/master/pentesting-web/deserialization/nodejs-proto-prototype-pollution/prototype-pollution-to-rce.md#pp2rce-vuln-child_process-functions ，可用原型链污染污染Object，这样在调用具有参数的spawn时就会获得rce。puppeteer内部使用了带有参数的spawn。需要污染一系列属性，如果是用protobuf.js的漏洞污染的话，只能一个一个属性去污染
