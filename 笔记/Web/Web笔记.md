@@ -3490,5 +3490,13 @@ window.recaptcha=true;
 - [protobuf.js](https://github.com/protobufjs/protobuf.js) Prototype Pollution CVE： https://www.code-intelligence.com/blog/cve-protobufjs-prototype-pollution-cve-2023-36665 。要求攻击者可控制`.proto` schema文件的属性（或注入自己的属性。`.schema`文件在用户输入未被过滤的情况下，直接拼接也会发生注入，即Protobuf Schema Injection）
 - js的`glob.sync()`函数允许用Bash shell的语法查找文件
 - 可利用原型链污染，污染`req.connection`的`_peername.address`属性，从而影响到`req.connection.remoteAddress`
-- 其他wp： https://hackmd.io/@r2dev2/Hkj7IhP3T
+- 其他wp： 
+    - https://hackmd.io/@r2dev2/Hkj7IhP3T
     - 参考 https://github.com/carlospolop/hacktricks/blob/master/pentesting-web/deserialization/nodejs-proto-prototype-pollution/prototype-pollution-to-rce.md#pp2rce-vuln-child_process-functions ，可用原型链污染污染Object，这样在调用具有参数的spawn时就会获得rce。puppeteer内部使用了带有参数的spawn。需要污染一系列属性，如果是用protobuf.js的漏洞污染的话，只能一个一个属性去污染
+    - https://gist.github.com/arkark/4a70a2df20da9732979a80a83ea211e2 ：更多原型链污染到RCE payload
+424. [Is It Okay](https://blog.bi0s.in/2024/02/26/Misc/IsItOkay-bi0sCTF2024/)
+- python 3.11.3 urllib漏洞：在要访问的url前加个空格可以绕过过滤
+- 如果某个网站是docker container，访问`/registry`路径可以获取源码（包括其他repo的）以及其他敏感内容。详情见[docker registry API](https://distribution.github.io/distribution/spec/api/)
+- js `network.gateway_ip_for` 命令注入漏洞利用
+- 若python flask里有`app.config['TEMPLATES_AUTO_RELOAD'] = True`，修改template文件后无需关闭app，程序会自动重新加载修改后的template文件
+- 使用lsblk判断Cross Mount。设备A可以mount设备B的文件系统，在设备A上修改文件系统会影响到设备B
