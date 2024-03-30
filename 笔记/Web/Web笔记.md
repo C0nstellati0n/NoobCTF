@@ -34,6 +34,10 @@
     - blob URL简述就是对网页上某段内容的引用。blob url与创建自身的网页同源（same origin），不会应用Cache partitioning机制，而且可以在第三方情境下工作（work across third-party contexts），甚至可以做top-level navigation（与`data:` url区分）
     - 利用blob和iframe实现“同时拥有cookie而且又没有cookie”。创建一个iframe，里面包含构造的xss payload；xss payload内部将要泄漏的页面包装到blob url里。此时blob url内部是有cookie的，而iframe里则没有。注意创建iframe时，sandbox属性要为`allow-top-navigation allow-scripts allow-same-origin`
     - 其他wp： https://github.com/abhishekg999/CTFWriteups/tree/main/LACTF2024/ctf-wiki ，利用WebRTC配合DNS绕过CSP `connect-uri`，以及不用WebRTC的做法
+- [Image gallery 1](https://blog.bi0s.in/2024/03/06/Web/ImageGallery1-bi0sCTF2024/)
+    - 如果express服务器有这行代码：`app.use(express.static('public'));`，表明在用户访问路径`/`时默认使用当前app根目录下的`index.html`。攻击者可在服务器运行的时候修改或覆盖`index.html`，进而改变默认网页内容
+    - CSP `httpOnly`还可以用chrome的[bfcache](https://web.dev/articles/bfcache)绕过。较真来看不能算一种专门针对`httpOnly`的绕过手段，而是有的时候cookie（或相关内容）会被映射到网页上，利用缓存后退一步网页直接获取到内容而已
+    - 这题的完整步骤参考 https://gist.github.com/lebr0nli/843662f4d1f255cbe2e0f6252faf5589
 
 ## SSTI
 

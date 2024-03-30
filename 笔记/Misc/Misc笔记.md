@@ -186,7 +186,7 @@ f.close()
 30. DTMF拨号音识别+手机键盘密码。DTMF拨号音就像平时座机拨号的声音，手机键盘密码就是9键。例题:[[WUSTCTF2020]girlfriend](https://blog.csdn.net/mochu7777777/article/details/105412940)，使用工具[dtmf2num](http://hl.altervista.org/split.php?http://aluigi.altervista.org/mytoolz/dtmf2num.zip)
 31. mimikatz可分析dmp后缀文件并获取密码。例题：[[安洵杯 2019]Attack](../../CTF/BUUCTF/Misc/[安洵杯%202019]Attack.md)
 32. 当一串base64解码后是`Salted__`，可能的密文格式为AES，3DES或者Rabbit。
-33. usb流量包数据提取。例题:[usb](../../CTF/moectf/Misc/usb.md)
+33. usb流量包数据提取。例题:[usb](../../CTF/moectf/2022/Misc/usb.md)
 34. rar文件可以通过更改文件结构隐藏文件，效果是让rar里有的文件解压不出来。用010 Editor打开rar文件，注意用文件名的区域开头是否是74（在[RAR文件结构](https://www.freebuf.com/column/199854.html)中，文件块的位置应该是74并不是7A，74让文件可以被解压出来，7A则不能），如果不是要改成74让文件被解压出来。例题:[USB](https://blog.csdn.net/mochu7777777/article/details/109632626)
 35. python3 单字节16进制异或结果写入文件。今天遇到一道题，文本文件里的内容需要需要单字节与5异或后转为16进制写入文件。不知道为啥大佬们的脚本我用不了，可能是版本的问题，故自己写了一个python3的简陋玩意。题目:[[GUET-CTF2019]虚假的压缩包](https://blog.csdn.net/mochu7777777/article/details/105367979)
 
