@@ -25,6 +25,11 @@
             - 用[Slack-Parser](https://github.com/0xHasanM/Slack-Parser)获取聊天内容
             - slack中的cached文件以及其他artifact位于`C:\Users\[username]\AppData\Roaming\Slack\Cache\Cache_Data`
             - google drive artifact位于`C:\Users\%user%\AppData\Local\Google\DriveFS`，有些被删除的文件会cache在这里
+- [Batman Investigation I - Like Father Like Son](https://blog.bi0s.in/2024/03/05/Forensics/BatmanInvestigationI-LikeFatherLikeSon-bi0sCTF2024/)
+    - windows权限提升常用手段/恶意软件逆向分析
+        - 使用runas调用某个可疑程序
+        - PEB is being meddled with unlinking the current process from the list using SeDebugPrivilege，用于隐藏某些恶意进程。wp里还有一些隐藏恶意进程的手段
+        - VirtualAllocEx, WriteProcessMemory, GetModuleHandleA(“Kernel32”) are all very very common indicators of a DLL injection
 
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
@@ -1415,6 +1420,13 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - https://github.com/warlocksmurf/onlinectf-writeups/blob/main/KnightCTF24/forensics.md
     - `vol.py -f mem.dmp --profile=profile consoles`
     - `vol.py --plugins volatility-autoruns-master -f mem.dmp autoruns`
+- https://blog.bi0s.in/2024/03/05/Forensics/BatmanInvestigationI-LikeFatherLikeSon-bi0sCTF2024/
+    - `vol.py -f ctf.mem --profile profile malfind`
+        - 寻找可疑进程
+    - `vol.py -f ctf.mem --profile profile envars`
+        - 获取环境变量及其值
+    - `vol.py -f ctf.mem --profile profile vaddump -p <pid_num> -D out/`
+        - dump all the vads/heaps of the process
 131. [Attaaaaack4](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack4)
 - 时刻注意那些名字类似windows内置文件的文件，它们可能是伪装的恶意病毒。如`runddl.exe`。它的名字类似`rundll.exe`,但是后者用于run Dynamic Link Library (DLLs) on the Windows operating system，而前者是恶意文件。
 132. [Attaaaaack8](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack8)

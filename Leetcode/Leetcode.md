@@ -327,6 +327,7 @@
 - [Find All People With Secret](./Hard/Find%20All%20People%20With%20Secret.md). union find/bfs/dfs
 - [Greatest Common Divisor Traversal](./Hard/Greatest%20Common%20Divisor%20Traversal.md). union find/寻找质数列表及质因数分解/bfs/dfs
 - [Subarrays with K Different Integers](./Hard/Subarrays%20with%20K%20Different%20Integers.md). sliding window
+- [Count Subarrays With Fixed Bounds](./Hard/Count%20Subarrays%20With%20Fixed%20Bounds.md). sliding window
 
 ## Others
 

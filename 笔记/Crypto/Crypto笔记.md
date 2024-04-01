@@ -610,6 +610,9 @@ for i in range(1,e):
     - 通过曲线上的两个点恢复参数a和b
     - 带有elliptic cusp（a和b均为0）的椭圆曲线上的离散对数比较好求，参考 https://crypto.stackexchange.com/questions/61302/how-to-solve-this-ecdlp
     - 利用离散对数将曲线上点的加法转换为线性方程（wp里说是背包问题，我菜到看不出来）。假设有一些已知的点，各个点的系数未知，整体加起来为曲线上的另一个点S。可以取已知的点中任意一个点作“生成点G”，那么剩下的点一定是G的倍数（具体多少倍求离散对数可得）。求G对于S的离散对数（不确定这样表达有没有问题，求S是G的多少倍），那么之前求的G相对于已知点集里各个点的离散对数结果与G对S的离散对数构成模曲线质数p的方程（各个离散对数结果记为 $d_i$ ,G对S的离散对数记为D那么 $d_ix+d_{i+1}y+...=D\mod p$ 。解这种模某个数的线性方程的脚本参考wp）
+- [Predictable](https://blog.bi0s.in/2024/03/28/Crypto/Predictable-bi0sCTF2024/)
+    - 椭圆曲线上两个点相加的double-and-add算法的时间测信道攻击
+    - 利用backdoor预测Dual_EC_DRBG输出
 
 ## AES
 

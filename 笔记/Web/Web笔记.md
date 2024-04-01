@@ -38,6 +38,15 @@
     - 如果express服务器有这行代码：`app.use(express.static('public'));`，表明在用户访问路径`/`时默认使用当前app根目录下的`index.html`。攻击者可在服务器运行的时候修改或覆盖`index.html`，进而改变默认网页内容
     - CSP `httpOnly`还可以用chrome的[bfcache](https://web.dev/articles/bfcache)绕过。较真来看不能算一种专门针对`httpOnly`的绕过手段，而是有的时候cookie（或相关内容）会被映射到网页上，利用缓存后退一步网页直接获取到内容而已
     - 这题的完整步骤参考 https://gist.github.com/lebr0nli/843662f4d1f255cbe2e0f6252faf5589
+- [Image gallery 2](https://blog.bi0s.in/2024/03/06/Web/ImageGallery1-bi0sCTF2024/)
+    - 可在svg图片里插入html实现xss/重定向
+    - nginx byte range caching机制利用。若配置nginx服务器时有`proxy_set_header   Range $slice_range;`一行，表示启用了byte range caching。这个机制的实现有点问题，可以利用这个机制将一个文件切割。比如一个文件的内容是`abcdefgh`,先cache前面一部分，例如`abcd`，在cache第二部分，如`gh`，最后访问这个文件。nginx会拼接前面两段cache内容，导致response为`abcdgh`
+    - Subresource Integrity（SRI）利用。导入script的时候可以加上`integrity`属性，若脚本内容不符合Integrity的sha256，则脚本不会被加载
+    - dom cloberring和[cache probing](https://xsleaks.dev/docs/attacks/cache-probing/)（仅限headless chrome）。cache probing简述就是，假如用户加载了某个网页，那么那个网页会被浏览器缓存，下次再访问时的速度就会比之前没访问过的网页快很多。利用这点可以泄漏出用户到底有没有访问过某个网页，或是有没有加载过某个资源
+- [Variety Notes](https://blog.bi0s.in/2024/02/26/Web/VarietyNotes-bi0sCTF2024/)
+    - CSP的特例：如果某个允许的路径有服务器端的重定向至一个不被允许的路径，只要CSP允许当前domain，就不会违反CSP
+    - js里的try-catch-finally中finally里的代码无论如何都会运行，即使函数已经在try或者catch中return
+    - reDOS攻击
 
 ## SSTI
 
