@@ -47,6 +47,13 @@
     - CSP的特例：如果某个允许的路径有服务器端的重定向至一个不被允许的路径，只要CSP允许当前domain，就不会违反CSP
     - js里的try-catch-finally中finally里的代码无论如何都会运行，即使函数已经在try或者catch中return
     - reDOS攻击
+- [കുട്ടി Notes](https://blog.bi0s.in/2024/02/29/Web/KuttyNotes-bi0sCTF2024/)
+    - dom clobbering+XS-Leak
+    - 若违反了CSP `script-src`,当前页面的script标签就会被禁用
+    - 给CSS标签加上`blocking=render`属性会阻止页面资源的加载，直到当前资源已加载完毕
+    - JS objection利用`.columns`查询时，若传入的参数为数组，表示使用aliases。aliases可以让objection.js使用不同的aliases返回同一段查询内容
+    - 一般无法测量不同origin的页面加载时间。但是可以利用chrome的Connection-Pool机制。chrome的上限是256个socket。如果攻击者事先已阻塞255个socket，然后同时打开两个page A和B。B只会在A加载完成时才加载，借此可以测量出加载A所需的时间
+    - 另一种做法是使用`loading="lazy"`属性。这个属性可以让一个图片在用户划到可能会看到图片的位置后才加载。xs-leak时控制oracle返回的内容量，使命中目标时图片会被挤到页面下方；没命中时则相反
 
 ## SSTI
 
