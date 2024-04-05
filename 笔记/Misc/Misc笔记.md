@@ -30,7 +30,18 @@
         - 使用runas调用某个可疑程序
         - PEB is being meddled with unlinking the current process from the list using SeDebugPrivilege，用于隐藏某些恶意进程。wp里还有一些隐藏恶意进程的手段
         - VirtualAllocEx, WriteProcessMemory, GetModuleHandleA(“Kernel32”) are all very very common indicators of a DLL injection
-
+- [Batman Investigation II](https://blog.bi0s.in/2024/02/27/Forensics/BatmanInvestigationII-GothamUndergroundCorruption-bi0sCTF2024/)
+    - 若分析memory dump时在进程列表里看见`Thunderbird.exe`（电子邮箱软件），可以用volatility3的`windows.filescan.FileScan`和`windows.dumpfiles.DumpFiles`插件提取出Inbox file，进而获取全部的conversation data
+    - KeePass password manager密码获取。首先在memory dump中找后缀为`.kdbx`的文件，然后参考这篇[文章](https://www.forensicxlab.com/posts/keepass/)，或是利用这个[工具](https://github.com/vdohney/keepass-password-dumper)就可得到密码
+    - Exodus（cryptocurrency wallet）相关
+        - 获取该软件的安装时间（但我觉得也可以推广到其他软件）
+            1. 可用volatility2的printKey功能打印Uninstall reg entry。一般来说这个注册项的Last updated时间就是安装时间
+            2. 获取Exodus软件安装器的prefetch的执行时间
+            3. 用volatility3的`windows.mftscan.MFTScan`插件获取[MFT](https://www.sciencedirect.com/topics/computer-science/master-file-table)文件
+        - 登录用的密码在内存中处于字符串`exodus.wallet%22%2C%22passphrase%22%3A%22`和`%22%7D`之间
+        - 如何在软件中查看receive log
+    - 从内存中获取未保存的notepad内容。除了用volatility，还可以用windbg调试dmp文件
+    - linux/mac Dropbox dbx文件恢复:首先用[dbx-keygen-macos](https://github.com/dnicolson/dbx-keygen-macos),[dbx-keygen-linux](https://github.com/newsoft/dbx-keygen-linux)获取加密密钥。可能需要自行修改题目文件才能使用这些工具。然后用[sqlite3-dbx](https://github.com/newsoft/sqlite3-dbx)解码并查看dbx文件
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -467,6 +478,9 @@ flag.export("./flag.mp3", format="mp3")
 - [Bypassing Transport Layer](https://odintheprotector.github.io/2024/02/17/bitsctf2024-dfir.html)
     - `vol.py -f ctf.mem windows.netscan`:查看网络连接情况
     - TLS流的requests和responses都是加密的，解密需要密钥。若找到类似keylog.pcapng的文件也可以解密
+- [Batman Investigation II](https://blog.bi0s.in/2024/02/27/Forensics/BatmanInvestigationII-GothamUndergroundCorruption-bi0sCTF2024/)
+    - `vol -f ctf.raw windows.pslist.PsList`:List active process list
+    - `vol -f ctf.raw windows.mftscan.MFTScan`:获取[MFT](https://www.sciencedirect.com/topics/computer-science/master-file-table)文件
 - [LovelyMem](https://github.com/Tokeii0/LovelyMem):一个图形界面取证工具
 102. [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)，例题:[Tree of Secrets](https://medium.com/@vj35.cool/the-bytebandits-ctf-2023-449a2d64c7b4),例题是文件夹形式的Huffman coding。动图解释：https://zhuanlan.zhihu.com/p/63362804
 103. [private-bin](https://github.com/5t0n3/ctf-writeups/blob/main/2023-lactf/misc/private-bin/README.md)
@@ -1427,6 +1441,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
         - 获取环境变量及其值
     - `vol.py -f ctf.mem --profile profile vaddump -p <pid_num> -D out/`
         - dump all the vads/heaps of the process
+- [Batman Investigation II](https://blog.bi0s.in/2024/02/27/Forensics/BatmanInvestigationII-GothamUndergroundCorruption-bi0sCTF2024/)
+    - `vol.py -f ctf.raw --profile=profile vadtree -p <pid> --output-file=./vadtree.dot --output=dot`
+        - dump VAD结构中的heap（以tree的形式）。也可以参考文章，用volshell实现
 131. [Attaaaaack4](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack4)
 - 时刻注意那些名字类似windows内置文件的文件，它们可能是伪装的恶意病毒。如`runddl.exe`。它的名字类似`rundll.exe`,但是后者用于run Dynamic Link Library (DLLs) on the Windows operating system，而前者是恶意文件。
 132. [Attaaaaack8](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack8)
@@ -1750,7 +1767,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 215. [A.R.K](https://github.com/4n86rakam1/writeup/tree/main/TUCTF_2023/Misc)
 - John the Ripper爆破系列题目
     - SSH private key
-    - KeePassXC database。爆破完成后可以在KeePass内打开，某些被删除的文件可以在History里找到
+    - KeePassXC database。爆破完成后可以在KeePass内打开，某些被删除的文件可以在History/Recycle Bin里找到
     - macOS keychain，以及Mac OS X Keychain Forensic Tool [Chainbreaker](https://github.com/n0fate/chainbreaker)的使用
 216. [State of the Git](https://nicklong.xyz/posts/tuctf23-state-of-the-git-forensics-challenge/)
 - git forensic
