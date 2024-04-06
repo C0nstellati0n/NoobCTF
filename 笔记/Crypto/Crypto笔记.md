@@ -2,7 +2,7 @@
 
 ## RSA
 - 得到d和c，p和q为相邻质数。例题：[[NCTF2019]babyRSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BNCTF2019%5DbabyRSA.md)
-- 光滑数分解+威尔逊定理使用。例题1：[smooth](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Crypto/smooth.md)，例题2:[[RoarCTF2019]babyRSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BRoarCTF2019%5DbabyRSA.md)
+- 光滑数分解+威尔逊定理使用。例题1：[smooth](../../CTF/moectf/2022/Crypto/smooth.md)，例题2:[[RoarCTF2019]babyRSA](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Crypto/%5BRoarCTF2019%5DbabyRSA.md)
 - 共模攻击。适用于相同明文用同样的n却用不同的e加密时。注意两个不同的e需要互质。[例题1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Crypto/best_rsa.md)搭配使用Crypto库读取公钥，[例题2](https://blog.csdn.net/weixin_44017838/article/details/104886290)搭配解密结果是ascii的情况。
 
 ```python
@@ -518,7 +518,7 @@ for i in range(1,e):
 - [S_H](https://sovietbeast-writeups.gitbook.io/writeups/ctfs/fetch-the-flag-2023/cryptography/s_h)
     - 尝试恢复部分被遮挡的SSH RSA private key。主要是要了解rsa private key的格式，确认没被遮挡的部分属于密钥的哪一部分。比如这题没被遮挡的部分为部分dq，完整dp和完整q。所以这题其实是“利用dp和e恢复p”
 - [Missing Bits](https://meashiri.github.io/ctf-writeups/posts/202311-glacierctf/#missing-bits)
-    - ASN.1 DER格式私钥分析： https://www.cem.me/20141221-cert-binaries.html
+    - ASN.1 DER格式私钥分析： https://www.cem.me/20141221-cert-binaries.html 。注意符合这个题目的私钥有`-----END RSA PRIVATE KEY-----`字样，为`PKCS#1` encoded key
 - [ARISAI](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/intro/ARISAI)
     - 多素数rsa+利用crt加快解密过程
 - [Mayday Mayday](https://hackmd.io/@Giapppp/rJrKDLm8a),[官方wp](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/crypto/%5BMedium%5D%20Mayday%20Mayday)
@@ -533,6 +533,12 @@ for i in range(1,e):
     - AES翻转bit攻击（控制iv）
 - [Baby RSA](https://writeup.gldanoob.dev/bitsctf/)
     - 矩阵上的RSA。参考 https://www.gcsu.edu/sites/files/page-assets/node-808/attachments/pangia.pdf 第9页的3.3案例
+- [daisy_bell](https://tanglee.top/2024/02/27/bi0sCTF-2024-Crypto-Writeups/)
+    - coppersmith for RSA partial key leakag。不过这题有点不一样，泄露了部分p的高位（但是不够直接恢复p）；又泄露了 $q^{-1}\mod p$ 的部分低位。可能一个关键点在于，可以通过p的高位和n提取出q的部分高位。然后就能变形方程扔给[coppersmith脚本](https://github.com/kionactf/coppersmith)解了(这里还有个点，就是最后构造出来的方程居然有两个变量。我一直以为只能有一个变量，其实multivariate-coppersmith脚本可以处理两个变量的情况)
+- [Katyusha’s Campervan](https://tanglee.top/2024/02/27/bi0sCTF-2024-Crypto-Writeups/)
+    - 也是一道RSA partial key leak+multivariate-coppersmith的题目。不过这题泄露的是dp的低位（ $dp\mod 2^{892}$ ，比赛的时候压根没看出来是泄露低位……看见题还没分析就觉得太难，直接跑了）
+    - 在分解n后，还需要利用binomial_dlog在合数n上求离散对数（实现参考同wp里的rr题）
+    - 和这题与上一题相关的论文:[Some Applications of Lattice Based Root Finding Techniques](https://eprint.iacr.org/2010/146),[New Results for Partial Key Exposure on RSA with Exponent Blinding](https://www.scitepress.org/papers/2015/55717/55717.pdf)
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
@@ -572,6 +578,12 @@ for i in range(1,e):
     - 计算矩阵上的离散对数。若矩阵的阶为光滑数，就可以用pohlig-hellman配合sagemath解出
 - [lalala](https://berliangabriel.github.io/post/bi0s-ctf-2024/)
     - 求解大型矩阵与向量的线性方程组。继续暴露我的无知。参考 https://tanglee.top/2024/02/27/bi0sCTF-2024-Crypto-Writeups/ ，这题的方程组中每个方程的结构是 $\Sigma a_i+\Sigma_i x_{b_i}^2x_{c_i}^3$ 。a，b和c均已知， $x_i$ 是要求的变量，共10个；方程总数共100个； $a_i,b_i,c_i$ 随机生成，共1000个。然后我傻了。我想着“啊啊啊啊怎么是两个变量的乘积啊”，就懵了。有没有一种可能，初中就学过，可以把两个变量看成一个？将 $x_{b_i}^2x_{c_i}^3$ 整体看成线性方程组要求的变量即可。毕竟10个变量无论怎么搭配也只有100种可能，正好有100个方程，直接解就完事。不过sagemath里排列矩阵和向量还是有点绕的
+- [rr](https://tanglee.top/2024/02/27/bi0sCTF-2024-Crypto-Writeups/)
+    - 好难的一道数学题……个人只能看懂前面的一小部分，涉及费马小定理，二项式定理，模下的方程变形等。后面一段通过变形方程解离散对数的讲解完全看不懂，也不知道这些数怎么设的。大概率是用了什么我不知道的定理或知识
+    - binomial_dlog的sagemath实现：solve $y = g^x\mod p^r$ where q=phi(p) such that $g^q = 1\mod p$
+    - 多项式最大公因子（Polynomial GCD）的简单实现。快的方法可以参考[HGCD](https://github.com/jvdsn/crypto-attacks/blob/master/shared/polynomial.py)
+    - [constant_coefficient](https://ask.sagemath.org/question/52938/constant-coefficient-of-symbolic-expression/)使用
+    - 其他解法: [Discrete logarithm modulo powers of a small prime](https://math.stackexchange.com/questions/1863037/discrete-logarithm-modulo-powers-of-a-small-prime), Using p-adic Ring in sage to compute discrete logarithm
 
 ## Lattice(格)
 
@@ -613,6 +625,10 @@ for i in range(1,e):
 - [Predictable](https://blog.bi0s.in/2024/03/28/Crypto/Predictable-bi0sCTF2024/)
     - 椭圆曲线上两个点相加的double-and-add算法的时间测信道攻击
     - 利用backdoor预测Dual_EC_DRBG输出
+    - 其他wp： https://tanglee.top/2024/02/27/bi0sCTF-2024-Crypto-Writeups/
+- [challengename](https://tanglee.top/2024/02/27/bi0sCTF-2024-Crypto-Writeups/)
+    - 若ECDSA算法定义在256-bit的曲线上而nonce只有128 bit，可以使用short nonce attack。只需两个签名就可恢复私钥
+    - nonce reuse解法： https://berliangabriel.github.io/post/bi0s-ctf-2024/ ， https://gist.github.com/Hisokap3/f446034f6d6ca9bcfeee05c1dad0aaa4
 
 ## AES
 

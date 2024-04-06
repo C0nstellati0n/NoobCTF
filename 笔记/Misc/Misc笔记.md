@@ -42,6 +42,10 @@
         - 如何在软件中查看receive log
     - 从内存中获取未保存的notepad内容。除了用volatility，还可以用windbg调试dmp文件
     - linux/mac Dropbox dbx文件恢复:首先用[dbx-keygen-macos](https://github.com/dnicolson/dbx-keygen-macos),[dbx-keygen-linux](https://github.com/newsoft/dbx-keygen-linux)获取加密密钥。可能需要自行修改题目文件才能使用这些工具。然后用[sqlite3-dbx](https://github.com/newsoft/sqlite3-dbx)解码并查看dbx文件
+- [Batman Investigation III](https://blog.bi0s.in/2024/03/19/Forensics/BatmanInvestigationIII-Th3Sw0rd0fAzr43l-bi0sCTF2024/)
+    - 使用FTK Imager分析windows `ad1` 后缀文件
+    - 可在`windows/system32/config/`中的registry hives获取PC名和Timezone。具体在`SYSTEM/ROOT/ControlSet001/control/`
+    - 寻找被执行的Malware：looking into the timeline with logs, pf and other artefacts, we can see what software was run
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
