@@ -18,7 +18,7 @@
         - https://seall.dev/posts/verbotenbi0sctf2024
             - [USB Detective](https://usbdetective.com/)：用于查找usb相关信息；[RegCool](https://kurtzimmermann.com/regcoolext_en.html)：Registry相关信息
             - [Hindsight](https://github.com/obsidianforensics/hindsight):查看chrome记录
-            - [SecurityQuestionsView](https://xfnirsoft.net/utils/security_questions_view.html):查看windows安全问题及答案
+            - [SecurityQuestionsView](https://www.nirsoft.net/utils/security_questions_view.html):查看windows安全问题及答案
         - https://blog.bi0s.in/2024/03/08/Forensics/verboten-bi0sCTF2024/
             - chrome相关artifacts位于`C:\Users\%username%\AppData\Local\Google\Chrome\User Data\%profilename%.default`
             - 恶意软件持久化（无法简单删除）的基础手段是将软件放入Startup文件夹下
@@ -32,7 +32,7 @@
         - VirtualAllocEx, WriteProcessMemory, GetModuleHandleA(“Kernel32”) are all very very common indicators of a DLL injection
 - [Batman Investigation II](https://blog.bi0s.in/2024/02/27/Forensics/BatmanInvestigationII-GothamUndergroundCorruption-bi0sCTF2024/)
     - 若分析memory dump时在进程列表里看见`Thunderbird.exe`（电子邮箱软件），可以用volatility3的`windows.filescan.FileScan`和`windows.dumpfiles.DumpFiles`插件提取出Inbox file，进而获取全部的conversation data
-    - KeePass password manager密码获取。首先在memory dump中找后缀为`.kdbx`的文件，然后参考这篇[文章](https://www.forensicxlab.com/posts/keepass/)，或是利用这个[工具](https://github.com/vdohney/keepass-password-dumper)就可得到密码
+    - KeePass password manager密码获取。首先在memory dump中找后缀为`.kdbx`的文件，然后参考这篇[文章](https://www.forensicxlab.com/posts/keepass/)，或是利用这个[工具](https://github.com/vdohney/keepass-password-dumper) （另一个版本： https://github.com/matro7sh/keepass-dump-masterkey ）就可得到密码
     - Exodus（cryptocurrency wallet）相关
         - 获取该软件的安装时间（但我觉得也可以推广到其他软件）
             1. 可用volatility2的printKey功能打印Uninstall reg entry。一般来说这个注册项的Last updated时间就是安装时间
@@ -46,6 +46,16 @@
     - 使用FTK Imager分析windows `ad1` 后缀文件
     - 可在`windows/system32/config/`中的registry hives获取PC名和Timezone。具体在`SYSTEM/ROOT/ControlSet001/control/`
     - 寻找被执行的Malware：looking into the timeline with logs, pf and other artefacts, we can see what software was run
+    - 好好好，本来想着今天把笔记补完，结果网站上不去了……
+- [ReAL-File-System](https://github.com/5h4rrK/ctf/tree/main/bi0sctf24/ReAL-File-System)
+    - Resilient File System(ReFS) image分析+修复。可用工具[Active Disk Editor](https://www.disk-editor.org/index.html)检测镜像是否损坏并挂载
+        - 提取文件系统的log文件
+        - 获取全部被重命名的目录的名称，以及其原名和修改时的时间戳
+        - 获取全部被删除的目录的名称，以及其删除时的时间戳
+        - 获取全部目录名以及对应的创建时间
+        - 恢复所有被删除的文件
+        - 找出所有被删除的文件（Simple + Permanent），以及删除时的时间戳
+        - 寻找被重命名的文件
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)

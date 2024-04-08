@@ -636,6 +636,7 @@ AES是很能出题的
 
 - [t0y-b0x](https://blog.bi0s.in/2024/03/03/RE/t0y-b0x-bi0sCTF2024/)
     - Linear Cryptanalysis (AES with linearly dependent SBOX)。相关漏洞学习参考 https://hackmd.io/@vishiswoz/r10P7knwj 和 https://kevinliu.me/posts/linear-cryptanalysis/ 。SBOX是aes中唯一非线性的运算，如果SBOX操作线性了，就能使用线性相关的攻击
+    - [Cracking AES Without any one of its Operations](https://medium.com/@wrth/cracking-aes-without-any-one-of-its-operations-c42cdfc0452f)
 
 ## Z3使用
 

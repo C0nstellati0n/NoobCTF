@@ -49,6 +49,8 @@ system("cat /tmp/flag");
 
 Cross-Cache attack个人其实没找到明确定义，只在标题的文章中看见作者提了一嘴。大概是：说每个结构体/object都有对应的slab管理器，而kernel中常用的攻击手法——堆喷——目标是让kernel中的某一个重要结构体与我们能控制的内存重合（是吧？）。那要是题目中所有结构体所在的slab里没有可以利用的重要结构体，就寄了？并没有。在这篇[文章](https://brieflyx.me/2020/heap/linux-kernel-slab-101/)中可以看到slab在内存中以页为单位存在。如果我们free某个内存页中所有的结构体，使整个内存页完全空闲，kernel就会回收这个内存页。这时我们分配一个重要结构体，kernel就会把刚才那个回收的内存页用做这个结构体所在的slab。至此我们成功让某个内存页出现在了两个slab中，即“cross”
 
+找到了，详细解析在这： https://ruia-ruia.github.io/2022/08/05/CVE-2022-29582-io-uring/#crossing-the-cache-boundary
+
 ## [pipe-primitive](https://github.com/veritas501/pipe-primitive)
 利用pipe_buffer结构体实现任意文件写。参考 https://kaligulaarmblessed.github.io/post/palindromatic-biosctf2024/ 的DirtyPipe章节。说是pipe_buffer结构体里有个PIPE_BUF_FLAG_CAN_MERGE标志。当某些文件内容被写入pipe_buffer且长度不足以填满一个page时，其内容会被添加到已经存在的page（ring中上一个pipe_buffer的page。至于ring是什么，这里截一段原文：`The actual pipe_buffer object that is allocated is actually a ring of pipe_buffer structs. Initially the object is empty, when its written to for the first time, a pipe_buffer is added to the ring.`）而不是新分配一个，前提是这些pipe_buffer设置了PIPE_BUF_FLAG_CAN_MERGE标志。从pipe读取数据不会取消设置标志
 
