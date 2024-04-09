@@ -3521,3 +3521,6 @@ window.recaptcha=true;
 - js `network.gateway_ip_for` 命令注入漏洞利用
 - 若python flask里有`app.config['TEMPLATES_AUTO_RELOAD'] = True`，修改template文件后无需关闭app，程序会自动重新加载修改后的template文件
 - 使用lsblk判断Cross Mount。设备A可以mount设备B的文件系统，在设备A上修改文件系统会影响到设备B
+425. [MLWeb](https://jorianwoltjer.com/blog/p/ctf/gcc-ctf/mlweb)
+- python `hummingbird.ml`库的load函数内部读取`model_type.txt`的内容。若为"pytorch"，内部又会使用`pickle.load`。因此不能用load函数加载任意zip文件，有pickle反序列化漏洞
+- js fetch的参数可以用相对路径，例如`a/../b`。因此fetch的参数不应直接拼接用户可控制内容

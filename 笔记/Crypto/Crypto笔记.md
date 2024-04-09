@@ -584,6 +584,8 @@ for i in range(1,e):
     - 多项式最大公因子（Polynomial GCD）的简单实现。快的方法可以参考[HGCD](https://github.com/jvdsn/crypto-attacks/blob/master/shared/polynomial.py)
     - [constant_coefficient](https://ask.sagemath.org/question/52938/constant-coefficient-of-symbolic-expression/)使用
     - 其他解法: [Discrete logarithm modulo powers of a small prime](https://math.stackexchange.com/questions/1863037/discrete-logarithm-modulo-powers-of-a-small-prime), Using p-adic Ring in sage to compute discrete logarithm
+- [Too Many Leaks](https://connor-mccartney.github.io/cryptography/diffie-hellman/Too-Many-Leaks-GCC-CTF-2024)
+    - bivariate coppersmith求解方程。其实不仅能用于RSA，只要是在有限域下，两个变量的方程都能解（但估计和单变量coppersmith一样，有要求解的变量的大小的限制）。不过这题应用coppersmith的情况还是那种经典的leak n个bits的题，应该还有其他情况能用吧？只要找到线性关系就行
 
 ## Lattice(格)
 
@@ -600,6 +602,8 @@ for i in range(1,e):
 - [any% ssg](https://hackmd.io/@lamchcl/SJIdwQb3a#cryptoany-ssg)
     - 利用LLL爆破类似minecraft的生成地图seed。参考官方[wp](https://github.com/AVDestroyer/CTF-Writeups/tree/main/lactf2024/any-percent-ssg)和wp里提到的视频[系列](https://www.youtube.com/playlist?list=PLke4P_1UHlmB8sB1oGdcea4SeBH0yZy5B) （另外这也是个不错的格入门视频），这题的知识点更准确地说，应该是“找到LCG的初始seed，使接下来的12个连续输出满足 $min\leq seed_i\leq max$ 的不等式“
     - 其他脚本： https://gist.github.com/TheBlupper/0b3cb0b7402c46e3d374a7244bd9e5cd
+- [Too Many Leaks](https://berliangabriel.github.io/post/gcc-ctf-2024/)
+    - Diffie-Hellman共享秘密的高位泄漏：Hidden number problem,见[论文](https://eprint.iacr.org/2020/1506.pdf)的6.2节,Most significant bits of finite field Diffie-Hellman shared secret
 
 ## Elliptic Curves(ECC,椭圆曲线)
 

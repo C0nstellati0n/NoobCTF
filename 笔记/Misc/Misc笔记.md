@@ -1947,3 +1947,10 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - 溢出
     - 精度误差
     - https://stackoverflow.com/questions/22186589/why-does-adding-a-small-float-to-a-large-float-just-drop-the-small-one
+265. [Fill the library](https://seall.dev/posts/gccctf2024)
+- 恶意`.doc`文件分析
+266. [Bad Habit](https://seall.dev/posts/gccctf2024)
+- 信用卡（credit card）usb pcapng分析。参考 https://stackoverflow.com/questions/15059580/reading-emv-card-using-ppse-and-not-pse 和 https://emvlab.org/tlvutils/ ，可获取card number（Primary Account Number）和Application Expiration Date
+267. [GCC Online](https://jorianwoltjer.com/blog/p/ctf/gcc-ctf/gcc-online)
+- 利用gcc命令获取RCE。参考 https://gtfobins.github.io/gtfobins/gcc/ ，`-wrapper`是RCE的关键。其余的还有`@`符号用来读取文件（但不是所有的文件都能读，部分包含gcc options的文件就读不出来。这个符号原本的用法是从文件里读取gcc options）。如果`-wrapper`被ban，可以在要编译的C code中写`-wrapper`，然后`@`符号读取这个C文件
+- 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#gcc-online
