@@ -1948,7 +1948,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - 精度误差
     - https://stackoverflow.com/questions/22186589/why-does-adding-a-small-float-to-a-large-float-just-drop-the-small-one
 265. [Fill the library](https://seall.dev/posts/gccctf2024)
-- 恶意`.doc`文件分析
+- 恶意`.rtf`文件分析。除了上传到一些在线恶意软件分析网站，也可以用[rtfobj](https://github.com/decalage2/oletools/wiki/rtfobj),[rtfdump](https://github.com/DidierStevens/DidierStevensSuite/blob/master/rtfdump.py)等工具
+- 其他wp： https://shaym.xyz/fill-the-library/ ， https://github.com/warlocksmurf/onlinectf-writeups/blob/main/GCCCTF24/forensics.md
+    - threat intelligence tool： https://abuse.ch/ ， https://urlhaus.abuse.ch/
 266. [Bad Habit](https://seall.dev/posts/gccctf2024)
 - 信用卡（credit card）usb pcapng分析。参考 https://stackoverflow.com/questions/15059580/reading-emv-card-using-ppse-and-not-pse 和 https://emvlab.org/tlvutils/ ，可获取card number（Primary Account Number）和Application Expiration Date
 267. [GCC Online](https://jorianwoltjer.com/blog/p/ctf/gcc-ctf/gcc-online)

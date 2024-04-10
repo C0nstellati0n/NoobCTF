@@ -633,6 +633,10 @@ for i in range(1,e):
 - [challengename](https://tanglee.top/2024/02/27/bi0sCTF-2024-Crypto-Writeups/)
     - 若ECDSA算法定义在256-bit的曲线上而nonce只有128 bit，可以使用short nonce attack。只需两个签名就可恢复私钥
     - nonce reuse解法： https://berliangabriel.github.io/post/bi0s-ctf-2024/ ， https://gist.github.com/Hisokap3/f446034f6d6ca9bcfeee05c1dad0aaa4
+- [Elliptic](https://connor-mccartney.github.io/cryptography/ecc/Elliptic-GCC-CTF-2024)
+    - 如何构造anomalous curve（方便利用smart攻击求离散对数）。除了wp里的脚本，还可以用： https://github.com/jvdsn/crypto-attacks/blob/master/shared/ecc.py#L62
+    - 椭圆曲线上的knapsack问题。如果可以获取足够数量的方程，如加密二进制长度为107的字符串，获取107个不同的knapsack方程就能将其转为线性方程组求解。这题还多了个将曲线上的点转为线性方程的步骤，已经在budget bag里解释过
+    - [官方wp](https://www.xorminds.com/posts/2024/elliptic/)使用了格来解knapsack问题。128 bits的curve所组成的格过于dense，无法用LLL解出，需要用更大的质数，如768 bits
 
 ## AES
 

@@ -30,11 +30,11 @@ knapsack问题可概括为“从数集里选数字”。给定n个数字 $a_1...
 
 题目`Too Many Leaks`和解析可以看 https://berliangabriel.github.io/post/gcc-ctf-2024/ 。我又在[官方wp](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Crypto/Too_many_leaks)找到了题目来源的[论文](https://eprint.iacr.org/2020/1506.pdf)，见6.2节。省略题目的一堆前戏，总之最后得到线性方程 $k_1 − t^{−1}k_2 + r_1 − t^{−1}r_2\equiv 0 \mod p$ ，已知p，t， $r_1$ 和 $r_2$ ，求 $k_1$ 和 $k_2$ 。接下来的任务是构造一个格，使这个格内包含一个包含 $k_1$ 和 $k_2$ 的向量。那根据格的定义可知，格包含一个向量意味着这个向量是格基的线性组合。然后重点来了，这个线性组合重要吗？不重要。我们甚至不需要知道具体的线性组合，只要保证有这么个线性组合就行了。好，从得到的线性方程中，怎么得到 $k_1$ ？变形一下即可： $k_1=t^{-1}k_2-r_1+t^{-1}r_2\mod p$ 。对了，格里不好模p，所以我们可以手动把 $a_1p$ 加上，结果就是 $k_1=a_1p+t^{-1}k_2-r_1+t^{-1}r_2$ 。得到了格基的第一个列向量：
 
-$$\begin{pmatrix}p\\ t^{-1}\\ -r_1+t^{-1}r_2\end{pmatrix}$$
+$$\begin{pmatrix}p\cr t^{-1}\cr -r_1+t^{-1}r_2\end{pmatrix}$$
 
 这里我得出的列向量和两个wp都不一样，他们都是:
 
-$$\begin{pmatrix}p\\ t^{-1}\\ r_1-t^{-1}r_2\end{pmatrix}$$
+$$\begin{pmatrix}p\cr t^{-1}\cr r_1-t^{-1}r_2\end{pmatrix}$$
 
 sagemath跑了一下，两个都能解出来答案，只不过我算出来是全正的，他们算出来是全负的
 
@@ -52,7 +52,7 @@ $$\begin{pmatrix}0&0&K\end{pmatrix}$$
 
 有线性方程组：
 
-$$\begin{pmatrix}a_1&k_2&1\end{pmatrix}\begin{pmatrix}p&0&0\\ t^{-1}&1&0\\ -r_1+t^{-1}r_2&0&K\end{pmatrix}=\begin{pmatrix}k_1&k_2&K\end{pmatrix}$$
+$$\begin{pmatrix}a_1&k_2&1\end{pmatrix}\begin{pmatrix}p&0&0\cr t^{-1}&1&0\cr -r_1+t^{-1}r_2&0&K\end{pmatrix}=\begin{pmatrix}k_1&k_2&K\end{pmatrix}$$
 
 总结：不要管线性组合，知道它存在就行了，无需确切地知道每一个值。构造格的时候不需要它。格基需要全部选用已知的值，乘出来的结果是格基规约的结果（不太准确，主要是这个结果在格里是短向量）。适时加个bound帮助构造格（尝试了把格基最后那个向量去掉，直接给我个trivial的sb答案……因为这个trivial的答案比预期的那个短向量还要短。所以加个bound是为了尽可能保持要得到的结果短的情况下又让它没那么短？我又想起来，我要是去掉一个向量，整个格基不就不是格基，因为线性相关了吗？我可能真的不适合数学）
 
