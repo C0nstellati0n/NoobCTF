@@ -56,6 +56,9 @@
         - 恢复所有被删除的文件
         - 找出所有被删除的文件（Simple + Permanent），以及删除时的时间戳
         - 寻找被重命名的文件
+- [Pretty Links](https://nathan-out.github.io/write-up/pretty-links/)
+    - 使用[LECmd](https://www.sans.org/tools/lecmd/)分析`.lnk`文件
+    - 恶意软件分析
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -1953,6 +1956,17 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - threat intelligence tool： https://abuse.ch/ ， https://urlhaus.abuse.ch/
 266. [Bad Habit](https://seall.dev/posts/gccctf2024)
 - 信用卡（credit card）usb pcapng分析。参考 https://stackoverflow.com/questions/15059580/reading-emv-card-using-ppse-and-not-pse 和 https://emvlab.org/tlvutils/ ，可获取card number（Primary Account Number）和Application Expiration Date
+- 手动分析packet做法： https://jorianwoltjer.com/blog/p/ctf/gcc-ctf/bad-habit 及相关链接：[ISO 7816-4 spy using Wireshark](https://ludovicrousseau.blogspot.com/2019/08/iso-7816-4-spy-using-wireshark.html), https://mstcompany.net/blog/acquiring-emv-transaction-flow-part-4-pdol-and-contactless-cards-characteristic-features-of-qvsdc-and-quics , https://mstcompany.net/blog/acquiring-emv-transaction-flow-part-5-read-records
 267. [GCC Online](https://jorianwoltjer.com/blog/p/ctf/gcc-ctf/gcc-online)
 - 利用gcc命令获取RCE。参考 https://gtfobins.github.io/gtfobins/gcc/ ，`-wrapper`是RCE的关键。其余的还有`@`符号用来读取文件（但不是所有的文件都能读，部分包含gcc options的文件就读不出来。这个符号原本的用法是从文件里读取gcc options）。如果`-wrapper`被ban，可以在要编译的C code中写`-wrapper`，然后`@`符号读取这个C文件
 - 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#gcc-online
+268. [Trust Issues](https://oshawk.uk/Writeups/Trust+Issues)
+- 真不知道这题咋分……官方分类是crypto，但最重要的考点和crypto没关系，题目又以网站呈现，但也不算web。所以就到misc了
+- NumPy的empty函数不会清空内存，而且似乎每次申请都会申请到同一块内存。比如用empty申请两个object A和B，分别设置值为a和b。del后再用empty申请C和D但不要设置值，会发现C里的值为b，D里的值为a
+- python用排序字典（ordered dictionary）来储存object的属性，free的顺序和申请时的顺序一样
+- python里覆盖带有某个object的变量算free那个object。例如：
+```py
+a=A()
+a=A()
+```
+第一次的object A在执行第二行时被free了，第二行相当于再申请一个新的object A

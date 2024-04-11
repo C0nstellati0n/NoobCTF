@@ -2474,3 +2474,5 @@ c2=encrypt(k2,c1)
 - 利用wordlist的工具： https://github.com/JorianWoltjer/SubSolver
 136. [prove it!](https://tsumiiiiiiii.github.io/lacrypto/)
 - zero-knowledge proof:zk-snarks。不过这题其实和零知识证明没啥关系，主要还是利用离散对数和多项式解出目标
+137. [SuperAES](https://s1lver-lining.github.io/wu/gcc2024/superaes/)
+- 若LCG的模数m不是质数，在几轮迭代后，输出会固定为一个数。具体分析见wp

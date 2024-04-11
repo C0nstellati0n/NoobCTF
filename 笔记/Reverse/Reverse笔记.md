@@ -1173,3 +1173,5 @@ finish()
 - eBPF程序基础知识及逆向。可以用`llvm-objdump`获取汇编代码
 - ida eBPF程序分析插件使用:[eBPF_processor](https://github.com/cylance/eBPF_processor)
 - 加载eBPF程序到kernel内并与之交互，调用eBPF程序hook的自定义syscall
+152. [GccChat](https://0xmirasio.github.io/2024-02-02-GCC-gcchat1&2/)
+- 可用[hermes-dec](https://github.com/P1sec/hermes-dec)反编译被编译成Hermes VM bytecode的React Native文件。也可以直接修改汇编的字节码，保存后重新打包、签名apk即可运行修改逻辑后的apk

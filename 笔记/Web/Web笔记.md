@@ -3524,3 +3524,7 @@ window.recaptcha=true;
 425. [MLWeb](https://jorianwoltjer.com/blog/p/ctf/gcc-ctf/mlweb)
 - python `hummingbird.ml`库的load函数内部读取`model_type.txt`的内容。若为"pytorch"，内部又会使用`pickle.load`。因此不能用load函数加载任意zip文件，有pickle反序列化漏洞
 - js fetch的参数可以用相对路径，例如`a/../b`。因此fetch的参数不应直接拼接用户可控制内容
+426. [frenzy flask](https://jorianwoltjer.com/blog/p/ctf/gcc-ctf/frenzy-flask)
+- python pathlib的Path.joinpath的参数为绝对路径时，会舍弃掉前面的路径。和os.path.join的特性一致
+- 若运行pip install时添加了`--user`标志，表示安装的库文件会被放置在当前用户的家目录中
+- 使用`flask.__file__`可查看储存Flask的文件和其路径。可通过覆盖这个文件（如添加os.system）获取RCE，前提是重启flask服务，或有`debug=True`选项，使其在任何文件有改动的情况下自动重启
