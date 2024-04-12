@@ -3528,3 +3528,9 @@ window.recaptcha=true;
 - python pathlib的Path.joinpath的参数为绝对路径时，会舍弃掉前面的路径。和os.path.join的特性一致
 - 若运行pip install时添加了`--user`标志，表示安装的库文件会被放置在当前用户的家目录中
 - 使用`flask.__file__`可查看储存Flask的文件和其路径。可通过覆盖这个文件（如添加os.system）获取RCE，前提是重启flask服务，或有`debug=True`选项，使其在任何文件有改动的情况下自动重启
+427. [Free Chat](https://github.com/elweth-sec/Writeups/blob/master/GCC-2023/Free_Chat.md)
+- linux的locate命令的作用和find差不多，但是前者比后者快很多。因为find是实打实地在整个文件系统搜索指定的文件，而locate则是提前保存一个记录整个文件系统里所有文件的database，并实时更新。如果有任意文件读取漏洞，可尝试读取`/var/cache/locate/locatedb`，并用`/usr/bin/locate.findutils`查找想要的文件
+- 根据 https://rgxdb.com/r/2MQXJD5 ，一个有效的URL应以`/`结尾。如果应用检查domain name必须要以某个URL开头但末尾没有`/`时，可利用HTTP authentication机制重定向至任意网址。`https://a.com@b.com`可重定向至`b.com`，也可以借此实现SSRF访问内部网站：`http://a.com@devpanel:8000/?token=token`，携带GET参数token访问内部8000端口的devpanel
+428. [Free Cider](https://sanlokii.eu/writeups/gcc-ctf/free-cider/)
+- swagger API platform在`/static/`（比如`/static/swagger.json`）下有api列表
+- 和重置密码相关的漏洞： https://book.hacktricks.xyz/pentesting-web/reset-password 。一般重置密码后会重定向，而某些错误的重定向实现导致攻击者可以重定向至任意网站，进而窃取重置密码的token。例如重定向时直接将目标路径拼接到Host header后，攻击者就能通过修改host header重定向至任意网站

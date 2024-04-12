@@ -58,7 +58,7 @@
         - 寻找被重命名的文件
 - [Pretty Links](https://nathan-out.github.io/write-up/pretty-links/)
     - 使用[LECmd](https://www.sans.org/tools/lecmd/)分析`.lnk`文件
-    - 恶意软件分析
+    - 恶意软件分析。这点[官方wp](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Forensic/Pretty_Links)讲得更详细一点。`NisSrv.exe`被用于DLL Hijacking的载体
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -1970,3 +1970,11 @@ a=A()
 a=A()
 ```
 第一次的object A在执行第二行时被free了，第二行相当于再申请一个新的object A
+269. [DGA](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Misc/DGA)
+- 训练Domain Generation Algorithm (DGA) Detection模型。相关参考链接：
+    - https://www.kaggle.com/code/omurcantatar/domain-generation-algorithm-dga-detection/notebook
+    - https://www.kaggle.com/code/xeric7/dga-detection-using-gru/notebook
+270. [SoBusy](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Misc/SoBusy)
+- linux利用带有SUID bit的busybox提权。busybox本身是多个linux命令的集合体。其中一个用法是，设置多个symlink，如`/usr/bin/ls`,`/usr/bin/ls`，全部指向busybox，却可以实现不同的功能（所以有时候SUID在ls这种不起眼的命令上可能代表SUID bit在busybox上）。busybox利用`argv[0]`来分辨到底要执行那个命令，便可通过覆盖`argv[0]`提权
+- 其他做法：
+- [DDexec](https://github.com/arget13/DDexec): A technique to run binaries filelessly and stealthily on Linux by "overwriting" the shell's process with another

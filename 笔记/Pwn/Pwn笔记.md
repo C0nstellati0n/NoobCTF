@@ -1799,4 +1799,5 @@ try {
   - 使用pwntools的[unstrip_libc](https://docs.pwntools.com/en/stable/libcdb.html#pwnlib.libcdb.unstrip_libc)恢复被去除符号列表的libc中的符号
   - 在控制rdx的情况下可以用setcontext实现栈迁移。作者借此找到了puts里的一段gadget，在利用`__run_exit_handlers`调用这段gadget时，rbx和r14都指向libc里的可写段，能控制r14就能调用接下来调用的gadget
 183. [babybof](https://www.numb3rs.re/writeup/gccctf_babybof/)
-- Safestack保护机制下的buffer overflow。safestack机制创建了一块被隔离的内存，将不安全的data放置于此。因此没法覆盖返回地址执行rop。但是在足够的溢出下还是可以覆盖canary，也有几率控制一些寄存器
+- Safestack保护机制下的buffer overflow。safestack机制创建了一块被隔离的内存unsafe_stack，将不安全的data放置于此。因此没法覆盖返回地址执行rop。但是在足够的溢出下还是可以覆盖canary（unsafe_stack也被canary保护），也有几率控制一些寄存器
+- [官方wp](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Pwn/baby_bof)解释得比较详细些。储存不安全数据的unsafe_stack位于tls区域的上方，且与其偏移固定。可以用TLS DTOR技巧getshell

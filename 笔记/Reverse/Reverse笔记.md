@@ -994,6 +994,9 @@ main()
   - 另一个[wp](https://the-m3chanic.github.io/2024/01/26/Writeup-Secure-Computing-IRIS-CTF-2024/)讲得更详细。补充知识点：
     - seccomp-tools大部分情况下都可以使用ptrace自动dump出filter，意味着若程序里已有ptrace调用，需要patch掉后再dump。默认只会dump一个filter，加上`-l` flag可dump出完整的flag
     - [KLEE](https://klee.github.io/) Symbolic Virtual Machine (Solver)的安装及使用。可直接在C/C++语言文件上实现符号执行
+- [Array Programming Rocks](https://tellnotales.xyz/posts/gcc-ctf24_array_programming_rocks_writeup/)
+    - `.ua`程序逆向，对应的语言是[Uiua](https://www.uiua.org/)
+    - 其他同样是z3解法的脚本： https://gist.github.com/meowmeowxw/f25ad75a2531f8c0ac24923d3bcc86dd
 115. [Conquest of Camelot](https://black-frost.github.io/posts/sekai2023/)
 - OCaml语言binary逆向。这种语言的函数调用约定比较奇怪，ida可能无法生成伪代码。另外，这种语言对数组的操作会自动添加大量的bound checking，函数体会看起来很复杂但逻辑可能很简单
 - 參考 https://mcfx.us/posts/2023-09-01-sekaictf-2023-writeup/#conquest-of-camelot ，（ida里）calling convection应该为`__int64 __usercall func<rax>(__int64 arg0@<rax>, __int64 arg1@<rax>, __int64 arg2@<rdi>)`
