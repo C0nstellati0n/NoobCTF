@@ -968,7 +968,7 @@ main()
 110. [ilovepython](https://github.com/cewau/ctf-writeups/blob/main/20230805-litctf/REV_ilovepython.md)
 - python高级类型推断（逆变、协变）。这题非常复杂，看懂了python的类型就懂了（但是我看不懂，后面再遇到的话再看吧）
 111. [What Is It](https://learn-cyber.net/writeup/What-Is-It)
-- AutoIt脚本可能被隐藏在exe中（strings这样的exe会有AutoIt字样）。提取工具： https://github.com/nazywam/AutoIt-Ripper
+- AutoIt脚本可能被隐藏在exe中（strings这样的exe会有AutoIt字样）。提取工具： https://github.com/nazywam/AutoIt-Ripper ,或 https://github.com/JacobPimental/exe2aut 反编译
 112. [Old Obfuscation](https://learn-cyber.net/writeup/Old-Obfuscation)
 - exe和python文件同时出现在一个文件夹下很有可能是pyinstaller打包程序。strings exe文件内有pyinstaller字样。可用[pyinstxtractor](https://github.com/extremecoders-re/pyinstxtractor)解压
 - PyArmor混淆。参考 https://github.com/Svenskithesource/PyArmor-Unpacker/tree/main 进行反混淆
@@ -1177,4 +1177,5 @@ finish()
 - ida eBPF程序分析插件使用:[eBPF_processor](https://github.com/cylance/eBPF_processor)
 - 加载eBPF程序到kernel内并与之交互，调用eBPF程序hook的自定义syscall
 152. [GccChat](https://0xmirasio.github.io/2024-02-02-GCC-gcchat1&2/)
-- 可用[hermes-dec](https://github.com/P1sec/hermes-dec)反编译被编译成Hermes VM bytecode的React Native文件。也可以直接修改汇编的字节码，保存后重新打包、签名apk即可运行修改逻辑后的apk
+- 可用[hermes-dec](https://github.com/P1sec/hermes-dec)反编译被编译成Hermes VM bytecode的React Native framework文件。也可以直接修改汇编的字节码，保存后重新打包、签名apk即可运行修改逻辑后的apk
+- 官方wp更详细： https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Reverse

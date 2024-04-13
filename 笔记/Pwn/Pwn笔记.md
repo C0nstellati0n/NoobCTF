@@ -1791,13 +1791,14 @@ try {
 - 自定义堆内存分配器pwn。题目以apk的webview `@JavascriptInterface`作为载体，编写exp时需要使用js。具体做法是利用自定义堆内存分配器的漏洞分配任意地址，注入“读取flag并将flag发送至远程端口”的shellcode后执行
 - [官方wp](https://blog.bi0s.in/2024/02/26/Pwn/Tallocator-bi0sctf2024/)讲得更详细，还包括如何使用gdbserver，AVDManager和adb调试程序。android+pwn这类题之前也出现过： https://fineas.github.io/FeDEX/post/tridroid.html ，wp里还有更详细的调试步骤
 182. [Flag Roulette](https://chovid99.github.io/posts/gcc-ctf-2024/)
-- 可使用malloc申请大小在0x80到0x21000之间的chunk，且允许相对于这个chunk的非负oob write。使用FSOP泄漏libc地址，并用TLS DTOR实现栈迁移（绕过seccomp filter）
+- libc 2.37，可使用malloc申请大小在0x80到0x21000之间的chunk，且允许相对于这个chunk的非负oob write。使用FSOP泄漏libc地址，并用TLS DTOR实现栈迁移（绕过seccomp filter）
 - 若使用malloc分配的chunk的大小超过了`mp_.mmap_threshold`（默认0x20000，可能会有改动），就会使用mmap分配内存。这块内存与libc和tls的偏移是固定的
 - 当free一个用mmap分配的chunk时，会将`mp_.mmap_threshold`的大小改为那个被free的chunk的大小。如果把`mp_.no_dyn_threshold`改为1这个值就不会动了
 - 用FSOP泄漏libc地址时，注意FSOP只会在调用puts等IO流函数时才会执行，所以无需一次改完全部的FSOP设置
 - 其他wp： https://github.com/5kuuk/CTF-writeups/tree/main/gcc-2024/flag_roulette
   - 使用pwntools的[unstrip_libc](https://docs.pwntools.com/en/stable/libcdb.html#pwnlib.libcdb.unstrip_libc)恢复被去除符号列表的libc中的符号
   - 在控制rdx的情况下可以用setcontext实现栈迁移。作者借此找到了puts里的一段gadget，在利用`__run_exit_handlers`调用这段gadget时，rbx和r14都指向libc里的可写段，能控制r14就能调用接下来调用的gadget
+  - [官方wp](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Pwn/flag_roulette)。官方wp的做法稍微有些繁琐，因为作者忽略了FSOP可用，所以就用了[House of blindness](https://hackmd.io/jmE0VvcTQaaJm6SEWiqUJA)的变种技巧+栈迁移。这种技巧针对程序退出时的(_dl_fini，可能和82条有点关系？)的link_maps，需要将DT_FINI_ARRAY设为NULL，然后修改l_addr。在PIE的情况下需要爆破4bit的ASLR。而且这个技巧只能用一次，想再用的话得清理initial结构体。另外还有一个知识点，libc与其他binary的偏移固定的前提条件是运行时使用同样的环境变量
 183. [babybof](https://www.numb3rs.re/writeup/gccctf_babybof/)
 - Safestack保护机制下的buffer overflow。safestack机制创建了一块被隔离的内存unsafe_stack，将不安全的data放置于此。因此没法覆盖返回地址执行rop。但是在足够的溢出下还是可以覆盖canary（unsafe_stack也被canary保护），也有几率控制一些寄存器
 - [官方wp](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Pwn/baby_bof)解释得比较详细些。储存不安全数据的unsafe_stack位于tls区域的上方，且与其偏移固定。可以用TLS DTOR技巧getshell

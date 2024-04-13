@@ -2,6 +2,16 @@
 
 越来越认识到什么是“好记性不如烂笔头”
 
+## Web3
+
+似乎混进来了奇怪的分类……
+
+- [First Drop](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Web3/first_drop)
+    - 检查一个地址是否是contract不能采用“是否有bytecode”的判断方式。因为合约在构造时（构造函数内）是没有bytecode的
+    - re-entrancty攻击：`_safeMint`与onERC721Received
+- [Pincer](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Web3/pincer)
+    - sandwich attack (front running + back running)
+
 ## SQL注入
 
 之前开过一个SQL分区，感觉之后的还是放在这里比较好
@@ -54,6 +64,8 @@
     - JS objection利用`.columns`查询时，若传入的参数为数组，表示使用aliases。aliases可以让objection.js使用不同的aliases返回同一段查询内容
     - 一般无法测量不同origin的页面加载时间。但是可以利用chrome的Connection-Pool机制。chrome的上限是256个socket。如果攻击者事先已阻塞255个socket，然后同时打开两个page A和B。B只会在A加载完成时才加载，借此可以测量出加载A所需的时间
     - 另一种做法是使用`loading="lazy"`属性。这个属性可以让一个图片在用户划到可能会看到图片的位置后才加载。xs-leak时控制oracle返回的内容量，使命中目标时图片会被挤到页面下方；没命中时则相反
+- [The Genie pwn's adventures](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Web/TheGeniePwnAdventuresRevenge)
+    - [Cookie jar overflow](https://medium.com/@ibm_ptc_security/cookie-jar-overflow-attack-ae5135b6100)+xss。这个有关cookie的漏洞不难理解，浏览器里能设置的cookie数量有限，达到限制后，旧的cookie会被新添加的挤掉。这种办法甚至可以移除掉HttpOnly的cookie（简单的js xss攻击移不掉）。所以如果可以控制admin bot设置很多cookie挤掉自己的session，然后再添加上自己的session并logout，就可成为admin
 
 ## SSTI
 
