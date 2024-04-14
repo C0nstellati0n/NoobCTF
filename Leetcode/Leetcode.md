@@ -330,6 +330,7 @@
 - [Greatest Common Divisor Traversal](./Hard/Greatest%20Common%20Divisor%20Traversal.md). union find/寻找质数列表及质因数分解/bfs/dfs
 - [Subarrays with K Different Integers](./Hard/Subarrays%20with%20K%20Different%20Integers.md). sliding window
 - [Count Subarrays With Fixed Bounds](./Hard/Count%20Subarrays%20With%20Fixed%20Bounds.md). sliding window
+- [Maximal Rectangle](./Hard/Maximal%20Rectangle.md). monotonic stack/[Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram)
 
 ## Others
 
