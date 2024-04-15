@@ -80,6 +80,7 @@
 - [Maximum Product of Two Elements in an Array](./Easy/Maximum%20Product%20of%20Two%20Elements%20in%20an%20Array.md)
 - [Special Positions in a Binary Matrix](./Easy/Special%20Positions%20in%20a%20Binary%20Matrix.md)
 - [Reverse Linked List](./Easy/Reverse%20Linked%20List.md)
+- [Sum of Left Leaves](./Easy/Sum%20of%20Left%20Leaves.md). binary tree
 
 ## Medium
 - [Sum Root to Leaf Numbers](Medium/Sum%20Root%20to%20Leaf%20Numbers.md).Each root-to-leaf path in the tree represents a number. For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123. Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer. 返回全部根节点到子节点路径数字的和。

@@ -157,6 +157,8 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
     - 能干的事情很多，不止隐写。不过我认识到这个工具是因为里面有个python3频率盲水印，用其他的脚本提取不出来
 - [discord events](https://dothidden.xyz/la_ctf_2024/discord_events/)
     - [Steg Cloak](https://stegcloak.surge.sh/)的解码。被Steg Cloak加密的文字会包含不可见字符
+- [Professor's Inheritance](https://github.com/RJCyber1/VishwaCTF-2024-Writeups/blob/main/Steg/Professor's%20Inheritance.md)
+    - [Stegosuite](https://github.com/osde8info/stegosuite)
 1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)。不同版本的zip加密位不一样,例如有些zip需要将第7个字节的09改成00。如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
 3.   numpy.loadtxt读取坐标文件+基本matplotlib图像绘制。例题:[梅花香之苦寒来](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Misc/%E6%A2%85%E8%8A%B1%E9%A6%99%E4%B9%8B%E8%8B%A6%E5%AF%92%E6%9D%A5.md)
@@ -1978,3 +1980,11 @@ a=A()
 - linux利用带有SUID bit的busybox提权。busybox本身是多个linux命令的集合体。其中一个用法是，设置多个symlink，如`/usr/bin/ls`,`/usr/bin/ls`，全部指向busybox，却可以实现不同的功能（所以有时候SUID在ls这种不起眼的命令上可能代表SUID bit在busybox上）。busybox利用`argv[0]`来分辨到底要执行那个命令，便可通过覆盖`argv[0]`提权
 - 其他做法：
 - [DDexec](https://github.com/arget13/DDexec): A technique to run binaries filelessly and stealthily on Linux by "overwriting" the shell's process with another
+271. [Rooter](https://github.com/NateRiv3r/Hackerlab2019/blob/master/Rooter%20-%20Miscellaneous.md)
+- SSH-2.0-libssh_0.8.1: [CVE-2018-10993 libSSH authentication bypass exploit](https://gist.github.com/mgeeky/a7271536b1d815acfb8060fd8b65bd5d)。脚本用法可参考 https://github.com/S0nG0ku0/VishwaCTF_Web_Writeups/tree/main/Save_The_City
+272. [Smoke out the Rat](https://github.com/peace-ranger/CTF-WriteUps/blob/main/2024/VishwaCTF%202024/smoke_out_the_rat.md)
+- mysql replication log文件分析。可用mysql服务器自带的mysqlbinlog工具分析
+273. [Wired Secrets](https://github.com/InfoSecIITR/write-ups/blob/master/2024/vishwa-ctf-2024/forensics_steganography/wired_secret.md)
+- USB pcapng描绘鼠标轨迹。工具： https://github.com/WangYihang/USB-Mouse-Pcap-Visualizer
+274. [Repo Riddles](https://github.com/warlocksmurf/onlinectf-writeups/blob/main/VishwaCTF24/forensics.md)
+- github相关forensic。可用工具[GitTools](https://github.com/internetwache/GitTools)

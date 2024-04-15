@@ -1179,3 +1179,5 @@ finish()
 152. [GccChat](https://0xmirasio.github.io/2024-02-02-GCC-gcchat1&2/)
 - 可用[hermes-dec](https://github.com/P1sec/hermes-dec)反编译被编译成Hermes VM bytecode的React Native framework文件。也可以直接修改汇编的字节码，保存后重新打包、签名apk即可运行修改逻辑后的apk
 - 官方wp更详细： https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Reverse
+153. [Faulty Network](https://github.com/InfoSecIITR/write-ups/blob/master/2024/vishwa-ctf-2024/rev/Faulty%20Network/Faulty_Network.md)
+- python torch神经元网络逆向。暂时还不懂AI这方面的东西，先记着吧
