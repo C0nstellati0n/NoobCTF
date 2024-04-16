@@ -3507,6 +3507,7 @@ window.recaptcha=true;
 - python里的int_parsing_size错误：当整数过大时，将其转为字符串会报错。这题的预期解正是利用这点尝试猜测出x+b中x的值（b可控），见 https://www.youtube.com/watch?v=DQ9yLCdmt-s 的介绍
 417. [Filters](../../CTF/ShaktiCTF/ShaktiCTF.md)
 - 绕过php对eval输入的过滤并执行系统命令/读文件
+- 8进制编码不仅可以用在函数名，也可以用在参数。不过有时候会报错，尝试手动关闭php tag:`?>`。参考 https://thef0rceawak5ns.github.io/shaktictf
 418. [Flaglang](https://github.com/uclaacm/lactf-archive/tree/main/2024/web/flaglang)
 - yaml中，NO可被看作是布尔值。yaml里还有很多奇怪的布尔值表示，参考 https://www.bram.us/2022/01/11/yaml-the-norway-problem/
 419. [empty execution](https://github.com/tahdjao/writeup/blob/main/braekerctf/empty_execution_en.md)
@@ -3546,3 +3547,8 @@ window.recaptcha=true;
 428. [Free Cider](https://sanlokii.eu/writeups/gcc-ctf/free-cider/)
 - swagger API platform在`/static/`（比如`/static/swagger.json`）下有api列表
 - 和重置密码相关的漏洞： https://book.hacktricks.xyz/pentesting-web/reset-password 。一般重置密码后会重定向，而某些错误的重定向实现导致攻击者可以重定向至任意网站，进而窃取重置密码的token。例如重定向时直接将目标路径拼接到Host header后，攻击者就能通过修改host header重定向至任意网站
+429. [Bottle Poem](https://notateamserver.xyz/sekaictf-writeups/#bottle-poem)
+- python bottle网站框架的cookie处理逻辑中存在pickle反序列化漏洞
+430. [Notes V1](https://teamshakti.in/CTF-Write-ups/ShaktiCTF24/web/notes_v1/)
+- python中的`yaml.load`存在反序列化漏洞
+- 在python flask（Werkzeug）中，下划线(`_`)会被看作`-`。意味着`Content_Length` header会被看作`Content-Length`。如果发两个header `Content-Length`和`Content_Length`，go-proxy只会考虑第一个`Content-Length`，而python flask会考虑第二个`Content_Length`（第一个header的值被第二个覆盖了）。借这种差异可以获取请求走私（request smuggling）

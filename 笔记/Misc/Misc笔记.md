@@ -32,7 +32,7 @@
         - VirtualAllocEx, WriteProcessMemory, GetModuleHandleA(“Kernel32”) are all very very common indicators of a DLL injection
 - [Batman Investigation II](https://blog.bi0s.in/2024/02/27/Forensics/BatmanInvestigationII-GothamUndergroundCorruption-bi0sCTF2024/)
     - 若分析memory dump时在进程列表里看见`Thunderbird.exe`（电子邮箱软件），可以用volatility3的`windows.filescan.FileScan`和`windows.dumpfiles.DumpFiles`插件提取出Inbox file，进而获取全部的conversation data
-    - KeePass password manager密码获取。首先在memory dump中找后缀为`.kdbx`的文件，然后参考这篇[文章](https://www.forensicxlab.com/posts/keepass/)，或是利用这个[工具](https://github.com/vdohney/keepass-password-dumper) （另一个版本： https://github.com/matro7sh/keepass-dump-masterkey ）就可得到密码
+    - KeePass password manager密码获取。首先在memory dump中找后缀为`.kdbx`的文件，然后参考这篇[文章](https://www.forensicxlab.com/posts/keepass/)，或是利用这个[工具](https://github.com/vdohney/keepass-password-dumper) （另一个版本： https://github.com/matro7sh/keepass-dump-masterkey ）就可得到密码。另一道有关利用CVE漏洞恢复keepass密码的题：[H4Gr1n](https://teamshakti.in/CTF-Write-ups/ShaktiCTF24/forensics/H4Gr1n/)
     - Exodus（cryptocurrency wallet）相关
         - 获取该软件的安装时间（但我觉得也可以推广到其他软件）
             1. 可用volatility2的printKey功能打印Uninstall reg entry。一般来说这个注册项的Last updated时间就是安装时间
@@ -59,6 +59,10 @@
 - [Pretty Links](https://nathan-out.github.io/write-up/pretty-links/)
     - 使用[LECmd](https://www.sans.org/tools/lecmd/)分析`.lnk`文件
     - 恶意软件分析。这点[官方wp](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Forensic/Pretty_Links)讲得更详细一点。`NisSrv.exe`被用于DLL Hijacking的载体
+- [Machiavellian](https://berliangabriel.github.io/post/shakti-ctf-2024-foren/)
+    - FTK Imager+`.ad1` image forensic
+    - `\Users\USERNAME\AppData\Roaming\Microsoft\Windows\Recent`保存着用户最近使用的文件
+    - 获取Skype聊天软件的历史纪录
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -159,6 +163,8 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
     - [Steg Cloak](https://stegcloak.surge.sh/)的解码。被Steg Cloak加密的文字会包含不可见字符
 - [Professor's Inheritance](https://github.com/RJCyber1/VishwaCTF-2024-Writeups/blob/main/Steg/Professor's%20Inheritance.md)
     - [Stegosuite](https://github.com/osde8info/stegosuite)
+- [Aqua Gaze](https://berliangabriel.github.io/post/shakti-ctf-2024-foren)
+    - [jsteg](https://github.com/lukechampine/jsteg)
 1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)。不同版本的zip加密位不一样,例如有些zip需要将第7个字节的09改成00。如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
 3.   numpy.loadtxt读取坐标文件+基本matplotlib图像绘制。例题:[梅花香之苦寒来](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Misc/%E6%A2%85%E8%8A%B1%E9%A6%99%E4%B9%8B%E8%8B%A6%E5%AF%92%E6%9D%A5.md)
@@ -1988,3 +1994,5 @@ a=A()
 - USB pcapng描绘鼠标轨迹。工具： https://github.com/WangYihang/USB-Mouse-Pcap-Visualizer
 274. [Repo Riddles](https://github.com/warlocksmurf/onlinectf-writeups/blob/main/VishwaCTF24/forensics.md)
 - github相关forensic。可用工具[GitTools](https://github.com/internetwache/GitTools)
+275. [Ocean_Enigma](https://berliangabriel.github.io/post/shakti-ctf-2024-foren/)
+- 一个很新的做法，用Gemini AI做OSINT题
