@@ -645,6 +645,10 @@ AES是很能出题的
 - [t0y-b0x](https://blog.bi0s.in/2024/03/03/RE/t0y-b0x-bi0sCTF2024/)
     - Linear Cryptanalysis (AES with linearly dependent SBOX)。相关漏洞学习参考 https://hackmd.io/@vishiswoz/r10P7knwj 和 https://kevinliu.me/posts/linear-cryptanalysis/ 。SBOX是aes中唯一非线性的运算，如果SBOX操作线性了，就能使用线性相关的攻击
     - [Cracking AES Without any one of its Operations](https://medium.com/@wrth/cracking-aes-without-any-one-of-its-operations-c42cdfc0452f)
+- [tag-series-1](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/tag-series-1)
+    - AES ECB。在key固定且可以进行query的情况下（每次query的明文不同）预测某个明文的最后一个密文块。其实很简单，因为ECB是分块加密的，只要最后一个密文块对应的明文不变即可
+- [tag-series-2](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/tag-series-2)
+    - 跟上面那题目标一样，但是是CBC
 
 ## Z3使用
 

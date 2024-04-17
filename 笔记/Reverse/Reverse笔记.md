@@ -1181,3 +1181,9 @@ finish()
 - 官方wp更详细： https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Reverse
 153. [Faulty Network](https://github.com/InfoSecIITR/write-ups/blob/master/2024/vishwa-ctf-2024/rev/Faulty%20Network/Faulty_Network.md)
 - python torch神经元网络逆向。暂时还不懂AI这方面的东西，先记着吧
+154. [UnholyEXE](https://github.com/strobor/ctf-writeups/tree/main/wolvctf2024/UnholyEXE)
+- ZealOS可执行文件ZXE逆向。ghidra无法直接反编译这类文件，需要在ghidra里手动patch（比如添加引入的外部函数的memory map等）
+- 可用virtualBox boot zealOS帮助分析；可用ImDisk挂载ZealOS的文件系统并且修改
+155. [game-graphics-debugging](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/game-graphics-debugging)
+- 通过调试程序分析程序无法运行的原因。结合一点个人经验，大部分情况都是缺失了某个dll。IDA的dubugger options里有个`Suspend on library load/unload`，能帮助找到缺失的dll/函数。找到程序要求的dll后放在程序所在的相同目录下即可
+- 有些时候flag会藏在某个线程的TLS（ThreadLocalStorage）中。这种藏flag的情况适用于那些没有输入的逆向题

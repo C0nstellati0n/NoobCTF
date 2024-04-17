@@ -1996,3 +1996,8 @@ a=A()
 - github相关forensic。可用工具[GitTools](https://github.com/internetwache/GitTools)
 275. [Ocean_Enigma](https://berliangabriel.github.io/post/shakti-ctf-2024-foren/)
 - 一个很新的做法，用Gemini AI做OSINT题
+276. [befuddled1](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/befuddled1),[befuddled2](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/befuddled2)
+- [Befunge](https://en.wikipedia.org/wiki/Befunge)语言相关挑战
+277. [made-sense](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/made-sense),[made-functional](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/made-functional),[made-harder](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/made-harder)
+- Makefile jail系列挑战。目标是获取RCE/读取文件。也有点bash jail的成分
+- 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#made-sensemade-functionalmade-hardermade-with-love
