@@ -1802,3 +1802,6 @@ try {
 183. [babybof](https://www.numb3rs.re/writeup/gccctf_babybof/)
 - Safestack保护机制下的buffer overflow。safestack机制创建了一块被隔离的内存unsafe_stack，将不安全的data放置于此。因此没法覆盖返回地址执行rop。但是在足够的溢出下还是可以覆盖canary（unsafe_stack也被canary保护），也有几率控制一些寄存器
 - [官方wp](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Pwn/baby_bof)解释得比较详细些。储存不安全数据的unsafe_stack位于tls区域的上方，且与其偏移固定。可以用TLS DTOR技巧getshell
+184. [Game, CET, Match](https://github.com/S4muii/ctf_writeups/tree/main/wolvctf24/game_cet)
+- Intel CET机制介绍。这种机制主要是为了预防ROP/JOP。checksec没法检测该机制，可用readelf：`readelf -n ./pwn| grep -a SHSTK`，还有一个特征是每个函数开头都含ENDBR64/32。在这个机制下，每次程序跳转、调用函数时，第一个语句必须是ENDBR64/32，若不是就直接退出。不过即使某个程序开启了这个机制，若其运行的机器上不支持也没用。供调试用的虚拟机： https://www.intel.com/content/www/us/en/download/684897/intel-software-development-emulator.html
+- 格式化字符串漏洞

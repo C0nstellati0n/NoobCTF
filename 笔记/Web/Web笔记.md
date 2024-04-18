@@ -3552,3 +3552,5 @@ window.recaptcha=true;
 430. [Notes V1](https://teamshakti.in/CTF-Write-ups/ShaktiCTF24/web/notes_v1/)
 - python中的`yaml.load`存在反序列化漏洞
 - 在python flask（Werkzeug）中，下划线(`_`)会被看作`-`。意味着`Content_Length` header会被看作`Content-Length`。如果发两个header `Content-Length`和`Content_Length`，go-proxy只会考虑第一个`Content-Length`，而python flask会考虑第二个`Content_Length`（第一个header的值被第二个覆盖了）。借这种差异可以获取请求走私（request smuggling）
+431. [Upload Fun](https://www.youtube.com/watch?v=o7BSS4J0mP4)
+- windows和php下的文件名最长为约256个字符。若使用php有关文件的函数（比如`move_uploaded_file`）时参数的文件名超过了上限，php会给出warning，连带泄漏出问题行的代码（函数）和参数

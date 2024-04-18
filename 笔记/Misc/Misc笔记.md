@@ -2001,3 +2001,5 @@ a=A()
 277. [made-sense](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/made-sense),[made-functional](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/made-functional),[made-harder](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/made-harder)
 - Makefile jail系列挑战。目标是获取RCE/读取文件。也有点bash jail的成分
 - 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#made-sensemade-functionalmade-hardermade-with-love
+278. [UnholyFile](https://ctf.krauq.com/wolvctf-2024#unholyfile-10-solves)
+- raw image data的最简单header是PPM/PGM。不得不说wp作者对这种图片数据文件真的太敏感了，甚至能根据文件大小猜出来大概是个怎么样的图片，图片长和宽是什么
