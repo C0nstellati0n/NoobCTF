@@ -18,6 +18,10 @@
 - [Penguin-Login](https://dothidden.xyz/la_ctf_2024/penguin-login/)
     - 仅能使用`a-zA-Z0-9{_}`且不能使用LIKE和注释符的PostgreSQL盲注。LIKE的功能可以用BETWEEN代替
     - 其他wp（做法）： https://siunam321.github.io/ctf/LA-CTF-2024/web/penguin-login/ ，用`SIMILAR TO`和正则匹配代替LIKE。但是注意`{x}`在正则里表示匹配前一个字符x次，匹配带有`{}`的flag时可以去掉flag格式再匹配
+- [Order Up 1](https://github.com/sambrow/my_ctf_challenges/tree/main/wolvsec_ctf_2024/order-up)
+    - postgres sql布尔盲注。注入点发生在order字段处
+    - 如何判断服务器使用的数据库
+    - postgres里有个函数`current_query`，返回当前的查询语句
 
 ## XSS
 
@@ -3552,5 +3556,7 @@ window.recaptcha=true;
 430. [Notes V1](https://teamshakti.in/CTF-Write-ups/ShaktiCTF24/web/notes_v1/)
 - python中的`yaml.load`存在反序列化漏洞
 - 在python flask（Werkzeug）中，下划线(`_`)会被看作`-`。意味着`Content_Length` header会被看作`Content-Length`。如果发两个header `Content-Length`和`Content_Length`，go-proxy只会考虑第一个`Content-Length`，而python flask会考虑第二个`Content_Length`（第一个header的值被第二个覆盖了）。借这种差异可以获取请求走私（request smuggling）
-431. [Upload Fun](https://www.youtube.com/watch?v=o7BSS4J0mP4)
-- windows和php下的文件名最长为约256个字符。若使用php有关文件的函数（比如`move_uploaded_file`）时参数的文件名超过了上限，php会给出warning，连带泄漏出问题行的代码（函数）和参数
+431. [Upload fun](https://laxiisteam.blogspot.com/2024/03/and-i-tried-my-best.html)
+- windows和php下的文件名最长为约256个字符。若使用php有关文件的函数（比如move_uploaded_file）时参数的文件名超过了上限，php会给出warning。若没有`@error_reporting(1)`，会连带泄漏出问题行的代码（函数）和参数
+432. [Username](https://laxiisteam.blogspot.com/2024/03/and-i-tried-my-best.html)
+- XXE漏洞。大部分payload去 https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection 找即可，这里补充一个没见过的：`<xi:include xmlns:xi=\"http://www.w3.org/2001/XInclude\" parse=\"text\" href=\"file://flag\"/>`，适用于XML entities被ban了的情况，算XInclude attacks

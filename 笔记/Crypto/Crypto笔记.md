@@ -648,7 +648,7 @@ AES是很能出题的
 - [tag-series-1](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/tag-series-1)
     - AES ECB。在key固定且可以进行query的情况下（每次query的明文不同）预测某个明文的最后一个密文块。其实很简单，因为ECB是分块加密的，只要最后一个密文块对应的明文不变即可
 - [tag-series-2](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/tag-series-2)
-    - 跟上面那题目标一样，但是是CBC
+    - 跟上面那题目标一样，但是是CBC。更详细的解析： https://docs.google.com/presentation/d/1FfM7ZblrqmNklG5NX9T5UyTDdEb5h1BRZTtwNrm_-mQ
 
 ## Z3使用
 

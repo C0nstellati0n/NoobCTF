@@ -1997,9 +1997,9 @@ a=A()
 275. [Ocean_Enigma](https://berliangabriel.github.io/post/shakti-ctf-2024-foren/)
 - 一个很新的做法，用Gemini AI做OSINT题
 276. [befuddled1](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/befuddled1),[befuddled2](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/befuddled2)
-- [Befunge](https://en.wikipedia.org/wiki/Befunge)语言相关挑战
+- [Befunge](https://en.wikipedia.org/wiki/Befunge)语言相关挑战。官方解法： https://github.com/WolvSec/WolvCTF-2024-Challenges-Public/tree/master/misc
 277. [made-sense](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/made-sense),[made-functional](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/made-functional),[made-harder](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/made-harder)
-- Makefile jail系列挑战。目标是获取RCE/读取文件。也有点bash jail的成分
+- Makefile jail系列挑战。目标是获取RCE/读取文件。也有点bash jail的成分。官方解法： https://github.com/WolvSec/WolvCTF-2024-Challenges-Public/tree/master/misc 。解法中用到的一些变量： https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
 - 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#made-sensemade-functionalmade-hardermade-with-love
 278. [UnholyFile](https://ctf.krauq.com/wolvctf-2024#unholyfile-10-solves)
 - raw image data的最简单header是PPM/PGM。不得不说wp作者对这种图片数据文件真的太敏感了，甚至能根据文件大小猜出来大概是个怎么样的图片，图片长和宽是什么

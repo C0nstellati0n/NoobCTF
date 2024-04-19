@@ -1000,6 +1000,9 @@ main()
 - [doubledelete's revenge](https://github.com/macenb/WriteUps/tree/main/WolvCTF_2024/doubledelete)
     - rol的python逆向实现（ror）。以及z3逆向rol的做法: https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#doubledeletes-revenge
     - 另一种无z3实现方式（更加具有普遍性）： https://ctf.krauq.com/wolvctf-2024#doubledeletes-revenge-105-solves
+- [Palworld](https://ctf.krauq.com/wolvctf-2024#palworld-2-solves)
+    - PLD file(defining digital logic)逆向
+    - 使用z3+symbolic execution engine for circuit logic的解法： https://github.com/kjcolley7/CTF-WriteUps/tree/master/2024/wolvctf/palworld
 115. [Conquest of Camelot](https://black-frost.github.io/posts/sekai2023/)
 - OCaml语言binary逆向。这种语言的函数调用约定比较奇怪，ida可能无法生成伪代码。另外，这种语言对数组的操作会自动添加大量的bound checking，函数体会看起来很复杂但逻辑可能很简单
 - 參考 https://mcfx.us/posts/2023-09-01-sekaictf-2023-writeup/#conquest-of-camelot ，（ida里）calling convection应该为`__int64 __usercall func<rax>(__int64 arg0@<rax>, __int64 arg1@<rax>, __int64 arg2@<rdi>)`
@@ -1190,5 +1193,4 @@ finish()
 155. [game-graphics-debugging](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/game-graphics-debugging)
 - 通过调试程序分析程序无法运行的原因。结合一点个人经验，大部分情况都是缺失了某个dll。IDA的dubugger options里有个`Suspend on library load/unload`，能帮助找到缺失的dll/函数。找到程序要求的dll后放在程序所在的相同目录下即可
 - 有些时候flag会藏在某个线程的TLS（ThreadLocalStorage）中。这种藏flag的情况适用于那些没有输入的逆向题
-156. [Palworld](https://ctf.krauq.com/wolvctf-2024#palworld-2-solves)
-- PLD file(defining digital logic)逆向
+- 官方的视频解法： https://github.com/WolvSec/WolvCTF-2024-Challenges-Public/tree/master/rev/graphics ，使用不同GPU debuggers
