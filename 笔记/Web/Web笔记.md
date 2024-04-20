@@ -589,7 +589,7 @@ Content-Disposition: form-data; name="submit"
 
 48.  [linux proc/pid/信息说明](https://blog.csdn.net/shenhuxi_yu/article/details/79697792)。/proc/self/cmdline可以读取当前进程执行的命令，如果是python的网站可以借此读取到网站的文件名。linux中如果打开了一个文件且没有关闭的话，`/proc/pid/fd/文件描述符`  这个目录会包含了进程打开的每一个文件，比如/proc/pid/fd/3读取第一个打开的文件。在python里使用open打开的只要不close，都能猜文件描述符而读取到。例题:[[网鼎杯 2020 白虎组]PicDown](https://blog.csdn.net/wuyaowangchuan/article/details/114540227)
 49. perl GET命令执行漏洞。例题:[[HITCON 2017]SSRFme](../../CTF/BUUCTF/Web/[HITCON%202017]SSRFme.md)
-50. jwt可以通过将alg修改为none来实现无加密伪造。需要使用PyJWT第三方库。例题:[[HFCTF2020]EasyLogin](https://blog.csdn.net/qq_25500649/article/details/118597363)
+50. jwt可以通过将alg修改为none来实现无加密伪造。需要使用PyJWT第三方库。例题:[[HFCTF2020]EasyLogin](https://blog.csdn.net/qq_25500649/article/details/118597363)。也可以参考[you-can-trust-me](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/you-can-trust-me.md)，使用[jwt_tool](https://github.com/ticarpi/jwt_tool)
 51. [koa框架结构](https://www.cnblogs.com/wangjiahui/p/12660093.html)。
 52. 无列名注入+布尔盲注。例题:[[GYCTF2020]Ezsqli](https://blog.csdn.net/qq_45521281/article/details/106647880)(里面最后一道例题)
 53. sql多行二次注入+git目录泄漏+.DS_Store泄露。例题:[comment](../../CTF/攻防世界/7级/Web/comment.md)
@@ -3560,3 +3560,10 @@ window.recaptcha=true;
 - windows和php下的文件名最长为约256个字符。若使用php有关文件的函数（比如move_uploaded_file）时参数的文件名超过了上限，php会给出warning。若没有`@error_reporting(1)`，会连带泄漏出问题行的代码（函数）和参数
 432. [Username](https://laxiisteam.blogspot.com/2024/03/and-i-tried-my-best.html)
 - XXE漏洞。大部分payload去 https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection 找即可，这里补充一个没见过的：`<xi:include xmlns:xi=\"http://www.w3.org/2001/XInclude\" parse=\"text\" href=\"file://flag\"/>`，适用于XML entities被ban了的情况，算XInclude attacks
+433. [profile-pic](https://hackmd.io/@abdinata/UNbreakable-ICTF-2024#profile-pic)
+- librsvg [CVE-2023-38633](https://www.canva.dev/blog/engineering/when-url-parsers-disagree-cve-2023-38633/)路径穿越+本地文件读取漏洞
+444. [pygment](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/pygment.md)
+- pygmentize[命令注入漏洞](https://github.com/dedalozzo/pygmentize/issues/1)。个人当时做这道题的时候也搜到了这个漏洞，但发现issue里的poc没法直接用，便自己改了一下：`;ls||`。成功执行，但是忘记看网页源代码了，遂错失flag……
+445. [sided-curl](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/sided-curl.md)
+- 利用http authentication机制实现SSRF。相关链接： https://bugs.xdavidhu.me/google/2021/12/31/fixing-the-unfixable-story-of-a-google-cloud-ssrf/
+- 简写localhost。除了`127.0.0.1:8000`,还有`0:8000`

@@ -1194,3 +1194,5 @@ finish()
 - 通过调试程序分析程序无法运行的原因。结合一点个人经验，大部分情况都是缺失了某个dll。IDA的dubugger options里有个`Suspend on library load/unload`，能帮助找到缺失的dll/函数。找到程序要求的dll后放在程序所在的相同目录下即可
 - 有些时候flag会藏在某个线程的TLS（ThreadLocalStorage）中。这种藏flag的情况适用于那些没有输入的逆向题
 - 官方的视频解法： https://github.com/WolvSec/WolvCTF-2024-Challenges-Public/tree/master/rev/graphics ，使用不同GPU debuggers
+156. [flagen](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/flagen.md)
+- 使用apk[在线模拟器](https://appetize.io/)动态分析apk

@@ -1,6 +1,14 @@
 # Misc笔记
 
-# Digital Forensics and Incident Response(DFIR)
+## Linux privilege escalation（提权）
+
+之前曾经把这类题分到过pwn里，想了想感觉做这种题包含的东西很综合，不如放misc（说实话这才是我心目中的misc分类，包罗万象，单独放在哪个分类里都感觉不足；而不是一些奇怪的guessy题）
+
+- [privilege-not-included](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/privilege-not-included.md)
+    - 无权限机器使用python安装[pspy](https://github.com/DominicBreuker/pspy)监控进程
+    - 利用python module/library hijacking提权。其实就是在root运行某个python文件时将里面的某个库替换成其他代码，就能以root身份执行命令
+
+## Digital Forensics and Incident Response(DFIR)
 
 开个新的分类，用于存储这个困扰我很久的题目类型:(。顺便把disk，mem类型的forensic题也放这
 - https://github.com/slaee/ret-CTF-writeups/tree/main/2024/bitsCTF/DFIR
@@ -165,6 +173,8 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
     - [Stegosuite](https://github.com/osde8info/stegosuite)
 - [Aqua Gaze](https://berliangabriel.github.io/post/shakti-ctf-2024-foren)
     - [jsteg](https://github.com/lukechampine/jsteg)
+- [secrets-of-winter](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/secrets-of-winter.md)
+    - [StegoVeritas](https://github.com/bannsec/stegoVeritas)
 1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)。不同版本的zip加密位不一样,例如有些zip需要将第7个字节的09改成00。如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
 3.   numpy.loadtxt读取坐标文件+基本matplotlib图像绘制。例题:[梅花香之苦寒来](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Misc/%E6%A2%85%E8%8A%B1%E9%A6%99%E4%B9%8B%E8%8B%A6%E5%AF%92%E6%9D%A5.md)
@@ -1684,6 +1694,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - 利用eval不超过4个字符的payload获取rce。假如不能使用\`号，需要进行一系列复杂的变量赋值来实现
 176. [WPA](https://github.com/ArmanHZ/ctf-writeups/tree/master/Patriot_CTF_2023#wpa)
 - wpa2 handshake pcap分析。参考 https://book.hacktricks.xyz/generic-methodologies-and-resources/basic-forensic-methodology/pcap-inspection/wifi-pcap-analysis ，可用aircrack-ng爆破密码（`sudo apt-get install -y aircrack-ng`）
+- 参考[wifibasic](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/wifibasic.md),特征是包含EAPOL handshake，也可获取ESSID（SSID）和BSSID/MAC。获取密码后参考[wifiland](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/wifiland.md)解码流量包
 177. [Secret Wall Code](https://github.com/MasonCompetitiveCyber/PatriotCTF2023/tree/main/Crypto/Secret%20Wall%20Code)
 - FNAF wall code. 形如小旗子。discord里有人发了对照图： https://discord.com/channels/958195827933855854/970069048706613258/1150551861376598037
 178. [Evil Monkey 1](https://gist.github.com/kna27/0273b50f5e43e0a8c3d450fd574e5c4b)
@@ -2003,3 +2014,5 @@ a=A()
 - 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#made-sensemade-functionalmade-hardermade-with-love
 278. [UnholyFile](https://ctf.krauq.com/wolvctf-2024#unholyfile-10-solves)
 - raw image data的最简单header是PPM/PGM。不得不说wp作者对这种图片数据文件真的太敏感了，甚至能根据文件大小猜出来大概是个怎么样的图片，图片长和宽是什么
+279. [something-happened](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/something-happened.md)
+- Elastic Kibana日志分析
