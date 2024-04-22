@@ -1805,3 +1805,7 @@ try {
 184. [Game, CET, Match](https://github.com/S4muii/ctf_writeups/tree/main/wolvctf24/game_cet)
 - Intel CET机制介绍。这种机制主要是为了预防ROP/JOP。checksec没法检测该机制，可用readelf：`readelf -n ./pwn| grep -a SHSTK`，还有一个特征是每个函数开头都含ENDBR64/32。在这个机制下，每次程序跳转、调用函数时，第一个语句必须是ENDBR64/32，若不是就直接退出。不过即使某个程序开启了这个机制，若其运行的机器上不支持也没用。供调试用的虚拟机： https://www.intel.com/content/www/us/en/download/684897/intel-software-development-emulator.html
 - 格式化字符串漏洞
+185. [strground](https://ctftime.org/writeup/38871)
+- libc 2.30 double free+UAF leak，但tcache被禁用，且能分配的chunk最大为0x58。wp里提到了针对`__malloc_hook`的misaligned allocation，我已经忘了misaligned allocation是啥了，搜也没搜到……后面从wp里配的图和代码才慢慢恢复记忆。说欺骗分配器将某块我们需要的内存作为chunk分配给我们时，需要保证那块内存处有合格的size字段。很多时候`__malloc_hook`前面的内存处存储着一些地址，比如`0x0000565555603080`，这时就能稍微错位一下，构造出`0x5555603080000000	    0x0000000000000056`，这样这块内存就包含着一个有效的size（0x56）了。另外需要注意的是，针对`__malloc_hook`的misaligned allocation需要能分配大小为0x70的chunk，所以这题不能用
+- free heap上的fastbin堆块后，分配器会将这个chunk的地址放到main_arena里。如果是像这道题一样最大只能分配0x58的chunk，可以考虑在这个地址处使用misaligned allocation。这块内存下面的一点记录了top chunk的指针。如果某块内存有着有效的top chunk size，就能把指针覆盖成这处地址，接下来malloc chunk即可获得这块内存（wp里没讲，我看着 https://blog.wjhwjhn.com/posts/starctf2021-writeup/#%E5%88%A9%E7%94%A8%E5%88%86%E6%9E%90 脑补的）。`__malloc_hook-0x23`是一个很好的攻击对象。很多时候由于ASLR，无法用misaligned allocation获取有效的size字段。因此脚本可能无法获取100%的成功率
+- 其他wp： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#strground
