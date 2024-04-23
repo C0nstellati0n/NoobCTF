@@ -417,7 +417,7 @@ print(long_to_bytes(m))
   ```py
     from Crypto.Util.number import *
     import math
-
+  
     # Given
     p = 892582974910679288224965877067
     q = 809674535888980601722190167357
@@ -426,14 +426,14 @@ print(long_to_bytes(m))
     d = pow(e, -1, math.lcm(p-1, q-1))
     c = 36750775360709769054416477187492778112181529855266342655304
     newm = pow(c, d, n)
-
+  
     flag_len = 35   # Figured out experimentally lol
-
+  
     minimum_byte_string = b'bcactf{' + b',' * (flag_len - 6)
-
+  
     multiple = bytes_to_long(minimum_byte_string) // n              # Minimum multiple of N added to get `bcactf{`
     while (newm + n * multiple) & 0xFF != ord("}"): multiple += 1      # Increment until it will end with `}`
-
+  
     start = multiple    # Minimum multiple of N starting with `bcactf{` and ending with `}`
     end = 2 ** 100      # Really big number that doesn't matter
     step = 256          # 256 is coprime to N, so v + i * N (mod 256) has a period of 256
@@ -442,11 +442,11 @@ print(long_to_bytes(m))
     for i in range(start, end, 256):
         # Test byte string
         byte_str = long_to_bytes(newm + n * i)
-
+    
         # Stop once we're past the `bcactf{` part
         if not byte_str.startswith(b'bcactf{'):
             break
-
+    
         # If the whole byte string is in-flag-range ASCII, print and exit
         if all(0x2C < byte < 0x7f for byte in byte_str):
             print(byte_str)
@@ -2038,22 +2038,22 @@ ans = r_float(nn1, nn2) * (2**32 - 1)
     from Cryptodome.Util.number import *
     ct=
     pubk=
-
+  
     def rotate(l):
         return [l[-1]]+l[:-1]
-
+  
     # one of the papers describing the attack (there are many), "Bi, Jingguo, Xianmeng Meng, and Lidong Han. "Cryptanalysis of two knapsack public-key cryptosystems." Cryptology ePrint Archive (2009)."
-
+  
     base = [1]+[0]*179
     M=[]
     N=15 # >sqrt(180)，大于公钥长度平方根
-
+  
     # creating lattice matrix
     for i in range(180):
         M.append(base+[N*pubk[i]])
         base=rotate(base)
     M.append([0.5]*180+[N*ct])
-
+  
     B=matrix(QQ,M).LLL()
     for row in B:
         if all(abs(k) == 0.5 for k in row[:-1]):
@@ -2482,3 +2482,5 @@ c2=encrypt(k2,c1)
 - zero-knowledge proof:zk-snarks。不过这题其实和零知识证明没啥关系，主要还是利用离散对数和多项式解出目标
 137. [SuperAES](https://s1lver-lining.github.io/wu/gcc2024/superaes/)
 - 若LCG的模数m不是质数，在几轮迭代后，输出会固定为一个数。具体分析见wp
+
+138. [.png.encrypto](https://www.t00ls.com/articles-49265.html)
