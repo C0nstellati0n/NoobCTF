@@ -1196,3 +1196,5 @@ finish()
 - 官方的视频解法： https://github.com/WolvSec/WolvCTF-2024-Challenges-Public/tree/master/rev/graphics ，使用不同GPU debuggers
 156. [flagen](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/flagen.md)
 - 使用apk[在线模拟器](https://appetize.io/)动态分析apk
+157. [the-heist-1](https://cyberghost13337.github.io/2024/03/24/JerseyCTF-2024.html#the-heist-1)
+- rol的python实现

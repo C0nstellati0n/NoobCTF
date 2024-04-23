@@ -637,6 +637,8 @@ for i in range(1,e):
     - 如何构造anomalous curve（方便利用smart攻击求离散对数）。除了wp里的脚本，还可以用： https://github.com/jvdsn/crypto-attacks/blob/master/shared/ecc.py#L62
     - 椭圆曲线上的knapsack问题。如果可以获取足够数量的方程，如加密二进制长度为107的字符串，获取107个不同的knapsack方程就能将其转为线性方程组求解。这题还多了个将曲线上的点转为线性方程的步骤，已经在budget bag里解释过
     - [官方wp](https://www.xorminds.com/posts/2024/elliptic/)使用了格来解knapsack问题。128 bits的curve所组成的格过于dense，无法用LLL解出，需要用更大的质数，如768 bits
+- [mutant-mayhem](https://meashiri.github.io/ctf-writeups/posts/202403-jerseyctf/#mutant-mayhem)
+    - ECDSA的python简单实现
 
 ## AES
 

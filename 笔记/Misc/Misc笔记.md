@@ -71,6 +71,11 @@
     - FTK Imager+`.ad1` image forensic
     - `\Users\USERNAME\AppData\Roaming\Microsoft\Windows\Recent`保存着用户最近使用的文件
     - 获取Skype聊天软件的历史纪录
+- [rescue-mission](https://warlocksmurf.github.io/posts/jerseyctf2024/#rescue-mission-forensics)
+    - 使用FTK Imager分析VDI文件。不过有时候FTK Imager会因为某个文件（如png图片）损坏而无法显示，这时可以考虑用7zip查看那个损坏的文件（也不懂什么原理）
+- [sticky-situation](https://warlocksmurf.github.io/posts/jerseyctf2024/#sticky-situation-forensics)
+    - FTK Imager+AD1文件
+    - windows [Sticky Notes artifact forensic](https://forensafe.com/blogs/stickynotes.html)
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -2016,3 +2021,15 @@ a=A()
 - raw image data的最简单header是PPM/PGM。不得不说wp作者对这种图片数据文件真的太敏感了，甚至能根据文件大小猜出来大概是个怎么样的图片，图片长和宽是什么
 279. [something-happened](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/something-happened.md)
 - Elastic Kibana日志分析
+280. [insecure-creds](https://warlocksmurf.github.io/posts/jerseyctf2024/#insecure-creds-forensics)
+- 使用PyPyKatz（或mimikatz）破解DMP文件（Mini DuMP crash report）密码。相关链接： https://www.whiteoaksecurity.com/blog/attacks-defenses-dumping-lsass-no-mimikatz/ ， https://05t3.github.io/posts/DCTF/
+281. [netrunner-detected](https://github.com/0xdeis/writeups/blob/main/JerseyCTF-IV/netrunner-detected.md)
+- 分析nmap攻击流量包。如果一个packet同时设置了FIN, PSH, 和 URG bit，极有可能是[Xmas attack](https://nmap.org/book/scan-methods-null-fin-xmas-scan.html)
+282. [p1ng-p0ng](https://meashiri.github.io/ctf-writeups/posts/202403-jerseyctf/#p1ng-p0ng)
+- 使用nping自定义ICMP发送的内容
+283. [wi-will-wi-will…](https://meashiri.github.io/ctf-writeups/posts/202403-jerseyctf/#wi-will-wi-will)
+- 可以用pcap2john将pcap转为john the ripper可以爆破的hash形式。这题使用john寻找某个SSID网络对应的WPA密码
+284. [Crack-a-Mateo](https://meashiri.github.io/ctf-writeups/posts/202403-jerseyctf/#crack-a-mateo)
+- 使用[CUPP](https://github.com/Mebus/cupp)构造社会工程学（social engineering）密码字典
+285. [Hashcraft](https://meashiri.github.io/ctf-writeups/posts/202403-jerseyctf/#hashcraft)
+- 使用hashcat [OneRuleToRuleThemAll](https://github.com/NotSoSecure/password_cracking_rules)规则生成密码字典
