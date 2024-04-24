@@ -3567,3 +3567,5 @@ window.recaptcha=true;
 445. [sided-curl](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/sided-curl.md)
 - 利用http authentication机制实现SSRF。相关链接： https://bugs.xdavidhu.me/google/2021/12/31/fixing-the-unfixable-story-of-a-google-cloud-ssrf/
 - 简写localhost。除了`127.0.0.1:8000`,还有`0:8000`
+446. [require-all-denied](https://ayusshh.medium.com/jersey-ctf-require-all-denied-web-2d49e07ab33f)
+- Apache 2.4.49 path traversal（路径穿越） & RCE 漏洞: https://blog.qualys.com/vulnerabilities-threat-research/2021/10/27/apache-http-server-path-traversal-remote-code-execution-cve-2021-41773-cve-2021-42013

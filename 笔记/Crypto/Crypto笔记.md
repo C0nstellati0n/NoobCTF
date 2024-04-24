@@ -639,6 +639,7 @@ for i in range(1,e):
     - [官方wp](https://www.xorminds.com/posts/2024/elliptic/)使用了格来解knapsack问题。128 bits的curve所组成的格过于dense，无法用LLL解出，需要用更大的质数，如768 bits
 - [mutant-mayhem](https://meashiri.github.io/ctf-writeups/posts/202403-jerseyctf/#mutant-mayhem)
     - ECDSA的python简单实现
+    - sagemath实现： https://nightxade.github.io/ctf-writeups/writeups/2024/Jersey-CTF-IV-2024/crypto/mutant-mayhem.html
 
 ## AES
 
@@ -2482,5 +2483,5 @@ c2=encrypt(k2,c1)
 - zero-knowledge proof:zk-snarks。不过这题其实和零知识证明没啥关系，主要还是利用离散对数和多项式解出目标
 137. [SuperAES](https://s1lver-lining.github.io/wu/gcc2024/superaes/)
 - 若LCG的模数m不是质数，在几轮迭代后，输出会固定为一个数。具体分析见wp
-
-138. [.png.encrypto](https://www.t00ls.com/articles-49265.html)
+138. [.png.encrypto](../../CTF/PaluCTF/Writeup.md)
+- LFSR已知明文攻击
