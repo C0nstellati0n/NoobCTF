@@ -539,6 +539,9 @@ for i in range(1,e):
     - 也是一道RSA partial key leak+multivariate-coppersmith的题目。不过这题泄露的是dp的低位（ $dp\mod 2^{892}$ ，比赛的时候压根没看出来是泄露低位……看见题还没分析就觉得太难，直接跑了）
     - 在分解n后，还需要利用binomial_dlog在合数n上求离散对数（实现参考同wp里的rr题）
     - 和这题与上一题相关的论文:[Some Applications of Lattice Based Root Finding Techniques](https://eprint.iacr.org/2010/146),[New Results for Partial Key Exposure on RSA with Exponent Blinding](https://www.scitepress.org/papers/2015/55717/55717.pdf)
+- [rsa_oracle](https://github.com/PetePriority/picoctf-2024/tree/main/cryptography/rsa_oracle)
+    - chosen plaintext/ciphertext attack。这题是个rsa oracle，允许加密和解密除flag外的明文/密文。wp作者参考了 https://crypto.stackexchange.com/questions/2323/how-does-a-chosen-plaintext-attack-on-rsa-work/2331#2331 ，个人写的时候参考了 https://ctf-wiki.mahaloz.re/crypto/asymmetric/rsa/rsa_chosen_plain_cipher/
+    - 脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#rsa_oracle
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
@@ -586,6 +589,9 @@ for i in range(1,e):
     - 其他解法: [Discrete logarithm modulo powers of a small prime](https://math.stackexchange.com/questions/1863037/discrete-logarithm-modulo-powers-of-a-small-prime), Using p-adic Ring in sage to compute discrete logarithm
 - [Too Many Leaks](https://connor-mccartney.github.io/cryptography/diffie-hellman/Too-Many-Leaks-GCC-CTF-2024)
     - bivariate coppersmith求解方程。其实不仅能用于RSA，只要是在有限域下，两个变量的方程都能解（但估计和单变量coppersmith一样，有要求解的变量的大小的限制）。不过这题应用coppersmith的情况还是那种经典的leak n个bits的题，应该还有其他情况能用吧？只要找到线性关系就行
+- [flag_printer](https://github.com/PetePriority/picoctf-2024/tree/main/cryptography/flag_printer)
+    - 寻找一个多项式 $p(x)=a_0+a_1x+...+a_nx^n$ ，使得 $p(x_i)=y_i$ 。 $x_i$ 和 $y_i$ 都已知，相当于找多项式的系数 $a_i$ 。写成矩阵就是找Ap=y的p。这种线性方程组可以用polynomial interpolation相关算法（比如Lagrange）加速，但更快的做法参考 https://mathoverflow.net/questions/408666/fastest-implementation-of-polynomial-interpolation/458091#458091 ，思路是FFT+divide and conquer
+    - 这题最快的解法可能是flintlib的[nmod_poly_interpolate_nmod_vec_fast](https://flintlib.org/doc/nmod_poly.html#c.nmod_poly_interpolate_nmod_vec_fast)。sagemath实现见 https://github.com/PetePriority/picoctf-2024/blob/main/cryptography/flag_printer/solve_fast.ipynb （Fast interpolation algorithm）
 
 ## Lattice(格)
 

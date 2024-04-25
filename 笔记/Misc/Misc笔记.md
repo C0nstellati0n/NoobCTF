@@ -76,6 +76,8 @@
 - [sticky-situation](https://warlocksmurf.github.io/posts/jerseyctf2024/#sticky-situation-forensics)
     - FTK Imager+AD1文件
     - windows [Sticky Notes artifact forensic](https://forensafe.com/blogs/stickynotes.html)
+- [Dear Diary](https://infosecwriteups.com/picoctf-2024-write-up-forensics-c471e79e6af9)
+    - The Sleuth Kit分析 disk image。这题其实就是个grep题，但是我不知道TSK的icat可以cat某个partition的sector……而且也没想到这题grep的东西不是flag，而是些别的东西。本来想用Autopsy的，结果虚拟机一运行这个软件就崩，心态爆炸……
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -2033,3 +2035,9 @@ a=A()
 - 使用[CUPP](https://github.com/Mebus/cupp)构造社会工程学（social engineering）密码字典
 285. [Hashcraft](https://meashiri.github.io/ctf-writeups/posts/202403-jerseyctf/#hashcraft)
 - 使用hashcat [OneRuleToRuleThemAll](https://github.com/NotSoSecure/password_cracking_rules)规则生成密码字典
+286. [Blast from the past](https://infosecwriteups.com/picoctf-2024-write-up-forensics-c471e79e6af9)
+- 使用exiftool修改时间相关metadata
+- samsung的专属timestamp，exiftool只能读，不能改。不过可以用命令`exiftool -a -G1 -s ctf.jpg`或者 https://exif.tuchong.com/ 查看timestamp的日期表示形式，然后去 https://timestamp.online/ 将其转换为timestamp，最后在16进制编辑器搜索这个timestamp即可。个人发现图片末尾位置的`Image_UTC_Data`字样后的13个字节即为timestamp，除了最后一个改为1，其余都改为0（注意这个0和1是字符的0和1）即可得到`1970:01:01 00:00:00.001+00:00`
+287. [SansAlpha](https://github.com/PetePriority/picoctf-2024/tree/main/general_skills/SansAlpha)
+- bash无字母jail。思路是利用redirect或者特殊变量保存bash的报错信息，就能从报错信息里提取字母，组成要执行的命令
+- 个人做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#sansalpha

@@ -1198,3 +1198,6 @@ finish()
 - 使用apk[在线模拟器](https://appetize.io/)动态分析apk
 157. [the-heist-1](https://cyberghost13337.github.io/2024/03/24/JerseyCTF-2024.html#the-heist-1)
 - rol的python实现
+158. [WeirdSnake](https://hackmd.io/@tahaafarooq/picoctf-2024-reverse-engineering#WeirdSnake-300-Points)
+- python bytecode逆向。可以用`dis.dis(function_name)`查看某个函数的bytecode。对于同一段代码，不同版本的python会给出不同的bytecode。一定要注意用`dis.dis`边逆向边比对目标，你以为的代码不一定是你以为的
+- 另外个人做题时发现反编译时似乎有点“联系上下文”的意思。比如一个代码片段里调用了FOR_ITER，但是前面却没有GET_ITER。然后找到调用这个函数的代码段，发现GET_ITER在调用函数前的代码段里（如果不追究语法的话，以后看到GET_ITER就遍历即可）
