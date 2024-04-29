@@ -3571,3 +3571,4 @@ window.recaptcha=true;
 - Apache 2.4.49 path traversal（路径穿越） & RCE 漏洞: https://blog.qualys.com/vulnerabilities-threat-research/2021/10/27/apache-http-server-path-traversal-remote-code-execution-cve-2021-41773-cve-2021-42013
 447. [No Sql Injection](https://infosecwriteups.com/picoctf-2024-write-up-web-992348f48b99#4e8e)
 - MongoDB noSQL注入。要求在给定用户名但不知道其密码的情况下绕过登录
+- 也可以用`{"$gt":""}`

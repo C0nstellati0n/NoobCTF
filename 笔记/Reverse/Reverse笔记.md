@@ -899,6 +899,8 @@ print(ops_list)
     ```
 - [icancount](https://guyinatuxedo.github.io/13-angr/plaid19_icancount/index.html)
   - PIE下的angr模拟
+- [Classic Crackme 0x100](https://anugrahn1.github.io/pico2024#classic-crackme-0x100-300-pts)
+  - 主要是没想到什么都不用设置的情况下angr还能跑
 100. qiling框架调试。使用[qdb](https://github.com/ucgJhe/Qdb): https://docs.qiling.io/en/latest/qdb/
 101. [🏴❓🇨🇹🇫](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/%F0%9F%8F%B4%E2%9D%93%F0%9F%87%A8%F0%9F%87%B9%F0%9F%87%AB),[wp](https://wiki.cve.gay/en/Writeups/amateursCTF2023/emojis)
 - [emojicode](https://www.emojicode.org/docs/)逆向

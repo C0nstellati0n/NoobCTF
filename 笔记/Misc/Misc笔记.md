@@ -20,7 +20,7 @@
     - [Google Drive forensics](https://amgedwageh.medium.com/drivefs-sleuth-investigating-google-drive-file-streams-disk-artifacts-0b5ea637c980)：可用[DriveFS Sleuth](https://github.com/AmgdGocha/DriveFS-Sleuth)处理Google Drive File Stream disk artifacts，并辨认已删除的文件
     - AnyDesk（帮助远程控制计算机的软件）软件所在目录以及[AnyDesk forensics](https://medium.com/@tylerbrozek/anydesk-forensics-anydesk-log-analysis-b77ea37b90f1)。成功的AnyDesk连接存储于ad.trace日志文件。只需在文件内搜索incoming即可获取连接的详情（时间，user id）
     - 已删除的可执行文件的详细信息（如运行时间）可在prefetch文件中找到
-    - 重置windows密码的安全问题的答案和内容可在SAM hive的ResetData entry中找到，或`ROOT\SAM\Domains\Account\Users`
+    - 重置windows密码的安全问题的答案和内容可在SAM hive的ResetData entry中找到，或`ROOT\SAM\Domains\Account\Users` ， https://anugrahn1.github.io/pico2024#dear-diary-400-pts 使用Autopsy
     - [Clipboard Forensics](https://www.inversecos.com/2022/05/how-to-perform-clipboard-forensics.html):获取剪贴板的信息以及复制内容时的时间。位于ActivitiesCache.db文件
     - 其他wp： 
         - https://seall.dev/posts/verbotenbi0sctf2024
@@ -2039,8 +2039,11 @@ a=A()
 286. [Blast from the past](https://infosecwriteups.com/picoctf-2024-write-up-forensics-c471e79e6af9)
 - 使用exiftool修改时间相关metadata
 - samsung的专属timestamp，exiftool只能读，不能改。不过可以用命令`exiftool -a -G1 -s ctf.jpg`或者 https://exif.tuchong.com/ 查看timestamp的日期表示形式，然后去 https://timestamp.online/ 将其转换为timestamp，最后在16进制编辑器搜索这个timestamp即可。个人发现图片末尾位置的`Image_UTC_Data`字样后的13个字节即为timestamp，除了最后一个改为1，其余都改为0（注意这个0和1是字符的0和1）即可得到`1970:01:01 00:00:00.001+00:00`
+- 更详细的做法参考 https://anugrahn1.github.io/pico2024#blast-from-the-past-300-pts
 287. [SansAlpha](https://github.com/PetePriority/picoctf-2024/tree/main/general_skills/SansAlpha)
 - bash无字母jail。思路是利用redirect或者特殊变量保存bash的报错信息，就能从报错信息里提取字母，组成要执行的命令
 - 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#sansalpha
 288. [dont-you-love-banners](https://medium.com/@0xSphinx/picoctf-2024-dont-you-love-banners-writeup-43828d04f1d9)
 - python的open函数可以打开symlink。这也意味着具有root权限的python文件不能打开任何用户可控制的文件，因为这样攻击者就能用symlink链接到任意想要读取的文件
+289. [Commitment Issues](https://anugrahn1.github.io/pico2024#commitment-issues-50-pts)
+- git相关命令使用
