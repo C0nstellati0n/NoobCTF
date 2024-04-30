@@ -14,7 +14,7 @@
 
 ## SQL注入
 
-之前开过一个SQL分区，感觉之后的还是放在这里比较好
+之前开过一个SQL分区，感觉之后的还是放在这里比较好。顺便记一些NoSQL数据库
 - [Penguin-Login](https://dothidden.xyz/la_ctf_2024/penguin-login/)
     - 仅能使用`a-zA-Z0-9{_}`且不能使用LIKE和注释符的PostgreSQL盲注。LIKE的功能可以用BETWEEN代替
     - 其他wp（做法）： https://siunam321.github.io/ctf/LA-CTF-2024/web/penguin-login/ ，用`SIMILAR TO`和正则匹配代替LIKE。但是注意`{x}`在正则里表示匹配前一个字符x次，匹配带有`{}`的flag时可以去掉flag格式再匹配
@@ -22,6 +22,10 @@
     - postgres sql布尔盲注。注入点发生在order字段处
     - 如何判断服务器使用的数据库
     - postgres里有个函数`current_query`，返回当前的查询语句
+- [No Sql Injection](https://infosecwriteups.com/picoctf-2024-write-up-web-992348f48b99#4e8e)
+    - MongoDB noSQL注入。要求在给定用户名但不知道其密码的情况下绕过登录
+    - 也可以用`{"$gt":""}`
+    - 另一篇详细的介绍wp： https://voxal.dev/blog/pico-2024-web#no-sql-injection
 
 ## XSS
 
@@ -70,6 +74,17 @@
     - 另一种做法是使用`loading="lazy"`属性。这个属性可以让一个图片在用户划到可能会看到图片的位置后才加载。xs-leak时控制oracle返回的内容量，使命中目标时图片会被挤到页面下方；没命中时则相反
 - [The Genie pwn's adventures](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Web/TheGeniePwnAdventuresRevenge)
     - [Cookie jar overflow](https://medium.com/@ibm_ptc_security/cookie-jar-overflow-attack-ae5135b6100)+xss。这个有关cookie的漏洞不难理解，浏览器里能设置的cookie数量有限，达到限制后，旧的cookie会被新添加的挤掉。这种办法甚至可以移除掉HttpOnly的cookie（简单的js xss攻击移不掉）。所以如果可以控制admin bot设置很多cookie挤掉自己的session，然后再添加上自己的session并logout，就可成为admin
+- [Elements](https://www.justinsteven.com/posts/2024/04/02/picoctf-2024-elements-csp-bypass/)
+    - 一个非常爆炸的xss挑战。虽然可通过一系列操作获取js eval，但题目修改了Chromium本身，加了一堆CSP的同时还禁用了WebRTC，并增加了Chrome Policy，network_prediction_options等选项。[hacktricks](https://book.hacktricks.xyz/pentesting-web/content-security-policy-csp-bypass)里提到的绕过CSP的方法一个也不能用。最后还是用类似DOS的做法，flood server，使server在被flood的情况下响应延迟
+    - 列举wp里提到的尝试绕过CSP带出flag的方法。虽然在本题不可用，但是记下来也是不错的参考表
+        - `<img>`标签：被CSP default-src阻挡
+        - `<script>`标签：被CSP script-src阻挡
+        - `<link>`标签+stylesheet：被CSP style-src阻挡
+        - fetch：被CSP connect-src阻挡
+        - cross-site navigation（即直接修改`document.location.href`）：被Chrome Policy (URLAllowList/URLBlockList)阻挡
+        - DNS Leakage（在DNS解析域名时在subdomain名处带出flag，或是使用诸如`<link rel="dns-prefetch" href="//example.com">`的payload。建议使用base32编码，因为DNS大小写敏感，base32编码基本全是大写字母）：被chromium preferences network_prediction_options阻挡
+        - WebRTC：本题被patch掉无法考虑，不过根据其他题的经验，还蛮好用的
+        - 此题使用的flood方法。属于side channel attack，受网速影响较大,而且耗时长。说实话这个方法基本没办法能拦着，只要能执行js代码就能DOS，然后就是考虑怎么测量了
 
 ## SSTI
 
@@ -3569,6 +3584,3 @@ window.recaptcha=true;
 - 简写localhost。除了`127.0.0.1:8000`,还有`0:8000`
 446. [require-all-denied](https://ayusshh.medium.com/jersey-ctf-require-all-denied-web-2d49e07ab33f)
 - Apache 2.4.49 path traversal（路径穿越） & RCE 漏洞: https://blog.qualys.com/vulnerabilities-threat-research/2021/10/27/apache-http-server-path-traversal-remote-code-execution-cve-2021-41773-cve-2021-42013
-447. [No Sql Injection](https://infosecwriteups.com/picoctf-2024-write-up-web-992348f48b99#4e8e)
-- MongoDB noSQL注入。要求在给定用户名但不知道其密码的情况下绕过登录
-- 也可以用`{"$gt":""}`
