@@ -593,6 +593,7 @@ for i in range(1,e):
     - 寻找一个多项式 $p(x)=a_0+a_1x+...+a_nx^n$ ，使得 $p(x_i)=y_i$ 。 $x_i$ 和 $y_i$ 都已知，相当于找多项式的系数 $a_i$ 。写成矩阵就是找Ap=y的p。这种线性方程组可以用polynomial interpolation相关算法（比如Lagrange）加速，但更快的做法参考 https://mathoverflow.net/questions/408666/fastest-implementation-of-polynomial-interpolation/458091#458091 ，思路是FFT+divide and conquer
     - 这题最快的解法可能是flintlib的[nmod_poly_interpolate_nmod_vec_fast](https://flintlib.org/doc/nmod_poly.html#c.nmod_poly_interpolate_nmod_vec_fast)。sagemath实现见 https://github.com/PetePriority/picoctf-2024/blob/main/cryptography/flag_printer/solve_fast.ipynb （Fast interpolation algorithm）
     - 这个[wp](https://github.com/SuperBeetleGamer/Crypto-Writeups/blob/main/picoCTF%202024/Flag_printer/writeup.md)使用了[优化版的Lagrange Interpolation](https://codeforces.com/blog/entry/82953)。仅供参考，wp里再优化一遍后再加上112核的机器也要20小时才能跑完……
+    - 这题的矩阵其实是范德蒙德矩阵（[Vandermonde matrix](https://en.wikipedia.org/wiki/Vandermonde_matrix)），可以跟着这篇[wp](https://hackmd.io/@touchgrass/HyZ2poy1C#flag-printer)和 https://codeforces.com/blog/entry/94143 实现更优化版的Lagrange interpolation
 
 ## Lattice(格)
 

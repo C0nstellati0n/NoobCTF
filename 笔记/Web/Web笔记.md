@@ -85,6 +85,9 @@
         - DNS Leakage（在DNS解析域名时在subdomain名处带出flag，或是使用诸如`<link rel="dns-prefetch" href="//example.com">`的payload。建议使用base32编码，因为DNS大小写敏感，base32编码基本全是大写字母）：被chromium preferences network_prediction_options阻挡
         - WebRTC：本题被patch掉无法考虑，不过根据其他题的经验，还蛮好用的
         - 此题使用的flood方法。属于side channel attack，受网速影响较大,而且耗时长。说实话这个方法基本没办法能拦着，只要能执行js代码就能DOS，然后就是考虑怎么测量了
+    - 其他做法： https://hackmd.io/@touchgrass/HyZ2poy1C
+    - 预期做法： https://voxal.dev/blog/pico-2024-web#elements 。一篇很值得读的wp，作者提供了解XSS题目的一些思路和探索过程（比如翻了一堆JS Web API）。最后的预期解法是利用Credential Management API。这个API顾名思义，在网站想要将密码存储到浏览器的密码管理器时使用。在调用`navigator.credientals.store`存储FederatedCredential类型的登录凭证时，会弹出一个窗口。这个窗口里有个icon，url可由我们设置。到这里就很明显了，FederatedCredential弹出的窗口的对icon url的请求不会被CSP阻挡，于是就能绕过CSP了。不过有个弊端，就是弹窗仅会在一个profile出现一次，要再想弹一次窗口需要换一个profile。如果某个题目显示指定给bot指定不同的profile，可能是使用这个技巧的标志
+    - 最简单的做法： https://github.com/satoki/ctf_writeups/tree/master/picoCTF_2024/elements 。题目使用的chromium开启了实验功能，所以直接用实验功能之一的`PendingBeacon API`就能绕过CSP带出flag
 
 ## SSTI
 

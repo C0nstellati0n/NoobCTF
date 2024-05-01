@@ -51,6 +51,7 @@
 6. 查看程序以及各个模块的加载基地址： https://reverseengineering.stackexchange.com/questions/22494/how-to-use-memory-address-information-from-idafree-to-set-a-breakpoint-in-x32dbg
 7. upx手动脱壳： https://cloud.tencent.com/developer/article/2098526 。注意不脱壳的程序在手动脱壳前搜索字符串是搜不到的
 8. upx脱壳（程序，非手动）后的程序可能无法运行，使用调试器也不行
+9. 反反调试的插件：[ScyllaHide](https://github.com/x64dbg/ScyllaHide)
 
 ## dnSpy
 1. 如果遇到莫名其妙的报错导致编辑类后无法compile，可以尝试菜单栏->File->Reload All Assemblies
