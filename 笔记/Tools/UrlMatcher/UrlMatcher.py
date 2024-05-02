@@ -1,6 +1,6 @@
 import re
 import json
-excludeUrls=["www.w3.org/2000/svg","forms.gle","www.twitch.tv","cdn.discordapp.com/emojis","cdn.discordapp.com/avatars","images-ext-1.discordapp.net/external","lh3.googleusercontent.com","cdn.discordapp.com/icons","register","lh4.googleusercontent.com","discord.gg","lh6.googleusercontent.com",".png",".jpg","login","amazonaws.com","tenor.com","wigle.net","dcode.fr","nmap.org","gmail.com",".py","shellcraft.amd64.linux.sh",".gov","picoctf.net","picoctf.org","gchq.github.io/CyberChef","imgur.com","encrypted-tbn0.gstatic.com","pbs.twimg.com","github.com/bata24/gef","pwnable.kr","pwnable.tw","letmegooglethat.com","ibb.co"]
+excludeUrls=["www.w3.org/2000/svg","forms.gle","www.twitch.tv","cdn.discordapp.com/emojis","cdn.discordapp.com/avatars","images-ext-1.discordapp.net/external","lh3.googleusercontent.com","cdn.discordapp.com/icons","register","lh4.googleusercontent.com","discord.gg","lh6.googleusercontent.com",".png",".jpg","login","amazonaws.com","tenor.com","wigle.net","dcode.fr","nmap.org","gmail.com",".py","shellcraft.amd64.linux.sh",".gov","picoctf.net","picoctf.org","gchq.github.io/CyberChef","imgur.com","encrypted-tbn0.gstatic.com","pbs.twimg.com","github.com/bata24/gef","pwnable.kr","pwnable.tw","letmegooglethat.com","ibb.co",".tar.gz"]
 bookmarkTemplate="""<DL><p>
     <DT><H3>Writeups</H3>
     <DL><p>

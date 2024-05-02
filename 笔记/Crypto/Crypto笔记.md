@@ -594,6 +594,7 @@ for i in range(1,e):
     - 这题最快的解法可能是flintlib的[nmod_poly_interpolate_nmod_vec_fast](https://flintlib.org/doc/nmod_poly.html#c.nmod_poly_interpolate_nmod_vec_fast)。sagemath实现见 https://github.com/PetePriority/picoctf-2024/blob/main/cryptography/flag_printer/solve_fast.ipynb （Fast interpolation algorithm）
     - 这个[wp](https://github.com/SuperBeetleGamer/Crypto-Writeups/blob/main/picoCTF%202024/Flag_printer/writeup.md)使用了[优化版的Lagrange Interpolation](https://codeforces.com/blog/entry/82953)。仅供参考，wp里再优化一遍后再加上112核的机器也要20小时才能跑完……
     - 这题的矩阵其实是范德蒙德矩阵（[Vandermonde matrix](https://en.wikipedia.org/wiki/Vandermonde_matrix)），可以跟着这篇[wp](https://hackmd.io/@touchgrass/HyZ2poy1C#flag-printer)和 https://codeforces.com/blog/entry/94143 实现更优化版的Lagrange interpolation
+    - 其他解法及更多参考链接： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#flag_printer ， https://cp-algorithms.com/algebra/polynomial.html#interpolation
 
 ## Lattice(格)
 

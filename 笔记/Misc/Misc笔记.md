@@ -78,7 +78,7 @@
     - windows [Sticky Notes artifact forensic](https://forensafe.com/blogs/stickynotes.html)
 - [Dear Diary](https://infosecwriteups.com/picoctf-2024-write-up-forensics-c471e79e6af9)
     - The Sleuth Kit分析 disk image。这题其实就是个grep题，但是我不知道TSK的icat可以cat某个partition的sector(和直接strings整个disk的结果不同)……而且也没想到这题grep的东西不是flag，而是些别的东西。本来想用Autopsy的，结果虚拟机一运行这个软件就崩，心态爆炸……
-    - 其他wp（使用了更多TSK系列命令）： https://github.com/circle-gon/pico2024-writeup/blob/main/writeups/DearDiary.md
+    - 其他wp（使用了更多TSK系列命令）： https://github.com/circle-gon/pico2024-writeup/blob/main/writeups/DearDiary.md ，视频wp： https://www.youtube.com/watch?v=Og2g8OSOYqk
     - 参考 https://hackmd.io/@touchgrass/HyZ2poy1C#Dear-Diary ，原来此题的diary指代的是ext4 journal。可用jcat命令cat出各个entry
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
