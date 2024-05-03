@@ -2048,3 +2048,8 @@ a=A()
 - python的open函数可以打开symlink。这也意味着具有root权限的python文件不能打开任何用户可控制的文件，因为这样攻击者就能用symlink链接到任意想要读取的文件
 289. [Commitment Issues](https://anugrahn1.github.io/pico2024#commitment-issues-50-pts)
 - git相关命令使用
+290. [Study Music](https://gerlachsnezka.github.io/writeups/utctf/2024/forensics/study-music/)
+- Audacity使用。可以利用`Analyze > Plot Spectrum`功能集中显示某个频段的声音，并用`Effect > EQ and Filters > Filter Curve EQ`功能增强某个频率的声音并削弱其他频率的声音。这两个操作下来，某个频率声音的对应波形图的频谱图会清晰很多
+291. [CCV](https://gerlachsnezka.github.io/writeups/utctf/2024/misc/ccv/)
+- 利用[Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm)检查[PAN](https://en.wikipedia.org/wiki/Payment_card_number)
+- 计算CVV，参考 https://www.linkedin.com/pulse/card-verification-code-cvc-value-cvv-nayoon-cooray/
