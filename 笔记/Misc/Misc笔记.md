@@ -2050,6 +2050,10 @@ a=A()
 - git相关命令使用
 290. [Study Music](https://gerlachsnezka.github.io/writeups/utctf/2024/forensics/study-music/)
 - Audacity使用。可以利用`Analyze > Plot Spectrum`功能集中显示某个频段的声音，并用`Effect > EQ and Filters > Filter Curve EQ`功能增强某个频率的声音并削弱其他频率的声音。这两个操作下来，某个频率声音的对应波形图的频谱图会清晰很多
+- 利用相位抵消的做法： https://slefforge.github.io/writeups/StudyMusic/writeup.html
 291. [CCV](https://gerlachsnezka.github.io/writeups/utctf/2024/misc/ccv/)
 - 利用[Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm)检查[PAN](https://en.wikipedia.org/wiki/Payment_card_number)
 - 计算CVV，参考 https://www.linkedin.com/pulse/card-verification-code-cvc-value-cvv-nayoon-cooray/
+292. [Gibberish](https://slefforge.github.io/writeups/Gibberish/writeup.html)
+- 键盘pcap流量分析。不过这题的按键不是一个一个按的，而是同时按下多个键并同时松手。这种特征指向输入的方式可能为速记（[Stenotype](https://en.wikipedia.org/wiki/Stenotype)）。一个可用于qwerty键盘的速记引擎为[Plover](https://www.openstenoproject.org/plover/)。如何从pcap里提取组合键并转为正常文本参考wp
+- 更详细的wp： https://meashiri.github.io/ctf-writeups/posts/202403-utctf/#gibberish 。很关键的一点是，pcap里的`usbhid.data`字段一次最多只能识别同时按下的6个键，而一些速记的组合键超过6个字符，因此可能会识别失败
