@@ -2057,3 +2057,5 @@ a=A()
 292. [Gibberish](https://slefforge.github.io/writeups/Gibberish/writeup.html)
 - 键盘pcap流量分析。不过这题的按键不是一个一个按的，而是同时按下多个键并同时松手。这种特征指向输入的方式可能为速记（[Stenotype](https://en.wikipedia.org/wiki/Stenotype)）。一个可用于qwerty键盘的速记引擎为[Plover](https://www.openstenoproject.org/plover/)。如何从pcap里提取组合键并转为正常文本参考wp
 - 更详细的wp： https://meashiri.github.io/ctf-writeups/posts/202403-utctf/#gibberish 。很关键的一点是，pcap里的`usbhid.data`字段一次最多只能识别同时按下的6个键，而一些速记的组合键超过6个字符，因此可能会识别失败
+293. [SMP](https://seall.dev/posts/tamuctf2024#smp)
+- 分析minecraft服务器日志文件

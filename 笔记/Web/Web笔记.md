@@ -823,6 +823,7 @@ X-rewrite-url: secret.php //这个是bypass 403
 6. [catcat-new](../../CTF/攻防世界/2级/Web/catcat-new.md)
 - python存储对象（变量）的位置在堆上，因此可以利用/proc/self/maps+/proc/self/mem读取到变量的内容
 - 类似题目：[Home on the Range](https://github.com/M04m1n3/CTF-WRITEUPS/tree/main/utctf/Web/Home%20on%20the%20Range)
+- 拓展阅读： https://blog.holbertonschool.com/hack-the-virtual-memory-python-bytes/
 7.  [.htaccess的使用技巧](https://blog.csdn.net/solitudi/article/details/116666720)
 8.   [php利用伪协议绕过exit](https://www.leavesongs.com/PENETRATION/php-filter-magic.html)。例题:[[EIS 2019]EzPOP](https://blog.csdn.net/TM_1024/article/details/116208390)
 9.   php中使用create_function()创建的函数命名规律遵循：%00lambda_%d，其中%d是持续递增的。例题:[[SUCTF 2018]annonymous](https://blog.csdn.net/mochu7777777/article/details/105225558)

@@ -595,6 +595,8 @@ for i in range(1,e):
     - 这个[wp](https://github.com/SuperBeetleGamer/Crypto-Writeups/blob/main/picoCTF%202024/Flag_printer/writeup.md)使用了[优化版的Lagrange Interpolation](https://codeforces.com/blog/entry/82953)。仅供参考，wp里再优化一遍后再加上112核的机器也要20小时才能跑完……
     - 这题的矩阵其实是范德蒙德矩阵（[Vandermonde matrix](https://en.wikipedia.org/wiki/Vandermonde_matrix)），可以跟着这篇[wp](https://hackmd.io/@touchgrass/HyZ2poy1C#flag-printer)和 https://codeforces.com/blog/entry/94143 实现更优化版的Lagrange interpolation
     - 其他解法及更多参考链接： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#flag_printer ， https://cp-algorithms.com/algebra/polynomial.html#interpolation
+- [cryptordle](https://github.com/aditya-adiraju/capture-the-flag/tree/main/utctf-2024/cryptordle)
+    - [多项式环、理想](https://zhuanlan.zhihu.com/p/31441459)和[variety of an ideal](https://math.stackexchange.com/questions/1173939/variety-of-an-ideal)在sagemath里的使用。这么看来多项式环似乎只是全体多项式的集合，且可以有多个变量（多个变量是Multivariate Polynomial Ring）或在有限域里。对应到sagemath里的语法就是`R.<a,b,c,d,e> = PolynomialRing(GF(p))`。理想（ideal）跟着定义来就好，个人在sagemath里试了一下，怎么感觉随便写个多项式都能构造出理想，明明理想的定义挺严格的啊？有了理想后可以取variety，感觉就是理想内所有多项式共同的根
 
 ## Lattice(格)
 
@@ -649,6 +651,9 @@ for i in range(1,e):
 - [mutant-mayhem](https://meashiri.github.io/ctf-writeups/posts/202403-jerseyctf/#mutant-mayhem)
     - ECDSA的python简单实现
     - sagemath实现： https://nightxade.github.io/ctf-writeups/writeups/2024/Jersey-CTF-IV-2024/crypto/mutant-mayhem.html
+- [forgery](https://github.com/utisss/UTCTF-24/tree/main/crypto-blsforgery)
+    - BLS digital signature。BLS12-381是一个特殊的椭圆曲线，具体特征可看 https://hackmd.io/@benjaminion/bls12-381#About-curve-BLS12-381 。这种签名算法的私钥sk是一个从1到r-1（包含，r为群阶）的整数，公钥是私钥乘上 $g_1$ （子群 $G_1$ 的generator，参考 https://hackmd.io/@benjaminion/bls12-381#The-Subgroups ）。签名只需计算 $\sigma=[sk]H(m)$ 。有一个特别的性质，若n方用不同私钥签名了同一条消息，将n者所有的公钥和签名结果加起来，用这个结果验签也会通过。这种“合起来的签名”叫aggregate signatures
+    - Rogue key attacks。假设A的公钥是 $pk_1$ ，攻击者B的密钥是 $sk_2$ 。B可以伪造 $pk_2=[sk_2]g_1-pk_1$ ，即B的公钥加上A公钥的逆。此时签名一条信息 $\sigma=[sk_2]H(m)$ ，此签名是A和B的有效aggregate signatures，而A明明没有签名过这条信息
 
 ## AES
 
@@ -2342,6 +2347,7 @@ Ep.order() #曲线加法群的阶（the order of the elliptic curve group）
     print(len(zlib.compress(b"good_secret" + b"baad"))) #23
     ```
     脚本： https://github.com/mpgn/CRIME-poc/tree/master
+- [Criminal](https://github.com/rerrorctf/writeups/blob/main/2024_04_07_TamuCTF24/cry/criminal/criminal.md):CRIME攻击的`zlib.compress`+`ChaCha20_Poly1305`版本。不知为何，做这题的时候上面的脚本跑不了，最后还是抄 https://ctftime.org/writeup/27105 （这个题里是Salsa20）出来的。 https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#criminal
 95. [signer](https://meashiri.github.io/ctf-writeups/posts/202307-imaginaryctf/#signer)
 - crc32无法防止collsion，也无法防止数据被篡改。在给定一个crc32值后，可以利用[工具](https://github.com/theonlypwner/crc32)逆向算法，获取该crc32值对应的字符串
 96. [MCTEENX](https://xhacka.github.io/posts/writeup/2023/07/29/MCTEENX/)

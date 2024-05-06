@@ -1206,3 +1206,5 @@ finish()
 - 另外个人做题时发现反编译时似乎有点“联系上下文”的意思。比如一个代码片段里调用了FOR_ITER，但是前面却没有GET_ITER。然后找到调用这个函数的代码段，发现GET_ITER在调用函数前的代码段里（如果不追究语法的话，以后看到GET_ITER就遍历即可）
 159. [Fruit Deals](https://github.com/S4L1M-abd/UTCTF-WriteUPS/tree/main/Reverse/Fruit%20Deals)
 - xlsm excel sheet文件中的vba macro逆向。虽然很容易找到工具（oletools中的`olevba.exe`）提取出sheet文件里的macro，但是用excel打开可以运行并调试代码，有助于逆向
+160. [In The Dark](https://gist.github.com/nrabulinski/ba0a6927866e822e27faae190185a0f1)
+- 使用rust Ptracer trace另一个程序。可以调试，查看寄存器的值，修改内存（patch）等
