@@ -2059,3 +2059,5 @@ a=A()
 - 更详细的wp： https://meashiri.github.io/ctf-writeups/posts/202403-utctf/#gibberish 。很关键的一点是，pcap里的`usbhid.data`字段一次最多只能识别同时按下的6个键，而一些速记的组合键超过6个字符，因此可能会识别失败
 293. [SMP](https://seall.dev/posts/tamuctf2024#smp)
 - 分析minecraft服务器日志文件
+294. [Ladders](https://github.com/tamuctf/tamuctf-2024/tree/master/misc/ladders)
+- PLC文件，后缀`.ckp`，为Click PLC Programming Ladder Logic Project文件。可用相应的软件打开
