@@ -1208,3 +1208,5 @@ finish()
 - xlsm excel sheet文件中的vba macro逆向。虽然很容易找到工具（oletools中的`olevba.exe`）提取出sheet文件里的macro，但是用excel打开可以运行并调试代码，有助于逆向
 160. [In The Dark](https://gist.github.com/nrabulinski/ba0a6927866e822e27faae190185a0f1)
 - 使用rust Ptracer trace另一个程序。可以调试，查看寄存器的值，修改内存（patch）等
+161. [Alien](https://github.com/tamuctf/tamuctf-2024/tree/master/rev/alien)
+- 使用QEMU运行嵌入式系统的固件（use QEMU to run firmware for embedded systems）。题目是lm3s6965固件

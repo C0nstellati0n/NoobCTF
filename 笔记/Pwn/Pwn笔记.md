@@ -82,6 +82,12 @@ ret
   - 计算shellcode本身的HMAC-CRC64值，且可同时在RISC-V, AARCH64 和 x86-64下运行。技巧是利用[Barrett reduction](https://en.wikipedia.org/wiki/Barrett_reduction)缩减模运算所需要的代码长度。其他做法： 
     - https://gist.github.com/Riatre/e8eb949da91b650ea27ed6dbebeb3912
     - https://gist.github.com/TethysSvensson/067589b37c473ce2dce9270a64c8624d
+- [Five](https://github.com/tamuctf/tamuctf-2024/tree/master/pwn/five)
+  - 仅用5个字节构造shellcode并getshell。只靠5个字节肯定不可能，这种题一般都要利用执行shellcode时寄存器的状态（比如`xchg rdx, rsi; syscall`，交换特定的两个寄存器后可以直接执行read syscall）和程序里自带的代码。这题利用了mmap的一个性质：若mmap第一个参数指定的地址已经是一块被映射的内存，这个参数会被看成null。这种情况下，mmap会自行挑选一块空闲的内存，这块内存与libc的偏移固定
+  - 汇编里的relative jump最大偏移是一个有符号的32-bit整数。超出这个数字就没法做相对跳转了
+- [Janky](https://github.com/tamuctf/tamuctf-2024/tree/master/pwn/janky)
+  - 要求shellcode反编译后的每个指令都以j开头。能用的指令只有jmp，可以利用jmp的目标立即数实现RCE。这块得看wp才好理解，具体是，jmp指令后面的立即数最多4个字节，那么可以将shellcode分成多个部分，每个部分长4个字节，写成立即数跟在jmp后面。然后利用错位jmp，跳过开头的jmp指令，直接跳到立即数部分，就能执行这些立即数代表的shellcode了
+  - 大佬写的自动化脚本： https://github.com/9x14S/jmp-encoder
 
 1. 程序关闭标准输出会导致getshell后无法得到cat flag的输出。这时可以用命令`exec 1>&0`将标准输出重定向到标准输入，再执行cat flag就能看见了。因为默认打开一个终端后，0，1，2（标准输入，标准输出，标准错误）都指向同一个位置也就是当前终端。详情见这篇[文章](https://blog.csdn.net/xirenwang/article/details/104139866)。例题：[wustctf2020_closed](https://buuoj.cn/challenges#wustctf2020_closed)
 2. 做菜单类堆题时，添加堆块的函数一般是最重要的，需要通过分析函数来构建出程序对堆块的安排。比如有些笔记管理题会把笔记名称放一个堆中，笔记内容放另一个堆中，再用一个列表记录指针。了解程序是怎么安排堆后才能根据漏洞制定利用计划。如果分析不出来，用gdb调试对着看会好很多。例题：[babyfengshui](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/babyfengshui.md)
@@ -1823,3 +1829,8 @@ try {
 - 在discord找到的另一个做法（怎么还有啊）： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#high-frequency-toubles 。使用tcache poisoning+[house of cat](https://bbs.kanxue.com/thread-273895.htm)
 187. [Super Lucky](https://github.com/rerrorctf/writeups/blob/main/2024_04_07_TamuCTF24/pwn/super_lucky/super_lucky.md)
 - 预测C语言rand的输出。libc内部有个randtbl表，指向这个表的指针位于libc里的另一个结构体：unsafe_state。unsafe_state里还有两个指针，分别是fptr和rptr，指向randtbl里不同的数字。rand的输出由randtbl，fptr和rptr决定。如果可以泄漏randtbl或者fptr和rptr中的一个（fptr和rptr相差4），就能自行计算rand输出的数字
+188. [Good Emulation](https://github.com/tamuctf/tamuctf-2024/tree/master/pwn/good-emulation)
+- `7.2.0`版本之前的QEMU没有实现NX。即使用checksec检查binary显示开启了NX，或是查看`/proc/self/maps`显示栈不可执行，实际上是可以执行的
+- 也可以把这题当ARM rop打： https://github.com/buddurid/TamuCTF-2024/tree/main/good-emulation
+189. [Shrink](https://github.com/tamuctf/tamuctf-2024/tree/master/pwn/shrink)
+- c++ pwn,攻击`std::string`的短字符串优化功能（看见好多道和string有关的题了，就可劲地薅string的羊毛）。这个优化会将长度小于等于16（包括末尾null字符）的字符串存储在栈上，超过后才会将内容放在堆上。优化这段逻辑也会在用户调用`shrink_to_fit`函数时调用。假如buf原本在堆上，resize后长度小于16，此时调用shrink_to_fit会使buf被转移到栈上，有栈溢出的风险

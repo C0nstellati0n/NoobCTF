@@ -88,6 +88,9 @@
     - 其他做法： https://hackmd.io/@touchgrass/HyZ2poy1C
     - 预期做法： https://voxal.dev/blog/pico-2024-web#elements 。一篇很值得读的wp，作者提供了解XSS题目的一些思路和探索过程（比如翻了一堆JS Web API）。最后的预期解法是利用Credential Management API。这个API顾名思义，在网站想要将密码存储到浏览器的密码管理器时使用。在调用`navigator.credientals.store`存储FederatedCredential类型的登录凭证时，会弹出一个窗口。这个窗口里有个icon，url可由我们设置。到这里就很明显了，FederatedCredential弹出的窗口的对icon url的请求不会被CSP阻挡，于是就能绕过CSP了。不过有个弊端，就是弹窗仅会在一个profile出现一次，要再想弹一次窗口需要换一个profile。如果某个题目显示指定给bot指定不同的profile，可能是使用这个技巧的标志
     - 最简单的做法： https://github.com/satoki/ctf_writeups/tree/master/picoCTF_2024/elements 。题目使用的chromium开启了实验功能，所以直接用实验功能之一的`PendingBeacon API`就能绕过CSP带出flag
+- [Imposter](https://github.com/tamuctf/tamuctf-2024/tree/master/web/imposter)
+    - XSS里io socket的使用
+    - 其他payload： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#imposter
 
 ## SSTI
 

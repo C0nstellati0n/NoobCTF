@@ -2061,3 +2061,6 @@ a=A()
 - 分析minecraft服务器日志文件
 294. [Ladders](https://github.com/tamuctf/tamuctf-2024/tree/master/misc/ladders)
 - PLC文件，后缀`.ckp`，为Click PLC Programming Ladder Logic Project文件。可用相应的软件打开
+295. [Over The Shoulder](https://github.com/tamuctf/tamuctf-2024/tree/master/misc/over-the-shoulder)
+- 可以利用BPF程序的CAP_BPF/CAP_PERFMON来dump all strings passed to write with fd 1。比如cat命令输出的字符串
+- 其他做法: https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#over-the-shoulder 。也可以直接用kernel自带的tracing功能
