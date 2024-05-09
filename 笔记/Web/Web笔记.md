@@ -26,6 +26,8 @@
     - MongoDB noSQL注入。要求在给定用户名但不知道其密码的情况下绕过登录
     - 也可以用`{"$gt":""}`
     - 另一篇详细的介绍wp： https://voxal.dev/blog/pico-2024-web#no-sql-injection
+- [one-shot](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/one-shot/)
+    - union all select的使用。union仅会返回不重复的查询内容，而union all会返回包括重复项的全部内容
 
 ## XSS
 
@@ -3593,3 +3595,7 @@ window.recaptcha=true;
 - 简写localhost。除了`127.0.0.1:8000`,还有`0:8000`
 446. [require-all-denied](https://ayusshh.medium.com/jersey-ctf-require-all-denied-web-2d49e07ab33f)
 - Apache 2.4.49 path traversal（路径穿越） & RCE 漏洞: https://blog.qualys.com/vulnerabilities-threat-research/2021/10/27/apache-http-server-path-traversal-remote-code-execution-cve-2021-41773-cve-2021-42013
+447. [sculpture](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/sculpture/)
+- 纯浏览器python实现软件：[skulpt](https://skulpt.org/)，可以执行js代码。比如可以用`jseval("Sk.global")`获取到global object
+448. [denied](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/denied/)
+- HEAD和GET本质相同，只是服务器不会返回message-body。Express自动将HEAD映射到`.get()`方法

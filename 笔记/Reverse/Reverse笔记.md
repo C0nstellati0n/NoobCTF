@@ -1168,7 +1168,7 @@ finish()
 - 利用apktool解包apk并patch汇编再打包。重新打包的apk需要用[Uber Apk Signer](https://github.com/patrickfav/uber-apk-signer)或者类型签名工具签名后才能安装
 - 和传感器及相关插件（accelerometer，pedometer，sensor_plus）有关的题目可以从onSensorChanged事件下手
 146. [flag-finder](https://medium.com/@mohammadolimat/la-ctf-2024-reverse-writeup-6d05acd9c7be)
-- `.win`,`.unx`后缀游戏文件修改工具:[UndertaleModTool](https://github.com/UnderminersTeam/UndertaleModTool)使用
+- `.win`,`.unx`后缀(Game Maker Studio游戏文件)修改工具:[UndertaleModTool](https://github.com/UnderminersTeam/UndertaleModTool)使用
 147. [technically-correct](https://hackmd.io/@lamchcl/SJIdwQb3a#revtechnically-correct)
 - 有些时候可以通过修改elf文件的header，使反编译器无法读取elf文件。解决办法是自行用readelf看一遍文件，寻找有没有不符合头部定义的内容（大端/小端？32/64？）
 148. [Injecting Commands](https://intrigus.org/research/2024/03/03/braeker-ctf-2024-injecting-commands-writeup/)
@@ -1210,3 +1210,5 @@ finish()
 - 使用rust Ptracer trace另一个程序。可以调试，查看寄存器的值，修改内存（patch）等
 161. [Alien](https://github.com/tamuctf/tamuctf-2024/tree/master/rev/alien)
 - 使用QEMU运行嵌入式系统的固件（use QEMU to run firmware for embedded systems）。题目是lm3s6965固件
+162. [hole](https://hackmd.io/@Zzzzek/HyUXVYQl0#hole)
+- Erlang/Elixir `.beam`后缀文件逆向。wp里是手动反编译的做法,但赛后发现有自动反编译器： https://github.com/michalmuskala/decompile

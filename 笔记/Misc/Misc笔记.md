@@ -2064,3 +2064,16 @@ a=A()
 295. [Over The Shoulder](https://github.com/tamuctf/tamuctf-2024/tree/master/misc/over-the-shoulder)
 - 可以利用BPF程序的CAP_BPF/CAP_PERFMON来dump all strings passed to write with fd 1。比如cat命令输出的字符串
 - 其他做法: https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#over-the-shoulder 。也可以直接用kernel自带的tracing功能
+296. [bears-flagcord](https://hackmd.io/@Zzzzek/HyUXVYQl0#bears-flagcord)
+- discord bot activity分析。若一个bot（application）的flags字段为131072，意味着此bot内部有个activity。可访问`https://[application ID].discordsays.com`来查看详情
+297. [javajail1](https://gerlachsnezka.github.io/writeups/amateursctf/2024/jail/javajail1/)
+- 编写可以读取`flag.txt`文件内容并打印的java程序，但不能使用`import`,`class`,`Main`,`{`,`}`。可以用interface代替class，然后unicode编码代码
+- 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#javajail1
+298. [javajail2](https://gerlachsnezka.github.io/writeups/amateursctf/2024/jail/javajail2/)
+- 和上面那题一样的要求但是条件和限制更多
+- 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#javajail2
+299. [sansomega](https://gerlachsnezka.github.io/writeups/amateursctf/2024/jail/sansomega/)
+- 在不使用大小写字母和一些符号的情况下执行bash命令。287条的升级版
+- 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#sansomega
+300. [agile-rut](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/agile-rut/)
+- font字体文件分析。可用的两个网站： https://fontdrop.info/ ， https://www.glyphrstudio.com/app/
