@@ -1212,3 +1212,5 @@ finish()
 - 使用QEMU运行嵌入式系统的固件（use QEMU to run firmware for embedded systems）。题目是lm3s6965固件
 162. [hole](https://hackmd.io/@Zzzzek/HyUXVYQl0#hole)
 - Erlang/Elixir `.beam`后缀文件逆向。wp里是手动反编译的做法,但赛后发现有自动反编译器： https://github.com/michalmuskala/decompile
+163. [FLARE-VM](https://github.com/mandiant/flare-vm)
+- 集成了各种reverse工具的vm配置环境

@@ -2066,6 +2066,7 @@ a=A()
 - 其他做法: https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#over-the-shoulder 。也可以直接用kernel自带的tracing功能
 296. [bears-flagcord](https://hackmd.io/@Zzzzek/HyUXVYQl0#bears-flagcord)
 - discord bot activity分析。若一个bot（application）的flags字段为131072，意味着此bot内部有个activity。可访问`https://[application ID].discordsays.com`来查看详情
+- 更详细wp： https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/misc/bears-flagcord/
 297. [javajail1](https://gerlachsnezka.github.io/writeups/amateursctf/2024/jail/javajail1/)
 - 编写可以读取`flag.txt`文件内容并打印的java程序，但不能使用`import`,`class`,`Main`,`{`,`}`。可以用interface代替class，然后unicode编码代码
 - 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#javajail1
@@ -2076,4 +2077,8 @@ a=A()
 - 在不使用大小写字母和一些符号的情况下执行bash命令。287条的升级版
 - 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#sansomega
 300. [agile-rut](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/agile-rut/)
-- font字体文件分析。可用的两个网站： https://fontdrop.info/ ， https://www.glyphrstudio.com/app/
+- font字体文件分析。可用的几个网站： https://fontdrop.info/ ， https://www.glyphrstudio.com/app/ ， https://wakamaifondue.com/
+301. [zig-jail-1](https://unvariant.pages.dev/writeups/amateursctf-2024/jail-zig-jail-1/)
+- zig语言在编译时读取指定文件的几种方式
+302. [zig-jail-2](https://unvariant.pages.dev/writeups/amateursctf-2024/jail-zig-jail-2/)
+- zig语言在编译时所执行的代码默认累积向后分支（程序在编译时调用的全部for语句累积循环次数）数上限为1000。若for语句循环次数超过这个数就会报错。可以用`@setEvalBranchQuota`提高上限。可以用结构体来绕过这点（从全部for语句累积次数不超过1000到单次结构体里for语句循环数不超过1000）

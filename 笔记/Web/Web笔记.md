@@ -3597,5 +3597,6 @@ window.recaptcha=true;
 - Apache 2.4.49 path traversal（路径穿越） & RCE 漏洞: https://blog.qualys.com/vulnerabilities-threat-research/2021/10/27/apache-http-server-path-traversal-remote-code-execution-cve-2021-41773-cve-2021-42013
 447. [sculpture](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/sculpture/)
 - 纯浏览器python实现软件：[skulpt](https://skulpt.org/)，可以执行js代码。比如可以用`jseval("Sk.global")`获取到global object
+- 直接利用python的输出插入xss代码解法： https://masamuneee.github.io/posts/amateursctf-2024/#9-websculpture
 448. [denied](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/denied/)
 - HEAD和GET本质相同，只是服务器不会返回message-body。Express自动将HEAD映射到`.get()`方法

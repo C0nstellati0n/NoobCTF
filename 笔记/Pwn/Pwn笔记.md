@@ -88,6 +88,10 @@ ret
 - [Janky](https://github.com/tamuctf/tamuctf-2024/tree/master/pwn/janky)
   - 要求shellcode反编译后的每个指令都以j开头。能用的指令只有jmp，可以利用jmp的目标立即数实现RCE。这块得看wp才好理解，具体是，jmp指令后面的立即数最多4个字节，那么可以将shellcode分成多个部分，每个部分长4个字节，写成立即数跟在jmp后面。然后利用错位jmp，跳过开头的jmp指令，直接跳到立即数部分，就能执行这些立即数代表的shellcode了
   - 大佬写的自动化脚本： https://github.com/9x14S/jmp-encoder
+- [baby-sandbox](https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-baby-sandbox/)
+  - 可以使用sysenter来调用syscall。只是使用sysenter前，rbp和其他参数要指向可读地址；且这个指令只能在64位的intel处理器上用
+  - wp里提到了vector registers（以后写shellcode可以注意下，说不定直接就非预期简单解了）和侧信道解法
+  - 更详细wp： https://hyggehalcyon.gitbook.io/page/ctfs/2024/amateursctf#baby-sandbox
 
 1. 程序关闭标准输出会导致getshell后无法得到cat flag的输出。这时可以用命令`exec 1>&0`将标准输出重定向到标准输入，再执行cat flag就能看见了。因为默认打开一个终端后，0，1，2（标准输入，标准输出，标准错误）都指向同一个位置也就是当前终端。详情见这篇[文章](https://blog.csdn.net/xirenwang/article/details/104139866)。例题：[wustctf2020_closed](https://buuoj.cn/challenges#wustctf2020_closed)
 2. 做菜单类堆题时，添加堆块的函数一般是最重要的，需要通过分析函数来构建出程序对堆块的安排。比如有些笔记管理题会把笔记名称放一个堆中，笔记内容放另一个堆中，再用一个列表记录指针。了解程序是怎么安排堆后才能根据漏洞制定利用计划。如果分析不出来，用gdb调试对着看会好很多。例题：[babyfengshui](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/babyfengshui.md)
@@ -1322,6 +1326,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
   - x86 shellcode可以在[exploit-db](https://www.exploit-db.com/)找。wp提到了一个21字节的x86 shellcode，以及一个14字节的但是需要/bin/sh已在elf里存在的shellcode。构造elf的话可以把/bin/sh放在data段里
   - 若shellcode的执行开始于`_start`，可以默认寄存器值为0，就不用多余的字节来将一些寄存器设为0了
   - 注意加载程序时不能让程序的地址小于ubuntu的默认vm.mmap_min_addr（0x10000），否则程序会崩溃
+- 同作者的更小ELF构建题目： [summit](https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-summit/)。这次仅用了73字节。参考 https://tmpout.sh/3/22.html
 103. [perfect-sandbox](https://github.com/itaybel/Weekly-CTF/blob/main/amateursCTF/pwn/perfect-sandbox.md)
 - In x86-64 there are 3 TLS entries, two of them accesible via FS and GS registers, FS is used internally by glibc (in IA32 apparently FS is used by Wine and GS by glibc).fs段里可以泄露一些有关栈的信息，汇编这样访问：`mov register, qword ptr fs:offset`
 - 预期解和其它非预期解：https://amateurs.team/writeups/AmateursCTF-2023/perfect-sandbox
@@ -1837,3 +1842,14 @@ try {
 - 也可以把这题当ARM rop打： https://github.com/buddurid/TamuCTF-2024/tree/main/good-emulation
 189. [Shrink](https://github.com/tamuctf/tamuctf-2024/tree/master/pwn/shrink)
 - c++ pwn,攻击`std::string`的短字符串优化功能（看见好多道和string有关的题了，就可劲地薅string的羊毛）。这个优化会将长度小于等于16（包括末尾null字符）的字符串存储在栈上，超过后才会将内容放在堆上。优化这段逻辑也会在用户调用`shrink_to_fit`函数时调用。假如buf原本在堆上，resize后长度小于16，此时调用shrink_to_fit会使buf被转移到栈上，有栈溢出的风险
+190. [Crackbox](https://github.com/dreamsoftomorow/CTF-write-ups/blob/main/AmateursCTF/pwn/Crackbox.md)
+- qemu插件内容会在被转化（当前指令集转化到host机指令集。user-mode emulation下使用JIT来完成）的代码执行前执行
+- 可以用strace查看程序调用mmap时使用的flags
+- Qemu-user runs both the host and the guest in the same address-spaces, that's because it's not used as a sandbox in that mode
+- While qemu does sanitize memory accesses for some syscalls (such as sys_open, sys_openat, creat, link, linkat, unlinkat, execveat, chdir, mknod and more... ) it doesn't check memory locations for mmap, also, they don't check direct memory accesses
+- JIT区域的权限为RWX，可以将shellcode注入到这个区域并执行。但是有ASLR的影响，需要编写代码在程序里搜索这个区域
+- 结合这个简短的官方wp看会比较清楚： https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-crackbox/
+191. [baby-elfcrafting](https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-baby-elfcrafting/)
+- 构造一个不包含任何可执行代码段的ELF，使其在运行时获取shell。将PT_INTERP段（this section indicates the program path name that will be invoked as the interpreter of the ELF should it be an executable）设为`/bin/sh`即可
+192. [buffer-overflow](https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-buffer-overflow/)
+- rust里将部分unicode字符转换为大写时会导致一个字符被延长至多个字符，有栈溢出风险。unicode表： https://doc.rust-lang.org/src/core/unicode/unicode_data.rs.html#966
