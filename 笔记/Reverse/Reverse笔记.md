@@ -1214,3 +1214,5 @@ finish()
 - Erlang/Elixir `.beam`后缀文件逆向。wp里是手动反编译的做法,但赛后发现有自动反编译器： https://github.com/michalmuskala/decompile
 163. [FLARE-VM](https://github.com/mandiant/flare-vm)
 - 集成了各种reverse工具的vm配置环境
+164. [pickledbg](https://github.com/Legoclones/pickledbg)
+- python pickle文件调试器

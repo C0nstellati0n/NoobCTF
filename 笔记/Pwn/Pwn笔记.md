@@ -1853,3 +1853,5 @@ try {
 - 构造一个不包含任何可执行代码段的ELF，使其在运行时获取shell。将PT_INTERP段（this section indicates the program path name that will be invoked as the interpreter of the ELF should it be an executable）设为`/bin/sh`即可
 192. [buffer-overflow](https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-buffer-overflow/)
 - rust里将部分unicode字符转换为大写时会导致一个字符被延长至多个字符，有栈溢出风险。unicode表： https://doc.rust-lang.org/src/core/unicode/unicode_data.rs.html#966
+193. [reflection](https://hackmd.io/@Zzzzek/HyUXVYQl0)
+- 64位[ret2dlresolve](https://syst3mfailure.io/ret2dl_resolve/)+栈迁移。顺便找到个不错的文章： https://blog.osiris.cyber.nyu.edu/2019/04/06/pivoting-around-memory/
