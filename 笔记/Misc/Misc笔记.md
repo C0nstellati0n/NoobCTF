@@ -1488,6 +1488,11 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [Batman Investigation II](https://blog.bi0s.in/2024/02/27/Forensics/BatmanInvestigationII-GothamUndergroundCorruption-bi0sCTF2024/)
     - `vol.py -f ctf.raw --profile=profile vadtree -p <pid> --output-file=./vadtree.dot --output=dot`
         - dump VAD结构中的heap（以tree的形式）。也可以参考文章，用volshell实现
+- [Infant Mem](https://warlocksmurf.github.io/posts/shunyactf2024/#infant-mem-forensics)
+    - `vol.py -f ctf.raw --profile pprofile hivelist`
+        - 查看系统注册表（SYSTEM registry）。包含机器的hostname
+    - `vol.py -f ctf.raw --profile profile hashdump -y addr -s addr`
+        - https://github.com/volatilityfoundation/volatility/wiki/Command-Reference#hashdump :find the local user
 131. [Attaaaaack4](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack4)
 - 时刻注意那些名字类似windows内置文件的文件，它们可能是伪装的恶意病毒。如`runddl.exe`。它的名字类似`rundll.exe`,但是后者用于run Dynamic Link Library (DLLs) on the Windows operating system，而前者是恶意文件。
 132. [Attaaaaack8](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack8)
@@ -2082,3 +2087,5 @@ a=A()
 - zig语言在编译时读取指定文件的几种方式
 302. [zig-jail-2](https://unvariant.pages.dev/writeups/amateursctf-2024/jail-zig-jail-2/)
 - zig语言在编译时所执行的代码默认累积向后分支（程序在编译时调用的全部for语句累积循环次数）数上限为1000。若for语句循环次数超过这个数就会报错。可以用`@setEvalBranchQuota`提高上限。可以用结构体来绕过这点（从全部for语句累积次数不超过1000到单次结构体里for语句循环数不超过1000）
+303. [Check Research and Check again](https://hackctfs.blogspot.com/2024/04/shunyactf-aarambha-ctf-writeup-forensics.html)
+- png图片修复：Invalid IHDR interlace method，sRGB invalid rendering intent，RC error in chunk gAMA ，CRC error in chunk PLTE，invalid pHYs unit specifier，inflate error
