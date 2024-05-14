@@ -11,6 +11,10 @@
     - re-entrancty攻击：`_safeMint`与onERC721Received
 - [Pincer](https://github.com/GCC-ENSIBS/GCC-CTF-2024/tree/main/Web3/pincer)
     - sandwich attack (front running + back running)
+- [cr3dao](https://icypetal.github.io/ctf/cr3ctf)
+    - 一道foundry使用例题。也是solidity里DAO概念的示例
+- [cr3proxy](https://icypetal.github.io/ctf/cr3ctf/#cr3proxy)
+    - 合约升级（upgrade）和delegate call示例
 
 ## SQL注入
 
@@ -93,6 +97,11 @@
 - [Imposter](https://github.com/tamuctf/tamuctf-2024/tree/master/web/imposter)
     - XSS里io socket的使用
     - 其他payload： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#imposter
+- [modern](https://gist.github.com/avlidienbrunn/ef849803da7607acb00cbaae0a03a4f2)
+    - htmx题目，绕过CSP和DOMPurify
+    - https://twitter.com/ryotkak/status/1738400596074615238
+- [heterograph](https://r3kapig-not1on.notion.site/Midnight-Sun-CTF-2024-Quals-Jeopardy-cb986332bd3148a0b041b498141b6521)
+    - 使用特殊字体绕过WAF
 
 ## SSTI
 
@@ -3600,3 +3609,11 @@ window.recaptcha=true;
 - 直接利用python的输出插入xss代码解法： https://masamuneee.github.io/posts/amateursctf-2024/#9-websculpture
 448. [denied](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/denied/)
 - HEAD和GET本质相同，只是服务器不会返回message-body。Express自动将HEAD映射到`.get()`方法
+449. [web-crypto](https://github.com/shashankmahajan99/ctf-writeups/tree/main/first-bloods/cr3_CTF/misc/web-crypto)
+- hashcat字典+自定义rule爆破bcrypt
+- 1.22之前的go语言的for（应该说for-each，遍历一个序列的元素）循环中，存储每个元素使用的变量的地址不会改变。即：
+```go
+for _, bi := range ba {
+  res[i] = &bi //&bi的值在整个for循环里都是一样的，res[i]每个索引处存储的都是相同的地址
+}
+```
