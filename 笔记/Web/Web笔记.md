@@ -13,6 +13,7 @@
     - sandwich attack (front running + back running)
 - [cr3dao](https://icypetal.github.io/ctf/cr3ctf)
     - 一道foundry使用例题。也是solidity里DAO概念的示例
+    - [官方wp](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/block/cr3dao)更详细。这题的两个漏洞为 https://docs.soliditylang.org/en/latest/security-considerations.html#clearing-mappings 和 https://blog.oxor.io/exploring-the-bugs-and-features-of-solidity-compiler-versions-a-guide-for-smart-contract-fe04e852ea64 。前者是solidity语言的特性：无法删除map。一般将map设为新的空白map看作删除操作，但如果是包含map的数组，使用delete删除数组并创建新数组后数组内部的map保存着删除前的值。后者是solidity 0.8.10之前的漏洞，从calldata或者memory拷贝bytes时，即使数据长度不足32字节也会直接拷贝32字节，导致出现dirty byte。对byte数组调用无参数的`.push()`函数时会泄露这些dirty byte
 - [cr3proxy](https://icypetal.github.io/ctf/cr3ctf/#cr3proxy)
     - 合约升级（upgrade）和delegate call示例
 
