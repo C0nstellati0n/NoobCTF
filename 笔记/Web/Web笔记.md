@@ -3618,3 +3618,4 @@ for _, bi := range ba {
   res[i] = &bi //&bi的值在整个for循环里都是一样的，res[i]每个索引处存储的都是相同的地址
 }
 ```
+- 官方wp： https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/misc/web-crypto

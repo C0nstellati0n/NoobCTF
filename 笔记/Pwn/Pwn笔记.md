@@ -684,6 +684,8 @@ print(base64.b64encode(temp.encode()))
 - [pyquinejailgolf](https://gerlachsnezka.github.io/writeups/amateursctf/2024/jail/pyquinejailgolf/)
   - 使用python编写[quine](https://en.wikipedia.org/wiki/Quine_(computing)) 程序（输出自己源码的程序）。注意payload被包在题目文件里执行，所以部分payload会利用这点，导致其单独运行不是quine程序，只有在题目文件里才是
   - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#pyquinejailgolf
+- [Picklestar](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/misc/picklestar)
+  - python pickle反序列化挑战，限制可使用的opcode和字符串实现RCE。可以用INST字节码调用breakpoint然后执行命令
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
