@@ -17,6 +17,10 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
       - 喷射msg_msgseg结构体（这是个常用的用于泄漏的结构体），希望其中一个msg_msgseg与victim重叠。之后调用[splice](https://man7.org/linux/man-pages/man2/splice.2.html)，将`/etc/passwd`的fd作为fd_in参数，victim作为fd_out参数。这一举动会在ring末尾添加一个pipe_buffer
       - 读取上一步喷射的一堆msg_msgseg，尝试泄漏pipe_buffer的构造（泄漏的不一定是新增的那个pipe_buffer，任意一个都行，主要是获取其结构）。成功后伪造假pipe_buffer，设置PIPE_BUF_FLAG_CAN_MERGE；offset和len为0（改offset和len可以从文件开头开始写）。完成后把假pipe_buffer写入上一步喷射的一堆msg_msgseg。因为有一个msg_msgseg和victim重叠，这一步其实是修改了victim
       - 最后就能往victim里写内容，即往`/etc/passwd`里写
+- [mov cr3](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/pwn/mov-cr3)
+  - kernel-land空间+指定[cr3寄存器](https://blog.csdn.net/SweeNeil/article/details/106171361)任意地址读（AAR）。cr3寄存器简单来说可以用wp里的一句话概括：“CR3 register holds the physical address of Page Map Level (PML) 4 Table address”。PML4 Table指的是这篇[文章](https://zhuanlan.zhihu.com/p/108425561)里介绍的四个有关将虚拟地址转换为物理地址的表（我一直以为PML4 table是一个表，搜了好久都没搜到是个啥玩意，原来是4个表的合称）。这个寄存器通常由系统控制，进程切换时会修改cr3寄存器里的值为要切换进程的物理基地址。如果攻击者可以修改这个寄存器，就可以跨进程读内存。可通过kernel内部的task_struct（从init_task开始，一个个往下找想要进程的结构体）泄漏PML 4 table的虚拟地址，然后参考 https://www.kernel.org/doc/gorman/pdf/understand.pdf 59页的内容将其转换为物理地址
+  - Interrupt Descriptor Table (IDT)不被KASLR影响，可用来泄漏kernel基地址
+  - 非预期解： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#mov-cr3 。虽然是两个不同的进程，但所在的物理内存都是一样的。所以利用AAR扫描物理内存即可。我顺便记录了在服务器上看到的一段有助于理解的对话
 
 ## Shellcode题合集
 
@@ -1857,3 +1861,6 @@ try {
 - rust里将部分unicode字符转换为大写时会导致一个字符被延长至多个字符，有栈溢出风险。unicode表： https://doc.rust-lang.org/src/core/unicode/unicode_data.rs.html#966
 193. [reflection](https://hackmd.io/@Zzzzek/HyUXVYQl0)
 - 64位[ret2dlresolve](https://syst3mfailure.io/ret2dl_resolve/)+栈迁移。顺便找到个不错的文章： https://blog.osiris.cyber.nyu.edu/2019/04/06/pivoting-around-memory/
+194. [Echo Chamber](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/pwn/echo-chamber)
+- 能用的格式化字符串被过滤时，可以用`%*`泄漏32-bit值。题目作者的解释：“tho u can not specify the index for this but to can pad some %c before it to leak value on any position. ex: `%c %c %c %*` will leak the 4th value”
+- `__run_exit_handlers`(`.fini_array`,`.dtors`)的利用。这个之前见过很多次了，覆盖成想要的函数就能在程序退出时调用那个函数。可能要用`readelf -d`查看`.fini_array`的偏移。顺便再复习一下，这玩意只能帮助重新调用函数一次，不能无限循环。不过还不确定是不是只能覆盖一次，因为wp后续就利用stack修改返回地址了，没有再用`.fini_array`
