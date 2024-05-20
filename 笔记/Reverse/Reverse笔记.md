@@ -1006,6 +1006,12 @@ main()
 - [Palworld](https://ctf.krauq.com/wolvctf-2024#palworld-2-solves)
     - PLD file(defining digital logic)逆向
     - 使用z3+symbolic execution engine for circuit logic的解法： https://github.com/kjcolley7/CTF-WriteUps/tree/master/2024/wolvctf/palworld
+- [15min-adventure](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/rev/15min-adventure)
+	- RotateLeft的使用（对应ida里的`__ROL1__`操作）。有时候一个状态难写约束可以将其分成两个
+- [decrypt-me](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/rev/decrypt-me)
+	- [RNGeesus](https://github.com/deut-erium/RNGeesus)中Mersenne Twister的应用。这是一个利用z3 SMT求解PRNG的工具，除了这题用的MT，还有lcg，lfsr和dual_ec_drbg
+- [mbaboy](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/rev/mbaboy)
+	- z3里Array的使用
 115. [Conquest of Camelot](https://black-frost.github.io/posts/sekai2023/)
 - OCaml语言binary逆向。这种语言的函数调用约定比较奇怪，ida可能无法生成伪代码。另外，这种语言对数组的操作会自动添加大量的bound checking，函数体会看起来很复杂但逻辑可能很简单
 - 參考 https://mcfx.us/posts/2023-09-01-sekaictf-2023-writeup/#conquest-of-camelot ，（ida里）calling convection应该为`__int64 __usercall func<rax>(__int64 arg0@<rax>, __int64 arg1@<rax>, __int64 arg2@<rdi>)`
@@ -1216,3 +1222,15 @@ finish()
 - 集成了各种reverse工具的vm配置环境
 164. [pickledbg](https://github.com/Legoclones/pickledbg)
 - python pickle文件调试器
+165. [warmup](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/rev/warmup)
+- binja/ghidra/ida的一些bug，可用于混淆代码。参考 https://blog.es3n1n.eu/posts/obfuscator-pt-1/ 。对于不同反编译器，这些指令会使其无法反编译：
+```
+ida: ENTER 0xFFFF, 0xFF
+binja: adc
+ghidra:
+mov     r13, 0xffffffffffffffff
+lea     r13, [r13]
+mov     r8, qword [r13]
+```
+166. [wonderful](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/rev/wonderful)
+- 若binary内部有一个名为`.themida`的PE section，说明此binary被Themida加密过了。wp记录了这类binary的分析过程

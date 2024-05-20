@@ -103,6 +103,9 @@
     - https://twitter.com/ryotkak/status/1738400596074615238
 - [heterograph](https://r3kapig-not1on.notion.site/Midnight-Sun-CTF-2024-Quals-Jeopardy-cb986332bd3148a0b041b498141b6521)
     - 使用特殊字体绕过WAF
+- [babylogin](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/web/babylogin)
+    - cookie-parser技巧：在cookie前加上`j:`前缀会使cookie-parser用`JSON.parse`处理cookie，有原型链污染的可能
+    - xs-search：利用不同的HTTP Status code泄漏内容。参考 https://xsleaks.dev/docs/attacks/error-events/
 
 ## SSTI
 
@@ -856,7 +859,7 @@ Ubuntu默认安装的PHP中session.serialize_handler默认设置为php。
 
 105. [利用本地DTD文件的xxe](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)。例题:[[GoogleCTF2019 Quals]Bnv](https://syunaht.com/p/1267717976.html)。
 106. [xpath注入](https://www.cnblogs.com/backlion/p/8554749.html)。例题:[[NPUCTF2020]ezlogin](https://tyaoo.github.io/2020/05/26/BUUCTF-2/)
-107. express的parameterLimit默认为1000;根据rfc，header字段可以通过在每一行前面至少加一个SP或HT来扩展到多行。例题:[ez_curl](../../CTF/攻防世界/4级/Web/ez_curl.md)
+107. express的parameterLimit默认为1000,超过后会出现一些unintended behavior，可用于绕过一些内部检查逻辑;根据rfc，header字段可以通过在每一行前面至少加一个SP或HT来扩展到多行。例题:[ez_curl](../../CTF/攻防世界/4级/Web/ez_curl.md)
 108. java WEB-INF目录泄露+任意文件读取。例题:[[RoarCTF 2019]Easy Java](../../CTF/BUUCTF/Web/[RoarCTF%202019]Easy%20Java.md)
 109. 调用shell执行代码时，被反引号扩起来的内容会先执行，以此可用于绕过一些固定的格式。比如写入的system语句会被包装成json这种情况就可用反引号绕过。例题:[[2020 新春红包题]1](https://www.zhaoj.in/read-6397.html)
 110. 如果当前的权限不够，想用已知有权限的账号cat flag，可用：

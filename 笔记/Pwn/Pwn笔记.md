@@ -20,6 +20,7 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
 - [mov cr3](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/pwn/mov-cr3)
   - kernel-land空间+指定[cr3寄存器](https://blog.csdn.net/SweeNeil/article/details/106171361)任意地址读（AAR）。cr3寄存器简单来说可以用wp里的一句话概括：“CR3 register holds the physical address of Page Map Level (PML) 4 Table address”。PML4 Table指的是这篇[文章](https://zhuanlan.zhihu.com/p/108425561)里介绍的四个有关将虚拟地址转换为物理地址的表（我一直以为PML4 table是一个表，搜了好久都没搜到是个啥玩意，原来是4个表的合称）。这个寄存器通常由系统控制，进程切换时会修改cr3寄存器里的值为要切换进程的物理基地址。如果攻击者可以修改这个寄存器，就可以跨进程读内存。可通过kernel内部的task_struct（从init_task开始，一个个往下找想要进程的结构体）泄漏PML 4 table的虚拟地址，然后参考 https://www.kernel.org/doc/gorman/pdf/understand.pdf 59页的内容将其转换为物理地址
   - Interrupt Descriptor Table (IDT)不被KASLR影响，可用来泄漏kernel基地址
+  - 将kernel exp发送到服务器上的工具： https://github.com/pr0cf5/kernel-exploit-sendscript
   - 非预期解： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#mov-cr3 。虽然是两个不同的进程，但所在的物理内存都是一样的。所以利用AAR扫描物理内存即可。我顺便记录了在服务器上看到的一段有助于理解的对话
 
 ## Shellcode题合集
@@ -96,6 +97,9 @@ ret
   - 可以使用sysenter来调用syscall。只是使用sysenter前，rbp和其他参数要指向可读地址；且这个指令只能在64位的intel处理器上用
   - wp里提到了vector registers（以后写shellcode可以注意下，说不定直接就非预期简单解了）和侧信道解法
   - 更详细wp： https://hyggehalcyon.gitbook.io/page/ctfs/2024/amateursctf#baby-sandbox
+- [randomness](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/pwn/randomness)
+  - 每8个字节的shellcode的最后一个字节会被随机数字异或。预期解是将rdi设为0，然后只用7个字节跳转到调用srand的地方。这样就能知道接下来的随机数了
+  - 但我记这道题主要还是因为这个非预期解: https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#randomness 。我们可以执行任意多个长度为5字节的shellcode，只需要在最后拼接上长为2字节的相对jmp，就能跳过接下来被随机化的字节，到下一个5字节指令
 
 1. 程序关闭标准输出会导致getshell后无法得到cat flag的输出。这时可以用命令`exec 1>&0`将标准输出重定向到标准输入，再执行cat flag就能看见了。因为默认打开一个终端后，0，1，2（标准输入，标准输出，标准错误）都指向同一个位置也就是当前终端。详情见这篇[文章](https://blog.csdn.net/xirenwang/article/details/104139866)。例题：[wustctf2020_closed](https://buuoj.cn/challenges#wustctf2020_closed)
 2. 做菜单类堆题时，添加堆块的函数一般是最重要的，需要通过分析函数来构建出程序对堆块的安排。比如有些笔记管理题会把笔记名称放一个堆中，笔记内容放另一个堆中，再用一个列表记录指针。了解程序是怎么安排堆后才能根据漏洞制定利用计划。如果分析不出来，用gdb调试对着看会好很多。例题：[babyfengshui](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/babyfengshui.md)
@@ -1753,6 +1757,11 @@ try {
   - nodeJS里的全局object： https://nodejs.org/api/globals.html
   - 其他wp： https://sheeptester.github.io/longer-tweets/lactf/#miscjsfudge ，https://github.com/uclaacm/lactf-archive/tree/main/2024/misc/jsfudge
     - 同样是一些js里的字符串构造技巧，以及技巧的解析。附带一个绕过沙盒执行代码的漏洞利用： https://security.snyk.io/vuln/SNYK-JS-SAFEEVAL-3373064
+- [jscripting](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/web/jscripting)
+  - 获取globalThis.storage里的值。需要先从执行代码的vm里逃逸出来，然后还要利用Proxy自定义的函数绕过Proxy的hook，最后利用`...`语法绕过过滤词
+  - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#jscripting
+- [jscripting-revenge](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/web/jscripting-revenge)
+  - 自定义jsc文件分析+util.inspect的使用
 168. [U2S](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#U2S-2-solves)
 - lua pwn入门。通过lua数组负索引溢出获取任意地址读写并实现RCE。lua上可以使用堆喷，然后利用负索引溢出修改lua内置object元数据。具体可参考 https://ricercasecurity.blogspot.com/2023/07/fuzzing-farm-4-hunting-and-exploiting-0.html
 169. [CoolPool](https://ajomix.hashnode.dev/pwn-coolpool-tetctf2024)
