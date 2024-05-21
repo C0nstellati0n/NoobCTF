@@ -1759,7 +1759,7 @@ try {
     - 同样是一些js里的字符串构造技巧，以及技巧的解析。附带一个绕过沙盒执行代码的漏洞利用： https://security.snyk.io/vuln/SNYK-JS-SAFEEVAL-3373064
 - [jscripting](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/web/jscripting)
   - 获取globalThis.storage里的值。需要先从执行代码的vm里逃逸出来，然后还要利用Proxy自定义的函数绕过Proxy的hook，最后利用`...`语法绕过过滤词
-  - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#jscripting
+  - 其他做法/参考资料： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#jscripting ， https://gist.github.com/jcreedcmu/4f6e6d4a649405a9c86bb076905696af
 - [jscripting-revenge](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/web/jscripting-revenge)
   - 自定义jsc文件分析+util.inspect的使用
 168. [U2S](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#U2S-2-solves)
@@ -1873,3 +1873,6 @@ try {
 194. [Echo Chamber](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/pwn/echo-chamber)
 - 能用的格式化字符串被过滤时，可以用`%*`泄漏32-bit值。题目作者的解释：“tho u can not specify the index for this but to can pad some %c before it to leak value on any position. ex: `%c %c %c %*` will leak the 4th value”
 - `__run_exit_handlers`(`.fini_array`,`.dtors`)的利用。这个之前见过很多次了，覆盖成想要的函数就能在程序退出时调用那个函数。可能要用`readelf -d`查看`.fini_array`的偏移。顺便再复习一下，这玩意只能帮助重新调用函数一次，不能无限循环。不过还不确定是不是只能覆盖一次，因为wp后续就利用stack修改返回地址了，没有再用`.fini_array`
+195. [libprce3](https://mwlik.github.io/2024-05-10-defcon-quals-libprce3-challenge/)
+- 后门分析实战。大概是先用git diff找到新版本文件与之前稳定版本的区别，然后即兴发挥，分析后门在哪
+- 当无法使用空格时可以使用`$IFS`。但有时候会被bash错误识别，比如`ls$IFSsomething`，意在执行命令`ls something`，但bash有可能将整个`$IFSsomething`识别为一个东西，进而得到一个空字符串。解决办法是在中间加个任意数字`$num`：bash parses `$somenumber` it stops by the first number and get evaluated to nothing
