@@ -184,6 +184,10 @@ extradata:0         .. file: Zip archive data, at least v2.0 to extract, compres
     - [jsteg](https://github.com/lukechampine/jsteg)
 - [secrets-of-winter](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/secrets-of-winter.md)
     - [StegoVeritas](https://github.com/bannsec/stegoVeritas)
+- [Watch the Waves](https://warlocksmurf.github.io/posts/sdctf2024/#watch-the-waves-forensics)
+    - [wav2png](https://directmusic.me/wav2png/)
+    - 如果png转出来的wav听不清，可尝试在stegsolve里换一下bit planes
+    - 这题的第二部分有sstv命令使用例子
 1.   当遇见单独加密的压缩包时，首先确认是不是[伪加密](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/1%E7%BA%A7/Misc/fakezip.md)。不同版本的zip加密位不一样,例如有些zip需要将第7个字节的09改成00。如果不是，考虑到没有其它提示的因素，可以尝试直接ARCHPR爆破，常见的爆破掩码为4位数字。
 2.   010Editor自带很多文件类型模板，把常用的例如png装上，鼠标悬浮在数据上就能得到那些数据代表的内容。修改单个字节可以鼠标选中要修改的字节，然后菜单栏->编辑->插入/覆盖->插入字节
 3.   numpy.loadtxt读取坐标文件+基本matplotlib图像绘制。例题:[梅花香之苦寒来](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Misc/%E6%A2%85%E8%8A%B1%E9%A6%99%E4%B9%8B%E8%8B%A6%E5%AF%92%E6%9D%A5.md)

@@ -1234,3 +1234,5 @@ mov     r8, qword [r13]
 ```
 166. [wonderful](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/rev/wonderful)
 - 若binary内部有一个名为`.themida`的PE section，说明此binary被Themida加密过了。wp记录了这类binary的分析过程
+167. [food-without-salt](https://fastcall.dev/posts/sdctf-rev-2024/)
+- godot engine游戏逆向。之前记过要用[gdsdecomp](https://github.com/bruvzg/gdsdecomp)反编译出工程文件，但这题多了个花样，工程文件被加密了。参考 https://godot.community/topic/35/protecting-your-godot-project-from-decompilation 。长话短说，可用[gdke](https://github.com/char-ptr/gdke)提取出密钥，将密钥输入到gdsdecomp即可

@@ -2511,3 +2511,6 @@ c2=encrypt(k2,c1)
 - LFSR已知明文攻击
 139. [getting-closer](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/crypto/getting-closer-damn)
 - https://math.stackexchange.com/questions/7473/prove-that-gcdan-1-am-1-a-gcdn-m-1 : $gcd(n^a-1,n^b-1)=n^{gcd(a,b)}-1$
+140. [Raccoon Run](https://gist.github.com/ky28059/e9d0957313af0d38811e6e845dab7a41)
+- 这题是很常规的randcrack预测python随机数。不过`random.getrandbits(32)`的结果被分成了多个部分，重新组装是个问题。另一个做法见 https://gist.github.com/austin-li/b4d1a7222d1b7b5da4b594f758230bb7
+- python websocket库使用
