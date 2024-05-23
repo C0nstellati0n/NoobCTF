@@ -3622,3 +3622,12 @@ for _, bi := range ba {
 }
 ```
 - 官方wp： https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/misc/web-crypto
+450. [SNOWfall](https://siunam321.github.io/ctf/San-Diego-CTF-2024/Web/SNOWfall/)
+- ServiceNow使用
+  - Service Catalog可查看所有application
+  - 可在`/sys_update_set_list.do`查看update logs
+  - `/workflow_ide.do?sysparm_nostack=true&sysparm_use_polaris=false`可以图像形式查看某个application的workflow
+  - server side js代码分析
+  - `/sys.scripts.modern.do`的`Scripts - Background`处可执行server side js代码。可用于测试一些poc
+  - 查找用户/系统id
+- ServiceNow server side js原型链污染。ServiceNow内部执行server side js代码时用的是Rhino引擎。其中`__proto__`很早以前就被弃用了，原型链污染这个键不会起作用。可污染`constructor.prototype`代替

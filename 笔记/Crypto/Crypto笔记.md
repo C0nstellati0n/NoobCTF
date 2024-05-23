@@ -624,6 +624,16 @@ for i in range(1,e):
     - 其他脚本： https://gist.github.com/TheBlupper/0b3cb0b7402c46e3d374a7244bd9e5cd
 - [Too Many Leaks](https://berliangabriel.github.io/post/gcc-ctf-2024/)
     - Diffie-Hellman共享秘密的高位泄漏：Hidden number problem,见[论文](https://eprint.iacr.org/2020/1506.pdf)的6.2节,Most significant bits of finite field Diffie-Hellman shared secret
+- [ReallyComplexProblem](https://maplebacon.org/2024/05/sdctf-reallycomplexproblem/)
+    - 复数（complex numbers）上的部分p（这个p是高斯素数，gaussian primes）泄漏RSA题。也是个coppersmith，本来要放在rsa分类里的，不过这题的重难点都在格上，就放这了。不过这篇wp也是篇很好的coppersmith介绍文。涉及内容：
+        - Howgrave-Graham Theorem，有关如何将mod p上的多项式的根转换成普通整数上多项式的根（说转换可能不太准确，应该说“存在”）
+        - 如何缩减大型多项式。上面那个定理有一条要求多项式的系数向量较小，如果已有的多项式过大的话，就要找点方法将其缩小（缩的是系数而不是根）。长话短说，几个mod p下根一样的多项式的线性组合结果不会改变根。针对coppersmith这个 $f(x)=a+r\mod p$ （实际情况下还要乘个上限R）多项式找同根的多项式也不难，n是一个（常数也算），f(x)的所有次幂也是。给f(x)乘x的不同次幂也行，只是这样就没有常数项了。还有两种构造方式见wp
+    - 用上面的方法找到各个根相同的多项式后，就能用LLL找最短小的线性组合了。主要这里我们要的线性组合仅限整数，如果只用在实数下找到比较正交短小的向量线性组合，用施密特正交化即可。LLL在整数RSA和复数RSA上的构造见wp（整数勉强能懂，复数完全不懂，看是看得懂每一个字，但不知道为啥要这样做）
+    - 其他资料和参考文章：
+        - A bunch of lectures from Tanja Lange on Coppersmith and RSA： https://www.youtube.com/@tanjalangecryptology783/videos
+        - https://www.klwu.co/maths-in-crypto/lattice-2
+        - [Ideal forms of Coppersmith’s theorem and Guruswami-Sudan list decoding](https://ia803007.us.archive.org/2/items/arxiv-1008.1284/1008.1284.pdf)
+        - paper that summarizes the various attacks on RSA:[Recovering cryptographic keys from partial information, by example](https://eprint.iacr.org/2020/1506.pdf)
 
 ## Elliptic Curves(ECC,椭圆曲线)
 
