@@ -344,6 +344,7 @@
 - [Maximal Rectangle](./Hard/Maximal%20Rectangle.md). monotonic stack/[Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram)
 - [Sum of Distances in Tree](./Hard/Sum%20of%20Distances%20in%20Tree.md). tree+dfs+reroot dp
 - [Maximum Score Words Formed by Letters](./Hard/Maximum%20Score%20Words%20Formed%20by%20Letters.md). backtrack
+- [Word Break II](./Hard/Word%20Break%20II.md). backtrack
 
 ## Others
 
