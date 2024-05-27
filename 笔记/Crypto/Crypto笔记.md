@@ -2526,3 +2526,5 @@ c2=encrypt(k2,c1)
 140. [Raccoon Run](https://gist.github.com/ky28059/e9d0957313af0d38811e6e845dab7a41)
 - 这题是很常规的randcrack预测python随机数。不过`random.getrandbits(32)`的结果被分成了多个部分，重新组装是个问题。另一个做法见 https://gist.github.com/austin-li/b4d1a7222d1b7b5da4b594f758230bb7
 - python websocket库使用
+141. [lightweight-crypto-guard-system](https://dunglq2000.github.io/mywriteups/TJCTF-2024.html#lightweight-crypto-guard-system)
+- LCG的变种。给出LCG的输出 $x_1,x_{n+1},x_{2n+1},x_{3n+1}...$ (共六个)，恢复初始seed和a，b，m参数。其实和给出连续输出的LCG一样，只不过按照公式算出来的a是 $a^n$ ,b也是经过n次周期的结果

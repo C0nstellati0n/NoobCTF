@@ -694,6 +694,9 @@ print(base64.b64encode(temp.encode()))
   - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#pyquinejailgolf
 - [Picklestar](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/misc/picklestar)
   - python pickle反序列化挑战，限制可使用的opcode和字符串实现RCE。可以用INST字节码调用breakpoint然后执行命令
+- [my-favorite-code](https://github.com/acmucsd/sdctf-2024/tree/main/misc/my-favorite-code)
+  - 只能用两个python opcode调用breakpoint函数（建议看题目源码，要求`dis.Bytecode`返回的函数opcode只有两种，一个是COMPARE_OP，另一个自选）
+  - 在discord的聊天里艰难地拼出了一个wp： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#my-favorite-code 。关键点在于利用python 3.11新加的功能code objects cache（见 https://docs.python.org/3.11/whatsnew/3.11.html#cpython-bytecode-changes 和  https://github.com/python/cpython/issues/90997 ）隐藏部分opcode。cache的部分不会被`dis.Bytecode`看到
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

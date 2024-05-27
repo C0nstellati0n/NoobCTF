@@ -2103,3 +2103,7 @@ a=A()
 - 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#donut
 306. [blackjack](https://github.com/acmucsd/sdctf-2024/tree/main/misc/blackjack)
 - 真就直接“赌博”。据大佬所说，实现 https://www.blackjackapprenticeship.com/blackjack-strategy-charts/ 的部分策略即可稳定赢钱
+- 其他大佬的脚本： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#blackjack
+307. [Pals](https://404unfound.com/writeups/tjctf_24/pals/)
+- PNG Palette Chunk隐写。PLTE chunk定义图片使用的调色板（Palette），每个chunk以`50 4C 54 45`（即PLTE）开头，一张图片可有多个Palette。如果将图片中所有的Palette刻意调为同一种，图片整体看起来就是一种颜色。手动将每个调色板调为不同的颜色即可
+- 发现了一个只用stegsolve的解法： https://github.com/marcus-hao/CTF/tree/main/TJCTF%202024/forensics/pals 。原来stegsolve里的random color map是这个意思啊？
