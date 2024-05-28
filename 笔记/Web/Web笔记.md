@@ -915,6 +915,7 @@ index()
   - `http://localtest.me`
   - `localh.st`
   - `127.0.0.4`,`http://127.0.0.2`，好像127开头的都是loopback地址
+  - 要是允许访问外网的话，可以找点类似tinyurl的网站编码内网ip
 127. [[NPUCTF2020]验证🐎](https://blog.csdn.net/hiahiachang/article/details/105756697)。本题的知识点有：
 - js中列表，对象等与字符串相加会导致强制类型转换，结果为字符串。可用这个特点绕过一些md5加盐。以及，绕过md5时如果程序启用了json，可以利用json构造对象绕过大部分限制。
 - js利用__proto__可从原型链上引出Function和String，Function用于构造函数，String用于得到fromCharCode绕过强制过滤。利用`process.mainModule.require('child_process').execSync('cat /flag')`进行rce，同时还利用了箭头函数。
@@ -3638,3 +3639,6 @@ for _, bi := range ba {
 451. [utf-wait](https://github.com/acmucsd/sdctf-2024/tree/main/web/utf-wait)
 - [UTF-8 Overlong Encoding](https://www.leavesongs.com/PENETRATION/utf-8-overlong-encoding.html)。这道题考的倒不是Overlong Encoding相关的漏洞，而是猜测flag这四个字符在服务器上对应的Overlong Encoding（见Overlong Encoding的介绍，一个字符有多种Overlong Encoding的方式）
 - 这个[脚本](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#utf-wait)可能好理解一点
+452. [ToppleContainer](https://ayusshh.medium.com/tjctf-topplecontainer-web-d2928599e6c6)
+- jwt JWKS spoofing。说得很玄乎，其实就是网站里出现了某种漏洞，导致攻击者可以控制网站验签时使用的key
+- 漏洞很好理解，一些实现上的细节见wp。个人的做法稍微有点不一样： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#topplecontainer 。关键在于如何生成jwks.json

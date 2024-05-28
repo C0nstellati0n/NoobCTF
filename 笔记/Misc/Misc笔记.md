@@ -2107,3 +2107,11 @@ a=A()
 307. [Pals](https://404unfound.com/writeups/tjctf_24/pals/)
 - PNG Palette Chunk隐写。PLTE chunk定义图片使用的调色板（Palette），每个chunk以`50 4C 54 45`（即PLTE）开头，一张图片可有多个Palette。如果将图片中所有的Palette刻意调为同一种，图片整体看起来就是一种颜色。手动将每个调色板调为不同的颜色即可
 - 发现了一个只用stegsolve的解法： https://github.com/marcus-hao/CTF/tree/main/TJCTF%202024/forensics/pals 。原来stegsolve里的random color map是这个意思啊？
+308. [minisculest](https://github.com/TJCSec/tjctf-2024-challenges/tree/main/forensics/minisculest)
+- High Efficiency Image File Format(`.heif`)图片格式分析。这题主要是把png里的zlib IDAT数据提取出来，按照heif图片的格式装成个heif图片
+- 继续在discord拼wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#minisculest
+309. [golf-hard](https://github.com/TJCSec/tjctf-2024-challenges/tree/main/misc/golf-hard)
+- 正则挑战，给定字符串组A和B，要求写出匹配A组但不匹配B组且长度在要求内的正则
+- 这题也是：[golf-harder](https://github.com/TJCSec/tjctf-2024-challenges/tree/main/misc/golf-harder)
+310. [ml-project](https://github.com/TJCSec/tjctf-2024-challenges/tree/main/misc/ml-project)
+- 逆向机器学习（Machine learning，AI相关）model。可以用z3，也可以纯数学: https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#ml-project

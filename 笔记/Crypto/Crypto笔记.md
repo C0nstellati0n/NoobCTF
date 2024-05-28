@@ -608,6 +608,9 @@ for i in range(1,e):
 - [maskRSA](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/crypto/maskRSA)
     - [高斯消元法](https://zhuanlan.zhihu.com/p/147962066) （Gauss Elimination），阶梯形矩阵（sagemath echelon_form）的使用。这题三个解法，Gröbner Basis，Gauss Elimination和拉格朗日插值法，但都没想到……看了wp有个疑惑的地方，wp说“...use Gauss Elimination to calculate each coefficient of the encryption polynomials, since the challenge give us 20 encryptions while there are only 18 coefficients in each polynomial”,但我寻思高斯消元法需要的方程个数不是和要求的变量数量有关吗？怎么这里拐到系数数量了？可能是因为这里把“系数”看成多项式的变量了。所以搞半天这里说的系数不是解方程时的系数，而是题目那个17次多项式乘起来的结果的系数，我们要求的就是这个系数，所以这个系数应该是解方程时的变量
 - [Lagrange interpolation over a finite field(mod p)](https://ask.sagemath.org/question/39732/lagrange-interpolation-over-a-finite-field/)
+- [accountleak](https://dunglq2000.github.io/mywriteups/TJCTF-2024.html#accountleak)
+  - 利用PolynomialRing解单变量方程（多项式）。需要变形方程使其可以表示为单变量多项式
+  - 另外值得一提的是，这题需要爆破多项式中的一个变量，因此给定该变量的一个值后解方程的速度越快越好。个人在比赛中用了sagemath内置的solve来解，非常慢……像这个wp用多项式环就会快很多
 
 ## Lattice(格)
 
@@ -2528,3 +2531,4 @@ c2=encrypt(k2,c1)
 - python websocket库使用
 141. [lightweight-crypto-guard-system](https://dunglq2000.github.io/mywriteups/TJCTF-2024.html#lightweight-crypto-guard-system)
 - LCG的变种。给出LCG的输出 $x_1,x_{n+1},x_{2n+1},x_{3n+1}...$ (共六个)，恢复初始seed和a，b，m参数。其实和给出连续输出的LCG一样，只不过按照公式算出来的a是 $a^n$ ,b也是经过n次周期的结果
+- 官方的脚本可能更好理解点： https://github.com/TJCSec/tjctf-2024-challenges/tree/main/crypto/lightweight-crypto-guard-system
