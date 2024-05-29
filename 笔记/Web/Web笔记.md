@@ -33,6 +33,9 @@
     - 另一篇详细的介绍wp： https://voxal.dev/blog/pico-2024-web#no-sql-injection
 - [one-shot](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/one-shot/)
     - union all select的使用。union仅会返回不重复的查询内容，而union all会返回包括重复项的全部内容
+- [Hacker Web Store](https://siunam321.github.io/ctf/NahamCon-CTF-2024/Web/Hacker-Web-Store/)
+    - 很少见这么完整的sqlite注入过程了。注入点出现在insert语句的values中，可以用[subquery](https://www.w3resource.com/sqlite/sqlite-subqueries.php)带出数据
+    - python flask(Werkzeug) password encryption破解。这类hash以`pbkdf2:sha256:600000`开头。有现成的破解工具:[Werkzeug-Cracker](https://github.com/AnataarXVI/Werkzeug-Cracker)
 
 ## XSS
 
@@ -3124,6 +3127,7 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 - websocket下的sqlite注入。漏洞点和利用方法都一样，只不过连接方式不同。sqlmap默认不支持websocket，需要借助于工具： https://github.com/BKreisel/sqlmap-websocket-proxy
 311. [reCAPTCHA v39](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_recaptcha-v39)
 - python建立websocket连接+计算图片阴影部分面积。websocket连接的网页用requests是连不上的
+- 不知道为啥，在做[kaboot](https://github.com/TJCSec/tjctf-2024-challenges/tree/main/web/kaboot)时websocket库出问题了，没法send（奇了怪了，明明官方也是用这个库的）。于是这里是nodejs做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#kaboot
 312. [ZKPLite](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_zkplite)
 - blockchain如何计算/预测合约地址（msg.sender）： https://docs.soliditylang.org/en/latest/control-structures.html#salted-contract-creations-create2
 313. [Optimized Admin Bot](https://www.youtube.com/watch?v=BRnMRdQJVeo)
@@ -3642,3 +3646,6 @@ for _, bi := range ba {
 452. [ToppleContainer](https://ayusshh.medium.com/tjctf-topplecontainer-web-d2928599e6c6)
 - jwt JWKS spoofing。说得很玄乎，其实就是网站里出现了某种漏洞，导致攻击者可以控制网站验签时使用的key
 - 漏洞很好理解，一些实现上的细节见wp。个人的做法稍微有点不一样： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#topplecontainer 。关键在于如何生成jwks.json
+453. [WP Elevator](https://siunam321.github.io/ctf/NahamCon-CTF-2024/Sponsorship/WP-Elevator/)
+- wordpress插件php代码分析
+- 在这题也稍微了解了下wordpress的一些构造。比如：[REST API endpoint](https://developer.wordpress.org/rest-api/),[AJAX actions](https://developer.wordpress.org/plugins/javascript/ajax/)，重置密码（reset password）的过程即逻辑等

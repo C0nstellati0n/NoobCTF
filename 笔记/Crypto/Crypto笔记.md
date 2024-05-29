@@ -2441,6 +2441,7 @@ print(hex(random.getrandbits(256)))
 - 注意脚本内使用了z3.LShR而不是单纯的`>>`。z3中的整数默认是有符号的，不这么做可能会得到unsat
 109. [Lottery](https://meashiri.github.io/ctf-writeups/posts/202309-csaw/#lottery)
 - 一个ticket可以从1-70中选6个不同的数字，开奖时越多数字匹配就能得到越多奖。多少个ticket才能保证一定盈利？利用fano planes构造特殊数字组即可。参考 https://www.youtube.com/watch?v=zYkmIxS4ksA 。解法不唯一
+- 又找到了一道差不多的题：[Rigged Lottery](https://chronopad.gitbook.io/nahamcon-ctf-2024/rigged-lottery)。这个wp的脚本更简单一点
 110. [Linear Aggressor](https://muuu.net/2023-09-18/)
 - [linear regression model](https://en.wikipedia.org/wiki/Linear_regression)
 111. [Blocky Noncense](https://github.com/osirislab/CSAW-CTF-2023-Quals/tree/main/crypto/blocky%20noncense)
