@@ -7,6 +7,11 @@
 - [privilege-not-included](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/privilege-not-included.md)
     - 无权限机器使用python安装[pspy](https://github.com/DominicBreuker/pspy)监控进程
     - 利用python module/library hijacking提权。其实就是在root运行某个python文件时将里面的某个库替换成其他代码，就能以root身份执行命令
+- [SecureSurfer](https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/misc/SecureSurfer)
+    - lynx命令注入+提权。这题的知识点我之前都见过但是都忘了……比如：`'$(id)'#https://`，`#`用来注释后面的内容，`$()`取出命令执行结果。我自己想的payload就粗暴很多：`https:///'||ls||'`
+    - 用户的`.ssh`文件夹下存储着ssh连接的私钥及公钥。有了私钥就能随便连ssh了。连ssh是比较稳重的做法，这题就没法利用命令注入直接执行bash。可能是因为lynx的某种性质，运行bash后得不到输出
+    - 提权可看一下这个命令的输出:`sudo -l`。一般都是突破口
+    - lynx有个`-editor`选项，可指定使用的编辑器。将其指定为vi后进入lynx并输入e就能进入vi界面。然后输入`:!/bin/bash`就能getshell了。如果lynx有root权限，这个出来的vi包括其打开的shell也有root权限
 
 ## Digital Forensics and Incident Response(DFIR)
 
@@ -80,6 +85,10 @@
     - The Sleuth Kit分析 disk image。这题其实就是个grep题，但是我不知道TSK的icat可以cat某个partition的sector(和直接strings整个disk的结果不同)……而且也没想到这题grep的东西不是flag，而是些别的东西。本来想用Autopsy的，结果虚拟机一运行这个软件就崩，心态爆炸……
     - 其他wp（使用了更多TSK系列命令）： https://github.com/circle-gon/pico2024-writeup/blob/main/writeups/DearDiary.md ，视频wp： https://www.youtube.com/watch?v=Og2g8OSOYqk
     - 参考 https://hackmd.io/@touchgrass/HyZ2poy1C#Dear-Diary ，原来此题的diary指代的是ext4 journal。可用jcat命令cat出各个entry
+- [Breath of the wild](https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/forensics/Breathofthewild)
+    - Microsoft Disk Image eXtended文件(`.VHDX`)分析。访问disk文件最简单的方法是在windows里挂载（mount）
+    - Autopsy可以获取图片在网络上的url（即下载时的url，如果有的话）
+    - 也可以用qemu-nbd & dislocker处理disk后，在linux里mount或者用TestDisk读取ADS (Alternate Data stream)数据： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#breath-of-the-wild
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -2115,3 +2124,7 @@ a=A()
 - 这题也是：[golf-harder](https://github.com/TJCSec/tjctf-2024-challenges/tree/main/misc/golf-harder)
 310. [ml-project](https://github.com/TJCSec/tjctf-2024-challenges/tree/main/misc/ml-project)
 - 逆向机器学习（Machine learning，AI相关）model。可以用z3，也可以纯数学: https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#ml-project
+311. [QRRRRRRRR](https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/warmup/QRRRRRRRR)
+- [rMQR code](https://www.qrcode.com/en/codes/rmqr.html)识别。长得有点像拉长的qr code，可用scandit扫描
+312. [Seventy Eight](https://gist.github.com/mlashley/6d960c7119e4f97d1dd2223d5d6d21fd)
+- 如何使用esoteric language [78](https://github.com/oatmealine/78)打印字符串
