@@ -3651,6 +3651,7 @@ for _, bi := range ba {
 - 在这题也稍微了解了下wordpress的一些构造。比如：[REST API endpoint](https://developer.wordpress.org/rest-api/),[AJAX actions](https://developer.wordpress.org/plugins/javascript/ajax/)，重置密码（reset password）的过程即逻辑等
 - 另一道例题：[My Shop Disaster](https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/web/MyShopDisaster)
     - 看另一篇[wp](https://sec.stealthcopter.com/nahamcon-ctf-2024-my-shop-disaster/)时发现了个奇怪的事：wordpress内部的`is_admin`函数检查的是“当前request是否来自于admin页面”，而不是当前用户是不是admin。又因为wordpress要求ajax action只能从`/wp-admin/admin-ajax.php`调用，所以从ajax action调用`is_admin`一定返回true
+    - 这篇[wp](https://medium.com/@rphang/wp-elevator-nahamcon-ctf-24-e55bef0b6f81)的思路比较清晰（按照做题时的步骤分析）
 454. [The Davinci Code](https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/web/TheDavinciCode)
 - 可以用`curl -X OPTIONS url`探测某个url可用的请求方法： https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
 455. [The Mission](https://github.com/4n86rakam1/writeup/tree/main/NahamCon_CTF_2024/The_Mission)

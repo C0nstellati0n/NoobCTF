@@ -1240,3 +1240,11 @@ mov     r8, qword [r13]
 - 若binary内部有一个名为`.themida`的PE section，说明此binary被Themida加密过了。wp记录了这类binary的分析过程
 167. [food-without-salt](https://fastcall.dev/posts/sdctf-rev-2024/)
 - godot engine游戏逆向。之前记过要用[gdsdecomp](https://github.com/bruvzg/gdsdecomp)反编译出工程文件，但这题多了个花样，工程文件被加密了。参考 https://godot.community/topic/35/protecting-your-godot-project-from-decompilation 。长话短说，可用[gdke](https://github.com/char-ptr/gdke)提取出密钥，将密钥输入到gdsdecomp即可
+168. [Fly Away!](https://hackmd.io/@avila-pwn-notes/r183kzlEA)
+- android apk逆向工具[reFlutter](https://github.com/Impact-I/reFlutter)使用。这个工具替换要逆向的apk的lib文件，使其在执行过程中打印出供调试的信息，后续还可用burpsuite监控流量。还能搭配frida框架hook函数
+169. [Perfectly Legit Crypto Casino](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon-2024/Malware/Perfectly_Legit_Crypto_Casino.md)
+- Electron应用程序逆向。这类应用的源码在`app.asar`文件里，解压方式参考 https://github.com/clausmalver/ctf-writeup/tree/main/Nahamcon_2024
+- 这题的软件是针对macOS开发的，所以用mac打开会发现这个程序有个自定义的图标。但本质上还是个目录，可以直接cd进去
+170. [What's in the Box?](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon-2024/Rev/Whats_In_The_Box.md)
+- Makeself POSIX shell script executable(self-executable archive)。这类脚本执行的代码在尾部（具体是第几行可以自行打开文件查看）,tail等命令可以提取出代码
+- 也可以在运行途中去tmp目录找到执行的代码： https://medium.com/@0xMr_Robot/nahamcon-ctf-2024-reverse-engineering-challenges-b397296721c1

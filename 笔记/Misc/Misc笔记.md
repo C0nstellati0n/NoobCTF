@@ -9,9 +9,15 @@
     - 利用python module/library hijacking提权。其实就是在root运行某个python文件时将里面的某个库替换成其他代码，就能以root身份执行命令
 - [SecureSurfer](https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/misc/SecureSurfer)
     - lynx命令注入+提权。这题的知识点我之前都见过但是都忘了……比如：`'$(id)'#https://`，`#`用来注释后面的内容，`$()`取出命令执行结果。我自己想的payload就粗暴很多：`https:///'||ls||'`
-    - 用户的`.ssh`文件夹下存储着ssh连接的私钥及公钥。有了私钥就能随便连ssh了。连ssh是比较稳重的做法，这题就没法利用命令注入直接执行bash。可能是因为lynx的某种性质，运行bash后得不到输出
+    - 用户的`.ssh`文件夹下存储着ssh连接的私钥及公钥。有了私钥就能随便连ssh了。连ssh是比较稳重的做法。又看了一篇[wp](https://blog.ikuamike.io/posts/2024/nahamcon_ctf_2024_misc/)，执行bash并得到输出，不过使用的payload是`';bash;'`，而且放到`$()`里用就没有输出。另外这个wp里有lynx其他的提权方式，比如读取、覆盖文件
     - 提权可看一下这个命令的输出:`sudo -l`。一般都是突破口
     - lynx有个`-editor`选项，可指定使用的编辑器。将其指定为vi后进入lynx并输入e就能进入vi界面。然后输入`:!/bin/bash`就能getshell了。如果lynx有root权限，这个出来的vi包括其打开的shell也有root权限
+- [Curly Fries](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon-2024/Misc/Curly_Fries.md)
+    - 使用curl进行提权（用之前要保证运行curl时有root权限。用`sudo -l`查看哪些用户可以用root权限运行哪些命令）。gtfobins一般都有好东西： https://gtfobins.github.io/gtfobins/curl/
+    - 这题要求curl必须访问url `127.0.0.1:8000/health-check`。可以开启两个终端A和B，在终端A用python在8000端口host一个名为health-check的文件，内容为伪造的`/etc/passwd`文件。终端B运行curl，并使用`-o`选项覆盖机器的`/etc/passwd`文件。之后直接`su root`即可
+    - 比赛的时候我运行了`find / -perm -4000 2>/dev/null`命令来找SUID bit的文件。现在确认了，这个方法不能替代`sudo -l`（基础不好的下场），压根找不到curl。跑了[PEASS-ng](https://github.com/peass-ng/PEASS-ng) （LinPEAS）好像也没找到（不太确定，这个工具的输出特别多，可能漏了）
+- [Jack Be](https://game0v3r.vercel.app/blog/nahamconctf-miscellaneous)
+    - 使用nimble命令提权。nimble是nim语言的包管理器（package manager）
 
 ## Digital Forensics and Incident Response(DFIR)
 
@@ -86,9 +92,11 @@
     - 其他wp（使用了更多TSK系列命令）： https://github.com/circle-gon/pico2024-writeup/blob/main/writeups/DearDiary.md ，视频wp： https://www.youtube.com/watch?v=Og2g8OSOYqk
     - 参考 https://hackmd.io/@touchgrass/HyZ2poy1C#Dear-Diary ，原来此题的diary指代的是ext4 journal。可用jcat命令cat出各个entry
 - [Breath of the wild](https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/forensics/Breathofthewild)
-    - Microsoft Disk Image eXtended文件(`.VHDX`)分析。访问disk文件最简单的方法是在windows里挂载（mount）
+    - Microsoft Disk Image eXtended文件(virtual hard disk，`.VHDX`)分析。访问disk文件最简单的方法是在windows里挂载（mount）
     - Autopsy可以获取图片在网络上的url（即下载时的url，如果有的话）
     - 也可以用qemu-nbd & dislocker处理disk后，在linux里mount或者用TestDisk读取ADS (Alternate Data stream)数据： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#breath-of-the-wild
+- [Taking Up Residence](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon-2024/Forensics/Taking_Up_Residence.md)
+    - [MFT](https://learn.microsoft.com/en-us/windows/win32/fileio/master-file-table)文件相关forensic。可用[MFTExplorer](https://ericzimmerman.github.io)工具查看
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -2128,3 +2136,5 @@ a=A()
 - [rMQR code](https://www.qrcode.com/en/codes/rmqr.html)识别。长得有点像拉长的qr code，可用scandit扫描
 312. [Seventy Eight](https://gist.github.com/mlashley/6d960c7119e4f97d1dd2223d5d6d21fd)
 - 如何使用esoteric language [78](https://github.com/oatmealine/78)打印字符串
+313. [LogJam](https://alhumaw.github.io/posts/LogJam/)
+- 可以用[python-evtx](https://github.com/williballenthin/python-evtx)处理并分析windows日志文件（Windows Event Log files，后缀`.evtx`）
