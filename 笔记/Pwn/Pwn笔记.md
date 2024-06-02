@@ -804,9 +804,44 @@ int main(int argc, char *argv[]) {
 
 56. [更换程序使用的libc](https://bbs.kanxue.com/thread-271583.htm)。如果题目提供了libc但本地运行程序默认使用的libc却不是题目的，可以更换掉。libc可以在[这里](https://github.com/matrix1001/glibc-all-in-one)找。
 ```sh
-sudo apt install patchelf
-patchelf --set-interpreter ~/glibc-all-in-one/libs/2.35-0ubuntu3.4_amd64/ld-linux-x86-64.so.2 $1
-patchelf --replace-needed libc.so.6 ~/glibc-all-in-one/libs/2.35-0ubuntu3.4_amd64/libc.so.6
+#!/bin/bash
+#谢谢Chatgpt
+# Check if the correct number of parameters is provided
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <binary_file> <new_interpreter> <new_library>"
+    exit 1
+fi
+
+# Check if patchelf is installed
+if ! command -v patchelf &> /dev/null; then
+    echo "patchelf is not installed. Installing patchelf now..."
+    sudo apt install patchelf
+fi
+
+# Assigning parameters to variables
+binary_file="$1"
+new_interpreter="$2"
+new_library="$3"
+
+# Check if the binary file exists
+if [ ! -f "$binary_file" ]; then
+    echo "Error: Binary file '$binary_file' not found."
+    exit 1
+fi
+
+# Set interpreter
+sudo patchelf --set-interpreter "$new_interpreter" "$binary_file" || {
+    echo "Error: Failed to set the interpreter."
+    exit 1
+}
+
+# Replace needed library
+sudo patchelf --replace-needed libc.so.6 "$new_library" "$binary_file" || {
+    echo "Error: Failed to replace needed library."
+    exit 1
+}
+
+echo "Binary '$binary_file' patched successfully."
 ```
 - 很多时候题目会给出libc但没有ld.so。此时可以使用[pwninit](https://github.com/io12/pwninit)自动下载对应版本的ld.so并patch。不过个人使用发现还是有点问题，建议配合[glibc-all-in-one](https://github.com/matrix1001/glibc-all-in-one)。使用前确保有zstd，下载：`sudo apt install zstd`
 57. [360chunqiu2017_smallest](https://www.anquanke.com/post/id/217081)
@@ -1869,6 +1904,7 @@ try {
 - 结合这个简短的官方wp看会比较清楚： https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-crackbox/
 191. [baby-elfcrafting](https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-baby-elfcrafting/)
 - 构造一个不包含任何可执行代码段的ELF，使其在运行时获取shell。将PT_INTERP段（this section indicates the program path name that will be invoked as the interpreter of the ELF should it be an executable）设为`/bin/sh`即可
+- 脚本： https://github.com/r1ru/ctf-writeups/tree/master/2024/AmateursCTF/baby-elfcrafting 。但是我找不到elf是哪个第三方库……官方的exp要自己从那个asm代码编译：`nasm -f elf64 -o exp exp.asm`
 192. [buffer-overflow](https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-buffer-overflow/)
 - rust里将部分unicode字符转换为大写时会导致一个字符被延长至多个字符，有栈溢出风险。unicode表： https://doc.rust-lang.org/src/core/unicode/unicode_data.rs.html#966
 193. [reflection](https://hackmd.io/@Zzzzek/HyUXVYQl0)
