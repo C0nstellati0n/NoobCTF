@@ -37,7 +37,7 @@ def process(path):
         if len(temp)!=0:
             for url in temp:
                 if not url in urls:
-                    res+=f"https://discord.com/channels/{serverId}/{i['channel_id']}/{i['id']}: {url}\n"
+                    res+=f"{url}\n"
                     bookmarks+=f'<DT><A HREF="{url}">{url}</A>\n'
                     urls.update([url])
 path=input("请输入存储所有json文件的文件夹的路径: ")
@@ -47,7 +47,6 @@ if lastIndex==-1:
     bookmarksPath=f"bookmarks_{outputPath}"
 else:
     bookmarksPath=f"{outputPath[:lastIndex]}/bookmarks_{outputPath[lastIndex+1:]}"
-serverId=input("请输入server id: ")
 jsons=Path(path).glob("**/*.json")
 for jsonFile in jsons:
     process(jsonFile)

@@ -3657,3 +3657,5 @@ for _, bi := range ba {
 455. [The Mission](https://github.com/4n86rakam1/writeup/tree/main/NahamCon_CTF_2024/The_Mission)
 - 如果获取了github api的`Authorization(Bearer)`token，就可以访问诸如`https://api.github.com/user/repos`的github api获取这个token对应用户的仓库等内容
 - 另外这个系列的题目都是黑盒，也算积累例题了
+456. [Staker](/CTF/Codegate%20Junior/Staker.md)
+- web3 blockchain solidity题目实践

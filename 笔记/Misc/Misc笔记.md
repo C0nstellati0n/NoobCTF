@@ -12,6 +12,7 @@
     - 用户的`.ssh`文件夹下存储着ssh连接的私钥及公钥。有了私钥就能随便连ssh了。连ssh是比较稳重的做法。又看了一篇[wp](https://blog.ikuamike.io/posts/2024/nahamcon_ctf_2024_misc/)，执行bash并得到输出，不过使用的payload是`';bash;'`，而且放到`$()`里用就没有输出。另外这个wp里有lynx其他的提权方式，比如读取、覆盖文件
     - 提权可看一下这个命令的输出:`sudo -l`。一般都是突破口
     - lynx有个`-editor`选项，可指定使用的编辑器。将其指定为vi后进入lynx并输入e就能进入vi界面。然后输入`:!/bin/bash`就能getshell了。如果lynx有root权限，这个出来的vi包括其打开的shell也有root权限
+    - 发现了个[非预期解](https://github.com/ramenhost/ctf-writeups/tree/main/nahamcon-ctf-2024/misc/securesurfer)。root的密码也是userpass，但是在`/etc/passwd`里，其login shell被设置成了invalid。解决办法是用ssh登录进任意用户的shell后用`su -s /bin/bash root`覆盖当前shell为root
 - [Curly Fries](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon-2024/Misc/Curly_Fries.md)
     - 使用curl进行提权（用之前要保证运行curl时有root权限。用`sudo -l`查看哪些用户可以用root权限运行哪些命令）。gtfobins一般都有好东西： https://gtfobins.github.io/gtfobins/curl/
     - 这题要求curl必须访问url `127.0.0.1:8000/health-check`。可以开启两个终端A和B，在终端A用python在8000端口host一个名为health-check的文件，内容为伪造的`/etc/passwd`文件。终端B运行curl，并使用`-o`选项覆盖机器的`/etc/passwd`文件。之后直接`su root`即可
@@ -94,7 +95,7 @@
 - [Breath of the wild](https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/forensics/Breathofthewild)
     - Microsoft Disk Image eXtended文件(virtual hard disk，`.VHDX`)分析。访问disk文件最简单的方法是在windows里挂载（mount）
     - Autopsy可以获取图片在网络上的url（即下载时的url，如果有的话）
-    - 也可以用qemu-nbd & dislocker处理disk后，在linux里mount或者用TestDisk读取ADS (Alternate Data stream)数据： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#breath-of-the-wild
+    - 也可以用qemu-nbd & dislocker处理disk后，在linux里mount或者用TestDisk读取ADS (Alternate Data stream)数据： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#breath-of-the-wild 。如何在linux里mount vhdx文件： https://gist.github.com/allenyllee/0a4c02952bf695470860b27369bbb60d 。相关wp： https://ctftime.org/writeup/25953
 - [Taking Up Residence](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon-2024/Forensics/Taking_Up_Residence.md)
     - [MFT](https://learn.microsoft.com/en-us/windows/win32/fileio/master-file-table)文件相关forensic。可用[MFTExplorer](https://ericzimmerman.github.io)工具查看
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)

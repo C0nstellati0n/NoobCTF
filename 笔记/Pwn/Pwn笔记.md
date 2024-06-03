@@ -1922,3 +1922,7 @@ try {
 - 简述exp过程。协程（async）函数返回某个object a后，a的ref count会减去1（这块是作者故意patch出的漏洞，正常情况下不应该这样做）。当某个object的ref count为0时，会被garbage collector（gc）回收，或者说free掉object所在的内存。现在我们全局定义一个数组arr，并使协程函数fn1返回arr。调用两次fn1（具体调用几次可通过实验的方式得到。毕竟不了解全部的引擎内部实现，经常会有些奇怪的情况发生，实践出真知）会让arr所在的内存被free掉。但那个全局的arr引用还在，出现UAF。继续构造几个object（从和metadata同样大小的free list）中分配几个chunk，使某个内部管理数组的metadata（见QuickJS internals介绍）被分配到一个可被控制的数组uaf_arr里。此时我们就可以往uaf_arr里写值来修改之前那个数组arr的metadata了。通过修改metadata的`.u.array.u.ptr`属性（指向数组的存储内存）就能任意读写某个地址处的数据。但是现在我们不知道任何地址，需要想个办法泄漏地址。可以在JSString上用同样的UAF步骤获取到某个JSString的metadata，然后修改metadata的length属性为一个很大的值，打印字符串时就能越界泄漏一部分内存了，里面就有我们需要的libc和堆基地址。最后是获取RCE。很多js函数的第一个参数为`JSContext *ctx`，这个object里有个叫rt的属性指向一个JSRuntime object。这玩意里又有两个属性`JSMallocFunctions mf`和`JSMallocState malloc_state`。mf里又有4个函数指针，其中一个是`js_malloc`。这个函数的第一个参数正好就是`JSMallocState *`。所以只要把`ctx->rt->mf.js_malloc`这个函数指针覆盖成system，并往`&(ctx->rt->malloc_state)`里写`/bin/sh`，之后随便分配一个object触发`js_malloc`就能getshell了。另外，在getshell之前需要将arr的metadata的shape属性指向一块空内存（全是0，比如堆开始的地方）。这样才不会在js内部调用find_own_property时segmentation fault
 - 一些编写exp时需要注意的地方。因为js有gc控制内存，所以很难预测某个object什么时候被free。比如有时候写一句`Math.min`会导致某个object不会被free掉，注释掉就可以了；有时候又完全没影响。JS的源代码会被分配到堆上，所以写太多注释（改动成功的exp的代码长度太多）也会导致exp无法正常运行
 - 另一篇也是UAF漏洞的wp： https://mem2019.github.io/jekyll/update/2021/09/27/TCTF2021-Promise.html
+197. [babyheap](/CTF/Codegate%20Junior/babyheap.md)
+- libc 2.35堆溢出+uaf
+- 一些个人搞chunk overlap的实践记录。chunk overlap其实不用考虑太多，只要覆盖chunk的size为任意一个合理的size就行了
+- libc 2.38 RCE方法 https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc 实践记录
