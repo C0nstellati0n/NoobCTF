@@ -697,6 +697,9 @@ print(base64.b64encode(temp.encode()))
 - [my-favorite-code](https://github.com/acmucsd/sdctf-2024/tree/main/misc/my-favorite-code)
   - 只能用两个python opcode调用breakpoint函数（建议看题目源码，要求`dis.Bytecode`返回的函数opcode只有两种，一个是COMPARE_OP，另一个自选）
   - 在discord的聊天里艰难地拼出了一个wp： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#my-favorite-code 。关键点在于利用python 3.11新加的功能code objects cache（见 https://docs.python.org/3.11/whatsnew/3.11.html#cpython-bytecode-changes 和  https://github.com/python/cpython/issues/90997 ）隐藏部分opcode。cache的部分不会被`dis.Bytecode`看到
+- [PySysMagic](https://github.com/salvatore-abello/CTF-Writeups/blob/main/L3ak%20CTF%202024/PySysMagic)
+  - obligatory pyjail+PyMagic(这两题我竟然都记过)。这题倒没什么绕过audit hook的技巧，但是pyjail技巧不少
+  - wp作者的python相关cheatsheet： https://github.com/salvatore-abello/python-ctf-cheatsheet
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -1926,3 +1929,16 @@ try {
 - libc 2.35堆溢出+uaf
 - 一些个人搞chunk overlap的实践记录。chunk overlap其实不用考虑太多，只要覆盖chunk的size为任意一个合理的size就行了
 - libc 2.38 RCE方法 https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc 实践记录
+198. [oorrww](https://lenartlola.github.io/post/oorrww_dist/)
+- 如何将float转为hex。可能这样说不明确，详细解释就是，c语言将某处内存的数据看作float输出，如何还原那处数据？
+```py
+int(float.hex(float(value))[5:17], 16)
+```
+- 以及上面那个操作的反向操作:
+```py
+struct.unpack('d', bytes.fromhex(p64(data).hex()))[0]
+```
+- 有关seccomp绕过
+  - 若没有检查arch type，可以调用其他架构的系统调用。比如64位程序调用32位execve系统调用
+  - 若没有检查大于`0x40000000`的系统调用号，可以用`0x40000000 + SYSCALL_NUMBER`绕过。因为内核会忽略掉系统调用号的高位
+- 栈迁移+orw syscall rop。不算个标准的orw，因为wp里open后用sendfile输出文件内容。原因是按部就班写read和write的rop需要太多字节。另外sendfile这个函数有4个参数，syscall时需要用r10记录第四个参数。可以用位于libc `0x119170` 处的gadget，只要能控制rcx就能控制r10，顺便把系统调用号设置成sendfile的

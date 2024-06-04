@@ -2139,3 +2139,6 @@ a=A()
 - 如何使用esoteric language [78](https://github.com/oatmealine/78)打印字符串
 313. [LogJam](https://alhumaw.github.io/posts/LogJam/)
 - 可以用[python-evtx](https://github.com/williballenthin/python-evtx)处理并分析windows日志文件（Windows Event Log files，后缀`.evtx`）
+314. [Communication Gateway](https://github.com/Apzyte-Gamer/L3akCTF-2024/tree/main/Hardware-RF/Communication%20Gateway)
+- 波音频(wave audio)分析。如果Audacity打开音频发现波只有两个波峰并穿插出现，有可能是Frequency-Shift Keying (FSK)。可在audacity里用Filter过滤出两个频率的波峰肉眼识别数据，或者直接用minimodem
+- 更加手动的解法： https://github.com/itsabugnotafeature/writeups/tree/main/l3ak-2024/communication-gateway

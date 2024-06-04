@@ -71,7 +71,7 @@ p.interactive()
 
 发现`0x5879b462ba10`确实进了大小为0xe0的tcache。但是看看底下那个unsorted bin里的chunk `0x5879b462ba60`，很明显有部分和`0x5879b462ba10`重复了。现在理论上，如果我们申请一个0xe0大小的chunk，写data时就能一直覆盖到那个libc地址，进而用view泄漏libc地址
 
-然后我突然发现根本没必要。我接下来申请的chunk大小为104，和0xe0根本不沾边，为啥还能得到libc地址？这里只需要申请一个不在已有tcache里并小于unsorted bin的大小就行了，因为这样libc会从unsorted bin切出一块，直接包含libc。又因为程序没有清空chunk，所以直接就拿到了libc地址。这个chunk overlap根本就没必要……我本来想着用chunk overlap泄漏地址并覆盖metadata chunk，结果发现有更简单的方法，就是脚本开头的那几步
+我接下来申请的chunk大小为104，和0xe0根本不沾边，为啥还能得到libc地址？这里只需要申请一个不在已有tcache里并小于unsorted bin的大小就行了，因为这样libc会从unsorted bin切出一块，直接包含libc。又因为程序没有清空chunk，所以直接就拿到了libc地址。这个chunk overlap根本就没必要……我本来想着用chunk overlap泄漏地址并覆盖metadata chunk，结果发现有更简单的方法，就是脚本开头的那几步
 
 后面拿RCE也卡了我很久。我写前半部分脚本和后半部分的时间隔了大半天，忘了有view函数……于是努力寻找一个只需要libc地址的RCE方法。翻了大佬的[笔记](https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc)，似乎一个也用不了。以下是我尝试各个方法的记录
 

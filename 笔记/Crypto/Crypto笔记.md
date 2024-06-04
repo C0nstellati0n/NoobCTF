@@ -699,6 +699,8 @@ AES是很能出题的
     - LFSR的另类实现（选取异或的bit时使用位移，一次更新4轮，输出4个bit）,以及其对应的z3实现
     - 模运算通常会破坏线性。例如本题输出的4bit的数字会模3，导致只能用z3强行解初始state
     - 其他wp： https://github.com/quasar098/ctf-writeups/tree/main/dicectf-2024/rps-casino 。bitvec不知为何无法使用，便用bool类型代替
+- [Quantum L3ak](https://github.com/lrnzsir/ctf-writeups/tree/main/L3akCTF%202024/Quantum%20L3ak)
+    - python qiskit量子计算+z3实现MersenneTwister并预测Random生成的随机数
 
 ## 其他
 

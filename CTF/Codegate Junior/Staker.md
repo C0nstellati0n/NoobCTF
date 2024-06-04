@@ -114,7 +114,7 @@ contract StakingManager {
     }
 }
 ```
-查看stake和unstakeAll的逻辑，看起来只要调用这两个函数的间隔时间越长，reward就越多。但我试了很多次才发现，光靠这样赚token根本不够。题目instance只会维持30分钟，无论如何我们都没法拿到1e18个token。重点其实是LpToken：
+查看stake和unstakeAll的逻辑，看起来只要调用这两个函数的间隔时间越长，reward就越多。但我试了很多次才发现，光靠这样赚token根本不够。题目instance只会维持30分钟，无论如何我们都没法拿到`10*1e18`个token。重点其实是LpToken：
 ```solidity
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.25;

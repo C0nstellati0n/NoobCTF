@@ -355,7 +355,7 @@ flag在汇编代码里就很明显了。
 53. 基础vm虚拟机逆向。例题:[[GWCTF 2019]babyvm](../../CTF/BUUCTF/Reverse/[GWCTF%202019]babyvm.md)
 54. 在C#中，字符串默认是Unicode字符串，所以转成字节数组，在每个字符字节后都要加一个"\x00"
 55. [MFC](https://baike.baidu.com/item/MFC/2530850)逆向，需要使用[xspy](https://www.52pojie.cn/forum.php?mod=viewthread&tid=193686&highlight=xspy)。例题:[[HDCTF2019]MFC](https://blog.csdn.net/m0_46296905/article/details/116240702)。
-56. [golang无符号程序逆向](https://static.anquanke.com/download/b/security-geek-2019-q1/article-13.html)。
+56. golang无符号程序逆向。相关脚本：[AlphaGolang](https://github.com/SentineLabs/AlphaGolang) （IDA），[GoReSym](https://github.com/mandiant/GoReSym) （IDA，Ghidra）
 57. 迷宫+blowfish加密算法。例题:[[RCTF2019]DontEatMe](https://lantern.cool/wp-games-2019rctf/#DontEatMe)
 58. Smart Assembly混淆可用[de4dot](https://github.com/de4dot/de4dot)去混淆。例题:[[FlareOn2]YUSoMeta](https://blog.csdn.net/weixin_53349587/article/details/122310993)
 59. 双进程保护程序逆向。关键的加密和检查逻辑无法通过静态分析得到，程序在动态运行时开启另外的进程，利用[int3](https://www.codenong.com/cs106526086/)和WriteProcessMemory向具有检查逻辑的进程写入正确的字节。例题:[[SWPU2019]EasiestRe](https://blog.csdn.net/weixin_53349587/article/details/122279966)
@@ -1250,3 +1250,5 @@ mov     r8, qword [r13]
 - 也可以在运行途中去tmp目录找到执行的代码： https://medium.com/@0xMr_Robot/nahamcon-ctf-2024-reverse-engineering-challenges-b397296721c1
 171. [Buggy Jumper](https://www.youtube.com/watch?v=t_7eETJO6v8)
 - 如何使用Android Studio调试apk
+172. [CC](https://github.com/imenyoo2/ctf_writeups/tree/main/L3akCTF%202024)
+- python gdb script使用。发现了一个之前没想到过的逆向方式——可以同时开启两个gdb实例，两者用两个文件通信。这样就能实现实例1调用实例2里的函数了。我记得C语言里有不需要中间文件直接跟一个进程通信的函数，不知道gdb里行不行

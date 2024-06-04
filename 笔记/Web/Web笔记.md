@@ -3659,3 +3659,5 @@ for _, bi := range ba {
 - 另外这个系列的题目都是黑盒，也算积累例题了
 456. [Staker](/CTF/Codegate%20Junior/Staker.md)
 - web3 blockchain solidity题目实践
+457. [Simple calculator](https://mrno0ne.notion.site/L3AK-CTF-Writeups-8dd136a6064b45f28891e7fae5e0d451)
+- php无字母引号命令执行。比赛的时候我参考了 https://xz.aliyun.com/t/11929 的payload，但是发现无法执行。后面发现原因是这道题的eval被包在函数popCalc里，如果eval不在函数里是可以正常执行的
