@@ -98,6 +98,9 @@
     - 也可以用qemu-nbd & dislocker处理disk后，在linux里mount或者用TestDisk读取ADS (Alternate Data stream)数据： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#breath-of-the-wild 。如何在linux里mount vhdx文件： https://gist.github.com/allenyllee/0a4c02952bf695470860b27369bbb60d 。相关wp： https://ctftime.org/writeup/25953
 - [Taking Up Residence](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Nahamcon-2024/Forensics/Taking_Up_Residence.md)
     - [MFT](https://learn.microsoft.com/en-us/windows/win32/fileio/master-file-table)文件相关forensic。可用[MFTExplorer](https://ericzimmerman.github.io)工具查看
+- [The Spy](https://0xmr8anem.medium.com/l3akctf-2024-forensics-writeups-3b5575f07cba)
+  - volatility3 disk forensic+doc文件分析
+  - 用`windows.pslist`扫描进程时，若发现有`soffice.exe`（document viewer like Microsoft Office），很大概率有doc文件正在运行。可以用FileScan扫描文件并过滤出可能doc文件的地址，然后用DumpFiles dump出doc文件
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -2142,3 +2145,10 @@ a=A()
 314. [Communication Gateway](https://github.com/Apzyte-Gamer/L3akCTF-2024/tree/main/Hardware-RF/Communication%20Gateway)
 - 波音频(wave audio)分析。如果Audacity打开音频发现波只有两个波峰并穿插出现，有可能是Frequency-Shift Keying (FSK)。可在audacity里用Filter过滤出两个频率的波峰肉眼识别数据，或者直接用minimodem
 - 更加手动的解法： https://github.com/itsabugnotafeature/writeups/tree/main/l3ak-2024/communication-gateway
+315. [Impostor](https://0xmr8anem.medium.com/l3akctf-2024-forensics-writeups-3b5575f07cba)
+- pcapng http+websocket流量分析+解密jenkins credentials
+- 这篇wp作者在试这个[脚本](https://github.com/tweksteen/jenkins-decrypt)时解密失败，但是discord里有其他人解密成功。放几个别的脚本： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#impostor
+316. [HoldOnTight](https://kashmir54.github.io/ctfs/L3akCTF2024)
+- linux persistence技巧。此题展示了部分技巧使用的文件
+317. [Not My Fault!](https://github.com/r3-ck0/writeups/tree/master/L3AKctf/Hardware-RF/not_my_fault)
+- hardware fault-injection实战。此题允许插入stuck-at fault（指电路某处的信号持续在0或1，无论输入），要求在有限的评估电路的次数和fault数量下，找到input。顺便补了下电路基础知识，比如真值表，INV gate加AND gate等于NAND gate等

@@ -36,6 +36,8 @@
 - [Hacker Web Store](https://siunam321.github.io/ctf/NahamCon-CTF-2024/Web/Hacker-Web-Store/)
     - 很少见这么完整的sqlite注入过程了。注入点出现在insert语句的values中，可以用[subquery](https://www.w3resource.com/sqlite/sqlite-subqueries.php)带出数据（即再包一层select语句）。当然经典union select在这里也能用： https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/web/TheHackerWebstore
     - python flask(Werkzeug) password encryption破解。这类hash以`pbkdf2:sha256:600000`开头。有现成的破解工具:[Werkzeug-Cracker](https://github.com/AnataarXVI/Werkzeug-Cracker)
+- [bbsqli](https://kashmir54.github.io/ctfs/L3akCTF2024)
+    - 一个挺有意思的sql注入挑战。注入出现在username，要求注入sql语句将flag从email字段带出，且语句查询出的用户名等于username。有点唬人的成分在，只需要提前将构造好的sql语句作为用户名注册即可。wp作者使用了`INNER JOIN...on...`和LIKE语句。不过官方解法更简单，直接内嵌一个sql语句即可（subquery？）: https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#bbsqli
 
 ## XSS
 
