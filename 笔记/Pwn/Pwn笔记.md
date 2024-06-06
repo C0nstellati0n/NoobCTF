@@ -1938,7 +1938,15 @@ int(float.hex(float(value))[5:17], 16)
 ```py
 struct.unpack('d', bytes.fromhex(p64(data).hex()))[0]
 ```
+- 使用struct的做法： https://ihuomtia.onrender.com/l3ak-pwn-oorrww
 - 有关seccomp绕过
   - 若没有检查arch type，可以调用其他架构的系统调用。比如64位程序调用32位execve系统调用
   - 若没有检查大于`0x40000000`的系统调用号，可以用`0x40000000 + SYSCALL_NUMBER`绕过。因为内核会忽略掉系统调用号的高位
 - 栈迁移+orw syscall rop。不算个标准的orw，因为wp里open后用sendfile输出文件内容。原因是按部就班写read和write的rop需要太多字节。另外sendfile这个函数有4个参数，syscall时需要用r10记录第四个参数。可以用位于libc `0x119170` 处的gadget，只要能控制rcx就能控制r10，顺便把系统调用号设置成sendfile的
+  - 这题的[revenge版本](https://ihuomtia.onrender.com/l3ak-pwn-oorrww-revenge)也是栈迁移+ORW，不过是迁移到bss段上。另外这篇wp是较为“标准”的ORW，作者用一些精心挑选的gadget缩短了rop链长度
+199. [chonccfile](https://github.com/Nosiume/CTF-Writeups/tree/master/L3akCTF-2024/pwn/chonccfile)
+- libc 2.39 UAF+FSOP RCE。wp里有个FSOP的利用模板。另外新开的第一个文件的file structure也可以泄露libc地址，因为单向链表的性质，其`_chain`正好指向一个libc里的文件结构
+200. [Real-vm](https://hackmd.io/Fu4PG9dqRg2K7XEyM6HtgQ)
+- libc 2.23 kvm(vm escape)+FSOP RCE。虽然是kernel上的虚拟机，但还是用户态下的pwn
+- 这个kvm用起来挺复杂的，设置和调用需要用ioctl，逆向起来也烦。可以用`strace -v`查看ioctl的参数。在long mode下运行还要自行设置page table。查看程序设置的page table是什么只需要在其设置寄存器时查看cr3的值，它指向的地址就是page table的起始处。同理，假如vm内部运行用户的代码，攻击者也可以伪造page table并设置cr3来访问任意地址。在kvm内部访问特定的物理内存会触发KVM_EXIT_MMIO
+- 另一道题，关于页表（page table）等知识讲得更详细： https://github.com/kscieslinski/CTF/tree/master/pwn/conf2020/kvm
