@@ -354,3 +354,5 @@
 - [The big party](./Others/The%20big%20party.md). 2d dijkstra(2d dist数组)的复杂情况
 - [ROPChain](./Others/ROPChain.md). dp,计算一个字符串最少需要用多少个提供的字符串组合得到
 - [Seat exchange](./Others/Seat%20exchange.md). 快速计算k次[置换](https://oi-wiki.org/math/permutation/) (permutations)，directed graph cycles
+- [Square Game](https://bburns.xyz/files/square-game-writeup.pdf)
+    - 2d binary search+intersection

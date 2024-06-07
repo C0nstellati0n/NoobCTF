@@ -544,6 +544,9 @@ for i in range(1,e):
     - 脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#rsa_oracle
 - [ComplexProblem](https://github.com/acmucsd/sdctf-2024/tree/main/crypto/complex-problem)
     - 复数上的RSA。比赛时搜了好久"RSA over complex numbers"或者各种RSA+complex numbers的组合，但搜不出来。换个说法"rsa with gaussian primes"就出来了。 https://digitalcommons.njit.edu/cgi/viewcontent.cgi?article=1332&context=dissertations 135页（论文118页）。部分简单的复数可以在sagemath里分解。个人解法和官方解法稍微有点不一样，故记录一下（虽然本质是一样的）: https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#complexproblem
+- [RSAn’t](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/crypto/RSAn%E2%80%99t)
+    - 当同一个公钥加密两条明文时，可通过两组明文和密文求出n
+    - 已知p或q高位的coppersmith。以后遇见题目里奇怪的生成质数方式时一定要用代数乘出来看看结果，不然根本看不出来一些特殊的关系
 ## Sagemath
 
 感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
@@ -639,6 +642,8 @@ for i in range(1,e):
         - https://www.klwu.co/maths-in-crypto/lattice-2
         - [Ideal forms of Coppersmith’s theorem and Guruswami-Sudan list decoding](https://ia803007.us.archive.org/2/items/arxiv-1008.1284/1008.1284.pdf)
         - paper that summarizes the various attacks on RSA:[Recovering cryptographic keys from partial information, by example](https://eprint.iacr.org/2020/1506.pdf)
+- [Crypto on the Rocks](https://github.com/supaaasuge/CTF-Challenges/tree/main/crypto-on-the-rocks)
+    - PuTTY NIST P-521 elliptic curve biased k: https://www.chiark.greenend.org.uk/~sgtatham/putty/wishlist/vuln-p521-bias.html 。PuTTY工具使用了NIST P-521椭圆曲线，由于一些实现错误导致选择的k的9个msb bit均为0。于是便有了[hidden number problem](https://lazzzaro.github.io/2020/11/07/crypto-%E6%A0%BC%E5%AF%86%E7%A0%81/index.html#%E9%9A%90%E8%97%8F%E6%95%B0%E9%97%AE%E9%A2%98%EF%BC%88HNP-Hidden-Number-Problem%EF%BC%89) （这题是hnp的一个小分支：dsa known msb），可用lattice求解： https://github.com/jvdsn/crypto-attacks/blob/master/attacks/hnp/lattice_attack.py
 
 ## Elliptic Curves(ECC,椭圆曲线)
 
