@@ -111,6 +111,9 @@
 - [babylogin](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/web/babylogin)
     - cookie-parser技巧：在cookie前加上`j:`前缀会使cookie-parser用`JSON.parse`处理cookie，有原型链污染的可能
     - xs-search：利用不同的HTTP Status code泄漏内容。参考 https://xsleaks.dev/docs/attacks/error-events/
+- [im_not_the_ceo](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/web/im_not_the_ceo)
+    - htmx+dompurify xss
+    - 主要都是利用div标签，只是属性的不同： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#im_not_the_ceo
 
 ## SSTI
 
@@ -3663,3 +3666,4 @@ for _, bi := range ba {
 - web3 blockchain solidity题目实践
 457. [Simple calculator](https://mrno0ne.notion.site/L3AK-CTF-Writeups-8dd136a6064b45f28891e7fae5e0d451)
 - php无字母引号命令执行。比赛的时候我参考了 https://xz.aliyun.com/t/11929 的payload，但是发现无法执行。后面发现原因是这道题的eval被包在函数popCalc里，如果eval不在函数里是可以正常执行的
+- 用8进制绕过也可以： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#write-up-for-simplecalculator-l3akctf-2024

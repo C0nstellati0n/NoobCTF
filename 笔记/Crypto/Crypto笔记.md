@@ -2540,3 +2540,5 @@ c2=encrypt(k2,c1)
 141. [lightweight-crypto-guard-system](https://dunglq2000.github.io/mywriteups/TJCTF-2024.html#lightweight-crypto-guard-system)
 - LCG的变种。给出LCG的输出 $x_1,x_{n+1},x_{2n+1},x_{3n+1}...$ (共六个)，恢复初始seed和a，b，m参数。其实和给出连续输出的LCG一样，只不过按照公式算出来的a是 $a^n$ ,b也是经过n次周期的结果
 - 官方的脚本可能更好理解点： https://github.com/TJCSec/tjctf-2024-challenges/tree/main/crypto/lightweight-crypto-guard-system
+142. [Paillien Tourist](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/crypto/paillien-tourist)
+- [Paillier cryptosystem](https://en.wikipedia.org/wiki/Paillier_cryptosystem)的加密与解密

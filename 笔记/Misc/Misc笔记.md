@@ -103,6 +103,8 @@
   - 用`windows.pslist`扫描进程时，若发现有`soffice.exe`（document viewer like Microsoft Office），很大概率有doc文件正在运行。可以用FileScan扫描文件并过滤出可能doc文件的地址，然后用DumpFiles dump出doc文件
 - [AiR](https://warlocksmurf.github.io/posts/l3akctf2024)
   - windows drive(驱动) disk分析。题目要求找到drive里的wifi密码。WiFi相关信息存储于`C:\ProgramData\Microsoft\Wlansvc\Profiles\Interfaces[Interface Guid]`，但windows一般会用Data Protection API (DPAPI)加密密码。可参考wp的做法用[DataProtectionDecryptor](https://www.nirsoft.net/utils/dpapi_data_decryptor.html)解密，或者用 https://github.com/tijldeneut/dpapilab-ng/blob/main/wifidec.py
+- [raven](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/forensics/raven)
+    - `.dd`后缀磁盘映像文件分析。作者用了TSK命令行来解
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
@@ -2156,3 +2158,11 @@ a=A()
 - 更详细的wp： https://warlocksmurf.github.io/posts/l3akctf2024
 317. [Not My Fault!](https://github.com/r3-ck0/writeups/tree/master/L3AKctf/Hardware-RF/not_my_fault)
 - hardware fault-injection实战。此题允许插入stuck-at fault（指电路某处的信号持续在0或1，无论输入），要求在有限的评估电路的次数和fault数量下，找到input。顺便补了下电路基础知识，比如真值表，INV gate加AND gate等于NAND gate等
+318. [Do It Dynamically](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/forensics/Do-It-Dynamically)
+- windows如何配置本机ip并使用`nc.exe`监听端口
+319. [Fire Checker](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/misc/fire-checker)
+- 不要让攻击者控制被[Fire](https://github.com/google/python-fire)库包裹的程序的args，攻击者可以借此影响程序的输出
+- 较详细的wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#write-up-for-firechecker-l3akctf-2024
+320. [Magic Trick](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/misc/magictrick)
+- 如何欺骗python [Magika](https://github.com/google/magika)库，使其将python代码识别为别的语言
+- 其他做法/wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#magic-trick

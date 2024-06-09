@@ -1255,3 +1255,5 @@ mov     r8, qword [r13]
 - 如何使用Android Studio调试apk
 172. [CC](https://github.com/imenyoo2/ctf_writeups/tree/main/L3akCTF%202024)
 - python gdb script使用。发现了一个之前没想到过的逆向方式——可以同时开启两个gdb实例，两者用两个文件通信。这样就能实现实例1调用实例2里的函数了。我记得C语言里有不需要中间文件直接跟一个进程通信的函数，不知道gdb里行不行
+173. [Anti](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/rev/Anti)
+- HOP(Hook_Oriented_Programming)反调试技巧： https://github.com/moabid42/anti-debug

@@ -357,3 +357,4 @@
 - [Seat exchange](./Others/Seat%20exchange.md). 快速计算k次[置换](https://oi-wiki.org/math/permutation/) (permutations)，directed graph cycles
 - [Square Game](https://bburns.xyz/files/square-game-writeup.pdf)
     - 2d binary search+intersection
+    - 官方wp： https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/misc/square-game
