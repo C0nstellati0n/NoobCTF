@@ -1257,3 +1257,10 @@ mov     r8, qword [r13]
 - python gdb script使用。发现了一个之前没想到过的逆向方式——可以同时开启两个gdb实例，两者用两个文件通信。这样就能实现实例1调用实例2里的函数了。我记得C语言里有不需要中间文件直接跟一个进程通信的函数，不知道gdb里行不行
 173. [Anti](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/rev/Anti)
 - HOP(Hook_Oriented_Programming)反调试技巧： https://github.com/moabid42/anti-debug
+174. [Parabox](https://github.com/rex69420/ctf-writeups/tree/main/GPN%20CTF%202024/rev/parabox)
+- GameBoy reverse。一些gameboy emulator（模拟器）：[Gearboy](https://github.com/drhelius/Gearboy/),[BGB](https://bgb.bircd.org/)。此wp使用后者解题
+- python记录键盘按下的键和脚本模拟按键
+- ghidra gameboy插件： [GhidraBoy](https://github.com/Gekkio/GhidraBoy)
+- 其他wp： https://github.com/Capo80/CTF-Writeups/tree/main/gpn_2024/parabox
+175. [Electric](https://github.com/MathVerg/WriteUp/tree/master/GPN2024/Electric)
+- 如何运行python compiled library（[Cython](https://github.com/cython/cython) ）

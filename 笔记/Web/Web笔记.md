@@ -114,6 +114,17 @@
 - [im_not_the_ceo](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/web/im_not_the_ceo)
     - htmx+dompurify xss
     - 主要都是利用div标签，只是属性的不同： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#im_not_the_ceo
+- [So Many Flags](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/So%20many%20flags.md)/[Even more flags](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/Even%20more%20flags.md)
+    - chrome flags分析
+    - 其他解法： https://github.com/lars-ctf/writeup-gpn22/blob/main/even-more-flags.md ，利用命令注入。里面还有一些url的知识：可以在`/`后加上几乎任何东西
+- [todo](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/todo.md)/[todo-hard](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/todo-hard.md)
+    - CSP `default-src 'none'; script-src 'self' 'unsafe-inline'`时实现页面的重定向。给我想复杂了，我自己的payload是这样的：
+    ```html
+    <form method="get" id="theForm" action="./script.js"></form>
+    <body onload="document.getElementById('theForm').submit();">
+    ```
+    - hard版本会将重定向的页面里的flag使用replace函数替换成别的。这个点我老是忘：既然我们可以执行js代码，自己手动把replace函数换成个别的就行了。其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#todotodo-hard
+    - 结果这些利用xss重定向的方法全是非预期解。预期解是这个： https://cyber-man.pl/GPNCTF-2024-todo-web ，利用`Function.prototype.toString.apply`竟然可以打印出class里被注释的代码
 
 ## SSTI
 
@@ -3014,7 +3025,7 @@ my.onload = function () {
 - nmap参数注入。如果没法注入新的命令，单纯靠nmap的参数也可以rce。参考 https://gtfobins.github.io/gtfobins/nmap/ 和wp（需要公网ip,如果用ngrok转发的话注意过滤，需要把域名转成ip： https://siunam321.github.io/ctf/SekaiCTF-2023/Web/Scanner-Service/ ）
 - shell命令参数除了用`${IFS}`和空格隔开，还能用tab键
 296. [Golf Jail](https://blog.antoniusblock.net/posts/golfjail/)
-- iframe的srcdoc里的内容光用php的`htmlspecialchars`是不够的，因为srcdoc里的代码本身就能适配HTML entities。iframe里的csp遵循其parent的csp
+- iframe的srcdoc里的内容光用php的`htmlspecialchars`是不够的，因为srcdoc里的代码本身就能适配HTML entities（其他语言的sanitize函数同理，见[Refined Notes](https://github.com/0xM4hm0ud/CTF-Writeups/tree/main/GPN%20CTF%202024/Web/Refined%20Notes) ）。iframe里的csp遵循其parent的csp
 - 构造较短的js xss payload。参考 https://www.offensiveweb.com/docs/writeup/sekaictf2023_golfjail/ ，一般有3种做法：
 ```html
 <!-- <svg/onload=xxx 也可以 -->
@@ -3667,3 +3678,6 @@ for _, bi := range ba {
 457. [Simple calculator](https://mrno0ne.notion.site/L3AK-CTF-Writeups-8dd136a6064b45f28891e7fae5e0d451)
 - php无字母引号命令执行。比赛的时候我参考了 https://xz.aliyun.com/t/11929 的payload，但是发现无法执行。后面发现原因是这道题的eval被包在函数popCalc里，如果eval不在函数里是可以正常执行的
 - 用8进制绕过也可以： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#write-up-for-simplecalculator-l3akctf-2024
+458. [Inspect Element](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/Inspect%20Element.md)
+- chrome debugger任意文件读取： https://blog.pentesteracademy.com/chrome-debugger-arbitrary-file-read-1ff2c41320d1
+- 无msf纯手动做法： https://cyber-man.pl/GPNCTF-2024-inspect-element-web

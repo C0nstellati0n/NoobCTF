@@ -1954,3 +1954,8 @@ struct.unpack('d', bytes.fromhex(p64(data).hex()))[0]
 - 另一道题，关于页表（page table）等知识讲得更详细： https://github.com/kscieslinski/CTF/tree/master/pwn/conf2020/kvm
 201. [pors](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/pwn/pors)
 - SROP syscall chain。参考 https://ctf-wiki.org/en/pwn/linux/user-mode/stackoverflow/x86/advanced-rop/srop
+202. [Future of Pwning 1](https://github.com/0xM4hm0ud/CTF-Writeups/tree/main/GPN%20CTF%202024/Pwning/Future%20of%20Pwning%201)
+- [ForwardCom](https://www.agner.org/optimize/forwardcom.pdf) assembly编写
+- 更详细的wp： https://github.com/lars-ctf/writeup-gpn22/blob/main/future-of-pwning-1.md
+203. [Polyrop warmup](https://github.com/MathVerg/WriteUp/tree/master/GPN2024/PolyropWarmup)
+- x86_64, aarch64, arm, riscv64 和 s390x架构下的绕过aslr和ret2win。关键是要用qemu运行各个架构的binary然后gdb检查stack

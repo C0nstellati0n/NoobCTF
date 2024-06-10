@@ -19,6 +19,9 @@
     - 比赛的时候我运行了`find / -perm -4000 2>/dev/null`命令来找SUID bit的文件。现在确认了，这个方法不能替代`sudo -l`（基础不好的下场），压根找不到curl。跑了[PEASS-ng](https://github.com/peass-ng/PEASS-ng) （LinPEAS）好像也没找到（不太确定，这个工具的输出特别多，可能漏了）
 - [Jack Be](https://game0v3r.vercel.app/blog/nahamconctf-miscellaneous)
     - 使用nimble命令提权。nimble是nim语言的包管理器（package manager）
+- [No crypto](https://github.com/0xM4hm0ud/CTF-Writeups/tree/main/GPN%20CTF%202024/Miscellaneous/No%20crypto)
+    - [path hijacking](https://vk9-sec.com/privilege-escalation-linux-path-hijacking/)。若某个具有root权限的binary A内部调用了一个没有用绝对路径的binary B，可以伪造PATH环境变量，劫持A调用的B
+    - stat命令可以查看文件的创建、读取等时间
 
 ## Digital Forensics and Incident Response(DFIR)
 
