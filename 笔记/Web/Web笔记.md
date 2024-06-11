@@ -116,7 +116,7 @@
     - 主要都是利用div标签，只是属性的不同： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#im_not_the_ceo
 - [So Many Flags](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/So%20many%20flags.md)/[Even more flags](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/Even%20more%20flags.md)
     - chrome flags分析
-    - 其他解法： https://github.com/lars-ctf/writeup-gpn22/blob/main/even-more-flags.md ，利用命令注入。里面还有一些url的知识：可以在`/`后加上几乎任何东西
+    - 其他解法： https://github.com/lars-ctf/writeup-gpn22/blob/main/even-more-flags.md ， https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#even-more-flags 利用命令注入。里面还有一些url的知识：可以在`/`后加上几乎任何东西
 - [todo](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/todo.md)/[todo-hard](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/todo-hard.md)
     - CSP `default-src 'none'; script-src 'self' 'unsafe-inline'`时实现页面的重定向。给我想复杂了，我自己的payload是这样的：
     ```html
@@ -125,6 +125,8 @@
     ```
     - hard版本会将重定向的页面里的flag使用replace函数替换成别的。这个点我老是忘：既然我们可以执行js代码，自己手动把replace函数换成个别的就行了。其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#todotodo-hard
     - 结果这些利用xss重定向的方法全是非预期解。预期解是这个： https://cyber-man.pl/GPNCTF-2024-todo-web ，利用`Function.prototype.toString.apply`竟然可以打印出class里被注释的代码
+- [secure-notes](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#secure-notes)
+    - 类似题目wp： [hCorem](https://ctftime.org/writeup/16642)。一个由编码引发的故事。攻击者可以手动指定Byte Order Mark (BOM) 使xss payload在浏览器里由另一种编码显示，如`utf-16-be`，可过滤payload时处理payload代码的逻辑又将其看成另一种编码,如`utf-16-le`。此时在`utf-16-le`编码下看起来没问题的payload在浏览器里用`utf-16-be`解码就有问题了。总之，不要用utf-16编码，dompurify和chrome两者没法安全处理
 
 ## SSTI
 
@@ -3681,3 +3683,5 @@ for _, bi := range ba {
 458. [Inspect Element](https://github.com/luxeria/ctf-writeups/blob/main/GPN%20CTF%202024/Inspect%20Element.md)
 - chrome debugger任意文件读取： https://blog.pentesteracademy.com/chrome-debugger-arbitrary-file-read-1ff2c41320d1
 - 无msf纯手动做法： https://cyber-man.pl/GPNCTF-2024-inspect-element-web
+- 另外两个python脚本自动化做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#inspect-element
+- 参考资料： -failures-with-chromiums-remote-debugger-8a4c4d19429f#3a81 ， https://book.jorianwoltjer.com/web/chrome-remote-devtools

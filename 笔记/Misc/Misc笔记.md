@@ -2169,3 +2169,5 @@ a=A()
 320. [Magic Trick](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/misc/magictrick)
 - 如何欺骗python [Magika](https://github.com/google/magika)库，使其将python代码识别为别的语言
 - 其他做法/wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#magic-trick
+321. [pickleassem](https://github.com/gousaiyang/pickleassem)
+- 一个帮助手动编写pickle opcode的工具

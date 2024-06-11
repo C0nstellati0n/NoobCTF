@@ -1907,8 +1907,9 @@ try {
 - JIT区域的权限为RWX，可以将shellcode注入到这个区域并执行。但是有ASLR的影响，需要编写代码在程序里搜索这个区域
 - 结合这个简短的官方wp看会比较清楚： https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-crackbox/
 191. [baby-elfcrafting](https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-baby-elfcrafting/)
-- 构造一个不包含任何可执行代码段的ELF，使其在运行时获取shell。将PT_INTERP段（this section indicates the program path name that will be invoked as the interpreter of the ELF should it be an executable）设为`/bin/sh`即可
+- 构造一个不包含任何可执行代码段的ELF，使其在运行时获取shell/运行binary。将PT_INTERP段（this section indicates the program path name that will be invoked as the interpreter of the ELF should it be an executable）设为`/bin/sh`即可
 - 脚本： https://github.com/r1ru/ctf-writeups/tree/master/2024/AmateursCTF/baby-elfcrafting 。但是我找不到elf是哪个第三方库……官方的exp要自己从那个asm代码编译：`nasm -f elf64 -o exp exp.asm`
+- 似乎找到了一道类似的题：[A full solve's what I'm thinking of](https://port19.xyz/tech/gpn-ctf-2024-writeup/)和相关内容介绍文章：[Arbitrary Code Execution with ldd](https://klamp.works/2016/04/15/code-exec-ldd.html)
 192. [buffer-overflow](https://unvariant.pages.dev/writeups/amateursctf-2024/pwn-buffer-overflow/)
 - rust里将部分unicode字符转换为大写时会导致一个字符被延长至多个字符，有栈溢出风险。unicode表： https://doc.rust-lang.org/src/core/unicode/unicode_data.rs.html#966
 193. [reflection](https://hackmd.io/@Zzzzek/HyUXVYQl0)
