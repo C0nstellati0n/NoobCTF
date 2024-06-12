@@ -644,6 +644,7 @@ for i in range(1,e):
         - paper that summarizes the various attacks on RSA:[Recovering cryptographic keys from partial information, by example](https://eprint.iacr.org/2020/1506.pdf)
 - [Crypto on the Rocks](https://github.com/supaaasuge/CTF-Challenges/tree/main/crypto-on-the-rocks)
     - PuTTY NIST P-521 elliptic curve biased k: https://www.chiark.greenend.org.uk/~sgtatham/putty/wishlist/vuln-p521-bias.html 。PuTTY工具使用了NIST P-521椭圆曲线，由于一些实现错误导致选择的k的9个msb bit均为0。于是便有了[hidden number problem](https://lazzzaro.github.io/2020/11/07/crypto-%E6%A0%BC%E5%AF%86%E7%A0%81/index.html#%E9%9A%90%E8%97%8F%E6%95%B0%E9%97%AE%E9%A2%98%EF%BC%88HNP-Hidden-Number-Problem%EF%BC%89) （这题是hnp的一个小分支：dsa known msb），可用lattice求解： https://github.com/jvdsn/crypto-attacks/blob/master/attacks/hnp/lattice_attack.py
+- Fast lattice reduction:[flatter](https://github.com/keeganryan/flatter)
 
 ## Elliptic Curves(ECC,椭圆曲线)
 
@@ -683,6 +684,9 @@ for i in range(1,e):
 - [forgery](https://github.com/utisss/UTCTF-24/tree/main/crypto-blsforgery)
     - BLS digital signature。BLS12-381是一个特殊的椭圆曲线，具体特征可看 https://hackmd.io/@benjaminion/bls12-381#About-curve-BLS12-381 。这种签名算法的私钥sk是一个从1到r-1（包含，r为群阶）的整数，公钥是私钥乘上 $g_1$ （子群 $G_1$ 的generator，参考 https://hackmd.io/@benjaminion/bls12-381#The-Subgroups ）。签名只需计算 $\sigma=[sk]H(m)$ 。有一个特别的性质，若n方用不同私钥签名了同一条消息，将n者所有的公钥和签名结果加起来，用这个结果验签也会通过。这种“合起来的签名”叫aggregate signatures
     - Rogue key attacks。假设A的公钥是 $pk_1$ ，攻击者B的密钥是 $sk_2$ 。B可以伪造 $pk_2=[sk_2]g_1-pk_1$ ，即B的公钥加上A公钥的逆。此时签名一条信息 $\sigma=[sk_2]H(m)$ ，此签名是A和B的有效aggregate signatures，而A明明没有签名过这条信息
+- [Babylogin](https://affine.group/writeup/2024-06-Codegate-Babylogin)
+    - invalid point(invalid curve)攻击。之前见过（122条）但是不太明白，今天看了 https://lazzzaro.github.io/2020/11/07/crypto-ECC/index.html#Invalid-curve-attack 稍微明白点了。这题不一样的地方在于，服务器只看x坐标，导致私钥s模invalid curve的阶d有`s mod d`和`-s mod d`两种可能。这时做crt就有点麻烦了，因为不知道到底哪种才是对的，需要爆破正确组合。wp里给了四种解决办法。另外一个难点在于怎么生成用于实施invalid point攻击的曲线和对应小阶数的点
+    - 题目作者灵感来源： https://www.gsma.com/solutions-and-impact/technologies/security/wp-content/uploads/2023/10/0073-invalid_curve.pdf
 
 ## AES
 
@@ -695,6 +699,9 @@ AES是很能出题的
     - AES ECB。在key固定且可以进行query的情况下（每次query的明文不同）预测某个明文的最后一个密文块。其实很简单，因为ECB是分块加密的，只要最后一个密文块对应的明文不变即可
 - [tag-series-2](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/tag-series-2)
     - 跟上面那题目标一样，但是是CBC。更详细的解析： https://docs.google.com/presentation/d/1FfM7ZblrqmNklG5NX9T5UyTDdEb5h1BRZTtwNrm_-mQ
+- [Lazy STEK](https://blog.soreatu.com/posts/writeup-for-lazy-stek-in-line-ctf-2022/)
+    - AES-GCM forbidden attack（nonce reused攻击）
+    - 还是在这个[脚本](https://rbtree.blog/posts/2022-03-27-sage-script-for-aes-gcm/)里知道这题的。脚本内容为“在sagemath里如何将字节块转换为 $F_2^{128}$ 里的元素”
 
 ## Z3使用
 
