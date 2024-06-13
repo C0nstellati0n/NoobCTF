@@ -1960,3 +1960,6 @@ struct.unpack('d', bytes.fromhex(p64(data).hex()))[0]
 - 更详细的wp： https://github.com/lars-ctf/writeup-gpn22/blob/main/future-of-pwning-1.md
 203. [Polyrop warmup](https://github.com/MathVerg/WriteUp/tree/master/GPN2024/PolyropWarmup)
 - x86_64, aarch64, arm, riscv64 和 s390x架构下的绕过aslr和ret2win。关键是要用qemu运行各个架构的binary然后gdb检查stack
+204. [Bytecode](https://github.com/Nosiume/CTF-Writeups/tree/master/Akasec2024/PWN/bytecode)
+- glibc 2.39 FSOP RCE。这题是个虚拟机（自定义指令集和模拟stack等），漏洞为越界读和写，正好越界的部分里有stdout
+- 作者提供的FSOP模板是比较“奢侈”的一种，没有使用诸如“重叠struct”的技巧来缩减伪造的IO_FILE结构的大小。目前我见过最简短的还得是nobodyisnobody佬的[做法](https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc#3---the-fsop-way-targetting-stdout)，不过这种做法需要直接往stdout里写一个完整的IO_FILE，像这题就没这个条件，一次只能写8个字节。只能在别的地方伪造IO_FILE后再把伪造的IO_FILE的地址写到stdout里去

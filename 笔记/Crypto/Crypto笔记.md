@@ -687,6 +687,7 @@ for i in range(1,e):
 - [Babylogin](https://affine.group/writeup/2024-06-Codegate-Babylogin)
     - invalid point(invalid curve)攻击。之前见过（122条）但是不太明白，今天看了 https://lazzzaro.github.io/2020/11/07/crypto-ECC/index.html#Invalid-curve-attack 稍微明白点了。这题不一样的地方在于，服务器只看x坐标，导致私钥s模invalid curve的阶d有`s mod d`和`-s mod d`两种可能。这时做crt就有点麻烦了，因为不知道到底哪种才是对的，需要爆破正确组合。wp里给了四种解决办法。另外一个难点在于怎么生成用于实施invalid point攻击的曲线和对应小阶数的点
     - 题目作者灵感来源： https://www.gsma.com/solutions-and-impact/technologies/security/wp-content/uploads/2023/10/0073-invalid_curve.pdf
+    - 另一道类似的题目： https://rkm0959.tistory.com/232
 
 ## AES
 
@@ -702,6 +703,8 @@ AES是很能出题的
 - [Lazy STEK](https://blog.soreatu.com/posts/writeup-for-lazy-stek-in-line-ctf-2022/)
     - AES-GCM forbidden attack（nonce reused攻击）
     - 还是在这个[脚本](https://rbtree.blog/posts/2022-03-27-sage-script-for-aes-gcm/)里知道这题的。脚本内容为“在sagemath里如何将字节块转换为 $F_2^{128}$ 里的元素”
+- [Invisible Salamanders in AES-GCM-SIV](https://keymaterial.net/2020/09/07/invisible-salamanders-in-aes-gcm-siv/)
+    - 构建一条`ciphertext+tag`使其用两个已知的不同密钥解密后得到两个不一样但有效的明文
 
 ## Z3使用
 

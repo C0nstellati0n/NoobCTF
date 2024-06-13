@@ -1265,3 +1265,9 @@ mov     r8, qword [r13]
 - 其他wp： https://github.com/Capo80/CTF-Writeups/tree/main/gpn_2024/parabox
 175. [Electric](https://github.com/MathVerg/WriteUp/tree/master/GPN2024/Electric)
 - 如何运行python compiled library（[Cython](https://github.com/cython/cython) ）
+176. [Everlasting_Message](https://justinapplegate.me/2024/codegatectf-everlastingmessage/)
+- 认识一些C语言函数
+  - Message Queues: msgget/msgsnd/msgrcv/msgctl
+  - Process Threads: pthread_create
+  - 以及如何在ghidra里创建这些函数用到的struct结构类型
+- python gdb script编写

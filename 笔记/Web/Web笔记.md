@@ -3708,3 +3708,21 @@ Content-Type: text/plain
 - python flask misconfiguration。`app.run(host='0.0.0.0',port=5000)`表示该应用被绑定到所有的网络接口（network interfaces），只要访问运行这个程序的任意一个开放的`ip:5000`就能访问这个应用。比如机器在`x.x.x.x:8080`开放了应用A，将错误配置的应用B当成A的内部应用。由于应用B的错误配置，攻击者访问`x.x.x.x:5000`就能访问这个内部应用
 - 一些bash命令绕过滤： https://book.hacktricks.xyz/linux-hardening/bypass-bash-restrictions#bypass-paths-and-forbidden-words ，以及localhost替代`127.0.0.1`绕`.`过滤
 - 如何获取Memcache里的内容： https://chinnidiwakar.gitbook.io/githubimport/pentesting/11211-memcache 。python也有对应的memcache库：`pymemcache`
+461. [Python class pollution](https://book.hacktricks.xyz/generic-methodologies-and-resources/python/class-pollution-pythons-prototype-pollution)
+- 这有篇更详细的文章： https://blog.abdulrah33m.com/prototype-pollution-in-python/
+- 这个技巧的一个用法是污染flask session。假如merge函数作用于像下面这样的payload就能将flask里的`session["username"]`的值污染为admin：
+```py
+{
+  "__class__": {
+    "__init__": {
+      "__globals__": {
+        "session": {
+          "username": "admin"
+        }
+      }
+    }
+  }
+}
+```
+462. [Upload](https://medium.com/@itsmeliodas/upload-ctf-akasec-2024-5723cc950bb9)
+- `PDF.js`库任意js代码执行： https://codeanlabs.com/blog/research/cve-2024-4367-arbitrary-js-execution-in-pdf-js/ ，可用于xss

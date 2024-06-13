@@ -108,6 +108,17 @@
   - windows drive(驱动) disk分析。题目要求找到drive里的wifi密码。WiFi相关信息存储于`C:\ProgramData\Microsoft\Wlansvc\Profiles\Interfaces[Interface Guid]`，但windows一般会用Data Protection API (DPAPI)加密密码。可参考wp的做法用[DataProtectionDecryptor](https://www.nirsoft.net/utils/dpapi_data_decryptor.html)解密，或者用 https://github.com/tijldeneut/dpapilab-ng/blob/main/wifidec.py
 - [raven](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/forensics/raven)
     - `.dd`后缀磁盘映像文件分析。作者用了TSK命令行来解
+- [Portugal](https://auteqia.garden/posts/write-ups/akasec2024/portugal/)
+    - volatility3获取google chrome搜索历史记录（searching history）
+
+## Network Forensics
+
+记那种分析pcapng的流量题
+
+- [Sussy](https://auteqia.garden/posts/write-ups/akasec2024/sussy/)
+    - 在docker里使用[zeek](https://zeek.org/)分析流量包
+    - john爆破7z和pdf文件密码
+
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
 3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
