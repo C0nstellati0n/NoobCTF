@@ -383,7 +383,7 @@ e =
 m1 = attack(c1, c2 e)
 print(binascii.unhexlify("%x" % int(m1)))
 ```
-相关信息攻击的关键点在于找出两条信息具有线性关系的方程。通常方程形如 $((a\*m)+b)^e\mod n$ 和 $((c\*m)+d)^e\mod n$ ，也是脚本中需要自己填写的a，b，c和d值的由来。[unusualrsa2](https://4xwi11.github.io/posts/80806ae5/#unusualrsa2)
+相关信息攻击的关键点在于找出两条信息具有线性关系的方程。通常方程形如 $((a\*m)+b)^e\mod n$ 和 $((c\*m)+d)^e\mod n$ ，也是脚本中需要自己填写的a，b，c和d值的由来。[unusualrsa2](https://4xwi11.github.io/posts/80806ae5/#unusualrsa2)。另外今天又发现个不错的例题+解析：[Twin](https://github.com/Warriii/CTF-Writeups/blob/main/akasec/crypto_twin.md)
 - 给出p+q（(p-2)(q-2)一个作用）和n时，构造多项式即可获取p或q。
 
 $f(x)=(x-p)(x-q)$<br>
@@ -614,6 +614,11 @@ for i in range(1,e):
 - [accountleak](https://dunglq2000.github.io/mywriteups/TJCTF-2024.html#accountleak)
   - 利用PolynomialRing解单变量方程（多项式）。需要变形方程使其可以表示为单变量多项式
   - 另外值得一提的是，这题需要爆破多项式中的一个变量，因此给定该变量的一个值后解方程的速度越快越好。个人在比赛中用了sagemath内置的solve来解，非常慢……像这个wp用多项式环就会快很多
+- [My Calculus Lab](https://github.com/Warriii/CTF-Writeups/blob/main/akasec/crypto_calculus.md)
+  - 使用sagemath求解常微分方程
+  - 一些sagemath api
+    - `function('y')(x)`:定义一个名为y的函数，其自变量为x
+    - `desolve(2*ypp - 6*yp + 3*y == 0, y, ics=[0,v0,v1], ivar=x)`:第一个参数为方程，第二个参数为因变量，第三个参数为初始条件。这里表示`x=0,y(0)=v0,y'(0)=v1`。`ivar=x`表示自变量为x
 
 ## Lattice(格)
 
@@ -2552,3 +2557,5 @@ c2=encrypt(k2,c1)
 - 官方的脚本可能更好理解点： https://github.com/TJCSec/tjctf-2024-challenges/tree/main/crypto/lightweight-crypto-guard-system
 142. [Paillien Tourist](https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/crypto/paillien-tourist)
 - [Paillier cryptosystem](https://en.wikipedia.org/wiki/Paillier_cryptosystem)的加密与解密
+143. [Power Over All](https://github.com/Warriii/CTF-Writeups/blob/main/akasec/crypto_power_over_all.md)
+- 寻找modular square roots。模某个质数的平方根用sagemath很好找，问题是这题要连续找55个。我就卡在了这点，因为每次可能的平方根都有两个，把这`2*55`个组合起来不知道要多久。我能想到用quadratic residue（二次剩余）淘汰一些根，但是脚本不知道咋写。leetcode白写了，看wp发现某种意义上这是个多源bfs问题

@@ -3724,5 +3724,8 @@ Content-Type: text/plain
   }
 }
 ```
-462. [Upload](https://medium.com/@itsmeliodas/upload-ctf-akasec-2024-5723cc950bb9)
+462. [upload](https://siunam321.github.io/ctf/Akasec-CTF-2024/Web/Upload/)
 - `PDF.js`库任意js代码执行： https://codeanlabs.com/blog/research/cve-2024-4367-arbitrary-js-execution-in-pdf-js/ ，可用于xss
+463. [Proxy For Life](https://carmar.is/write-ups/proxy-for-life.html)
+- go `net/http/pprof`模块的错误配置。这个模块有个`/debug/pprof/`路径，用于查看一些调试用的文件。若生产环境没有撤下，攻击者可以在这个路径下看到敏感内容
+- 这题我真的钻到死胡同了……不是很熟悉go，一直卡在无用的陷阱里。结果这题是dependencies出了问题。啥时候能养成看dependencies的习惯啊？

@@ -110,6 +110,7 @@
     - `.dd`后缀磁盘映像文件分析。作者用了TSK命令行来解
 - [Portugal](https://auteqia.garden/posts/write-ups/akasec2024/portugal/)
     - volatility3获取google chrome搜索历史记录（searching history）
+    - 这有个现成的插件： https://github.com/superponible/volatility-plugins/blob/master/chromehistory.py ，不过是给volatility2的
 
 ## Network Forensics
 
@@ -562,6 +563,7 @@ flag.export("./flag.mp3", format="mp3")
 - [Not supported](https://pakcyberbot.github.io/CTF-Writeups/posts/BHME-NotSupported/)
     - `vol -f file.mem windows.memmap.Memmap --pid <num> --dump`:dump pid为num的进程的内容。有意思的地方在于，Memdumps are essentially RAM moment captures，可以将dump出来的文件后缀改成.data放进GIMP，能看到内存的图片，包括字符串形式的flag。参考 https://www.youtube.com/watch?v=-E3VTblFkKg
     - 另一道使用这个技巧的题的图文wp：[Pixelated](https://warlocksmurf.github.io/posts/l3akctf2024)和[参考文章](https://w00tsec.blogspot.com/2015/02/extracting-raw-pictures-from-memory.html)，更详细一点
+    - 另外，如果要grep dump出来的memory，记得用`strings * -e l`，因为dump出来的内容都是小端的(但有的时候直接grep也行)
 - [conqueror](https://github.com/daffainfo/ctf-writeup/tree/main/2023/niteCTF%202023/conqueror)
     - `vol -f ctf.mem windows.hashdump.Hashdump`:dump用户及其md5 hash
 - [Bypassing Transport Layer](https://odintheprotector.github.io/2024/02/17/bitsctf2024-dfir.html)
@@ -2182,3 +2184,5 @@ a=A()
 - 其他做法/wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#magic-trick
 321. [pickleassem](https://github.com/gousaiyang/pickleassem)
 - 一个帮助手动编写pickle opcode的工具
+322. [Alien Circuit](https://ihuomtia.onrender.com/akasec-hw-alien-circuit)
+-  R-2R ladder Digital-to-Analog Converter circuit分析：将analog信号转换为digital信号
