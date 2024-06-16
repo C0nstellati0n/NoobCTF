@@ -1274,5 +1274,6 @@ mov     r8, qword [r13]
 177. [Mips](https://kos0ng.gitbook.io/ctfs/write-up/2024/akasec-ctf/reverse-engineering)
 - Nintendo 64 ROM image逆向。注意和97条的Nintendo DS Slot-2 ROM image不是一个东西。参考文章： https://blog.quantumlyconfused.com/ctf/2022/05/22/nsec2022-n64/ ；可用[ares](https://ares-emu.net/)模拟运行并调试；可用ghidra插件[N64LoaderWV](https://github.com/zeroKilo/N64LoaderWV)反编译image
 - ares的调试模块是一个gdb server，配置端口后用gdb-multiarch连接即可进行调试，因为Nintendo 64 ROM image的架构不是常见的amd64,是MIPS
+- 另一种逆向方式：将z64 ROM转为ELF后ida pro配上 https://assemblergames.org/viewtopic.php?t=39372 即可。如何转化： https://gist.github.com/JayFoxRox/5eaa45b374a44ce27143388bab1753b7
 178. [Orgalorg](https://kos0ng.gitbook.io/ctfs/write-up/2024/akasec-ctf/reverse-engineering)
 - python gdb script编写：如何自定义gdb里的命令

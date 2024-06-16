@@ -3529,6 +3529,8 @@ window.recaptcha=true;
         - `COPY (SELECT '') TO PROGRAM '/readflag';--`可以执行`/readflag`，以及一些PostgreSQL sql语句构造技巧
         - 可以利用字符串拼接绕过[JSql](https://jsqlparser.sourceforge.net/)的AST过滤
         - 利用thymeleaf SSTI+postgres实现RCE，参考 https://book.hacktricks.xyz/network-services-pentesting/pentesting-postgresql#rce-to-program
+    - https://samuzora.com/posts/rwctf-2024/
+        - 这个解法利用了`FileSystemXmlApplicationContext`加载一个外部xml并在xml里执行命令。这样就不用担心thymeleaf内部的过滤了
     - https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#chatterbox
 405. [SafeBridge](https://chovid99.github.io/posts/real-world-ctf-2024/)
 - 两个blockchain网络之间无法通信，需要借助bridge来在两者之间传输资源。遇见的第一个环境内有多个blockchain的题目
@@ -3729,3 +3731,10 @@ Content-Type: text/plain
 463. [Proxy For Life](https://carmar.is/write-ups/proxy-for-life.html)
 - go `net/http/pprof`模块的错误配置。这个模块有个`/debug/pprof/`路径，用于查看一些调试用的文件。若生产环境没有撤下，攻击者可以在这个路径下看到敏感内容
 - 这题我真的钻到死胡同了……不是很熟悉go，一直卡在无用的陷阱里。结果这题是dependencies出了问题。啥时候能养成看dependencies的习惯啊？
+464. [HackerCommunity](https://blog.hamayanhamayan.com)
+- ruby里有个[Multiparameter](https://www.cookieshq.co.uk/posts/multiparameter-attributes)，可以用来绕过滤。比如`admin=1`被过滤了，可以用`admin(1i)=1`或`admin()=0`绕过
+- request host劫持。同428条，通过手动修改request的host字段使得服务器访问攻击者控制的host。这种漏洞到底是怎么出现的？
+465. [HackerNickName](https://blog.hamayanhamayan.com)
+- java jackson `@JacksonInject`字段注入。可以将key设置为空字符串来插入被标记为`@JacksonInject`的字段。见 https://blog.kuron3k0.vip/2021/04/10/vulns-of-misunderstanding-annotation/
+- 一个[curl globbing](https://everything.curl.dev/cmdline/globbing.html)和URL相关的绕过滤技巧。具体过滤代码见wp，总之可以用`https://{a@url1/path1,b@url2/path2}`（`http://{127.0.0.1:8090,@nicknameservice:5000/}`）使java的URL库识别hostname为`nicknameservice`而curl真正访问的url为`127.0.0.1:8090`
+- 其他wp： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#hackernickname 。这题原来还有java 反序列化（SSTI）的内容，见404条。也跟 https://vulncheck.com/blog/cve-2023-44604-activemq-in-memory 沾点边

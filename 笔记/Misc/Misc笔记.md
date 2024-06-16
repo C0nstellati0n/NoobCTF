@@ -2186,3 +2186,7 @@ a=A()
 - 一个帮助手动编写pickle opcode的工具
 322. [Alien Circuit](https://ihuomtia.onrender.com/akasec-hw-alien-circuit)
 -  R-2R ladder Digital-to-Analog Converter circuit分析：将analog信号转换为digital信号
+323. [Flag Checker](https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#flag-checker)
+- 还以为这题是时间测信道攻击……远程连接下这么高的延迟怎么可能能测出来一个操作的差距……问题出在源码里`reading rest of input`那部分代码，我做的时候还在疑惑这段是干啥的，但我想着反正我也不懂c，作者这么写定是有他的道理……所以一定要多留意可疑的部分啊……
+333. [Inception](https://github.com/rex69420/ctf-writeups/tree/main/Akasec%20CTF%202024/forensics/Inception)
+- grep题，flag全靠grep。不过认识了一个升级版grep：[ripgrep](https://github.com/BurntSushi/ripgrep)
