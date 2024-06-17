@@ -702,6 +702,11 @@ print(base64.b64encode(temp.encode()))
   - wp作者的python相关cheatsheet： https://github.com/salvatore-abello/python-ctf-cheatsheet
   - 官方wp： https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/misc/PySysMagic
 - 一些只用了较少python printable字符的RCE payload： `𝕤𝕪𝕤.𝕞𝕠𝕕𝕦𝕝𝕖𝕤['os'].𝕤𝕪𝕤𝕥𝕖𝕞('sh')`，`[*𝔰𝔶𝔰.𝔪𝔬𝔡𝔲𝔩𝔢𝔰.𝔳𝔞𝔩𝔲𝔢𝔰()][29].𝔰𝔶𝔰𝔱𝔢𝔪(𝔰𝔶𝔰.𝔢𝔵𝔢𝔠𝔲𝔱𝔞𝔟𝔩𝔢)`
+- [JailBreak Revenge](https://ctf.krauq.com/bcactf-2024)
+  - 可使用`locals()["param"]`获取文件里名为param的参数的值
+  - 禁数字的情况下不使用等于号获取数字：`[]<[()]`
+  - 其他wp： https://github.com/D13David/ctf-writeups/tree/main/bcactf5/misc/jailbreak
+    - 如何查看jail环境下可用的builtin函数
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

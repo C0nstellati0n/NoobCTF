@@ -38,6 +38,10 @@
     - python flask(Werkzeug) password encryption破解。这类hash以`pbkdf2:sha256:600000`开头。有现成的破解工具:[Werkzeug-Cracker](https://github.com/AnataarXVI/Werkzeug-Cracker)
 - [bbsqli](https://kashmir54.github.io/ctfs/L3akCTF2024)
     - 一个挺有意思的sql注入挑战。注入出现在username，要求注入sql语句将flag从email字段带出，且语句查询出的用户名等于username。有点唬人的成分在，只需要提前将构造好的sql语句作为用户名注册即可。wp作者使用了`INNER JOIN...on...`和LIKE语句。不过官方解法更简单，直接内嵌一个sql语句即可（subquery？）: https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#bbsqli
+- [User #1](https://j4ck4l-24.github.io/2024/06/12/BCACTF_5.0_Writeup/)
+    - sqlite在update语句处的注入。包含：获取表名，字段名，表结构，修改字段等。修改时要注意`INTEGER PRIMARY KEY`，这类key必须是独特的，不能和其他的重复。但没有规定必须是递增的
+    - `FOREIGN KEY(id) REFERENCES users(id) ON UPDATE CASCADE`表示修改users表的id也会修改当前表的id
+    - 发现一个更简洁的做法： https://docs.google.com/document/d/1WaPoR1qaCXB-iLPM8jFbspiyjFN1rbAs7ij67T9HDQI/edit 。update时可以直接`id=id-1`
 
 ## XSS
 
@@ -3738,3 +3742,5 @@ Content-Type: text/plain
 - java jackson `@JacksonInject`字段注入。可以将key设置为空字符串来插入被标记为`@JacksonInject`的字段。见 https://blog.kuron3k0.vip/2021/04/10/vulns-of-misunderstanding-annotation/
 - 一个[curl globbing](https://everything.curl.dev/cmdline/globbing.html)和URL相关的绕过滤技巧。具体过滤代码见wp，总之可以用`https://{a@url1/path1,b@url2/path2}`（`http://{127.0.0.1:8090,@nicknameservice:5000/}`）使java的URL库识别hostname为`nicknameservice`而curl真正访问的url为`127.0.0.1:8090`
 - 其他wp： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#hackernickname 。这题原来还有java 反序列化（SSTI）的内容，见404条。也跟 https://vulncheck.com/blog/cve-2023-44604-activemq-in-memory 沾点边
+466. [Duck Finder](https://github.com/D13David/ctf-writeups/tree/main/bcactf5/web/duckfinder)
+- js ejs库3.1.6 RCE漏洞： https://eslam.io/posts/ejs-server-side-template-injection-rce/

@@ -1277,3 +1277,5 @@ mov     r8, qword [r13]
 - 另一种逆向方式：将z64 ROM转为ELF后ida pro配上 https://assemblergames.org/viewtopic.php?t=39372 即可。如何转化： https://gist.github.com/JayFoxRox/5eaa45b374a44ce27143388bab1753b7
 178. [Orgalorg](https://kos0ng.gitbook.io/ctfs/write-up/2024/akasec-ctf/reverse-engineering)
 - python gdb script编写：如何自定义gdb里的命令
+179. [My Brain Hurts](https://github.com/kaien07/CTF-Writeups/tree/main/BCACTF%202024/My%20Brain%20Hurts)
+- brainfuck逆向

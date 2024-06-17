@@ -2190,3 +2190,14 @@ a=A()
 - 还以为这题是时间测信道攻击……远程连接下这么高的延迟怎么可能能测出来一个操作的差距……问题出在源码里`reading rest of input`那部分代码，我做的时候还在疑惑这段是干啥的，但我想着反正我也不懂c，作者这么写定是有他的道理……所以一定要多留意可疑的部分啊……
 333. [Inception](https://github.com/rex69420/ctf-writeups/tree/main/Akasec%20CTF%202024/forensics/Inception)
 - grep题，flag全靠grep。不过认识了一个升级版grep：[ripgrep](https://github.com/BurntSushi/ripgrep)
+334. [23-719](https://ctf.krauq.com/bcactf-2024)
+- 使用`pdftotext`将pdf转为文本文件后可以grep出更多内容
+335. [magic](https://github.com/D13David/ctf-writeups/tree/main/bcactf5/forensics/magic)
+- 可用`pdfinfo -js ./ctf.pdf`提取出pdf中的js代码
+- js代码反混淆
+336. [Manipulate Spreadsheet 2](https://ctf.krauq.com/bcactf-2024)
+- 在google sheet网页app里点击File->Download->Web Page即可查看被锁起来的sheet的内容
+337. [Miracle](https://ctf.krauq.com/bcactf-2024)
+- js的一个特性：`eval("Number('077')")=77`,`eval('077')=63`。因为077是63的8进制形式
+338. [sheep](https://github.com/D13David/ctf-writeups/tree/main/bcactf5/forensics/sheep)
+- ESRI Shapefile（`.shp`后缀）文件查看及文件头格式修复
