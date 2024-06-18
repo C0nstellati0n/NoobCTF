@@ -2192,12 +2192,15 @@ a=A()
 - grep题，flag全靠grep。不过认识了一个升级版grep：[ripgrep](https://github.com/BurntSushi/ripgrep)
 334. [23-719](https://ctf.krauq.com/bcactf-2024)
 - 使用`pdftotext`将pdf转为文本文件后可以grep出更多内容
+- 其他解法以及现实生活中的原型： https://github.com/BCACTF/bcactf-5.0/tree/main/23-719
 335. [magic](https://github.com/D13David/ctf-writeups/tree/main/bcactf5/forensics/magic)
 - 可用`pdfinfo -js ./ctf.pdf`提取出pdf中的js代码
 - js代码反混淆
 336. [Manipulate Spreadsheet 2](https://ctf.krauq.com/bcactf-2024)
 - 在google sheet网页app里点击File->Download->Web Page即可查看被锁起来的sheet的内容
-337. [Miracle](https://ctf.krauq.com/bcactf-2024)
+337. [Miracle](https://github.com/BCACTF/bcactf-5.0/blob/main/miracle)
 - js的一个特性：`eval("Number('077')")=77`,`eval('077')=63`。因为077是63的8进制形式
 338. [sheep](https://github.com/D13David/ctf-writeups/tree/main/bcactf5/forensics/sheep)
 - ESRI Shapefile（`.shp`后缀）文件查看及文件头格式修复
+- 无需修复文件，使用python shapefile模块手动读取坐标点： https://github.com/DenseLance/ctf-challenges/tree/main/BCACTF%205.0/forensics/sheep
+- “稍微”复杂一点的做法： https://github.com/BCACTF/bcactf-5.0/blob/main/sheep ，将文件转为geojson格式

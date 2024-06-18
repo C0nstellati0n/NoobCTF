@@ -3150,6 +3150,7 @@ res=web3.eth.wait_for_transaction_receipt(hstrx)
 311. [reCAPTCHA v39](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_recaptcha-v39)
 - python建立websocket连接+计算图片阴影部分面积。websocket连接的网页用requests是连不上的
 - 不知道为啥，在做[kaboot](https://github.com/TJCSec/tjctf-2024-challenges/tree/main/web/kaboot)时websocket库出问题了，没法send（奇了怪了，明明官方也是用这个库的）。于是这里是nodejs做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#kaboot
+- 好好好，今天又遇见一道websocket题，python和nodejs都不行，疯狂断连。但为啥别人的nodejs就行啊？[Spinner](https://vaktibabat.github.io/posts/vsCTF_Writeups/),以及个人的无脑console解法（用js代码触发题目自带的event从而发送socket信息）和其他python解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#spinner
 312. [ZKPLite](https://github.com/sahuang/my-ctf-challenges/tree/main/vsctf-2023/misc_zkplite)
 - blockchain如何计算/预测合约地址（msg.sender）： https://docs.soliditylang.org/en/latest/control-structures.html#salted-contract-creations-create2
 313. [Optimized Admin Bot](https://www.youtube.com/watch?v=BRnMRdQJVeo)

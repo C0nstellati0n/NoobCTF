@@ -694,6 +694,8 @@ for i in range(1,e):
     - invalid point(invalid curve)攻击。之前见过（122条）但是不太明白，今天看了 https://lazzzaro.github.io/2020/11/07/crypto-ECC/index.html#Invalid-curve-attack 稍微明白点了。这题不一样的地方在于，服务器只看x坐标，导致私钥s模invalid curve的阶d有`s mod d`和`-s mod d`两种可能。这时做crt就有点麻烦了，因为不知道到底哪种才是对的，需要爆破正确组合。wp里给了四种解决办法。另外一个难点在于怎么生成用于实施invalid point攻击的曲线和对应小阶数的点
     - 题目作者灵感来源： https://www.gsma.com/solutions-and-impact/technologies/security/wp-content/uploads/2023/10/0073-invalid_curve.pdf
     - 另一道类似的题目： https://rkm0959.tistory.com/232
+- [talk-to-echo](https://github.com/BCACTF/bcactf-5.0/blob/main/talk-to-echo)
+    - 又是一个invalid point(invalid curve)攻击。不过这题是入门级，稍微好理解点。生成小阶数的点和曲线时都用的是随机生成的方式，求crt时用的是 $priv^2\mod p$ 的做法来消除原本的正负数两种可能。这个方法的缺点是，假如原本曲线模n，这里想恢复 $priv^2$ 就需要crt的各个质数总乘积达到 $n^2$
 
 ## AES
 
