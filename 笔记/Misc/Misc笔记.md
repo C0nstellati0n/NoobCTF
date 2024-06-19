@@ -2186,6 +2186,9 @@ a=A()
 - 一个帮助手动编写pickle opcode的工具
 322. [Alien Circuit](https://ihuomtia.onrender.com/akasec-hw-alien-circuit)
 -  R-2R ladder Digital-to-Analog Converter circuit分析：将analog信号转换为digital信号
+- 其他wp：
+    - https://jbryant0653.github.io/CTF%20Writeups/Hardware/%E2%80%9CAlien%20Circuit%E2%80%9D%20akaCTF2024%20Hardware.html
+    - https://github.com/AkaSec-1337-CyberSecurity-Club/Akasec-CTF-2024/tree/main/hardware/Alien_Circuit
 323. [Flag Checker](https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#flag-checker)
 - 还以为这题是时间测信道攻击……远程连接下这么高的延迟怎么可能能测出来一个操作的差距……问题出在源码里`reading rest of input`那部分代码，我做的时候还在疑惑这段是干啥的，但我想着反正我也不懂c，作者这么写定是有他的道理……所以一定要多留意可疑的部分啊……
 333. [Inception](https://github.com/rex69420/ctf-writeups/tree/main/Akasec%20CTF%202024/forensics/Inception)
@@ -2204,3 +2207,6 @@ a=A()
 - ESRI Shapefile（`.shp`后缀）文件查看及文件头格式修复
 - 无需修复文件，使用python shapefile模块手动读取坐标点： https://github.com/DenseLance/ctf-challenges/tree/main/BCACTF%205.0/forensics/sheep
 - “稍微”复杂一点的做法： https://github.com/BCACTF/bcactf-5.0/blob/main/sheep ，将文件转为geojson格式
+339. [Miku AI](https://github.com/c-bassx/ctf-writeups/tree/main/vsCTF/misc/miku-ai)
+- [AUDIOPAINT](http://www.nicolasfournel.com/?page_id=125):将图片潜入音频文件的频谱图。wp包含了如何使用这个工具生成更清晰的图片
+- 如何修改音频的振幅（amplitude）

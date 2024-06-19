@@ -2564,3 +2564,6 @@ c2=encrypt(k2,c1)
 - [Paillier cryptosystem](https://en.wikipedia.org/wiki/Paillier_cryptosystem)的加密与解密
 143. [Power Over All](https://github.com/Warriii/CTF-Writeups/blob/main/akasec/crypto_power_over_all.md)
 - 寻找modular square roots。模某个质数的平方根用sagemath很好找，问题是这题要连续找55个。我就卡在了这点，因为每次可能的平方根都有两个，把这`2*55`个组合起来不知道要多久。我能想到用quadratic residue（二次剩余）淘汰一些根，但是脚本不知道咋写。leetcode白写了，看wp发现某种意义上这是个多源bfs问题
+144. [Salad](https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#salad)
+- [Unbalanced oil and vinegar scheme](https://en.wikipedia.org/wiki/Unbalanced_oil_and_vinegar_scheme)。个人感觉是个有点繁琐+诡异（对于数学废物）的公钥签名系统。wikipedia不是特别详细，更详细的介绍见这篇[论文](http://www.goubin.fr/papers/OILLONG.PDF)
+- 此题的漏洞见论文第7节（pdf第8页）： solve a system of n randomly chosen quadratic equations in n + v variables, when $v ≥ n^2$
