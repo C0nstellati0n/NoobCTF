@@ -26,6 +26,8 @@
 ## Digital Forensics and Incident Response(DFIR)
 
 开个新的分类，用于存储这个困扰我很久的题目类型:(。顺便把disk，mem类型的forensic题也放这
+- 一些插件（平时看到的零零散散的插件，没有例题）
+    - https://www.tc4shell.com/en/7zip/forensic7z/ ：在7-Zip里玩disk forensics？
 - https://github.com/slaee/ret-CTF-writeups/tree/main/2024/bitsCTF/DFIR
     - 题目情景为`.ad`后缀文件+mem文件+pcap文件。使用工具volatility3,FTK Imager
 - [verboten](https://github.com/warlocksmurf/onlinectf-writeups/blob/main/bi0sCTF24/forensics.md)
@@ -2210,3 +2212,5 @@ a=A()
 339. [Miku AI](https://github.com/c-bassx/ctf-writeups/tree/main/vsCTF/misc/miku-ai)
 - [AUDIOPAINT](http://www.nicolasfournel.com/?page_id=125):将图片潜入音频文件的频谱图。wp包含了如何使用这个工具生成更清晰的图片
 - 如何修改音频的振幅（amplitude）
+340. [Roblox Cache Buster](https://gist.github.com/Hans5958/f9870ae89f80b5d972d95031e24584bb)
+- 将Roblox cache files转为可正常打开的文件

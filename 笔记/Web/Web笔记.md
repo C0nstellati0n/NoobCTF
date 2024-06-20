@@ -131,6 +131,16 @@
     - 结果这些利用xss重定向的方法全是非预期解。预期解是这个： https://cyber-man.pl/GPNCTF-2024-todo-web ，利用`Function.prototype.toString.apply`竟然可以打印出class里被注释的代码
 - [secure-notes](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#secure-notes)
     - 类似题目wp： [hCorem](https://ctftime.org/writeup/16642)。一个由编码引发的故事。攻击者可以手动指定Byte Order Mark (BOM) 使xss payload在浏览器里由另一种编码显示，如`utf-16-be`，可过滤payload时处理payload代码的逻辑又将其看成另一种编码,如`utf-16-le`。此时在`utf-16-le`编码下看起来没问题的payload在浏览器里用`utf-16-be`解码就有问题了。总之，不要用utf-16编码，dompurify和chrome两者没法安全处理
+- [flarenotes](https://zimzi.substack.com/p/vsctf-2024-flarenotes-revenge)
+    - `/cdn-cgi/trace`利用。这个路径是cloudflare提供的，只要使用了这个服务的网站就有这个路径（因此题目源码看不到有关这个路径的内容）。比如 https://leetcode.com/cdn-cgi/trace 。这个路径会反射一些内容，其中包含user-agent。如果让网站用html处理其返回内容，就能在user-agent处插入html代码从而实现xss
+    - firefox和chrome的差别：chrome忽略对于User-Agent字段值的覆盖，而firefox不会。见这段代码：
+    ```js
+    //这里如果get传参headers尝试覆盖浏览器自带的user-agent的话，firefox可以，chrome不行
+    const res = await fetch(`${window.location.origin}/raw/${params.get("user")}`, {
+                    headers: new Headers(JSON.parse(params.get("headers") || "{}"))
+                });
+    ```
+    - 非预期解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#flarenotes 。也是xss，但没用`/cdn-cgi/trace`技巧。主要问题在于，代码里用dompurify过滤代码前忘记解码html entity了，但渲染时又解码了。这种不统一的地方通常就是漏洞点。见 https://stackoverflow.com/questions/22831988/string-attribute-values-in-multiple-lines-html
 
 ## SSTI
 
