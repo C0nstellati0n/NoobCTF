@@ -10,6 +10,7 @@ public:
     int subarraysWithKDistinct(vector<int>& nums, int k) {
         return subcount(nums, k) - subcount(nums, k-1);
     }
+    //感觉这里计算的是at least k的subarray数量。但是和计算at most k的效果相同。毕竟at least k-(at least k-1)=at most k-(at most k-1)
     int subcount(vector<int>& nums, int k) {
         memset(cnt, 0, 20001 * sizeof(int));
         int c=1, res=0;
@@ -37,4 +38,4 @@ public:
 
 For each valid window, we can calculate the total number of subarrays it can form using the formula right - left + 1. This represents the number of subarrays ending at the current element (right) and starting anywhere from the current left boundary (left) to the right pointer (right) (inclusive).
 
-如left是0，right是3，里面满足“at Most K”条件的subarray数量为left-right+1。拿0，1，2，3作为所有可能的起始点，固定结束点为right，数量正好是left-right+1=4。然后呢？这里的数量是at most K，或者说Less Than K，我们要正好K啊？不急，假如我们先算at most k的subarray数量，再算at most k-1的subarray数量，两者一减，不就是正好k的subarray数量了吗？
+如left是0，right是3，里面满足“at Most K”条件的subarray数量为right-left+1。拿0，1，2，3作为所有可能的起始点，固定结束点为right，数量正好是right-left+1=4。然后呢？这里的数量是at most K，或者说Less Than K，我们要正好K啊？不急，假如我们先算at most k的subarray数量，再算at most k-1的subarray数量，两者一减，不就是正好k的subarray数量了吗？

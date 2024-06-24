@@ -113,6 +113,9 @@
 - [Portugal](https://auteqia.garden/posts/write-ups/akasec2024/portugal/)
     - volatility3获取google chrome搜索历史记录（searching history）
     - 这有个现成的插件： https://github.com/superponible/volatility-plugins/blob/master/chromehistory.py ，不过是给volatility2的
+- [tiny_usb](https://odintheprotector.github.io/2024/06/23/wanictf-forensic-writeup.html)
+    - 使用[isodump](https://github.com/evild3ad/isodump)分析iso镜像文件
+    - 这个[wp](https://warlocksmurf.github.io/posts/wanictf2024/)说用7zip可以直接看
 
 ## Network Forensics
 
@@ -121,6 +124,12 @@
 - [Sussy](https://auteqia.garden/posts/write-ups/akasec2024/sussy/)
     - 在docker里使用[zeek](https://zeek.org/)分析流量包
     - john爆破7z和pdf文件密码
+- [I_wanna_be_a_streamer](https://odintheprotector.github.io/2024/06/23/wanictf-forensic-writeup.html)
+    - RTP 和 RTSP 协议流量分析。这种流量包常用于传输视频和音频。此协议不会加密传输的内容。可以用Wireshark插件[H264extractor](https://github.com/volvet/h264extractor)提取其中的H.264视频数据
+    - Wireshark如何安装并使用插件；ffmpeg可以将H.264转为mp4
+    - 其他wp：
+        - https://serikatnewbie.me/blog/wani-ctf-2024/forensics ，提到了要根据 https://stackoverflow.com/questions/26164442/decoding-rtp-payload-as-h264-using-wireshark 将RTP流解码为H264
+        - https://www.yuque.com/sanxun-phiqb/czl271/dy7pfgq48o1x06fv?#%E3%80%8A%E6%B5%81%E9%87%8F%E5%8C%85%E9%9B%86%E5%90%88%E3%80%8B ：无插件手动提取做法
 
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
@@ -784,7 +793,7 @@ print("Random SK: " + RsessKey.hex())
 - 使用Random Session Key解密smb2流量。Menu>> Edit >> Preferences >> Protocols >> SMB2 >> Edit。在弹出的窗口中点击+号添加Session ID，Session Key，Server-to-Client:`(zero length)`,Client=to=Server:`(zeron length)`.如果只看见前两项，需要安装最新版的wireshark。解密后就能导出smb2流量里的文件了。Menu>>File >> Export Objects >> SMB
 133. 分析HTTPS流量前需要证书解密。若有证书（如server_key.pem），去到菜单栏>>Edit >> preferences >> protocol >> TLS >> RSA keys list,选择pem文件后解密。就能用`http`过滤出解密的流量包了。
 134. bmp图片文件格式[详解](https://www.cnblogs.com/Matrix_Yao/archive/2009/12/02/1615295.html)。bmp图片可以通过改宽高来隐写的。宽和高各占4个字节，在16进制编辑器里正好是第二行开始的前8个字节。
-135. jpg改宽高[隐写](https://blog.csdn.net/u010391191/article/details/80811813)。
+135. jpg改宽高[隐写](https://blog.csdn.net/u010391191/article/details/80811813)。今天遇见了例题：[tiny_10px](https://odintheprotector.github.io/2024/06/23/wanictf-forensic-writeup.html),也可以看看这篇[文章](https://cyberhacktics.com/hiding-information-by-changing-an-images-height/)
 136. [隐信道数据安全分析](https://blog.csdn.net/mochu7777777/article/details/120279188)
 - mp3文件private bit隐写。使用010 Editor查看文件结构，在每个MPEG_FRAME mf下的4字节MPEG_HEADER mpeg_hdr中的第24个bit是private bit。此处可以隐写内容。
 ```python
@@ -2214,3 +2223,9 @@ a=A()
 - 如何修改音频的振幅（amplitude）
 340. [Roblox Cache Buster](https://gist.github.com/Hans5958/f9870ae89f80b5d972d95031e24584bb)
 - 将Roblox cache files转为可正常打开的文件
+341. [jq](https://octo-kumo.github.io/c/ctf/2024-wanictf/misc/jq)
+- jq命令注入读取文件：可用`-R`选项配合`/*`读取全部文件。`-f f*`也行
+342. [sh](https://medium.com/@shreethaar/wanictf-2024-sh-37eb1bb2ea63)
+- printf处的命令注入以及`set -eou pipefail`的绕过。查了一下，e表示一有错误就exit，u表示使用未设置的变量时就exit，o表示将pipeline的status设置为最后一个执行失败的命令。如果不设置o的话，`error|true`的status是true，之前执行的命令的错误被隐藏了
+- 从这题也认识到了一个好用的工具：[shellcheck](https://github.com/koalaman/shellcheck)
+- 其他wp： https://github.com/rerrorctf/writeups/tree/main/2024_06_21_WaniCTF24/misc/sh

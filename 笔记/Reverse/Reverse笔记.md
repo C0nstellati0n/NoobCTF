@@ -1279,3 +1279,5 @@ mov     r8, qword [r13]
 - python gdb script编写：如何自定义gdb里的命令
 179. [My Brain Hurts](https://github.com/kaien07/CTF-Writeups/tree/main/BCACTF%202024/My%20Brain%20Hurts)
 - brainfuck逆向
+180. [lambda](https://octo-kumo.github.io/c/ctf/2024-wanictf/rev/lambda)
+- [Lambdifier](https://github.com/gio54321/lambdifier):利用lambda表达式的python混淆/反混淆脚本

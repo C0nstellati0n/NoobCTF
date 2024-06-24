@@ -141,6 +141,9 @@
                 });
     ```
     - 非预期解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#flarenotes 。也是xss，但没用`/cdn-cgi/trace`技巧。主要问题在于，代码里用dompurify过滤代码前忘记解码html entity了，但渲染时又解码了。这种不统一的地方通常就是漏洞点。见 https://stackoverflow.com/questions/22831988/string-attribute-values-in-multiple-lines-html
+- [Noscript](https://octo-kumo.github.io/c/ctf/2024-wanictf/web/noscript)
+    - 题目里有个很明显的xss，但由于csp是`default-src 'self'`和`script-src 'none'`，不能直接在这里xss偷cookie。里面还有个username字段，但这个字段是用plain格式返回的，不是html。虽然我想到了用meta标签重定向，可是不知道重定向到哪。看了这个wp才知道可以用`<object>`标签，在标签里指定`type="text/html"`就能把那个格式为plain的username当成html加载了
+    - meta标签做法和一个比较奇怪的服务器行为： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#noscript 。在用meta或object标签重定向/导入资源时，部分内容会被看作text/html，而部分只会被看成text/plain
 
 ## SSTI
 
@@ -3525,6 +3528,7 @@ window.recaptcha=true;
 - cloud AWS渗透（获取RCE及泄漏敏感信息）
 401. [X Et Et](https://hackmd.io/@Solderet/HJ52F9496)
 - js electron RCE。若electron内`new BrowserWindow`时设置了`sandbox: false`和`contextIsolation: false`，就能利用原型链污染获取RCE。类似技巧见 https://github.com/maple3142/My-CTF-Challenges/tree/master/HITCON%20CTF%202023/Harmony#rce-using-client-side-prototype-pollution
+- 又一道相同考点的题，利用electron的这个特性从xss到RCE:[Elec](https://octo-kumo.github.io/c/ctf/2024-wanictf/web/elec)。完整脚本见 https://github.com/rerrorctf/writeups/tree/main/2024_06_21_WaniCTF24/web/elec
 402. [Stress Release Service](https://medium.com/@s4r7h4k/7-characters-php-tetctf-2024-5f43ee0c7293)
 - 利用7个非字母数字的字符在php内实现eval内代码执行。wp内列举了几个phpfuck相关的网站，不过这类网站给出的payload通常较长。php内可以将字符串看作函数执行：`'function_name'()`，所以可以利用这个特点加上异或获取字符执行任意代码
 - 类似题及参考链接：
@@ -3755,3 +3759,5 @@ Content-Type: text/plain
 - 其他wp： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#hackernickname 。这题原来还有java 反序列化（SSTI）的内容，见404条。也跟 https://vulncheck.com/blog/cve-2023-44604-activemq-in-memory 沾点边
 466. [Duck Finder](https://github.com/D13David/ctf-writeups/tree/main/bcactf5/web/duckfinder)
 - js ejs库3.1.6 RCE漏洞： https://eslam.io/posts/ejs-server-side-template-injection-rce/
+467. [tls_spec](https://github.com/southball/ctf-writeups/tree/main/Wani-CTF-2024/web/tls_spec)
+- tls相关内容。如何构造自己的client certificate，如何通过抓包分析服务器接受的是哪种certificate。作者说这题有关oid_filters extension
