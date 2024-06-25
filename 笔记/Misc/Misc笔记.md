@@ -2228,4 +2228,6 @@ a=A()
 342. [sh](https://medium.com/@shreethaar/wanictf-2024-sh-37eb1bb2ea63)
 - printf处的命令注入以及`set -eou pipefail`的绕过。查了一下，e表示一有错误就exit，u表示使用未设置的变量时就exit，o表示将pipeline的status设置为最后一个执行失败的命令。如果不设置o的话，`error|true`的status是true，之前执行的命令的错误被隐藏了
 - 从这题也认识到了一个好用的工具：[shellcheck](https://github.com/koalaman/shellcheck)
-- 其他wp： https://github.com/rerrorctf/writeups/tree/main/2024_06_21_WaniCTF24/misc/sh
+- 其他wp：
+    - https://github.com/rerrorctf/writeups/tree/main/2024_06_21_WaniCTF24/misc/sh
+    - https://zenn.dev/hk_ilohas/articles/wani2024-writeup （在`[[ ]]`里注入通配符）

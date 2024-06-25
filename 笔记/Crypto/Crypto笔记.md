@@ -650,6 +650,18 @@ for i in range(1,e):
         - paper that summarizes the various attacks on RSA:[Recovering cryptographic keys from partial information, by example](https://eprint.iacr.org/2020/1506.pdf)
 - [Crypto on the Rocks](https://github.com/supaaasuge/CTF-Challenges/tree/main/crypto-on-the-rocks)
     - PuTTY NIST P-521 elliptic curve biased k: https://www.chiark.greenend.org.uk/~sgtatham/putty/wishlist/vuln-p521-bias.html 。PuTTY工具使用了NIST P-521椭圆曲线，由于一些实现错误导致选择的k的9个msb bit均为0。于是便有了[hidden number problem](https://lazzzaro.github.io/2020/11/07/crypto-%E6%A0%BC%E5%AF%86%E7%A0%81/index.html#%E9%9A%90%E8%97%8F%E6%95%B0%E9%97%AE%E9%A2%98%EF%BC%88HNP-Hidden-Number-Problem%EF%BC%89) （这题是hnp的一个小分支：dsa known msb），可用lattice求解： https://github.com/jvdsn/crypto-attacks/blob/master/attacks/hnp/lattice_attack.py
+- [uf](https://connor-mccartney.github.io/cryptography/other/WaniCTF2024)
+    - 求解approximate gcd问题。说有这么一组数，它们的gcd为m。但是由于某种原因，多了一个较小的误差项：
+    ```py
+    #理论上
+    assert m == gcd([x0, x1, x2, x3])
+    #但是多了几个误差项
+    #x0 = y0*m + z0
+    #x1 = y1*m + z1
+    #x2 = y2*m + z2
+    #x3 = y3*m + z3
+    ```
+    - 论文： https://eprint.iacr.org/2016/215.pdf
 - Fast lattice reduction:[flatter](https://github.com/keeganryan/flatter)
 
 ## Elliptic Curves(ECC,椭圆曲线)
