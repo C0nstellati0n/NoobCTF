@@ -144,6 +144,9 @@
 - [Noscript](https://octo-kumo.github.io/c/ctf/2024-wanictf/web/noscript)
     - 题目里有个很明显的xss，但由于csp是`default-src 'self'`和`script-src 'none'`，不能直接在这里xss偷cookie。里面还有个username字段，但这个字段是用plain格式返回的，不是html。虽然我想到了用meta标签重定向，可是不知道重定向到哪。看了这个wp才知道可以用`<object>`标签，在标签里指定`type="text/html"`就能把那个格式为plain的username当成html加载了
     - meta标签做法和一个比较奇怪的服务器行为： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#noscript 。在用meta或object标签重定向/导入资源时，部分内容会被看作text/html，而部分只会被看成text/plain
+- [sappy](https://zimzi.substack.com/p/googlectf-2024-sappy)
+    - skill issue时刻。这题我看出来怎么搞xss了，但是不知道怎么绕过validate函数里的getDomain。比赛时和队友试了很久都没试出来怎么欺骗host名。至少现在看了wp又懂了一种url confusion的手段
+    - 其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5 ，包含另一种的url欺骗方式。但似乎利用`data://` url才是官方预期解法（我怎么把这个忘了，我都想到`javascript://`了）
 
 ## SSTI
 

@@ -709,9 +709,9 @@ for i in range(1,e):
 - [talk-to-echo](https://github.com/BCACTF/bcactf-5.0/blob/main/talk-to-echo)
     - 又是一个invalid point(invalid curve)攻击。不过这题是入门级，稍微好理解点。生成小阶数的点和曲线时都用的是随机生成的方式，求crt时用的是 $priv^2\mod p$ 的做法来消除原本的正负数两种可能。这个方法的缺点是，假如原本曲线模n，这里想恢复 $priv^2$ 就需要crt的各个质数总乘积达到 $n^2$
 
-## AES
+## AES/DES
 
-AES是很能出题的
+AES是很能出题的。DES则是放在这凑数的
 
 - [t0y-b0x](https://blog.bi0s.in/2024/03/03/RE/t0y-b0x-bi0sCTF2024/)
     - Linear Cryptanalysis (AES with linearly dependent SBOX)。相关漏洞学习参考 https://hackmd.io/@vishiswoz/r10P7knwj 和 https://kevinliu.me/posts/linear-cryptanalysis/ 。SBOX是aes中唯一非线性的运算，如果SBOX操作线性了，就能使用线性相关的攻击
@@ -727,6 +727,9 @@ AES是很能出题的
     - 构建一条`ciphertext+tag`使其用两个已知的不同密钥解密后得到两个不一样但有效的明文
 - [DODOLOUF](https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#dodolouf)
     - AES-cbc字节反转攻击+python随机数预测（randcrack）。这题出现反转攻击的明文段属于python pickle序列化内容。有一点要注意，因为攻击后必定有几块解密出乱码，所以一般安排这些乱码出现在诸如username的等无伤大雅的字段。但是若原本存储username时用的是普通字符串（unicode类型）而不是bytestring，反序列化时就会出问题。所以要同时把pickle里记录字段类型的字节也改了
+- [Desfunctional](https://berliangabriel.github.io/post/google-ctf-2024/)
+    - DES的Complement Property。 $E(P)=C\Leftrightarrow E(\overline{P})=\overline{C}$ 。 $\overline{P}$ 指的是P的补码，即P^0xff
+    - 此题使用的是3-DES CBC。3-DES不影响这个性质，不过注意CBC的构造，分成多个块后只有第一个块按照该性质解密后需要手动异或0xff。原因在于CBC加密前会与前一个密文块进行异或，只有第一块只跟iv异或。 $E(P_1^0xff^iv)=E(P_1^iv^0xff)=C_1^0xff(C_1=P_1^iv)$ 。下一个块加密时得到 $E(P_2^0xff^C_1)=P_2^P_1$ ，0xff被抵消掉了。因此解密后直接得到 $P_2$ 而不是 $P_2^0xff$
 
 ## Z3使用
 
