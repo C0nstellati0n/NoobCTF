@@ -661,7 +661,7 @@ for i in range(1,e):
     #x2 = y2*m + z2
     #x3 = y3*m + z3
     ```
-    - 论文： https://eprint.iacr.org/2016/215.pdf
+    - 相关论文/资料： https://eprint.iacr.org/2016/215.pdf ， https://ur4ndom.dev/static/files/latticetraining/practical_lattice_reductions.pdf
 - Fast lattice reduction:[flatter](https://github.com/keeganryan/flatter)
 
 ## Elliptic Curves(ECC,椭圆曲线)
@@ -2584,3 +2584,6 @@ c2=encrypt(k2,c1)
 - 此题的漏洞见论文第7节（pdf第8页）： solve a system of n randomly chosen quadratic equations in n + v variables, when $v ≥ n^2$
 145. [dream-revenge](https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#dream-revenge)
 - 现在只需要8个输出就能破解python random库的seed了……见 https://stackered.com/blog/python-random-prediction/ 。MT19937你不行啊（doge）
+146. [Many Xor Shift](https://thr34dr1pp3r.gitbook.io/ctf/wanictf-2024/crypto-many-xor-shift)
+- 使用矩阵与向量表达异或和位移等操作。常用来加速某些线性操作的组合
+- 官方wp： https://qiita.com/KowerKoint/items/89d94343e6ceee32645c

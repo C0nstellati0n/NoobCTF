@@ -2231,3 +2231,6 @@ a=A()
 - 其他wp：
     - https://github.com/rerrorctf/writeups/tree/main/2024_06_21_WaniCTF24/misc/sh
     - https://zenn.dev/hk_ilohas/articles/wani2024-writeup （在`[[ ]]`里注入通配符）
+343. [hwsim](https://blog.nikost.dev/posts/google-ctf-2024-hwsim/)
+- 在8-bit[加法器](https://blog.nikost.dev/posts/google-ctf-2024-hwsim/)中植入硬件后门。这题处理的问题在于，如何在这个8-bit加法器真值表正常的情况下使`64+i`变为`128+i`
+- 一些硬件中的电路结构：[SR NAND latch](https://en.wikipedia.org/wiki/Flip-flop_(electronics)#SR_NAND_latch),[Master-Slave SR Latch](https://www.allaboutelectronics.org/master-slave-flip-flop-explained/)
