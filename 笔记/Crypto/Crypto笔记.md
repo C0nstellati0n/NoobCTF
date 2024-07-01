@@ -2587,3 +2587,11 @@ c2=encrypt(k2,c1)
 146. [Many Xor Shift](https://thr34dr1pp3r.gitbook.io/ctf/wanictf-2024/crypto-many-xor-shift)
 - 使用矩阵与向量表达异或和位移等操作。常用来加速某些线性操作的组合
 - 官方wp： https://qiita.com/KowerKoint/items/89d94343e6ceee32645c
+147. [blinders](https://mystiz.hk/posts/2024/2024-06-24-google-ctf-1/)
+- 一个[private set membership protocol](https://github.com/google/private-membership)的错误实现。这个协议可以让客户端得知自己手中的某个信息在服务器上有没有，但请求时服务器不会知道客户端手中具体是哪个信息，客户端也不会知道服务器上是否有其它信息
+- 这题要求仅用两次query获知服务器上1-256个数字中缺了哪个。思路是，说到两次query找数字x，说明有一种分法可以将任意数字分为两种。于是就想到了奇偶数。叫我做我肯定想不到
+148. [ZKPOK](https://mystiz.hk/posts/2024/2024-06-24-google-ctf-2/)
+- 完全没看懂这题……作者用的符号标记看不懂……但还是有一些不错的工具可以记录。此题为Zero Knowledge Proof，使用了[Fiat-Shamir transform](https://www.zkdocs.com/docs/zkdocs/protocol-primitives/fiat-shamir/)将交互式的证明转换为无需交互的证明（简单来看就是把随机数的生成交给hash函数来做）
+- md5碰撞工具：[fastcoll](https://github.com/brimstone/fastcoll)。给定一段前缀，在前缀后添加两段不同的内容使两者md5 hash值一致
+- 如何求解形如 $x^2+ky^2\equiv m\mod n$ 的方程。见论文： https://dl.acm.org/doi/10.1109/TIT.1987.1057350
+- 此题的求解脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#ZKPOK
