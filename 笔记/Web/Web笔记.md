@@ -146,7 +146,15 @@
     - meta标签做法和一个比较奇怪的服务器行为： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#noscript 。在用meta或object标签重定向/导入资源时，部分内容会被看作text/html，而部分只会被看成text/plain
 - [sappy](https://zimzi.substack.com/p/googlectf-2024-sappy)
     - skill issue时刻。这题我看出来怎么搞xss了，但是不知道怎么绕过validate函数里的getDomain。比赛时和队友试了很久都没试出来怎么欺骗host名。至少现在看了wp又懂了一种url confusion的手段
-    - 其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5 ，包含另一种的url欺骗方式。但似乎利用`data://` url才是官方预期解法（我怎么把这个忘了，我都想到`javascript://`了）
+    - 其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5 ，包含另一种的url欺骗方式。但似乎利用`data://` url才是官方预期解法（我怎么把这个忘了，我都想到`javascript://`了，结果`javascript://`不能用于fetch，但`data://`可以）
+    - 其他wp： https://blog.chummydns.com/blogs/google-ctf-2024 。一些小技巧，比如可以在url后加`#`来将后续内容转换为hash tag忽略掉（见过好多次，老是忘）；iframe内的网站不会带cookie，可以用window.open解决；如何给打开的window/iframe post message
+- [grand prix heaven](https://blog.chummydns.com/blogs/google-ctf-2024)
+    - 这题倒没什么xss相关的技巧。就一点：看到奇怪的架构+innerHTML总是十分有九分的可疑
+    - js的parseInt函数只要字符串开头是数字就可以正常parse。比如`0honk`会返回`0`
+    - CRLF注入。如果`multipart/form-data`的boundary是固定的，就能跨boundary注入自定义内容
+    - 调用JSON.parse时会对key做一次排序。所以parse时的顺序不等于parse后的顺序
+    - 错误的正则匹配。`/[A-z]/`会匹配ascii值A到z的所有字符，比如`\`。不仅仅是26个字母的大小写。正确写法应该是`A-Za-z`。见 https://wtfjs.com/wtfs/2014-01-29-regular-expression-and-slash
+    - js的`new URL(url, 'https://xxx/abc/')`可用来组建url。如果url是相对路径，结果是`https://xxx/abc/url`;但如果是绝对路径（以`\`或`/`开头。前者是因为URL会自动将其标准化为`/`），则结果为`https://xxx/url`。之前的路径会被覆盖
 
 ## SSTI
 

@@ -2234,3 +2234,6 @@ a=A()
 343. [hwsim](https://blog.nikost.dev/posts/google-ctf-2024-hwsim/)
 - 在8-bit[加法器](https://blog.nikost.dev/posts/google-ctf-2024-hwsim/)中植入硬件后门。这题处理的问题在于，如何在这个8-bit加法器真值表正常的情况下使`64+i`变为`128+i`
 - 一些硬件中的电路结构：[SR NAND latch](https://en.wikipedia.org/wiki/Flip-flop_(electronics)#SR_NAND_latch),[Master-Slave SR Latch](https://www.allaboutelectronics.org/master-slave-flip-flop-explained/)
+344. [onlyecho](https://blog.chummydns.com/blogs/google-ctf-2024)
+- 此题用[bash-parser](https://vorpaljs.github.io/bash-parser-playground)将shell代码转为ast树，只允许执行command名为echo或空的命令。后者可以利用shell脚本的各类神奇语法RCE
+- 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#onlyecho 。分别利用“bash-parser默认parse posix sh而不是bash”和“字符串替换”的性质

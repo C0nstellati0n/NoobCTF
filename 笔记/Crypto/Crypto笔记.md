@@ -2595,3 +2595,5 @@ c2=encrypt(k2,c1)
 - md5碰撞工具：[fastcoll](https://github.com/brimstone/fastcoll)。给定一段前缀，在前缀后添加两段不同的内容使两者md5 hash值一致
 - 如何求解形如 $x^2+ky^2\equiv m\mod n$ 的方程。见论文： https://dl.acm.org/doi/10.1109/TIT.1987.1057350
 - 此题的求解脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#ZKPOK
+149. [Ilovecrackmes](https://github.com/perfectblue/ctf-writeups/tree/master/2024/googlectf-2024/rev-ilovecrackmes)
+- [paillier cryptosystem](https://blog.openmined.org/the-paillier-cryptosystem/)。这个系统有同态的性质。所以在服务器给出一条密文和公钥后，能伪造出含有特定内容的另一条密文
