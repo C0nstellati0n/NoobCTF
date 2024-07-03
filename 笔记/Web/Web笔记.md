@@ -155,6 +155,16 @@
     - 调用JSON.parse时会对key做一次排序。所以parse时的顺序不等于parse后的顺序
     - 错误的正则匹配。`/[A-z]/`会匹配ascii值A到z的所有字符，比如`\`。不仅仅是26个字母的大小写。正确写法应该是`A-Za-z`。见 https://wtfjs.com/wtfs/2014-01-29-regular-expression-and-slash
     - js的`new URL(url, 'https://xxx/abc/')`可用来组建url。如果url是相对路径，结果是`https://xxx/abc/url`;但如果是绝对路径（以`\`或`/`开头。前者是因为URL会自动将其标准化为`/`），则结果为`https://xxx/url`。之前的路径会被覆盖
+- [POSTVIEWER V3](../../CTF/GoogleCTF/2024/POSTVIEWER%20V3.md)
+    - 也没什么xss技巧，是一个很复杂的架构+错误地直接拼接参数计算hash+race condition+如何在`storage.googleapis.com`下拿到xss
+- [GAME ARCADE](https://blog.huli.tw/2024/06/28/google-ctf-2024-writeup)
+    - POSTVIEWER V3的降级版（？）。修复了上一个版本的hash计算问题，但是出了个xss。这个xss的成因见 https://github.com/Sudistark/xss-writeups/blob/main/figma.com-xss.md ，说下面这段代码：
+    ```js
+    let p = document.createElement("div");
+    p.innerHTML = "<img src=x onerror=alert()>";
+    ```
+    就算p没有被加入dom，也会触发xss。问就是魔法
+    - [cookie tossing](https://security.stackexchange.com/questions/67608/cookie-tossing-explained)。假如在`a.b.com`设置了cookie `c=d`，在`b.com`上也用同名的cookie的话会受影响。这题需要自己构造一个subdomain `c.a.b.com`，在里面用js代码修改cookie，影响`a.b.com`里同名cookie的取值。xss出现在这个同名cookie处，所以成功在`a.b.com`得到xss
 
 ## SSTI
 
