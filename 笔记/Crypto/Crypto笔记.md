@@ -729,6 +729,7 @@ AES是很能出题的。DES则是放在这凑数的
     - AES-cbc字节反转攻击+python随机数预测（randcrack）。这题出现反转攻击的明文段属于python pickle序列化内容。有一点要注意，因为攻击后必定有几块解密出乱码，所以一般安排这些乱码出现在诸如username的等无伤大雅的字段。但是若原本存储username时用的是普通字符串（unicode类型）而不是bytestring，反序列化时就会出问题。所以要同时把pickle里记录字段类型的字节也改了
 - [Desfunctional](https://berliangabriel.github.io/post/google-ctf-2024/)
     - DES的Complement Property。 $E(P)=C\Leftrightarrow E(\overline{P})=\overline{C}$ 。 $\overline{P}$ 指的是P的补码，即P^0xff
+    - DES密钥字节的第0，8，16,...,184位为parity bit，即使这些bit被改变后也不影响解密结果
     - 此题使用的是3-DES CBC。3-DES不影响这个性质，不过注意CBC的构造，分成多个块后只有第一个块按照该性质解密后需要手动异或0xff。原因在于CBC加密前会与前一个密文块进行异或，只有第一块只跟iv异或。 $E(P_1^0xff^iv)=E(P_1^iv^0xff)=C_1^0xff(C_1=P_1^iv)$ 。下一个块加密时得到 $E(P_2^0xff^C_1)=P_2^P_1$ ，0xff被抵消掉了。因此解密后直接得到 $P_2$ 而不是 $P_2^0xff$
 
 ## Z3使用
@@ -2597,3 +2598,8 @@ c2=encrypt(k2,c1)
 - 此题的求解脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#ZKPOK
 149. [Ilovecrackmes](https://github.com/perfectblue/ctf-writeups/tree/master/2024/googlectf-2024/rev-ilovecrackmes)
 - [paillier cryptosystem](https://blog.openmined.org/the-paillier-cryptosystem/)。这个系统有同态的性质。所以在服务器给出一条密文和公钥后，能伪造出含有特定内容的另一条密文
+150. [IDEA](https://mystiz.hk/posts/2024/2024-06-24-google-ctf-3)
+- [IDEA](https://www.geeksforgeeks.org/simplified-international-data-encryption-algorithm-idea/)密码相关密钥攻击。能够flip密钥的指定bit并加密内容，在可接受的操作数量里恢复完整的key。相关论文： https://www.schneier.com/wp-content/uploads/2016/02/paper-key-schedule.pdf
+151. [mceliece](https://github.com/google/google-ctf/tree/main/2024/quals/crypto-mceliece)
+- [McEliece cryptosystem](https://en.wikipedia.org/wiki/McEliece_cryptosystem)。此题预期解是实现论文里提到的算法：[Distinguisher-Based Attacks on Public-Key
+Cryptosystems Using Reed-Solomon Codes](https://arxiv.org/pdf/1307.6458)

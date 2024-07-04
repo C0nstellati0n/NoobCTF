@@ -2237,3 +2237,9 @@ a=A()
 344. [onlyecho](https://blog.chummydns.com/blogs/google-ctf-2024)
 - 此题用[bash-parser](https://vorpaljs.github.io/bash-parser-playground)将shell代码转为ast树，只允许执行command名为echo或空的命令。后者可以利用shell脚本的各类神奇语法RCE
 - 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#onlyecho 。分别利用“bash-parser默认parse posix sh而不是bash”和“字符串替换”的性质
+345. [py-storage](https://github.com/google/google-ctf/tree/main/2024/quals/misc-py-storage)
+- python支持多个平台的newlines：windows的`CR LF`,unix的`LF`，Old Macintosh的`CR`。无论在哪个平台上，这三种newline都可以在python里使用。所以ban newline时不能只ban `\n`,还有个`\r`
+- ps:自己做题时可能是记错了，直接`\r`不行。于是随便加了几个`\f`配合`\r`，行了
+346. [pycalc](https://github.com/google/google-ctf/tree/main/2024/quals/misc-pycalc)
+- 做题时没有源码，不知道要干啥。以为是python opcode绕过，结果是md5 hash碰撞。wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#pycalc 。认识了一个工具：[hashclash](https://github.com/cr-marcstevens/hashclash),用于创建同前缀的md5碰撞，也可保证后一个块的部分字符一致
+- 一个md5性质：`+`表示拼接，则若md5(m1)=md5(m2),md5(m1+m1)!=md5(m2+m2),md5(m1+m3)=md5(m2+m3)

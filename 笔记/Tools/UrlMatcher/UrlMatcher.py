@@ -9,7 +9,6 @@ bookmarkTemplate="""<DL><p>
     </DL><p>
 </DL><p>"""
 urls=set()
-res=""
 bookmarks=""
 def filterUrl(content):
     #https://gist.github.com/gruber/8891611
@@ -28,7 +27,6 @@ def filterUrl(content):
     return list(set(res))
 def process(path):
     global urls
-    global res
     global bookmarks
     with open(path,'r') as f:
         content=json.load(f)
@@ -37,7 +35,6 @@ def process(path):
         if len(temp)!=0:
             for url in temp:
                 if not url in urls:
-                    res+=f"{url}\n"
                     bookmarks+=f'<DT><A HREF="{url}">{url}</A>\n'
                     urls.update([url])
 path=input("请输入存储所有json文件的文件夹的路径: ")
@@ -50,7 +47,5 @@ else:
 jsons=Path(path).glob("**/*.json")
 for jsonFile in jsons:
     process(jsonFile)
-with open(outputPath,"w") as f:
-    f.write(res[:-1])
 with open(bookmarksPath+".html",'w') as f:
     f.write(bookmarkTemplate.format(bookmarks[:-1]))

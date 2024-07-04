@@ -1284,3 +1284,4 @@ mov     r8, qword [r13]
 181. [Rustyschool](https://github.com/perfectblue/ctf-writeups/tree/master/2024/googlectf-2024/rev-rustyschool)
 - （痛苦）逆向rust的记录
 - 技巧还是有的，比如用trace函数了解大致调用了什么函数；比对两次trace结果就能知道是否有随机成分，具体在哪里；patch rust的random相关函数来控制其seed；动调通常比静态分析更适合rust……但更多是逆向实力+数学
+- 官方wp比较简短： https://github.com/google/google-ctf/tree/main/2024/quals/rev-rustyschool

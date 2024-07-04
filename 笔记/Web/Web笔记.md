@@ -147,7 +147,9 @@
 - [sappy](https://zimzi.substack.com/p/googlectf-2024-sappy)
     - skill issue时刻。这题我看出来怎么搞xss了，但是不知道怎么绕过validate函数里的getDomain。比赛时和队友试了很久都没试出来怎么欺骗host名。至少现在看了wp又懂了一种url confusion的手段
     - 其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5 ，包含另一种的url欺骗方式。但似乎利用`data://` url才是官方预期解法（我怎么把这个忘了，我都想到`javascript://`了，结果`javascript://`不能用于fetch，但`data://`可以）
-    - 其他wp： https://blog.chummydns.com/blogs/google-ctf-2024 。一些小技巧，比如可以在url后加`#`来将后续内容转换为hash tag忽略掉（见过好多次，老是忘）；iframe内的网站不会带cookie，可以用window.open解决；如何给打开的window/iframe post message
+    - 其他wp： 
+        - https://blog.chummydns.com/blogs/google-ctf-2024 。一些小技巧，比如可以在url后加`#`来将后续内容转换为hash tag忽略掉（见过好多次，老是忘）；iframe内的网站不会带cookie，可以用window.open解决；如何给打开的window/iframe post message
+        - https://adragos.ro/google-ctf-2024
 - [grand prix heaven](https://blog.chummydns.com/blogs/google-ctf-2024)
     - 这题倒没什么xss相关的技巧。就一点：看到奇怪的架构+innerHTML总是十分有九分的可疑
     - js的parseInt函数只要字符串开头是数字就可以正常parse。比如`0honk`会返回`0`
@@ -157,6 +159,7 @@
     - js的`new URL(url, 'https://xxx/abc/')`可用来组建url。如果url是相对路径，结果是`https://xxx/abc/url`;但如果是绝对路径（以`\`或`/`开头。前者是因为URL会自动将其标准化为`/`），则结果为`https://xxx/url`。之前的路径会被覆盖
 - [POSTVIEWER V3](../../CTF/GoogleCTF/2024/POSTVIEWER%20V3.md)
     - 也没什么xss技巧，是一个很复杂的架构+错误地直接拼接参数计算hash+race condition+如何在`storage.googleapis.com`下拿到xss
+    - 另一种hash拼接的做法： https://adragos.ro/google-ctf-2024/
 - [GAME ARCADE](https://blog.huli.tw/2024/06/28/google-ctf-2024-writeup)
     - POSTVIEWER V3的降级版（？）。修复了上一个版本的hash计算问题，但是出了个xss。这个xss的成因见 https://github.com/Sudistark/xss-writeups/blob/main/figma.com-xss.md ，说下面这段代码：
     ```js
@@ -165,6 +168,11 @@
     ```
     就算p没有被加入dom，也会触发xss。问就是魔法
     - [cookie tossing](https://security.stackexchange.com/questions/67608/cookie-tossing-explained)。假如在`a.b.com`设置了cookie `c=d`，在`b.com`上也用同名的cookie的话会受影响。这题需要自己构造一个subdomain `c.a.b.com`，在里面用js代码修改cookie，影响`a.b.com`里同名cookie的取值。xss出现在这个同名cookie处，所以成功在`a.b.com`得到xss
+    - 又一个firefox和chrome的区别：chrome无法在`blob://` url下设置和读取cookie，但firefox可以
+    - 一些[Public Suffix List](https://wiki.mozilla.org/Public_Suffix_List)的知识。上面提到的cookie tossing没法影响Public Suffix List里的domain（但是subdomain可以）。见 https://adragos.ro/google-ctf-2024/
+- [IN-THE-SHADOWS](https://blog.huli.tw/2024/06/28/google-ctf-2024-writeup),[官方wp](https://github.com/google/google-ctf/tree/main/2024/quals/web-in-the-shadows)
+    - css injection。目标是绕过过滤的情况下一次注入泄漏出[shadow dom](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM)之外的元素。“逃逸”shadow dom可以用`:host-context`或者`:host`。绕过过滤则是由于chromium的一个bug（现在修了），主要是在re-serialization某个style sheet（或者说取出某个css rule的cssText？）时，单引号被去掉了，导致css的含义改变，可以偷渡`@import`进去
+    - 单注入点css injection泄漏内容。第一篇wp用了trigram的做法，个人感觉官方wp的做法更好,见 https://research.securitum.com/css-data-exfiltration-in-firefox-via-single-injection-point
 
 ## SSTI
 
