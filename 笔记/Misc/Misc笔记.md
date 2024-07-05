@@ -2195,6 +2195,7 @@ a=A()
 - 其他做法/wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#magic-trick
 321. [pickleassem](https://github.com/gousaiyang/pickleassem)
 - 一个帮助手动编写pickle opcode的工具
+- 使用案例：[push_and_pickle](https://github.com/rerrorctf/writeups/tree/main/2024_06_29_UIUCTFCTF24/misc/push_and_pickle)
 322. [Alien Circuit](https://ihuomtia.onrender.com/akasec-hw-alien-circuit)
 -  R-2R ladder Digital-to-Analog Converter circuit分析：将analog信号转换为digital信号
 - 其他wp：
@@ -2243,3 +2244,5 @@ a=A()
 346. [pycalc](https://github.com/google/google-ctf/tree/main/2024/quals/misc-pycalc)
 - 做题时没有源码，不知道要干啥。以为是python opcode绕过，结果是md5 hash碰撞。wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#pycalc 。认识了一个工具：[hashclash](https://github.com/cr-marcstevens/hashclash),用于创建同前缀的md5碰撞，也可保证后一个块的部分字符一致
 - 一个md5性质：`+`表示拼接，则若md5(m1)=md5(m2),md5(m1+m1)!=md5(m2+m2),md5(m1+m3)=md5(m2+m3)
+347. [slot-machine](https://github.com/rerrorctf/writeups/tree/main/2024_06_29_UIUCTFCTF24/misc/slot-machine)
+- 寻找开头全是一个字符的hash。比赛时我寻思我去哪爆破啊，完全忘了blockchain这个东西。它们可喜欢找开头全是0的hash了。跟着wp做就能拿到开头一堆0的sha256 hash了

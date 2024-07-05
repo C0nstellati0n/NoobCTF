@@ -1285,3 +1285,7 @@ mov     r8, qword [r13]
 - （痛苦）逆向rust的记录
 - 技巧还是有的，比如用trace函数了解大致调用了什么函数；比对两次trace结果就能知道是否有随机成分，具体在哪里；patch rust的random相关函数来控制其seed；动调通常比静态分析更适合rust……但更多是逆向实力+数学
 - 官方wp比较简短： https://github.com/google/google-ctf/tree/main/2024/quals/rev-rustyschool
+182. [push_and_pickle](https://github.com/rerrorctf/writeups/tree/main/2024_06_29_UIUCTFCTF24/misc/push_and_pickle)
+- 使用[pickleassem](https://github.com/gousaiyang/pickleassem)手动编写pickle opcode。手动编写相比于自动生成可以绕过一点过滤，比如global和global_stack opcode（`c`和`\x93`）不是必需的
+- python pickle code逆向。可以用radare2配合pickle插件，或者直接用python版本小于3.9的uncompyle6。作者没提到是什么插件，网上搜到的第一个结果是[r2pickledec
+](https://github.com/doyensec/r2pickledec)

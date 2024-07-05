@@ -101,7 +101,12 @@ ret
   - 每8个字节的shellcode的最后一个字节会被随机数字异或。预期解是将rdi设为0，然后只用7个字节跳转到调用srand的地方。这样就能知道接下来的随机数了
   - 但我记这道题主要还是因为这个非预期解: https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#randomness 。我们可以执行任意多个长度为5字节的shellcode，只需要在最后拼接上长为2字节的相对jmp，就能跳过接下来被随机化的字节，到下一个5字节指令
 - [Bad Trip](https://github.com/AkaSec-1337-CyberSecurity-Club/Akasec-CTF-2024/tree/main/pwn/bad_trip_and_the_absolute_horror_of_the_trip)
-    - MMU cache side-channel attack to bypass ASLR
+  - MMU cache side-channel attack to bypass ASLR
+- [syscalls](https://flex0geek.blogspot.com/2024/07/pwn-writeup-syscalls-and-backup-power.html)
+  - 使用openat，preadv2和pwritev2读取文件内容
+  - 其他做法：
+    - https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#syscalls ：使用openat+mmap+pwritev2读取文件内容，并用pwntools编写shellcode。之前没注意，今天发现mmap有个参数fd，用open或openat等函数得到文件fd后，用mmap就能得到文件的内容，不是非得read系函数
+    - https://github.com/rerrorctf/writeups/tree/main/2024_06_29_UIUCTFCTF24/pwn/syscalls ：seccomp rule规定只要writev的fd大于0x3e9就能使用writev。于是用openat+preadv2读文件后用dup2复制文件fd再用writev写（所以为什么不用第一个wp的pwritev2）
 
 1. 程序关闭标准输出会导致getshell后无法得到cat flag的输出。这时可以用命令`exec 1>&0`将标准输出重定向到标准输入，再执行cat flag就能看见了。因为默认打开一个终端后，0，1，2（标准输入，标准输出，标准错误）都指向同一个位置也就是当前终端。详情见这篇[文章](https://blog.csdn.net/xirenwang/article/details/104139866)。例题：[wustctf2020_closed](https://buuoj.cn/challenges#wustctf2020_closed)
 2. 做菜单类堆题时，添加堆块的函数一般是最重要的，需要通过分析函数来构建出程序对堆块的安排。比如有些笔记管理题会把笔记名称放一个堆中，笔记内容放另一个堆中，再用一个列表记录指针。了解程序是怎么安排堆后才能根据漏洞制定利用计划。如果分析不出来，用gdb调试对着看会好很多。例题：[babyfengshui](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/babyfengshui.md)
@@ -709,6 +714,9 @@ print(base64.b64encode(temp.encode()))
   - 禁数字的情况下不使用等于号获取数字：`[]<[()]`
   - 其他wp： https://github.com/D13David/ctf-writeups/tree/main/bcactf5/misc/jailbreak
     - 如何查看jail环境下可用的builtin函数
+- [Astea](https://octo-kumo.me/c/ctf/2024-uiuctf/misc/astea)
+  - 禁止使用以下操作：assign, call, import, import from, binary operation (`+-/`等)，尝试获取RCE。可以用函数装饰器（function decorators），但是这样出来的payload不是一行。一行的做法可以用AnnAssign（之前真没见过这种语法）
+  - 其他做法: https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#astea 。用海象运算符（walrus operator）+list comprehension
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -1976,3 +1984,5 @@ struct.unpack('d', bytes.fromhex(p64(data).hex()))[0]
 205. [encrypted-runner](https://github.com/ALaggyDev/ctf-writeups/tree/main/gctf-2024/pwn_encrypted_runner)
 - 由于AES的错误实现，sub-bytes操作将所有255以上的值重置为0。结果在解密时，最后的AddRoundKey操作把private key泄漏了
 - 官方解析见 https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#encrypted_runner ,原型是js里的一个问题，见 https://www.slideshare.net/slideshow/biting-into-the-forbidden-fruit-lessons-from-trusting-javascript-crypto/37474054 ，也叫16 snowmen攻击
+206. [backup power](https://flex0geek.blogspot.com/2024/07/pwn-writeup-syscalls-and-backup-power.html)
+- MIPS架构下的栈溢出题（没有rop，不懂rop会不会更复杂）。基本和平时的没什么区别，哪里崩溃了调试即可

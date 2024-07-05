@@ -3790,3 +3790,6 @@ Content-Type: text/plain
 - js ejs库3.1.6 RCE漏洞： https://eslam.io/posts/ejs-server-side-template-injection-rce/
 467. [tls_spec](https://github.com/southball/ctf-writeups/tree/main/Wani-CTF-2024/web/tls_spec)
 - tls相关内容。如何构造自己的client certificate，如何通过抓包分析服务器接受的是哪种certificate。作者说这题有关oid_filters extension
+468. [Log Action](https://siunam321.github.io/ctf/UIUCTF-2024/Web/Log-Action/)
+- nextjs（ >=13.4.0 <14.1.1）SSRF漏洞： https://www.assetnote.io/resources/research/digging-for-ssrf-in-nextjs-apps 。这些js dependencie的问题可以用`npm audit`找到。这个SSRF竟然是之前见过的那种改host（这个还要加个origin）header触发的漏洞……原来还真有实例啊
+- docker默认用172.17.0.0/16 subnet。稍微爆破就能找到一些内部网站的ip

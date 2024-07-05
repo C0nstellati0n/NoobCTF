@@ -549,7 +549,9 @@ for i in range(1,e):
     - 已知p或q高位的coppersmith。以后遇见题目里奇怪的生成质数方式时一定要用代数乘出来看看结果，不然根本看不出来一些特殊的关系
 ## Sagemath
 
-感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数。
+感觉了解sagemath的api很重要啊，那今天就专门开个部分用于记录例题和使用的函数
+
+sympy也放这了
 
 - https://github.com/Neobeo/CrewCTF2023/blob/main/crypto_writeups.ipynb
     - 实数域上的rsa。这里的p，q等数可能是分数
@@ -621,6 +623,8 @@ for i in range(1,e):
         - `function('y')(x)`:定义一个名为y的函数，其自变量为x
         - `desolve(2*ypp - 6*yp + 3*y == 0, y, ics=[0,v0,v1], ivar=x)`:第一个参数为方程，第二个参数为因变量，第三个参数为初始条件。这里表示`x=0,y(0)=v0,y'(0)=v1`。`ivar=x`表示自变量为x
     - python sympy（无sagemath）解法： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#my-calculus-lab
+- [Determined](https://octo-kumo.me/c/ctf/2024-uiuctf/crypto/determined)
+    - 比赛时看出来了它在算5阶方阵的行列式，也想到了用sagemath或者z3算方程拿p和q，但是模拟方程太复杂了，懒得写。结果这个wp告诉我sympy里直接做个矩阵自动求行列式放到方程里就能解？
 ## Lattice(格)
 
 是的我需要一个格题分类。虽然我根本就不懂什么是格
@@ -2603,3 +2607,8 @@ c2=encrypt(k2,c1)
 151. [mceliece](https://github.com/google/google-ctf/tree/main/2024/quals/crypto-mceliece)
 - [McEliece cryptosystem](https://en.wikipedia.org/wiki/McEliece_cryptosystem)。此题预期解是实现论文里提到的算法：[Distinguisher-Based Attacks on Public-Key
 Cryptosystems Using Reed-Solomon Codes](https://arxiv.org/pdf/1307.6458)
+152. [groups](https://github.com/Warriii/CTF-Writeups/blob/main/uiu24/crypto_groups.md)
+- 生成一个大于512 bit的carmichael数k，并计算k上的离散对数。生成做法没啥技巧，参考[定理](https://en.wikipedia.org/wiki/Carmichael_number)爆破即可。计算离散对数时因为已经知道了其分解，可以参考wp实现一个自己的pohlig hellman
+- 这还有个库：[Carmichael](http://github.com/drazioti/Carmichael)
+153. [Key in a Haystack](https://berliangabriel.github.io/post/uiu-ctf-2024/)
+- 这题大概是，一堆1024 bit的质数乘上一个40 bit的质数，找到这个40 bit的质数。原来Pollard’s p-1算法只要有一个因子p减上1是B-smooth就能用，所以这题可以自行选定一个较好的B值然后用这个算法碰运气
