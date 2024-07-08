@@ -1289,3 +1289,5 @@ mov     r8, qword [r13]
 - 使用[pickleassem](https://github.com/gousaiyang/pickleassem)手动编写pickle opcode。手动编写相比于自动生成可以绕过一点过滤，比如global和global_stack opcode（`c`和`\x93`）不是必需的
 - python pickle code逆向。可以用radare2配合pickle插件，或者直接用python版本小于3.9的uncompyle6。作者没提到是什么插件，网上搜到的第一个结果是[r2pickledec
 ](https://github.com/doyensec/r2pickledec)
+183. [tooooo fancy](https://hackmd.io/@fsharp/ryuOxo1DC)
+- [tcl](https://en.wikipedia.org/wiki/Tcl)语言汇编逆向。如果题目提供了程序的机器码，可以用[tbcload](https://github.com/corbamico/tbcload)将其转换为assembly code。指令集参考 https://core.tcl-lang.org/tclquadcode/wiki?name=Standard+Tcl+Bytecodes
