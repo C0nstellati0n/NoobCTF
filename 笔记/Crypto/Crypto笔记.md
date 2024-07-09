@@ -2610,5 +2610,7 @@ Cryptosystems Using Reed-Solomon Codes](https://arxiv.org/pdf/1307.6458)
 152. [groups](https://github.com/Warriii/CTF-Writeups/blob/main/uiu24/crypto_groups.md)
 - 生成一个大于512 bit的carmichael数k，并计算k上的离散对数。生成做法没啥技巧，参考[定理](https://en.wikipedia.org/wiki/Carmichael_number)爆破即可。计算离散对数时因为已经知道了其分解，可以参考wp实现一个自己的pohlig hellman
 - 这还有个库：[Carmichael](http://github.com/drazioti/Carmichael)
+- 生成carmichael数后计算离散对数也可以用这个网站： https://www.alpertron.com.ar/DILOG.HTM
 153. [Key in a Haystack](https://berliangabriel.github.io/post/uiu-ctf-2024/)
 - 这题大概是，一堆1024 bit的质数乘上一个40 bit的质数，找到这个40 bit的质数。原来Pollard’s p-1算法只要有一个因子p减上1是B-smooth就能用，所以这题可以自行选定一个较好的B值然后用这个算法碰运气
+- 这个[网站](https://www.alpertron.com.ar/ECM.HTM)使用ECM法分解。ECM法复杂度取决于最小的因子，分解出40bit大概是两个小时

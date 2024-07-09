@@ -1986,3 +1986,20 @@ struct.unpack('d', bytes.fromhex(p64(data).hex()))[0]
 - 官方解析见 https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#encrypted_runner ,原型是js里的一个问题，见 https://www.slideshare.net/slideshow/biting-into-the-forbidden-fruit-lessons-from-trusting-javascript-crypto/37474054 ，也叫16 snowmen攻击
 206. [backup power](https://flex0geek.blogspot.com/2024/07/pwn-writeup-syscalls-and-backup-power.html)
 - MIPS架构下的栈溢出题（没有rop，不懂rop会不会更复杂）。基本和平时的没什么区别，哪里崩溃了调试即可
+207. [Rusty Pointers](https://github.com/0xM4hm0ud/CTF-Writeups/tree/main/UIUCTF%202024/pwn/Rusty%20Pointers)
+- libc 2.31 UAF。2.31还有free_hook，所以直接tcache poisoning覆盖hook即可。难点在于这题是用rust写的，且没有unsafe关键字，理论上应该是内存安全的。但rust里有个古老的bug，见 https://github.com/rust-lang/rust/issues/25860 ，相关利用见 https://github.com/Speykious/cve-rs/blob/main/src/lifetime_expansion.rs 。说这个函数：
+```rust
+const S: &&() = &&();
+#[inline(never)]
+fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
+    fn ident<'a, 'b, T: ?Sized>(
+        _val_a: &'a &'b (),
+        val_b: &'b mut T,
+    ) -> &'a mut T {
+            val_b
+    }
+    let f: fn(_, &'a mut T) -> &'b mut T = ident;
+    f(S, x)
+}
+```
+会导致uaf。`'a`这种东西是rust里的lifetime variable，用来标记某个变量的lifetime。使用前需要在尖括号`<>`定义，名字无所谓。作用是返回一个指向参数的指针，过程中修改其lifetime，比如从`b'`修改到`a'`。问题是，假如`b'`比`a'`短呢？意味着我们仍然保留着已经被free的变量的指针。rust应该阻止这段代码编译的，但由于这个bug，只要这么写就不会阻止

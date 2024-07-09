@@ -1287,7 +1287,13 @@ mov     r8, qword [r13]
 - 官方wp比较简短： https://github.com/google/google-ctf/tree/main/2024/quals/rev-rustyschool
 182. [push_and_pickle](https://github.com/rerrorctf/writeups/tree/main/2024_06_29_UIUCTFCTF24/misc/push_and_pickle)
 - 使用[pickleassem](https://github.com/gousaiyang/pickleassem)手动编写pickle opcode。手动编写相比于自动生成可以绕过一点过滤，比如global和global_stack opcode（`c`和`\x93`）不是必需的
-- python pickle code逆向。可以用radare2配合pickle插件，或者直接用python版本小于3.9的uncompyle6。作者没提到是什么插件，网上搜到的第一个结果是[r2pickledec
-](https://github.com/doyensec/r2pickledec)
+- python pickle code逆向。可以用radare2配合pickle插件，或者直接用python版本小于3.9的uncompyle6。作者没提到是什么插件，网上搜到的第一个结果是[r2pickledec](https://github.com/doyensec/r2pickledec)
+- 其他wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#push-and-pickle 。又认识了几个工具：
+  - [astor](https://github.com/berkerpeksag/astor):将AST转换为代码
+  - [Fickling](https://github.com/trailofbits/fickling):将pickle转为AST
+  - [pker](https://github.com/EddieIvan01/pker):更方便创建pickle opcodes
 183. [tooooo fancy](https://hackmd.io/@fsharp/ryuOxo1DC)
 - [tcl](https://en.wikipedia.org/wiki/Tcl)语言汇编逆向。如果题目提供了程序的机器码，可以用[tbcload](https://github.com/corbamico/tbcload)将其转换为assembly code。指令集参考 https://core.tcl-lang.org/tclquadcode/wiki?name=Standard+Tcl+Bytecodes
+184. [Time Travel](https://nesrak1.github.io/2024/07/06/timetravel.html)
+- 逆向由[5D Brainfuck With Multiverse Time Travel](https://esolangs.org/wiki/5D_Brainfuck_With_Multiverse_Time_Travel)编写的程序。这个语言太癫了，wiki界面也云里雾里的。建议直接把这篇wp看成这门语言的介绍
+- 调试普通brainfuck的调试器： https://ashupk.github.io/Brainfuck/brainfuck-visualizer-master/
