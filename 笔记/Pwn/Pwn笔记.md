@@ -107,6 +107,8 @@ ret
   - 其他做法：
     - https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#syscalls ：使用openat+mmap+pwritev2读取文件内容，并用pwntools编写shellcode。之前没注意，今天发现mmap有个参数fd，用open或openat等函数得到文件fd后，用mmap就能得到文件的内容，不是非得read系函数
     - https://github.com/rerrorctf/writeups/tree/main/2024_06_29_UIUCTFCTF24/pwn/syscalls ：seccomp rule规定只要writev的fd大于0x3e9就能使用writev。于是用openat+preadv2读文件后用dup2复制文件fd再用writev写（所以为什么不用第一个wp的pwritev2）
+- [syscalls-2](https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#syscalls-2)
+  - 使用io_uring raw syscall读取文件（一种很复杂的open+read，绕seccomp可用）
 
 1. 程序关闭标准输出会导致getshell后无法得到cat flag的输出。这时可以用命令`exec 1>&0`将标准输出重定向到标准输入，再执行cat flag就能看见了。因为默认打开一个终端后，0，1，2（标准输入，标准输出，标准错误）都指向同一个位置也就是当前终端。详情见这篇[文章](https://blog.csdn.net/xirenwang/article/details/104139866)。例题：[wustctf2020_closed](https://buuoj.cn/challenges#wustctf2020_closed)
 2. 做菜单类堆题时，添加堆块的函数一般是最重要的，需要通过分析函数来构建出程序对堆块的安排。比如有些笔记管理题会把笔记名称放一个堆中，笔记内容放另一个堆中，再用一个列表记录指针。了解程序是怎么安排堆后才能根据漏洞制定利用计划。如果分析不出来，用gdb调试对着看会好很多。例题：[babyfengshui](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/babyfengshui.md)
@@ -715,8 +717,8 @@ print(base64.b64encode(temp.encode()))
   - 其他wp： https://github.com/D13David/ctf-writeups/tree/main/bcactf5/misc/jailbreak
     - 如何查看jail环境下可用的builtin函数
 - [Astea](https://octo-kumo.me/c/ctf/2024-uiuctf/misc/astea)
-  - 禁止使用以下操作：assign, call, import, import from, binary operation (`+-/`等)，尝试获取RCE。可以用函数装饰器（function decorators），但是这样出来的payload不是一行。一行的做法可以用AnnAssign（之前真没见过这种语法）
-  - 其他做法: https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#astea 。用海象运算符（walrus operator）+list comprehension
+  - 禁止使用以下操作：assign, call, import, import from, binary operation (`+-/`等)，尝试获取RCE。可以用函数装饰器（function decorators），但是这样出来的payload不是一行。一行的做法可以用AnnAssign（之前真没见过这种语法）。属于abstract syntax tree（ast）sandbox题
+  - 其他做法: https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#astea 。用海象运算符（walrus operator）+list comprehension，以及其他很好的wp
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
@@ -1986,6 +1988,7 @@ struct.unpack('d', bytes.fromhex(p64(data).hex()))[0]
 - 官方解析见 https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#encrypted_runner ,原型是js里的一个问题，见 https://www.slideshare.net/slideshow/biting-into-the-forbidden-fruit-lessons-from-trusting-javascript-crypto/37474054 ，也叫16 snowmen攻击
 206. [backup power](https://flex0geek.blogspot.com/2024/07/pwn-writeup-syscalls-and-backup-power.html)
 - MIPS架构下的栈溢出题（没有rop，不懂rop会不会更复杂）。基本和平时的没什么区别，哪里崩溃了调试即可
+- 看了作者的[解析](https://www.youtube.com/watch?v=F8pqK4G2fTQ&t=2026s)才知道这是道“MIPS buffer overflow with a control flow integrity(CFI) check computed from the saved registers”。弄清了为什么wp里覆盖某些值后程序会崩
 207. [Rusty Pointers](https://github.com/0xM4hm0ud/CTF-Writeups/tree/main/UIUCTF%202024/pwn/Rusty%20Pointers)
 - libc 2.31 UAF。2.31还有free_hook，所以直接tcache poisoning覆盖hook即可。难点在于这题是用rust写的，且没有unsafe关键字，理论上应该是内存安全的。但rust里有个古老的bug，见 https://github.com/rust-lang/rust/issues/25860 ，相关利用见 https://github.com/Speykious/cve-rs/blob/main/src/lifetime_expansion.rs 。说这个函数：
 ```rust
