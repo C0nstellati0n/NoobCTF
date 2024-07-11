@@ -734,7 +734,11 @@ AES是很能出题的。DES则是放在这凑数的
 - [Desfunctional](https://berliangabriel.github.io/post/google-ctf-2024/)
     - DES的Complement Property。 $E(P)=C\Leftrightarrow E(\overline{P})=\overline{C}$ 。 $\overline{P}$ 指的是P的补码，即P^0xff
     - DES密钥字节的第0，8，16,...,184位为parity bit，即使这些bit被改变后也不影响解密结果
-    - 此题使用的是3-DES CBC。3-DES不影响这个性质，不过注意CBC的构造，分成多个块后只有第一个块按照该性质解密后需要手动异或0xff。原因在于CBC加密前会与前一个密文块进行异或，只有第一块只跟iv异或。 $E(P_1^0xff^iv)=E(P_1^iv^0xff)=C_1^0xff(C_1=P_1^iv)$ 。下一个块加密时得到 $E(P_2^0xff^C_1)=P_2^P_1$ ，0xff被抵消掉了。因此解密后直接得到 $P_2$ 而不是 $P_2^0xff$
+    - 此题使用的是3-DES CBC。3-DES不影响这个性质，不过注意CBC的构造，分成多个块后只有第一个块按照该性质解密后需要手动异或0xff。原因在于CBC加密前会与前一个密文块进行异或，只有第一块只跟iv异或。 $E(P_1\bigotimes 0xff\bigotimes iv)=E(P_1\bigotimes iv\bigotimes 0xff)=C_1\bigotimes 0xff(C_1=P_1\bigotimes iv)$ 。下一个块加密时得到 $E(P_2\bigotimes 0xff\bigotimes C_1)=P_2\bigotimes P_1$ ，0xff被抵消掉了。因此解密后直接得到 $P_2$ 而不是 $P_2\bigotimes 0xff$
+- [decrypt then eval](https://octo-kumo.me/c/ctf/2024-ductf/crypto/decrypt-then-eval)
+  - aes cfb猜明文。cfb模式是 $C=E\bigotimes P$ （具体见 https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_feedback_(CFB) ）,假如知道C和P，就能找到E，进而自己伪造密文。前提是key和iv重用且我们有足够的oracle
+  - [官方wp](https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/crypto/decrypt-then-eval)处理了更复杂的情况
+  - 其他解法： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#decrypt-then-eval
 
 ## Z3使用
 
@@ -2614,3 +2618,6 @@ Cryptosystems Using Reed-Solomon Codes](https://arxiv.org/pdf/1307.6458)
 153. [Key in a Haystack](https://berliangabriel.github.io/post/uiu-ctf-2024/)
 - 这题大概是，一堆1024 bit的质数乘上一个40 bit的质数，找到这个40 bit的质数。原来Pollard’s p-1算法只要有一个因子p减上1是B-smooth就能用，所以这题可以自行选定一个较好的B值然后用这个算法碰运气
 - 这个[网站](https://www.alpertron.com.ar/ECM.HTM)使用ECM法分解。ECM法复杂度取决于最小的因子，分解出40bit大概是两个小时
+154. [Three Line Crypto](https://octo-kumo.me/c/ctf/2024-ductf/crypto/three-line-crypto)
+- 一道很特别的异或题。感觉wp的思路值得记录
+- 官方解法： https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/crypto/three-line-crypto 。使用hill climbing算法。这个算法是个概率算法，随机设置key值后用Bhattacharyya coefficient衡量解出的明文是否“足够英语”，如果结果更好就保存。不断重复直到恢复key

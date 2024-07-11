@@ -1297,3 +1297,6 @@ mov     r8, qword [r13]
 184. [Time Travel](https://nesrak1.github.io/2024/07/06/timetravel.html)
 - 逆向由[5D Brainfuck With Multiverse Time Travel](https://esolangs.org/wiki/5D_Brainfuck_With_Multiverse_Time_Travel)编写的程序。这个语言太癫了，wiki界面也云里雾里的。建议直接把这篇wp看成这门语言的介绍
 - 调试普通brainfuck的调试器： https://ashupk.github.io/Brainfuck/brainfuck-visualizer-master/
+185. [sssshhhh](https://medium.com/@harryfyx/writeup-ductf-2024-sssshhhh-d2fac53f2ed1)
+- ghidra逆向golang程序案例
+- 官方wp： https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/beginner/sssshhhh

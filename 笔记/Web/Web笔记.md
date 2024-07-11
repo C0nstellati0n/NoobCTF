@@ -284,6 +284,7 @@ for i in range(300,1000):
     - ejs模板注入。题目增加了一个绕过gpt过滤的环节。这种用gpt做过滤的题之前没见过，做的时候发现只要payload带有ejs注入必须的`<%`就报错，完全不知道怎么绕过。后面看了wp意识到这是gpt，不是黑/白名单之类的过滤，在payload前加几句干扰gpt的指令即可（以及不用`<%`的纯ejs注入确实不可能）
     - 其他解法（干扰gpt语句+ejs注入payload）： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#gpwaf
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
+    - `{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("cmd").read()}}{%endif%}{% endfor %}`
 
 1. 当网站没有任何提示时，可以去看看一些敏感目录。
 
@@ -3774,6 +3775,11 @@ Content-Type: text/plain
   }
 }
 ```
+- 例题：[co2v2](https://octo-kumo.me/c/ctf/2024-ductf/web/co2v2)
+    - 感觉就像python原型链污染。这题是用来把一个全局变量的值改了。这么看来好像比js的更强，污染的值就算被定义过也可以覆盖。甚至连全局环境变量environ都能覆盖
+    - jinja2里有个Environment，当其autoescape参数为True时xss基本不可能
+    - `script-src 'self' 'https://ajax.googleapis.com;` csp绕过。通过特殊的payload可以利用`ajax.googleapis.com`获取xss。wp是一种方式， https://book.hacktricks.xyz/pentesting-web/content-security-policy-csp-bypass#angularjs-and-whitelisted-domain 是另一种方式
+    - 其他做法： https://siunam321.github.io/ctf/DownUnderCTF-2024/web/co2v2/
 462. [upload](https://siunam321.github.io/ctf/Akasec-CTF-2024/Web/Upload/)
 - `PDF.js`库任意js代码执行： https://codeanlabs.com/blog/research/cve-2024-4367-arbitrary-js-execution-in-pdf-js/ ，可用于xss
 463. [Proxy For Life](https://carmar.is/write-ups/proxy-for-life.html)
@@ -3803,3 +3809,20 @@ Content-Type: text/plain
 471. [fare-evasion](https://octo-kumo.me/c/ctf/2024-uiuctf/web/fare-evasion)
 - 比赛时记得见过这个考点但是不记得笔记记在哪了，于是留个痕。主要是因为php使用md5时直接用的raw md5，没有hex，导致可能hash出那种长得像sql注入payload的字符串。这时直接拼接结果就出问题了
 - 工具：[hasherbasher](https://github.com/gen0cide/hasherbasher)
+472. [Prisoner Processor](https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/web/prisoner-processor)
+- 老生常谈的js原型链污染。merge太经典了，所以这题出问题的地方是没有过滤`{}`的键值对，导致攻击者可以让键为`__proto__`，值为其他对象，污染当前对象的属性。这题利用污染给当前对象创建了一个属性，不知道这么污染能不能影响到全局
+- bun null字节路径截断。可以在`Bun.file`的路径参数里注入null字节，bun会自动丢弃null字节和其之后的全部内容。因为bun内部的语言是zig，zig和c一样拿null字节当字符串结尾（合理猜测任何有这个特性的语言都有这个bug）
+- 利用`/proc/self/fd`绕过waf - 利用yaml语法构造typescript脚本。yaml处理键值直接是`key: value`，所以构造ts rce payload时建议一行直接过，剩下的内容用`/**/`注释掉 - 如果在题目源代码里诸如`start.sh`的脚本里发现有“程序crush后重启”的逻辑，可以覆盖程序的index文件为别的payload，crush程序后就能执行我们的payload了
+- 其他wp： https://octo-kumo.me/c/ctf/2024-ductf/web/prisoner-processor 。不同的crush方式和rce payload
+473. [hah_got_em](https://octo-kumo.me/c/ctf/2024-ductf/web/hah_got_em)
+- gotenbergv8.0.3文件读取漏洞。基本上看见题目莫名其妙用一个特定版本的软件时就说明这个版本大概率有问题。不过exp不一定搜得到，需要自己查看patch找
+- 其他wp：
+    - https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/web/hah-got-em
+    - https://chuajianshen.github.io/2024/07/06/DownUnderCTF2024/
+474. [Sniffy](https://octo-kumo.me/c/ctf/2024-ductf/web/sniffy)
+- php的mime_content_type函数用于查看某个文件是什么类型。但是其内部原理只是用一个表格检查文件是否包含某些字节。所以只要在特定的位置处放上特征字节就能伪造文件的类型（估计这就是一些php木马上传的绕过方法原理）。至于到底是什么位置可以爆破或者看文件里记录的[偏移](https://sources.debian.org/src/dares/0.6.5-7/magic.mime/)
+- php将其session内容存储在`/tmp/sess_xxxx`。xxxx为cookie里可以看到的`PHPSESSID`的值
+- 更详细的wp： https://siunam321.github.io/ctf/DownUnderCTF-2024/web/sniffy/
+475. [i am confusion](https://siunam321.github.io/ctf/DownUnderCTF-2024/web/i-am-confusion/)
+- 可以用openssl获取服务器的ssl证书公钥
+- 334条的另一种情况，这里误用的是JsonWebToken库的verify。比赛时我用rsa_sign2n工具成功提取出公钥后，发现用JsonWebToken库没法伪造jwt。后面找到这个，行了： https://gist.github.com/FrancoisCapon/7e766d06cf9372fb8b5436a37b8bf18d 。这个方法也不像wp一样需要安装burpsuite的插件

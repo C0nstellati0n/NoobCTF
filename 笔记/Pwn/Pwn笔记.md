@@ -2006,3 +2006,5 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 }
 ```
 会导致uaf。`'a`这种东西是rust里的lifetime variable，用来标记某个变量的lifetime。使用前需要在尖括号`<>`定义，名字无所谓。作用是返回一个指向参数的指针，过程中修改其lifetime，比如从`b'`修改到`a'`。问题是，假如`b'`比`a'`短呢？意味着我们仍然保留着已经被free的变量的指针。rust应该阻止这段代码编译的，但由于这个bug，只要这么写就不会阻止
+208. [vector-overflow](https://octo-kumo.me/c/ctf/2024-ductf/pwn/vector-overflow)
+- 通过栈溢出修改c++里的vector结构。主要是用gdb观察vector的构造。见 https://stackoverflow.com/questions/52330010/what-does-stdvector-look-like-in-memory
