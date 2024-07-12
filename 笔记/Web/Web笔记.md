@@ -3813,7 +3813,9 @@ Content-Type: text/plain
 - 老生常谈的js原型链污染。merge太经典了，所以这题出问题的地方是没有过滤`{}`的键值对，导致攻击者可以让键为`__proto__`，值为其他对象，污染当前对象的属性。这题利用污染给当前对象创建了一个属性，不知道这么污染能不能影响到全局
 - bun null字节路径截断。可以在`Bun.file`的路径参数里注入null字节，bun会自动丢弃null字节和其之后的全部内容。因为bun内部的语言是zig，zig和c一样拿null字节当字符串结尾（合理猜测任何有这个特性的语言都有这个bug）
 - 利用`/proc/self/fd`绕过waf - 利用yaml语法构造typescript脚本。yaml处理键值直接是`key: value`，所以构造ts rce payload时建议一行直接过，剩下的内容用`/**/`注释掉 - 如果在题目源代码里诸如`start.sh`的脚本里发现有“程序crush后重启”的逻辑，可以覆盖程序的index文件为别的payload，crush程序后就能执行我们的payload了
-- 其他wp： https://octo-kumo.me/c/ctf/2024-ductf/web/prisoner-processor 。不同的crush方式和rce payload
+- 其他wp：
+    - https://octo-kumo.me/c/ctf/2024-ductf/web/prisoner-processor ：不同的crush方式和rce payload
+    - https://jamvie.net/posts/2024/07/ductf-2024-prisoner-processor/ ：一个思路差不多但是实现方式完全不一样的wp。这位大佬选择用原型链污染覆盖tsconfig.json。这个文件可以控制typescript导入模块时具体导入的文件。可以将其指向一个别的可控制内容的js文件，然后使程序崩溃，重新加载这个文件后index.ts导入模块时就能执行代码了。崩溃方式选择的是往/proc/self/mem写入内容。另外还有个冷知识，tsconfig.json其实不是json文件，它能支持`/**/`多行注释，在一个合法的json结构后加上一堆非法json也不会崩溃
 473. [hah_got_em](https://octo-kumo.me/c/ctf/2024-ductf/web/hah_got_em)
 - gotenbergv8.0.3文件读取漏洞。基本上看见题目莫名其妙用一个特定版本的软件时就说明这个版本大概率有问题。不过exp不一定搜得到，需要自己查看patch找
 - 其他wp：
@@ -3826,3 +3828,4 @@ Content-Type: text/plain
 475. [i am confusion](https://siunam321.github.io/ctf/DownUnderCTF-2024/web/i-am-confusion/)
 - 可以用openssl获取服务器的ssl证书公钥
 - 334条的另一种情况，这里误用的是JsonWebToken库的verify。比赛时我用rsa_sign2n工具成功提取出公钥后，发现用JsonWebToken库没法伪造jwt。后面找到这个，行了： https://gist.github.com/FrancoisCapon/7e766d06cf9372fb8b5436a37b8bf18d 。这个方法也不像wp一样需要安装burpsuite的插件
+- 看了另一篇[wp](https://ouuan.moe/post/2024/07/ductf-2024)，原来是我代码写错了（chatgpt也错了）。光用jsonwebtoken库是可以的

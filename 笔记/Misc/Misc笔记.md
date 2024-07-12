@@ -116,6 +116,13 @@
 - [tiny_usb](https://odintheprotector.github.io/2024/06/23/wanictf-forensic-writeup.html)
     - 使用[isodump](https://github.com/evild3ad/isodump)分析iso镜像文件
     - 这个[wp](https://warlocksmurf.github.io/posts/wanictf2024/)说用7zip可以直接看
+- [SAM I AM](https://p-pratik.github.io/posts/ductf'24/)
+    - 从SAM文件和SYSTEM文件中提取出密码hash。使用工具[samdump2](https://www.kali.org/tools/samdump2/)。出来的hash格式为Windows 2k/NT/XP password hash，常用的hash破解工具可以破解
+- [Bad Policies](https://p-pratik.github.io/posts/ductf'24/)
+	- 破解[Group Policy Preferences File (GPP XML)](https://infinitelogins.com/2020/09/07/cracking-group-policy-preferences-file-gpp-xml/)。可用命令`gpp-decrypt`
+- [mkductfiso](https://ouuan.moe/post/2024/07/ductf-2024)
+	- 提取ISO文件时如果发现提取出来的内容少了`initramfs-linux.img`或`{amd,intel}-ucode.img`或什么其他文件，导致iso文件无法正常挂载，可以自行下载需要的文件，之后用xorriso命令打包成新的iso文件
+	- [官方wp](https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/misc/mkductfiso)和这篇差不多， https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#mkductfiso 是另一种更详细的方式
 
 ## Network Forensics
 
@@ -2246,3 +2253,5 @@ a=A()
 - 一个md5性质：`+`表示拼接，则若md5(m1)=md5(m2),md5(m1+m1)!=md5(m2+m2),md5(m1+m3)=md5(m2+m3)
 347. [slot-machine](https://github.com/rerrorctf/writeups/tree/main/2024_06_29_UIUCTFCTF24/misc/slot-machine)
 - 寻找开头全是一个字符的hash。比赛时我寻思我去哪爆破啊，完全忘了blockchain这个东西。它们可喜欢找开头全是0的hash了。跟着wp做就能拿到开头一堆0的sha256 hash了
+348. [the other minimal php](https://ouuan.moe/post/2024/07/ductf-2024)
+- 看了半天才明白wp说的"follow the ... pattern"是什么意思。这题的源码在这： https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/misc/the-other-minimal-php ，payload传入htmlspecialchars后再取反，最后才eval。所以这里要求我们的payload取反后还是合法的UTF-8。根据wp所说和UTF-8的编码方式： https://en.wikipedia.org/wiki/UTF-8#Encoding ，四种编码方式里只有第二种里的做法拆开能用，因为只有`110xxxxx`和`10xxxxxx`取反后还在合法的UTF-8里。这也是为什么wp里的php payload那么奇怪
