@@ -751,6 +751,22 @@ AES是很能出题的。DES则是放在这凑数的
 - [Quantum L3ak](https://github.com/lrnzsir/ctf-writeups/tree/main/L3akCTF%202024/Quantum%20L3ak)
     - python qiskit量子计算+z3实现MersenneTwister并预测Random生成的随机数
 
+## Math
+
+记录数学题。可以预测这个分类一年都积攒不了几道题……
+
+- [V for Vieta](https://berliangabriel.github.io/post/ductf-2024/)
+	- 这题要求找到满足 $\frac{a^2 + ab + b^2}{2ab + 1}=k$ 的(a,b)对。结果wp就说了句[Vieta jumping](https://en.wikipedia.org/wiki/Vieta_jumping) （韦达跳跃）就没了……看了眼百科，在Constant descent Vieta jumping处看出了端倪，相关的[Vieta's formula](https://en.wikipedia.org/wiki/Vieta%27s_formulas) （韦达定理）似乎也有用。尝试把wp讲得更详细点：
+	1. 首先把式子写成a的方程： <br>
+	$\frac{a^2 + ab + b^2}{2ab + 1}=k$ <br>
+	$a^2 + ab + b^2=k(2ab + 1)$ <br>
+	$a^2+ab+b^2-2kab-k=0$ <br>
+	$a^2+(b-2kb)a+(b^2-k)=0$ <br>
+	2. 根据韦达定理，假如其中一个根是a，那么另一个根是 $a'=-\frac{b-2kb}{1}-a=-(b-2kb)-a$
+	3. a=0的情况下，容易看出 $b=\sqrt{k}$ ，以r代替。此时替换新a''=b， $b'=a'=-(r-2kr)-a=-(1-2k)r-a$ 。新出现的(a'',b')也是满足条件的一组(a,b)值。继续这么推下去就能拿到无数组想要的值
+	4. 百科里用这个方法递减可能的解，直到最小。为啥我们这越来越大？因为百科里默认0 < $x^2$ < b < a，这里我们初始b > a，懒得证明（菜）但是感觉这样替换结果越来越大
+	5. 为啥可以把a''换成b，b'换成a'？这里看原始式子就简单得多， $\frac{a^2 + ab + b^2}{2ab + 1}=k$ 里明显a和b的值交换不影响k
+
 ## 其他
 
 1. Crypto库根据已有信息构建私钥并解密
@@ -2621,3 +2637,4 @@ Cryptosystems Using Reed-Solomon Codes](https://arxiv.org/pdf/1307.6458)
 154. [Three Line Crypto](https://octo-kumo.me/c/ctf/2024-ductf/crypto/three-line-crypto)
 - 一道很特别的异或题。感觉wp的思路值得记录
 - 官方解法： https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/crypto/three-line-crypto 。使用hill climbing算法。这个算法是个概率算法，随机设置key值后用Bhattacharyya coefficient衡量解出的明文是否“足够英语”，如果结果更好就保存。不断重复直到恢复key
+- 发现crib drag（已知/猜测明文攻击）解法是最简单的： https://connor-mccartney.github.io/cryptography/other/DUCTF-2024

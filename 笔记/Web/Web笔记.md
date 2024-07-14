@@ -285,6 +285,7 @@ for i in range(300,1000):
     - 其他解法（干扰gpt语句+ejs注入payload）： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#gpwaf
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
     - `{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("cmd").read()}}{%endif%}{% endfor %}`
+    - https://sanlokii.eu/writeups/downunderctf/parrot-the-emu/
 
 1. 当网站没有任何提示时，可以去看看一些敏感目录。
 
@@ -3825,6 +3826,7 @@ Content-Type: text/plain
 - php的mime_content_type函数用于查看某个文件是什么类型。但是其内部原理只是用一个表格检查文件是否包含某些字节。所以只要在特定的位置处放上特征字节就能伪造文件的类型（估计这就是一些php木马上传的绕过方法原理）。至于到底是什么位置可以爆破或者看文件里记录的[偏移](https://sources.debian.org/src/dares/0.6.5-7/magic.mime/)
 - php将其session内容存储在`/tmp/sess_xxxx`。xxxx为cookie里可以看到的`PHPSESSID`的值
 - 更详细的wp： https://siunam321.github.io/ctf/DownUnderCTF-2024/web/sniffy/
+- 非预期解： https://github.com/4n86rakam1/writeup/tree/main/DownUnderCTF_2024 。这个非预期解比预期解还复杂，主要利用了一个php文件上传[技巧](https://blog.orange.tw/2018/10/)。假如在post data开头加上个PHP_SESSION_UPLOAD_PROGRESS，php会自动开启session，无视服务器端是否开启。session文件位于`/tmp/sess_[sessid]`，而sessid又可以在cookie里控制。唯一的问题是这样上传的cookie很快就会被自动删除，所以需要race condition。这个技巧适用于文件包含没有目标文件，需要自己创建文件和payload；以及无法以其他方式控制session的值的情况
 475. [i am confusion](https://siunam321.github.io/ctf/DownUnderCTF-2024/web/i-am-confusion/)
 - 可以用openssl获取服务器的ssl证书公钥
 - 334条的另一种情况，这里误用的是JsonWebToken库的verify。比赛时我用rsa_sign2n工具成功提取出公钥后，发现用JsonWebToken库没法伪造jwt。后面找到这个，行了： https://gist.github.com/FrancoisCapon/7e766d06cf9372fb8b5436a37b8bf18d 。这个方法也不像wp一样需要安装burpsuite的插件
