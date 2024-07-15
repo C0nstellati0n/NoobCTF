@@ -1300,3 +1300,6 @@ mov     r8, qword [r13]
 185. [sssshhhh](https://medium.com/@harryfyx/writeup-ductf-2024-sssshhhh-d2fac53f2ed1)
 - ghidra逆向golang程序案例
 - 官方wp： https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/beginner/sssshhhh
+186. [Wacky Recipe](https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/misc/wackyrecipe)
+- 逆向esoteric language [chef](https://esolangs.org/wiki/Chef)。相关文档： http://progopedia.com/language/chef/
+- 其他wp： https://github.com/EnchLolz/DUCTF-24/blob/main/MISC/Wacky%20Recipe.md

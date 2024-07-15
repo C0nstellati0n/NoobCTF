@@ -2262,3 +2262,5 @@ a=A()
 349. [Bad Policies](https://p-pratik.github.io/posts/ductf'24/)
 - 破解[Group Policy Preferences File (GPP XML)](https://infinitelogins.com/2020/09/07/cracking-group-policy-preferences-file-gpp-xml/)。可用命令`gpp-decrypt`
 - 另一种做法： https://sanlokii.eu/writeups/downunderctf/bad-policies/ ，使用impacket-Get-GPPPassword
+350. [Intercepted Transmissions](https://github.com/EnchLolz/DUCTF-24/blob/main/MISC/Intercepted%20Transmissions.md)
+- 手动解码[CCIR 476](https://en.wikipedia.org/wiki/CCIR_476) transmission
