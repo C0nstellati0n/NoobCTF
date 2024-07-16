@@ -3831,3 +3831,8 @@ Content-Type: text/plain
 - 可以用openssl获取服务器的ssl证书公钥
 - 334条的另一种情况，这里误用的是JsonWebToken库的verify。比赛时我用rsa_sign2n工具成功提取出公钥后，发现用JsonWebToken库没法伪造jwt。后面找到这个，行了： https://gist.github.com/FrancoisCapon/7e766d06cf9372fb8b5436a37b8bf18d 。这个方法也不像wp一样需要安装burpsuite的插件
 - 看了另一篇[wp](https://ouuan.moe/post/2024/07/ductf-2024)，原来是我代码写错了（chatgpt也错了）。光用jsonwebtoken库是可以的
+476. [waifu](https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/web/waifu)
+- chatgpt [repeated token attack](https://dropbox.tech/machine-learning/bye-bye-bye-evolution-of-repeated-token-attacks-on-chatgpt-models)。当攻击者在输入的信息里插入大量重复的token（这里的token指被分组的各个有意义的字符，详细见 https://simonwillison.net/2023/Jun/8/gpt-tokenizers/ ）时，chatgpt会出现一系列奇怪的反应，例如重复回答一句话，忽略重复token前的提问，“幻视”问题等。现在修复了，当问题里出现重复token时会报错
+- 可以用`javascript://`协议绕过typescript URL hostname检查，前提是不检查协议名
+- 无引号xss payload
+- 在discord里看见了和[temperature](https://medium.com/@wang6good/understanding-the-impact-of-temperature-on-openai-api-an-in-depth-analysis-and-thoughts-65a988e865e1)有关的讨论。长话短说，temperature越高，gpt输出的内容越随机。对应到用gpt当waf的情况就是false positive越多

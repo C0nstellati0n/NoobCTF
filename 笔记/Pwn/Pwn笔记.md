@@ -926,6 +926,16 @@ qemu-aarch64 -L /usr/aarch64-linux-gnu/ ./prog
 apt search binutils| grep aarch64
 sudo apt install bintuils-aarch64-linux-gnu-dbg
 ```
+  - 调试
+```sh
+sudo apt install qemu-user qemu-user-static gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu binutils-aarch64-linux-gnu-dbg build-essential
+sudo apt install gdb-multiarch
+qemu-aarch64 -g (port) ./pacsh
+#run: 
+gdb-multiarch ./pacsh
+#in gdb:
+target remote 0.0.0.0:port
+```
 63. [Contrived Shellcode](https://github.com/tamuctf/tamuctf-2023/tree/master/pwn/contrived-shellcode)
 - 仅用0-15的字节构建shellcode。可在[此处](http://ref.x86asm.net/coder64.html#x77)参考哪些inst可以用。
 - [方法1](https://chovid99.github.io/posts/tamuctf-2023/#contrived-shellcode):因为允许的字节范围内包含大量add，or和syscall，但每个操作数只能是32位寄存器。于是将getshell分为3个syscall：chdir('/')；chdir('bin')；execve('sh')。

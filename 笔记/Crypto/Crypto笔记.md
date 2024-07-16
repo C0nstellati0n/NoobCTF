@@ -2639,3 +2639,5 @@ Cryptosystems Using Reed-Solomon Codes](https://arxiv.org/pdf/1307.6458)
 - 官方解法： https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/crypto/three-line-crypto 。使用hill climbing算法。这个算法是个概率算法，随机设置key值后用Bhattacharyya coefficient衡量解出的明文是否“足够英语”，如果结果更好就保存。不断重复直到恢复key
 - 发现crib drag（已知/猜测明文攻击）解法是最简单的： https://connor-mccartney.github.io/cryptography/other/DUCTF-2024
 - 又见到一个使用genetic algorithm（ [遗传算法](https://www.jianshu.com/p/ae5157c26af9) ）的wp: https://gist.github.com/maple3142/a2e30e0face353149f9dd8c9f2dccce9 。和官方wp的hill climbing算法有异曲同工之妙，利用运气随机结果+筛选更好的结果
+155. [super-party-computation](https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/crypto/super-party-computation)
+- Lindell17 TSS protocol(Fast Secure Two-Party ECDSA Signing，见 https://aandds.com/blog/two-party-ecdsa.html )的错误实现导致攻击者可以恢复私钥。相关CVE编号为CVE-2023-33242

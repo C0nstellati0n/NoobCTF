@@ -2258,9 +2258,13 @@ a=A()
 347. [slot-machine](https://github.com/rerrorctf/writeups/tree/main/2024_06_29_UIUCTFCTF24/misc/slot-machine)
 - 寻找开头全是一个字符的hash。比赛时我寻思我去哪爆破啊，完全忘了blockchain这个东西。它们可喜欢找开头全是0的hash了。跟着wp做就能拿到开头一堆0的sha256 hash了
 348. [the other minimal php](https://ouuan.moe/post/2024/07/ductf-2024)
-- 看了半天才明白wp说的"follow the ... pattern"是什么意思。这题的源码在这： https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/misc/the-other-minimal-php ，payload传入htmlspecialchars后再取反，最后才eval。所以这里要求我们的payload取反后还是合法的UTF-8。根据wp所说和UTF-8的编码方式： https://en.wikipedia.org/wiki/UTF-8#Encoding ，四种编码方式里只有第二种里的做法拆开能用，因为只有`110xxxxx`和`10xxxxxx`取反后还在合法的UTF-8里。这也是为什么wp里的php payload那么奇怪
+- 看了半天才明白wp说的"follow the ... pattern"是什么意思。这题的源码在这： https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/misc/the-other-minimal-php (也是官方wp)，payload传入htmlspecialchars后再取反，最后才eval。所以这里要求我们的payload取反后还是合法的UTF-8。根据wp所说和UTF-8的编码方式： https://en.wikipedia.org/wiki/UTF-8#Encoding ，四种编码方式里只有第二种里的做法拆开能用，因为只有`110xxxxx`和`10xxxxxx`取反后还在合法的UTF-8里。这也是为什么wp里的php payload那么奇怪
+- 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#the-other-minimal-php
 349. [Bad Policies](https://p-pratik.github.io/posts/ductf'24/)
 - 破解[Group Policy Preferences File (GPP XML)](https://infinitelogins.com/2020/09/07/cracking-group-policy-preferences-file-gpp-xml/)。可用命令`gpp-decrypt`
 - 另一种做法： https://sanlokii.eu/writeups/downunderctf/bad-policies/ ，使用impacket-Get-GPPPassword
 350. [Intercepted Transmissions](https://github.com/EnchLolz/DUCTF-24/blob/main/MISC/Intercepted%20Transmissions.md)
 - 手动解码[CCIR 476](https://en.wikipedia.org/wiki/CCIR_476) transmission
+351. [i-see](https://www.youtube.com/watch?v=bmLAca3wxGc)
+- 硬件入门。题目给个示意图，要求从某个硬件里读数据。这题要求用[pico-sdk](https://github.com/raspberrypi/pico-sdk)从一个EEPROM里读取数据
+- 其他硬件题（主要没非常详细的wp，先积累起来，等我学硬件后再看）: https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/hardware
