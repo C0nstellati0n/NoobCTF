@@ -2268,3 +2268,5 @@ a=A()
 351. [i-see](https://www.youtube.com/watch?v=bmLAca3wxGc)
 - 硬件入门。题目给个示意图，要求从某个硬件里读数据。这题要求用[pico-sdk](https://github.com/raspberrypi/pico-sdk)从一个EEPROM里读取数据
 - 其他硬件题（主要没非常详细的wp，先积累起来，等我学硬件后再看）: https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/hardware
+352. [Finding The Seed](https://abuctf.github.io/posts/OSCTF/)
+- 如何破解一个世界的seed。需要安装mod [SeedcrackerX](https://github.com/19MisterX98/SeedcrackerX)。按照wp的方法安装mod后满世界找一些特殊遗迹即可恢复seed

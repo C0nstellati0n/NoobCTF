@@ -2539,6 +2539,7 @@ c1=encrypt(k1,plaintext)
 c2=encrypt(k2,c1)
 ```
 如果直接爆破k1和k2，时间复杂度为key space of k1\*key space of k2。但是可以把两者拆开，分别计算encrypt(k1,plaintext)和decrypt(k2,c2)。若两者结果匹配，我们就找到了(k1,k2)，时间复杂度要少上不少
+
 121. [Strong Primes](https://blog.bithole.dev/blogposts/ctf-writeups/udctf-strong-primes/)
 - python Crypto.Util里的getStrongPrime函数所生成的质数保证p-1里有一个因子是较大的质数。这并不意味着完全安全，因为那个较大的质数减去1仍然可能有很多很小的因子。故基于strongPrime的Diffie–Hellman协议仍然有机率可以使用Pohlig–Hellman算法求得离散对数
 122. [Keyshare](https://github.com/eylau-ucsd/ctf-sols/tree/main/LakeCTF/KeyShare)

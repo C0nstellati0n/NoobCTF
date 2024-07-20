@@ -3511,6 +3511,7 @@ window.recaptcha=true;
       }
 ```
 可以用`/static../foo.txt`绕过，进而访问`/usr/share/nginx`下的文件。参考 https://labs.hakaioffsec.com/nginx-alias-traversal/
+
 385. [Secret](https://d0ublew.github.io/posts/wgmy2023/web/secret/)
 - kubernetes+[HashiCorp Vault](https://zhuanlan.zhihu.com/p/30983205)。可下载[工具](https://developer.hashicorp.com/vault/install#Linux)并设置环境变量VAULT_ADDR为vault的地址然后尝试登录
 - 有些时候vault内保存的密码等敏感内容会被inject进kubernetes（参考 https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-sidecar ）。这时候文件可直接在`/vault/secrets`目录下读取

