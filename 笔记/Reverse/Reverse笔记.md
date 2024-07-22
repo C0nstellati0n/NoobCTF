@@ -1303,3 +1303,8 @@ mov     r8, qword [r13]
 186. [Wacky Recipe](https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/misc/wackyrecipe)
 - 逆向esoteric language [chef](https://esolangs.org/wiki/Chef)。相关文档： http://progopedia.com/language/chef/
 - 其他wp： https://github.com/EnchLolz/DUCTF-24/blob/main/MISC/Wacky%20Recipe.md
+187. [Irony](https://stelin41.github.io/en/posts/irony_catthequest2024_ctf/)
+- 逆向gameboy rom。发现[GhidraBoy](https://github.com/Gekkio/GhidraBoy)插件不是什么时候都好用，比如这题就基本没分析出来东西。不过[BGB](https://bgb.bircd.org/)模拟器（也是调试器）还是好用的
+- 手动分析gb studio bytecode。见[GBVM Operations](https://www.gbstudio.dev/docs/scripting/gbvm/gbvm-operations/)和[GB Studio](https://github.com/chrismaltby/gb-studio)
+188. [bf](https://yun.ng/c/ctf/2024-ictf/rev/bf)
+- 使用[debugger](https://bxt.gitlab.io/brainfuck-debugger/)调试brainfuck代码。不过这题主要利用的工具还是这个可以运行brainfuck并限制步数上限的js库：[braincrunch](https://github.com/Macil/braincrunch)

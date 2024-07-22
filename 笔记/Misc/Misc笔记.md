@@ -2270,3 +2270,14 @@ a=A()
 - 其他硬件题（主要没非常详细的wp，先积累起来，等我学硬件后再看）: https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/hardware
 352. [Finding The Seed](https://abuctf.github.io/posts/OSCTF/)
 - 如何破解一个世界的seed。需要安装mod [SeedcrackerX](https://github.com/19MisterX98/SeedcrackerX)。按照wp的方法安装mod后满世界找一些特殊遗迹即可恢复seed
+353. [playful-puppy](https://centinels.gitbook.io/home/writeups/imaginaryctf/forensics-playful-puppy)
+- 使用NBTExplorer分析Minecraft世界数据。这题的目标是找一个生物的名字
+- 命令解法： https://yun.ng/c/ctf/2024-ictf/forensics/playful-puppy
+354. [zable](https://yun.ng/c/ctf/2024-ictf/misc/zable)
+- bazel `--action_env`注入。如果可以控制`--action_env`的内容，则能够执行任意命令。`--action_env`本质是运行这么一条命令：`EXPORT NAME="content"`
+355. [gdbjail1](https://github.com/rerrorctf/writeups/tree/main/2024_07_19_Imaginary24/misc/gdbjail1)/[gdbjail2](https://github.com/rerrorctf/writeups/blob/main/2024_07_19_Imaginary24/misc/gdbjail2)
+- 只有set/continue/break命令，尝试在调试`/bin/cat`的gdb内部得到flag.txt。2比1多了一些过滤
+- 其他wp： 
+356. [starship](https://github.com/rerrorctf/writeups/blob/main/2024_07_19_Imaginary24/misc/starship)
+- sklearn(python大模型训练库) KNeighborsClassifier的特点。给定一组数据后，再给一个不在组里的数据，模型会根据这个数据周边几个点的结果来推断
+- 另一个wp： https://vaktibabat.github.io/posts/ictf_2024

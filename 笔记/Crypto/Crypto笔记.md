@@ -2642,3 +2642,14 @@ Cryptosystems Using Reed-Solomon Codes](https://arxiv.org/pdf/1307.6458)
 - 又见到一个使用genetic algorithm（ [遗传算法](https://www.jianshu.com/p/ae5157c26af9) ）的wp: https://gist.github.com/maple3142/a2e30e0face353149f9dd8c9f2dccce9 。和官方wp的hill climbing算法有异曲同工之妙，利用运气随机结果+筛选更好的结果
 155. [super-party-computation](https://github.com/DownUnderCTF/Challenges_2024_Public/blob/main/crypto/super-party-computation)
 - Lindell17 TSS protocol(Fast Secure Two-Party ECDSA Signing，见 https://aandds.com/blog/two-party-ecdsa.html )的错误实现导致攻击者可以恢复私钥。相关CVE编号为CVE-2023-33242
+156. [tango](https://yun.ng/c/ctf/2024-ictf/crypto/tango)
+- Salsa20属于stream cipher，这类密码本质上利用key（有时加个nonce）生成一串内容，然后与明文异或，结果就是密文。所以已知明文就能拿到密码流，key-nonce对不能重用。个人经验，这类stream cipher（还有aes-cbc。应该说是异或的锅）在固定key-nonce pair且有oracle的情况下基本是靠这个性质来伪造密文
+- crc32的性质。有多组信息，只要每组信息长度一样且变化的字节位置一致，异或的crc32结果就是一样的。例：
+```py
+a="abccc"
+b="aaccc"
+c="adeee"
+d="aceee"
+assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
+```
+- 更简单的做法： https://github.com/rerrorctf/writeups/tree/main/2024_07_19_Imaginary24/crypto/tango ，拿已知明文求出部分keystream然后加密自己的内容再拼接原本的密文即可

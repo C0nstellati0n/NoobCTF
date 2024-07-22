@@ -2270,7 +2270,8 @@ ${dwf.newInstance(ec,null)("cmd")}
         </body>
 </html>
 ```
-提交给admin bot的url为部署以上代码的公网url。
+提交给admin bot的url为部署以上代码的公网url
+
 222. [urmombotnetdotnet.com 4](https://github.com/BYU-CSA/BYUCTF-2023/blob/main/urmombotnetdotnet.com/Chall4.md)
 - sql的数据库会忽略类似`\u0000`的unicode，但python不会。意味着当注册一个用户名`\u0000\u0000\u0000a`时，python使用len函数的结果是4。后续可以用用户名`a`查询出来这个用户。
 223. [urmombotnetdotnet.com 5](https://github.com/BYU-CSA/BYUCTF-2023/blob/main/urmombotnetdotnet.com/Chall5.md)
@@ -3837,3 +3838,12 @@ Content-Type: text/plain
 - 可以用`javascript://`协议绕过typescript URL hostname检查，前提是不检查协议名
 - 无引号xss payload
 - 在discord里看见了和[temperature](https://medium.com/@wang6good/understanding-the-impact-of-temperature-on-openai-api-an-in-depth-analysis-and-thoughts-65a988e865e1)有关的讨论。长话短说，temperature越高，gpt输出的内容越随机。对应到用gpt当waf的情况就是false positive越多
+477. [Crystals](https://remoteshell.zip/imaginary/)
+- 如何在ruby sinatra搭建的网站上获取hostname。只要路径里有特殊字符就行
+478. [Readme2](https://remoteshell.zip/imaginary)
+- js URL类的特性：
+```js
+new URL("//a.com","http://b.com")
+//=> "http://a.com"
+```
+- 预期解： https://crocus-script-051.notion.site/readme2-1daa048e6c1a49e5993cad2ab6371292 。Bun有个特别的性质，会把Host header的值拼接进req.url
