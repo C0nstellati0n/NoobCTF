@@ -16,6 +16,8 @@
     - [官方wp](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/block/cr3dao)更详细。这题的两个漏洞为 https://docs.soliditylang.org/en/latest/security-considerations.html#clearing-mappings 和 https://blog.oxor.io/exploring-the-bugs-and-features-of-solidity-compiler-versions-a-guide-for-smart-contract-fe04e852ea64 。前者是solidity语言的特性：无法删除map。一般将map设为新的空白map看作删除操作，但如果是包含map的数组，使用delete删除数组并创建新数组后数组内部的map保存着删除前的值。后者是solidity 0.8.10之前的漏洞，从calldata或者memory拷贝bytes时，即使数据长度不足32字节也会直接拷贝32字节，导致出现dirty byte。对byte数组调用无参数的`.push()`函数时会泄露这些dirty byte
 - [cr3proxy](https://icypetal.github.io/ctf/cr3ctf/#cr3proxy)
     - 合约升级（upgrade）和delegate call示例
+- [Bank](https://github.com/NoobMaster9999/My-CTF-Challenges/tree/main/ImaginaryCTF-2024/Misc/bank)
+	- 爆炸了，比赛期间看到uint48有个整数溢出，但是依稀记得solidity里有自动的溢出检查所以没试。结果学艺不精，查了后发现小于0.8.0版本的程序是没有的……
 
 ## SQL注入
 
@@ -3839,7 +3841,7 @@ Content-Type: text/plain
 - 无引号xss payload
 - 在discord里看见了和[temperature](https://medium.com/@wang6good/understanding-the-impact-of-temperature-on-openai-api-an-in-depth-analysis-and-thoughts-65a988e865e1)有关的讨论。长话短说，temperature越高，gpt输出的内容越随机。对应到用gpt当waf的情况就是false positive越多
 477. [Crystals](https://remoteshell.zip/imaginary/)
-- 如何在ruby sinatra搭建的网站上获取hostname。只要路径里有特殊字符就行
+- 如何在ruby sinatra搭建的网站上获取hostname。只要路径里有特殊字符就行。不过discord里有大佬说这题和sinatra毫无关系，错误来源于ruby内部的HTTP request parsing。详细解析： https://siunam321.github.io/ctf/ImaginaryCTF-2024/Web/crystals/
 478. [Readme2](https://remoteshell.zip/imaginary)
 - js URL类的特性：
 ```js
@@ -3847,3 +3849,6 @@ new URL("//a.com","http://b.com")
 //=> "http://a.com"
 ```
 - 预期解： https://crocus-script-051.notion.site/readme2-1daa048e6c1a49e5993cad2ab6371292 。Bun有个特别的性质，会把Host header的值拼接进req.url
+479. [Pwning en Logique](https://siunam321.github.io/ctf/ImaginaryCTF-2024/Web/Pwning-en-Logique/)
+- [SWI-Prolog](https://www.swi-prolog.org/)环境搭建的网站
+- prolog语言格式化字符串漏洞。如果攻击者可以控制[format](https://www.swi-prolog.org/pldoc/doc_for?object=format/2)函数的格式符和参数，就能执行任意函数

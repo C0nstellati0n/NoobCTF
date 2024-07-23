@@ -2653,3 +2653,7 @@ d="aceee"
 assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
 ```
 - 更简单的做法： https://github.com/rerrorctf/writeups/tree/main/2024_07_19_Imaginary24/crypto/tango ，拿已知明文求出部分keystream然后加密自己的内容再拼接原本的密文即可
+- [官方wp](https://github.com/ImaginaryCTF/ImaginaryCTF-2024-Challenges-Public/tree/main/Crypto/tango)又用了crc32的另一个性质：`crc32(x ^ y ^ z) = crc32(x) ^ crc32(y) ^ crc32(z)`
+157. [lcasm](https://github.com/ImaginaryCTF/ImaginaryCTF-2024-Challenges-Public/blob/main/Crypto/lcasm)
+- 输入linear congruential generator（lcg）的参数，使其连续输出三个已知的目标值。使用专门解线性模方程的脚本： https://github.com/nneonneo/pwn-stuff/blob/master/math%2Fsolvelinmod.py
+- 其他做法： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#lcasm

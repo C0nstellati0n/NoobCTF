@@ -719,6 +719,8 @@ print(base64.b64encode(temp.encode()))
 - [Astea](https://octo-kumo.me/c/ctf/2024-uiuctf/misc/astea)
   - 禁止使用以下操作：assign, call, import, import from, binary operation (`+-/`等)，尝试获取RCE。可以用函数装饰器（function decorators），但是这样出来的payload不是一行。一行的做法可以用AnnAssign（之前真没见过这种语法）。属于abstract syntax tree（ast）sandbox题
   - 其他做法: https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#astea 。用海象运算符（walrus operator）+list comprehension，以及其他很好的wp
+- [Calc](https://crocus-script-051.notion.site/Calc-dbdf7f34430d403d9a1550f88b2a4316)
+	- 和audit hook有关的题。要求在不触发任何audit event的情况下获得shell且payload有长度限制。不确定在不触发任何audit event的情况下能不能getshell，但看这道题可以做到获取套娃函数里的参数并覆盖
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

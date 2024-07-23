@@ -2277,7 +2277,10 @@ a=A()
 - bazel `--action_env`注入。如果可以控制`--action_env`的内容，则能够执行任意命令。`--action_env`本质是运行这么一条命令：`EXPORT NAME="content"`
 355. [gdbjail1](https://github.com/rerrorctf/writeups/tree/main/2024_07_19_Imaginary24/misc/gdbjail1)/[gdbjail2](https://github.com/rerrorctf/writeups/blob/main/2024_07_19_Imaginary24/misc/gdbjail2)
 - 只有set/continue/break命令，尝试在调试`/bin/cat`的gdb内部得到flag.txt。2比1多了一些过滤
-- 其他wp： 
+- 其他wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#gdbjail12
 356. [starship](https://github.com/rerrorctf/writeups/blob/main/2024_07_19_Imaginary24/misc/starship)
 - sklearn(python大模型训练库) KNeighborsClassifier的特点。给定一组数据后，再给一个不在组里的数据，模型会根据这个数据周边几个点的结果来推断
 - 另一个wp： https://vaktibabat.github.io/posts/ictf_2024
+357. [Routed](https://odintheprotector.github.io/2024/07/22/imaginaryCTF-forensic.html)
+- `.pkz`后缀文件可以在Cisco Packet Tracer里打开。其中有个`View all commands entered in the file`按钮，可以用来藏东西
+- 如果发现开头为7的cisco密码，可以直接使用工具获取其值： https://packetlife.net/toolbox/type7/
