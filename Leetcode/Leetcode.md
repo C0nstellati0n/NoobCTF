@@ -353,6 +353,7 @@
 - [Maximum Score Words Formed by Letters](./Hard/Maximum%20Score%20Words%20Formed%20by%20Letters.md). backtrack
 - [Word Break II](./Hard/Word%20Break%20II.md). backtrack
 - [Student Attendance Record II](./Hard/Student%20Attendance%20Record%20II.md). 3d dp
+- [Second Minimum Time to Reach Destination](./Hard/Second%20Minimum%20Time%20to%20Reach%20Destination.md). bfs
 
 ## Others
 
