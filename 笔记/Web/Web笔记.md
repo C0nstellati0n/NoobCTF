@@ -3871,3 +3871,14 @@ new URL("//a.com","http://b.com")
 480. [heapnotes](https://github.com/ImaginaryCTF/ImaginaryCTF-2024-Challenges-Public/blob/main/Web/heapnotes)
 - 说是xs leak，但好像和xss一点关系都没有。主要是利用了flask的redirect函数的目标url有长度限制，若超出了这个限制就不会返回200，而是404（和[这个情况](https://stackoverflow.com/questions/67620929/url-limit-in-flask)有点像）
 - 这题还有点zlib compress oracle的成分。题目会把包含flag的username和攻击者可控制的内容一起压缩，然后把结果放到redirect的url里。利用zlib遇到相同字符压缩后长度会变短的特点，一个字符一个字符地猜flag。如果猜对了，压缩的内容变短，就能成功redirect；反之则返回404
+481. [buntime](https://yun.ng/c/ctf/2024-deadsec-ctf/web/buntime)
+- 在payload长度受限制的情况下在bun环境RCE
+- 可以用原型链污染测试远程服务器是否在同一环境下执行payload。如果是这种情况，可以利用污染`global.xxx`来将一段rce payload拆成多部分执行，进而绕过有关长度限制的waf
+- 有时候bun的函数无法使用，这时用node.js的内置函数也可以
+- 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#buntime 。eval get参数，这样就能将不受限制的payload从get参数中传入。wp作者提到bun里的await函数用不了，但根据这个补充payload,似乎要在async函数里执行才行
+482. [colorful-board](https://yun.ng/c/ctf/2024-deadsec-ctf/web/colorful-board)
+- css injection。用css选中`<input>`标签里的内容并带出到webhook
+- Mongoose id其实是编码后的时间戳（timestamp）。如果有3个id按顺序被创建，知道1和3的id后就能自己爆破2的id
+- 更详细的wp： https://blog.exon.kr/posts/ctf/2024/deadsec/
+483. [retrocalc](https://yun.ng/c/ctf/2024-deadsec-ctf/web/retrocalc)
+- js2py sandbox escape cve poc: https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape

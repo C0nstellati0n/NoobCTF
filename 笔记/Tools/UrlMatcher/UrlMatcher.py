@@ -25,7 +25,7 @@ def filterUrl(content):
         if expect:
             res.append(i)
     return list(set(res))
-def process(path):
+def processJson(path):
     global urls
     global bookmarks
     with open(path,'r') as f:
@@ -37,15 +37,39 @@ def process(path):
                 if not url in urls:
                     bookmarks+=f'<DT><A HREF="{url}">{url}</A>\n'
                     urls.update([url])
-path=input("请输入存储所有json文件的文件夹的路径: ")
+def processCsv(path):
+    global urls
+    global bookmarks
+    with open(path,'r') as f:
+        content=f.read().splitlines()
+    for i in content:
+        temp=filterUrl(i)
+        if len(temp)!=0:
+            for url in temp:
+                if not url in urls:
+                    bookmarks+=f'<DT><A HREF="{url}">{url}</A>\n'
+                    urls.update([url])
+mode=input("请输入文件格式(json/csv): ")
+if mode=="json":
+    prompt="请输入存储所有json文件的文件夹的路径: "
+    glob="**/*.json"
+    processFunc=processJson
+elif mode=="csv":
+    prompt="请输入存储所有csv文件的文件夹的路径: "
+    glob="**/*.csv"
+    processFunc=processCsv
+else:
+    print("此格式暂不支持")
+    exit(0)
+path=input(prompt)
 outputPath=input("请输入结果文件的路径: ")
 lastIndex=outputPath.rfind('/')
 if lastIndex==-1:
     bookmarksPath=f"bookmarks_{outputPath}"
 else:
     bookmarksPath=f"{outputPath[:lastIndex]}/bookmarks_{outputPath[lastIndex+1:]}"
-jsons=Path(path).glob("**/*.json")
-for jsonFile in jsons:
-    process(jsonFile)
+files=Path(path).glob(glob)
+for file in files:
+    processFunc(file)
 with open(bookmarksPath+".html",'w') as f:
     f.write(bookmarkTemplate.format(bookmarks[:-1]))

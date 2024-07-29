@@ -7,3 +7,5 @@
 加了个导出为bookmark文件的功能。可以直接将writeup的url以bookmark的形式导入chrome，方便管理
 
 然后又觉得每次都要指定文件路径太麻烦了，干脆直接用glob找到文件夹里所有的json文件。现在只需要把导出的json文件统一放到一个文件夹里即可
+
+突然有一天发现Discrub用不了了。于是找了[Discordmate](https://chromewebstore.google.com/detail/discordmate-discord-chat/ofjlibelpafmdhigfgggickpejfomamk)替代。但这个插件只能导出为csv，所以只能匆忙写点垃圾代码适配一下
