@@ -666,7 +666,7 @@ sympy也放这了
     #x3 = y3*m + z3
     ```
     - 相关论文/资料： https://eprint.iacr.org/2016/215.pdf ， https://ur4ndom.dev/static/files/latticetraining/practical_lattice_reductions.pdf
-- Fast lattice reduction:[flatter](https://github.com/keeganryan/flatter)
+- Fast lattice reduction:[flatter](https://github.com/keeganryan/flatter)。使用案例：[SSP](https://thr34dr1pp3r.gitbook.io/ctf/deadsec-ctf-2024/crypto-ssp)。可以加速大型格的计算，但是没法处理很小的格。小格的话用sagemath自带的LLL即可
 
 ## Elliptic Curves(ECC,椭圆曲线)
 
@@ -2660,3 +2660,4 @@ assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
 158. [Not an active field for a reason](https://yun.ng/c/ctf/2024-deadsec-ctf/crypto/not-an-active-field-for-a-reason)
 - Neural cryptography中的[Tree parity machine](https://en.wikipedia.org/wiki/Neural_cryptography#Tree_parity_machine)。怎么也没想到有一天密码学和人工智能能扯上关系……
 - 这题大概是让一个Tree parity machine C学习另外两个machine A和B之间建立的关系。有过度拟合的毛病，但这题没关系
+- 更详细的wp： https://c0degolf.github.io/posts/writeup/deadsec-ctf/deadsec2024/ 。使用的攻击方式似乎名为[geometry attack](https://arxiv.org/pdf/0711.2411#page=33)

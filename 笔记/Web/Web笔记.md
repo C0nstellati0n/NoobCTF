@@ -3878,7 +3878,8 @@ new URL("//a.com","http://b.com")
 - 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#buntime 。eval get参数，这样就能将不受限制的payload从get参数中传入。wp作者提到bun里的await函数用不了，但根据这个补充payload,似乎要在async函数里执行才行
 482. [colorful-board](https://yun.ng/c/ctf/2024-deadsec-ctf/web/colorful-board)
 - css injection。用css选中`<input>`标签里的内容并带出到webhook
-- Mongoose id其实是编码后的时间戳（timestamp）。如果有3个id按顺序被创建，知道1和3的id后就能自己爆破2的id
-- 更详细的wp： https://blog.exon.kr/posts/ctf/2024/deadsec/
+- Mongoose id其实是编码后的时间戳（timestamp）。如果有3个id按顺序被创建，知道1和3的id后就能自己爆破2的id。见 https://book.hacktricks.xyz/network-services-pentesting/27017-27018-mongodb#mongo-objectid-predict 。还有个工具: https://github.com/andresriancho/mongo-objectid-predict
+- 更详细的wp： https://blog.exon.kr/posts/ctf/2024/deadsec/ ， https://0x0oz.github.io/writeups/deadsec-ctf-2024
 483. [retrocalc](https://yun.ng/c/ctf/2024-deadsec-ctf/web/retrocalc)
 - js2py sandbox escape cve poc: https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape
+- 其他payload： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#retrocalc
