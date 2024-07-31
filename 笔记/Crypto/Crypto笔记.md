@@ -625,6 +625,9 @@ sympy也放这了
     - python sympy（无sagemath）解法： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#my-calculus-lab
 - [Determined](https://octo-kumo.me/c/ctf/2024-uiuctf/crypto/determined)
     - 比赛时看出来了它在算5阶方阵的行列式，也想到了用sagemath或者z3算方程拿p和q，但是模拟方程太复杂了，懒得写。结果这个wp告诉我sympy里直接做个矩阵自动求行列式放到方程里就能解？
+- [Raul Rosas](https://tsumiiiiiiii.github.io/deadsec24)
+	- bivariate coppersmith使用，相关脚本： https://github.com/defund/coppersmith 。真的是有点憨，coppersmith我想到了，方程的表示我也想到了，结果没想到爆破一个最小的未知数使方程只剩下两个未知数从而用bivariate coppersmith。注意使用coppersmith法时，构造的方程如果有很明显的平凡解法（比如0,0），需要变形方程使其避开这种情况
+	- 假如两个位数差距很大的数相乘，如一个1024位的数A乘上一个300位的数B，两者相乘的结果模 $2^{400}$ 等于A的低300位乘上B再模 $2^{400}$ 。也就是说位数低的数字相乘时只会影响另一个数字相应的低位。分解时考虑低位就好，高位不重要
 ## Lattice(格)
 
 是的我需要一个格题分类。虽然我根本就不懂什么是格
