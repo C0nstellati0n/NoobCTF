@@ -3883,3 +3883,5 @@ new URL("//a.com","http://b.com")
 483. [retrocalc](https://yun.ng/c/ctf/2024-deadsec-ctf/web/retrocalc)
 - js2py sandbox escape cve poc: https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape
 - 其他payload： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#retrocalc
+484. [Letter to the editor](https://platypwnies.de/writeups/2024/gpn/web/letter-to-the-editor/)
+- 寻找[firepad](https://github.com/FirebaseExtended/firepad)里的xss漏洞并利用
