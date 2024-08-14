@@ -127,6 +127,10 @@
 - [Lost in Memory](https://warlocksmurf.github.io/posts/ductf2024/)
 	- 使用volatility2和volatility3分析memory dump文件
 	- [reflective DLL injection](https://www.hackthebox.com/blog/reflection-ca-ctf-2022-forensics-writeup)的特征：出现powershell module `Invoke-ReflectivePEInjection`
+- [Crymem](https://warlocksmurf.github.io/posts/crewctf2024)
+	- 有些memory dump无法使用Volatility分析，原因在于Volatility需要特别的profile。这种情况下，若题目给出了相关代码或是相关内容，可直接用strings过滤关键字。配合bulk_extractor可以找到dump里的文件
+- [Fiilllleeeeeeee](https://warlocksmurf.github.io/posts/crewctf2024)
+	- `.ad1`后缀文件分析：恢复被[sdelete64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sdelete)删除的文件。被删除文件的文件名为一串相同字母。[$LogFile](https://forensafe.com/blogs/windowslogfile.html)存储了所有文件系统事件（event，或者说transactions），可以用[LogFileParser](https://github.com/jschicht/LogFileParser)分析文件并获取每个transaction的内容。由于创建、删除文件等都会触发transaction，所以相关文件的内容可能被记录在了MFT中,通过LogFile索引
 
 ## Network Forensics
 

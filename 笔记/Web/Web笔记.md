@@ -3885,3 +3885,10 @@ new URL("//a.com","http://b.com")
 - 其他payload： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#retrocalc
 484. [Letter to the editor](https://platypwnies.de/writeups/2024/gpn/web/letter-to-the-editor/)
 - 寻找[firepad](https://github.com/FirebaseExtended/firepad)里的xss漏洞并利用
+485. [Bearburger](https://firecraftgaming.hashnode.dev/crewctf-2024-writeup-bearburger)
+- java [JPQL](https://www.tutorialspoint.com/jpa/jpa_jpql.htm)注入。语法和sql很像，注入也是由拼接造成的。不过这题过滤了`"`和`;`，只能用`'`和`()`凑出时间注入
+- java spring SpelExpressionParser RCE。在无法获得命令执行结果的情况下执行[Spring Expression Language](https://docs.spring.io/spring-framework/docs/3.0.x/reference/expressions.html)并获得rce。部分语法和java通用，关键是执行命令后怎么把结果带出来
+- 官方解法: https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#bearburger
+486. [Malkonkordo](https://shellunease.github.io/posts/crewctf-2024-malkonkordo)
+- rust [CVE-2024-24576](https://nvd.nist.gov/vuln/detail/CVE-2024-24576)。大概是rust标准库在windows上使用Command调用批处理文件（`.bat`,`.cmd`后缀）时没有正确转义参数，导致可以命令注入。rust内部执行的命令大概是这样：`.\scripts\cmd.bat "{ARG}"`，其中`{ARG}`为攻击者可控制内容。明显攻击者可以直接用`"`跳出双引号，甚至可以在找到一个包含双引号的变量后用windows bash语法切割出双引号就能逃逸
+- 另一篇wp： https://remoteshell.zip/crewctf/
