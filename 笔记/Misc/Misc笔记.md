@@ -2288,3 +2288,10 @@ a=A()
 357. [Routed](https://odintheprotector.github.io/2024/07/22/imaginaryCTF-forensic.html)
 - `.pkz`后缀文件可以在Cisco Packet Tracer里打开。其中有个`View all commands entered in the file`按钮，可以用来藏东西
 - 如果发现开头为7的cisco密码，可以直接使用工具获取其值： https://packetlife.net/toolbox/type7/
+358. [sniff](https://mwlik.github.io/2024-08-05-crewctf-2024-sniff-challenge)
+- 使用[salae logic analyzer](https://www.saleae.com)分析硬件[Sniffing attack](https://en.wikipedia.org/wiki/Sniffing_attack)的结果。这硬件的东西我啥也不会，记录一下相关链接
+- 使用键盘的相关ascii code：[cardkb](https://github.com/ian-antking/cardkb),使用[I2C](https://youtu.be/CAvawEcxoPU)协议通信，见 https://docs.m5stack.com/en/unit/cardkb_1.1#protocol
+- Inky pHAT [pin layout](https://pinout.xyz/pinout/inky_phat)以及相关库[Inky](https://github.com/pimoroni/inky)
+- 一篇比较简短的wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#sniff
+359. [DEBUGjail](https://defcon225.org/blog/2024/crew-ctf.html)
+- 使用[DEBUG.EXE](https://en.wikipedia.org/wiki/Debug_(command))获取内存中的某段数据。DEBUG.EXE本身可以执行汇编或者查看内存，这题的关键其实是软件是由[DOSBox](https://zh.wikipedia.org/wiki/DOSBox)模拟运行的，但我们无法获取其GUI输出。因此这题从DOSBox入手，通过故意报错使其从报错信息中泄露内容

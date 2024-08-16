@@ -669,6 +669,10 @@ sympy也放这了
     #x3 = y3*m + z3
     ```
     - 相关论文/资料： https://eprint.iacr.org/2016/215.pdf ， https://ur4ndom.dev/static/files/latticetraining/practical_lattice_reductions.pdf
+- [Bigger and better](https://connor-mccartney.github.io/cryptography/small-roots/Bigger-and-better-crew-CTF-2024)
+	- 经典LLL题只能懂一半……大致是给出了一个在Z/nZ上的5变量高阶多项式，要求找到根。配合[官方wp](https://gist.github.com/Babafaba/b561e663299bfaa0bb6002b1b4946b0f)能把思路看得更明白点。虽然每个根相比多项式来说很小，但高阶+多变量使得5-variate coppersmith不太可能。所以把这个5变量的高阶多项式换成25变量的一阶多项式，加上模数n过大不破坏其线性关系，用LLL找到转换后多项式的根，然后用groebner_basis或者直接solve找到原本多项式的5个根
+- [Read between the lines](https://gist.github.com/7Rocky/5777a73648a3befdee58a0eac90d7b0d)
+	- 一道难得的lattice LLL入门题。但我仍不确定使用LLL时的某个用来加bound的大数字该怎么定？看wp里说是“an arbitrarily large number”，但似乎其他人不是这么说的？
 - Fast lattice reduction:[flatter](https://github.com/keeganryan/flatter)。使用案例：[SSP](https://thr34dr1pp3r.gitbook.io/ctf/deadsec-ctf-2024/crypto-ssp)。可以加速大型格的计算，但是没法处理很小的格。小格的话用sagemath自带的LLL即可
 
 ## Elliptic Curves(ECC,椭圆曲线)

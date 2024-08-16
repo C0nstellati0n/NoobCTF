@@ -2025,3 +2025,7 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 210. [User Management](https://www.theflash2k.me/blog/writeups/deadsec23/pwn/user-management)
 - 又是没看到buffer overflow bug的一天……干脆以后所有有输入的地方我都试一遍得了……
 - pwntools的`fmtstr_payload`函数可以设置`no_dollar`为True，这样出来的payload不会包含`$`符号
+211. [Format muscle](https://gist.github.com/7Rocky/f9354a76a35b139e44506e71fc4cc217)
+- [musl libc](https://github.com/kraj/musl)里的格式化字符串漏洞。有无数次利用漏洞的机会，但是musl的printf实现比较特殊，不能用类似`%7$p`的位置格式。想泄露地址的话只能一个一个`%p`凑过去，覆盖也是如此，一个一个`%c`凑过去。和不能使用`$`的情况比较像，因此也可以使用pwntools的fmtstr_payload的`no_dollars`参数
+- 官方wp getshell的方式是覆盖exit函数执行时调用的函数列表，见 https://github.com/kraj/musl/blob/kraj/master/src/exit/atexit.c#L34
+- 其他wp： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#format-muscle 。分别为“覆盖返回地址为rop”，“覆盖musl的stdin->read”
