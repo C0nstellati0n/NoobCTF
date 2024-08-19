@@ -192,6 +192,17 @@
 ```
 最开始的title切换了当前的charset，因此其他的都正常渲染，除了那个`\`。这个符号本来是拿来转义后面的`"`的，没了后我们剩下的内容就逃逸出去了，成功执行xss payload。不过我这里用chrome打开没见到payload执行，可能因为bot用的是firefox
 
+- [hello](https://yun.ng/c/ctf/2024-idek-ctf/web/hello)
+	- 爆炸了，这题其实是个很简单的xss题，对xss payload唯一的限制是不能在payload里使用空格，`/`,`\r`,`\n`和`\t`（由此得出这些东西都可以用来代替标签里用来分割属性的空格）。然而这点用`\x0c`就能轻松绕过了（比赛期间我是在[这里](https://security.stackexchange.com/questions/47684/what-is-a-good-xss-vector-without-forward-slashes-and-spaces)找到的）。httponly的cookie可以用phpinfo页面绕过这点我也知道。那么卡在哪里了呢？卡在这个nginx.conf项：
+	```
+	        location = /info.php {
+	        allow 127.0.0.1;
+	        deny all;
+	        }
+	```
+	但是bot和题目并不在一个机器上。结果发现这是个nginx mis-configuration，可以用`/info.php/.php`绕过……
+    - 另一种绕过方式和更详细的wp： https://hxuu.github.io/blog/ctf/idek24/hello/ 。[hacktricks](https://book.hacktricks.xyz/pentesting-web/proxy-waf-protections-bypass#php-fpm)有记录
+
 ## SSTI
 
 ssti（模板注入）。这张简单但是经典的表说明当出现ssti时如何测试是什么模板。
@@ -301,6 +312,10 @@ for i in range(300,1000):
 - [gpwaf](https://nanimokangaeteinai.hateblo.jp/entry/2024/02/06/051003#Web-115-gpwaf-180-solves)
     - ejs模板注入。题目增加了一个绕过gpt过滤的环节。这种用gpt做过滤的题之前没见过，做的时候发现只要payload带有ejs注入必须的`<%`就报错，完全不知道怎么绕过。后面看了wp意识到这是gpt，不是黑/白名单之类的过滤，在payload前加几句干扰gpt的指令即可（以及不用`<%`的纯ejs注入确实不可能）
     - 其他解法（干扰gpt语句+ejs注入payload）： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#gpwaf
+- [untitled-smarty-challenge](https://ireland.re/posts/idekctf_2024)
+	- php smarty 5模板注入rce。棘手的点在于smarty 5移除了很多方便rce的内容（如`system`），这个时候就要看题目里有没有可疑的库（明明dockerfile里安装了，但是完全没用，或者用得很没必要），里面可能有可用的函数
+	- smarty每次成功渲染一个模板文件后，都会在当前目录生成一个`templates_c`文件夹，里面的每个文件内容都是被渲染的模板转换成php文件的结果。不知道是不是个例，似乎模板文件名也会在转义后原封不动写入文件。该文件的名称同机器下完全一致（在docker里还原环境后查看生成的文件名，和服务端实际生成的文件名相同）
+	- 具体payload见[官方wp](https://github.com/idekctf/idekctf-2024/tree/main/web/untitled-smarty-challenge)。其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#untitled-smarty-challenge
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
     - `{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("cmd").read()}}{%endif%}{% endfor %}`
     - https://sanlokii.eu/writeups/downunderctf/parrot-the-emu/
@@ -3892,3 +3907,7 @@ new URL("//a.com","http://b.com")
 486. [Malkonkordo](https://shellunease.github.io/posts/crewctf-2024-malkonkordo)
 - rust [CVE-2024-24576](https://nvd.nist.gov/vuln/detail/CVE-2024-24576)。大概是rust标准库在windows上使用Command调用批处理文件（`.bat`,`.cmd`后缀）时没有正确转义参数，导致可以命令注入。rust内部执行的命令大概是这样：`.\scripts\cmd.bat "{ARG}"`，其中`{ARG}`为攻击者可控制内容。明显攻击者可以直接用`"`跳出双引号，甚至可以在找到一个包含双引号的变量后用windows bash语法切割出双引号就能逃逸
 - 另一篇wp： https://remoteshell.zip/crewctf/
+487. [crator](https://ireland.re/posts/idekctf_2024)
+- 看起来像pyjail，其实是条件竞争。然而真有人打pyjail那条路还拿到了RCE: https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#crator
+488. [includeme](https://ireland.re/posts/idekctf_2024)
+- julia语言Genie库搭建的网站下的任意文件包含利用。跟那种经典php任意文件包含题一样的配置，可以控制include函数的参数。突破点在于Genie库自带了一个`test.jl`文件，里面有两个路径：post提供了最基本的文件上传功能，get覆盖了题目`app.jl`自带的include路径。这时需要利用条件竞争，同时发送两个请求，一个请求include `app.jl`,另一个则include `test.jl`。当`app.jl`在`test.jl`后处理时，有概率会发生`test.jl`里的post路径被保留但get路径仍然是`app.jl`的情况
