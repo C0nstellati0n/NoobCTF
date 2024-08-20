@@ -1311,3 +1311,5 @@ mov     r8, qword [r13]
 - 手动分析gb studio bytecode。见[GBVM Operations](https://www.gbstudio.dev/docs/scripting/gbvm/gbvm-operations/)和[GB Studio](https://github.com/chrismaltby/gb-studio)
 188. [bf](https://yun.ng/c/ctf/2024-ictf/rev/bf)
 - 使用[debugger](https://bxt.gitlab.io/brainfuck-debugger/)调试brainfuck代码。不过这题主要利用的工具还是这个可以运行brainfuck并限制步数上限的js库：[braincrunch](https://github.com/Macil/braincrunch)
+189. [The Moon](https://gist.github.com/TrixterTheTux/6ed0999479443823538fe2d1b8739458)
+- 逆向lua脚本。好新颖的一道题，调试方法也挺神奇。因为脚本内部加了一堆反调试的代码，所以直接从lua的内部实现下手，让代码里使用的关键函数有方便调试的输出，就能弄明白题目的逻辑了
