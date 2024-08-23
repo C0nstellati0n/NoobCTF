@@ -64,8 +64,20 @@ setxattr函数比较特殊，同时包含了spray需要的kmalloc和kfree，甚�
 
 至于为什么要两个page：因为第一个没使用usefaultfd的page中的page fault仍然由kernel处理，里面的内容可以正常拷贝进spray的object中。所以page 1里的内容是我们希望写入spray object中的，page 2里的内容则不重要（纯纯用来触发page fault handler）
 
-这个技巧的重点是卡住程序的执行。所以不一定要用userfaultfd，像[dead-pwners-society](https://kaligulaarmblessed.github.io/post/dead-pwners-society)里一样用FUSE(Filesystem in UserSpacE)也行。kernel里有个保护项`CONFIG_USERFAULTFD=n`，表示不能使用usefaultfd，这时就要用FUSE了。FUSE允许用户创建自己的文件系统，并在不改动内核代码的前提前编写自己的系统调用handler。于是我们用FUSE文件系统注册一个文件，用这个文件的fd作为mmap函数的参数映射处一块内存，称之为B。然后正常mmap一块内存A。后面的东西就很眼熟了，将目标object放置于两者中间，等到setxattr于内存B执行读操作时，程序流暂停，转入我们给FUSE写的系统调用handler
+这个技巧的重点是卡住程序的执行。所以不一定要用userfaultfd，像[dead-pwners-society](https://kaligulaarmblessed.github.io/post/dead-pwners-society)里一样用FUSE(Filesystem in UserSpacE)也行（前提是kernel配置项`CONFIG_FUSE_FS`启用）。kernel里有个保护项`CONFIG_USERFAULTFD=n`，表示不能使用usefaultfd，这时就要用FUSE了。FUSE允许用户创建自己的文件系统，并在不改动内核代码的前提前编写自己的系统调用handler。于是我们用FUSE文件系统注册一个文件，用这个文件的fd作为mmap函数的参数映射处一块内存，称之为B。然后正常mmap一块内存A。后面的东西就很眼熟了，将目标object放置于两者中间，等到setxattr于内存B执行读操作时，程序流暂停，转入我们给FUSE写的系统调用handler
 
 wp里自定义了FUSE的read操作，用socketpair阻碍程序流运行。只要不往socketpair里写东西，读取操作就会一直卡在那。等UAF利用成功后再往里写东西即可继续程序流的运行
 
 注意要用多线程，因为阻碍程序流时整个线程都是停滞的
+
+## [User Space Mapping Attack (USMA)](https://i.blackhat.com/Asia-22/Thursday-Materials/AS-22-YongLiu-USMA-Share-Kernel-Code-wp.pdf)
+
+[dead-pwners-society](https://kaligulaarmblessed.github.io/post/dead-pwners-society)里有这个技巧的简单介绍
+
+此技巧依赖于覆盖packet_mmap函数里的内核堆指针数组pg_vec对象。当在一个socket fd上调用mmap时，kernel内部会调用packet_mmap，从pg_vec数组中获取一个地址。计算完这个地址对应的物理页（physical page）后，将该页传入`vm_insert_page`函数。这个函数的作用是将该页插入当前进程的虚拟地址空间
+
+但是吧，`vm_insert_page`没有检查那个代码页是否是kernel代码页（或者说kernel内部根本就没有对应的代码页类型）。因此我们可以分配一个pg_vec数组，然后在这个object的上方再分配一个object用来覆盖数组里的内核堆指针（只要能覆盖就行，具体什么手段不重要）。最后在一个socket fd上调用mmap，促使kernel将一块内核代码区映射到用户空间即可执行任意shellcode
+
+覆盖的指针需要满足：
+1. 所有指针都是有效合法的
+2. 所有指针都是页对齐的（page aligned）

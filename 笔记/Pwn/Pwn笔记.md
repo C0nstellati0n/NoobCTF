@@ -22,6 +22,34 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
   - Interrupt Descriptor Table (IDT)不被KASLR影响，可用来泄漏kernel基地址
   - 将kernel exp发送到服务器上的工具： https://github.com/pr0cf5/kernel-exploit-sendscript
   - 非预期解： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#mov-cr3 。虽然是两个不同的进程，但所在的物理内存都是一样的。所以利用AAR扫描物理内存即可。我顺便记录了在服务器上看到的一段有助于理解的对话
+- [dead-pwners-society](https://kaligulaarmblessed.github.io/post/dead-pwners-society)
+	- UAF+double free。kernel保护全开，还加了一堆配置保护项：
+		- `CONFIG_CFI_CLANG=y`:Control flow integrity，kROP和控制RIP的手段无法使用
+		- `CONFIG_STATIC_USERMODEHELPER=y`:无法覆盖modprobe路径
+		- `CONFIG_SLAB_FREELIST_HARDENED=y`:用两个异或操作加密freelist里的指针
+		- `CONFIG_SLAB_FREELIST_RANDOM=y`:随机化创建新代码页时使用的freelist顺序
+		- `CONFIG_LIST_HARDENED=y`:list相关保护
+		- `CONFIG_NF_TABLES=n`:无法使用nf_tables相关exp
+		- `CONFIG_SYSVIPC=n`：无法使用常用的msg_msg对象进行堆喷
+		- `CONFIG_SLAB_MERGE_DEFAULT=n`：禁用slab merging
+		- `CONFIG_USERFAULTFD=n`无法使用userfaultfd
+
+	其实这题只有一个bug，就是UAF。但是只要有UAF就能利用setxattr + FUSE堆喷手法获取double free（这个double free算是广义上字面意思的UAF，同一块内存被free两次，和用户态pwn里的double free——修改fd，有点不同），有了double free后就能用User Space Mapping Attack (USMA)提权了（这两个技巧我记kernel技巧里了）
+	- `CONFIG_PANIC_ON_OOPS`配置项决定kernel在遇到OOPS(严重但不致命的错误，比如引用一个空指针)时是否崩溃。禁用后kernel遇到OOPS会尝试恢复正常运行并打印log。然而这个恢复机制无法将内核完全恢复到OOPS前的状态。比如一个函数分为A、B和C三段，假如在B段触发了OOPS，kernel会杀死当前进程并恢复运行。然而A段对代码里的变量等内容的修改不会回退，C段也不会继续被执行
+	- 复述kernel题exp步骤时间。wp里面已经有一段简述了，这里稍微补充点内容和背景。DO_CREATE可以创建一个书object，书object内部的ref count字段（uint8，一个字节的大小）初始为1；DO_BORROW可以将创建的书放入loan_list，并增加ref count，最高到10；DO_DELETE可以free一本书，前提是该书的ref count为1；DO_NOTE可以free书对象内部的note字段指向的地址。漏洞发生在DO_READ，一个用来读取书内容的函数。这个函数里发生了整数溢出，可以将一本书的ref count降为1，从而能够free掉一本书。但实际上这本书还在loan_list里，仍然可以执行DO_READ等操作，即本题唯一的UAF漏洞。exp步骤如下：
+	1. 创建一个书对象A，将书对象定义里的note指针保持为0
+	2. 使用DO_BORROW将对象A放入loan_list
+	3. 调用DO_READ 0xff次。DO_READ分为三段，A段增加ref count，B段引用书对象定义里的note指针，C段减少ref count。然而我们已将note指针置为0，故触发OOPS，ref count光增不减。ref count只有一个字节这么大，故0xff次后溢出，将ref count重新置为1。注意这个操作要写另一个程序来触发，因为OOPS会杀死当前进程
+	4. 使用DO_DELETE删除对象A。对象A被free后仍然在loan_list里，发生UAF
+	5. 堆喷timerfd_ctx对象尝试重新取回对象A（使对象A内部填充timerfd_ctx对象的内容）
+	6. 使用DO_READ泄露对象A里的地址（来自timerfd_ctx，包含kmalloc-256堆基地址和内核基地址）
+	7. free堆喷的timerfd_ctx对象
+	8. 利用setxattr + FUSE技巧继续尝试取回对象A。这个技巧可以控制取回对象的内容，于是我们伪造一个书对象，note字段处为对象A本身的地址
+	9. 使用DO_NOTE函数free对象A
+	10. 堆喷pg_vec (kmalloc-256)对象尝试取回对象A
+	11. 触发FUSE技巧自带的一个free，free取到的对象A
+	12. 再次用setxattr + FUSE技巧取回刚才free的对象A。前面说个这个技巧可以修改取到的对象的内容，于是这里就能修改到pg_vec内部的堆指针了
+	13. 使用User Space Mapping Attack (USMA)提权
 
 ## Shellcode题合集
 
