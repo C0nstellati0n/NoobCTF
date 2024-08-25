@@ -18,6 +18,16 @@
     - 合约升级（upgrade）和delegate call示例
 - [Bank](https://github.com/NoobMaster9999/My-CTF-Challenges/tree/main/ImaginaryCTF-2024/Misc/bank)
 	- 爆炸了，比赛期间看到uint48有个整数溢出，但是依稀记得solidity里有自动的溢出检查所以没试。结果学艺不精，查了后发现小于0.8.0版本的程序是没有的……
+- [Tree](https://marziano.top/tree.html)
+	- [Merkle Tree](https://dev.to/olanetsoft/merkle-proofs-a-simple-guide-3l02)的[second preimage attack](https://www.rareskills.io/post/merkle-tree-second-preimage-attack)。merkle tree整体呈二叉树状，最下面的叶子（leaf）为保存的数据，其他node为底下两个子node的hash拼接结果。比如：
+	```
+		A
+	   / \
+	  B   C
+	 / \ / \
+	D  E F  G
+	```
+	D,E,F和G为要保存的数据的hash，比如D保存的数据是d，D里存储的就是`H(d)`。接着`H(B)=H(H(D)+H(E))`,C同理。一直这么递推上去，最后root处为`H(A)=H(H(B)+H(C))`。注意leaf存储的数据的长度不能正好是使用的hash函数输出字节的长度的两倍。否则就会出现second preimage attack。攻击者可以把B看成leaf（此时这个“leaf”代表的数据为`H(D)+H(E)`），提供C作为proof，也是一个正确的proof（merkle proof建议看上面提供的链接，有图会比较好理解）。当然，如果leaf不满足这个攻击前提，攻击者就没法把中间node B看成leaf，因为`H(D)+H(E)`的长度不满足合法leaf的数据长度
 
 ## SQL注入
 
