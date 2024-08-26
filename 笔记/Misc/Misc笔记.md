@@ -145,6 +145,8 @@
     - 其他wp：
         - https://serikatnewbie.me/blog/wani-ctf-2024/forensics ，提到了要根据 https://stackoverflow.com/questions/26164442/decoding-rtp-payload-as-h264-using-wireshark 将RTP流解码为H264
         - https://www.yuque.com/sanxun-phiqb/czl271/dy7pfgq48o1x06fv?#%E3%80%8A%E6%B5%81%E9%87%8F%E5%8C%85%E9%9B%86%E5%90%88%E3%80%8B ：无插件手动提取做法
+- [Unfare](https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/forensics/Unfare)
+	- 分析[proxmark3](https://github.com/RfidResearchGroup/proxmark3)流量包中的数据
 
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
@@ -2292,9 +2294,10 @@ a=A()
 - 使用[salae logic analyzer](https://www.saleae.com)分析硬件[Sniffing attack](https://en.wikipedia.org/wiki/Sniffing_attack)的结果。关于Saleae Logic Analyzer怎么用： https://www.youtube.com/watch?v=XGxE4FJH5kI 。这硬件的东西我啥也不会，记录一下相关链接
 - 使用键盘的相关ascii code：[cardkb](https://github.com/ian-antking/cardkb),使用[I2C](https://youtu.be/CAvawEcxoPU)协议通信，见 https://docs.m5stack.com/en/unit/cardkb_1.1#protocol
 - Inky pHAT [pin layout](https://pinout.xyz/pinout/inky_phat)以及相关库[Inky](https://github.com/pimoroni/inky)
-- 一篇比较简短的wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#sniff
+- 一篇比较简短的wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#sniff 。官方解法： https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/misc/sniff
 359. [DEBUGjail](https://defcon225.org/blog/2024/crew-ctf.html)
 - 使用[DEBUG.EXE](https://en.wikipedia.org/wiki/Debug_(command))获取内存中的某段数据。DEBUG.EXE本身可以执行汇编或者查看内存，这题的关键其实是软件是由[DOSBox](https://zh.wikipedia.org/wiki/DOSBox)模拟运行的，但我们无法获取其GUI输出。因此这题从DOSBox入手，通过故意报错使其从报错信息中泄露内容
+- 官方解法： https://github.com/Thehackerscrew/CrewCTF-2024-Public/blob/main/challenges/misc/debugjail
 360. [minecraft](https://yun.ng/c/ctf/2024-idek-ctf/misc/minecraft)
 - 一个可能这辈子都用不到的知识： 假设一个玩家固定在一个随机位置向不同位置射箭，根据被击中时的击退距离可以判断出那个玩家的位置（triangulate the location of the shooter）
 - 用python编写mc里的机器人，用java编写client mod

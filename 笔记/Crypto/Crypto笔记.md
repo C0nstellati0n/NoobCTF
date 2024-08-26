@@ -673,6 +673,21 @@ sympy也放这了
 	- 经典LLL题只能懂一半……大致是给出了一个在Z/nZ上的5变量高阶多项式，要求找到根。配合[官方wp](https://gist.github.com/Babafaba/b561e663299bfaa0bb6002b1b4946b0f)能把思路看得更明白点。虽然每个根相比多项式来说很小，但高阶+多变量使得5-variate coppersmith不太可能。所以把这个5变量的高阶多项式换成25变量的一阶多项式，加上模数n过大不破坏其线性关系，用LLL找到转换后多项式的根，然后用groebner_basis或者直接solve找到原本多项式的5个根
 - [Read between the lines](https://gist.github.com/7Rocky/5777a73648a3befdee58a0eac90d7b0d)
 	- 一道难得的lattice LLL入门题。但我仍不确定使用LLL时的某个用来加bound的大数字该怎么定？看wp里说是“an arbitrarily large number”，但似乎其他人不是这么说的？
+- [Boring LCG](https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/crypto/Boring%20LCG)
+	- 给出LCG（`x=(ax+b) mod c`）的a、b和c参数值以及lcg的连续12个输出的高位，求最开始的x。只能稍微看懂wp里说的简单情况——c为质数，实际的情况——c为质数的3次方，完全不懂。它这个前提我就不懂，什么叫“a finite field of order $p^k$ is instead usually constructed as a polynomial ring with coefficients in $F_p$ modulo an irreducible polynomial of degree k, i.e $F_p[i]/p(x)$ ”？意思是 $F_{p^k}$ 不常用，通常用（与其同构的，这个修饰词我猜的）多项式环代替？
+	- 简述一下这道题的简单情况。lcg第i项的通项公式为 $x_i=a^ix_0+b\frac{a^i-1}{a-1}$ （省略模p）, $x_0$ 是最初的seed。让 $B_i = b \frac{a^i-1}{a-1}$ ，构造以下格：
+
+$$
+\begin{bmatrix}
+1 & a^1 & a^2 & \cdots & a^n \\
+0 & p & 0 & \cdots & 0 \\
+0 & 0 & p & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & \cdots & p \\
+\end{bmatrix}
+$$
+
+考虑线性组合 $[s_0, k_1, k_2, ..., k_n]$ ，即在矩阵左侧乘上这个向量，结果是 $[s_0, s_1 - B_1, s_2 - B_2]$ 。 $k_i$ 我觉得是用来抵消模p的，毕竟乘出来结果是 $a^is_0+k_ip$ 。问题是，这个出来的向量不一定就是格里最短的向量，没法直接用LLL。于是我们构造一个结构和这个向量差不多的向量 $[h_0, h_1 - B_1, ..., h_n - B_n]$ ， $h_i$ 为 $s_i$ 最大值和最小值的中点（最大值和最小值可以根据题目给出的高位推算），用cvp相关算法算出和这个向量最近的向量，期待结果就是我们想要的那玩意
 - Fast lattice reduction:[flatter](https://github.com/keeganryan/flatter)。使用案例：[SSP](https://thr34dr1pp3r.gitbook.io/ctf/deadsec-ctf-2024/crypto-ssp)。可以加速大型格的计算，但是没法处理很小的格。小格的话用sagemath自带的LLL即可
 
 ## Elliptic Curves(ECC,椭圆曲线)
@@ -746,6 +761,8 @@ AES是很能出题的。DES则是放在这凑数的
   - aes cfb猜明文。cfb模式是 $C=E\bigotimes P$ （具体见 https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_feedback_(CFB) ）,假如知道C和P，就能找到E，进而自己伪造密文。前提是key和iv重用且我们有足够的oracle
   - [官方wp](https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/crypto/decrypt-then-eval)处理了更复杂的情况
   - 其他解法： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#decrypt-then-eval
+- [admin](https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/crypto/admin)
+	- AES GCM,已知两条明文及其对应密文+可控制加密用的IV（IV重用），要求伪造指定明文的密文
 
 ## Z3使用
 

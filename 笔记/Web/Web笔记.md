@@ -3921,3 +3921,7 @@ new URL("//a.com","http://b.com")
 - 看起来像pyjail，其实是条件竞争。然而真有人打pyjail那条路还拿到了RCE: https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#crator
 488. [includeme](https://ireland.re/posts/idekctf_2024)
 - julia语言Genie库搭建的网站下的任意文件包含利用。跟那种经典php任意文件包含题一样的配置，可以控制include函数的参数。突破点在于Genie库自带了一个`test.jl`文件，里面有两个路径：post提供了最基本的文件上传功能，get覆盖了题目`app.jl`自带的include路径。这时需要利用条件竞争，同时发送两个请求，一个请求include `app.jl`,另一个则include `test.jl`。当`app.jl`在`test.jl`后处理时，有概率会发生`test.jl`里的post路径被保留但get路径仍然是`app.jl`的情况
+489. [niceview1](https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/web/niceview1)
+- 此题涉及到c++应用框架Juce和c++网站框架Drogon。第一次见c++网站
+- 漏洞在于juce 6.1.4的zip symlink攻击。有了这个漏洞，攻击者就可以在juce解压zip文件时在服务器上写入任意文件
+- Drogon危险配置项`load_dynamic_views`会自动加载`.csp`文件。[官方文档](https://github.com/drogonframework/drogon/wiki/ENG-06-View#dynamic-compilation-and-loading-of-views)建议仅在开发环境下使用该配置项，否则攻击者可以在服务器上写入Drogon的`.csp`文件从而执行任意代码
