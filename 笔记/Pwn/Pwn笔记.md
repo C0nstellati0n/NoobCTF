@@ -749,6 +749,8 @@ print(base64.b64encode(temp.encode()))
   - 其他做法: https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#astea 。用海象运算符（walrus operator）+list comprehension，以及其他很好的wp
 - [Calc](https://crocus-script-051.notion.site/Calc-dbdf7f34430d403d9a1550f88b2a4316)
 	- 和audit hook有关的题。要求在不触发任何audit event的情况下获得shell且payload有长度限制。不确定在不触发任何audit event的情况下能不能getshell，但看这道题可以做到获取套娃函数里的参数并覆盖
+- [crator](https://outgoing-shoe-387.notion.site/Idek-CTF-2024-web-crator-WriteUp-43b1e90d7b7d40b3ad8b338fa9c08bc5)
+	- 如何更换函数的内部代码从而绕过沙盒。另外这篇wp里记录了很多不错的python沙盒逃逸学习链接
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

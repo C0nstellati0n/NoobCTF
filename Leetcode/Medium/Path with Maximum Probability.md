@@ -50,4 +50,37 @@ Memory
 Beats
 73.17%
 ```
-Bellman-Ford算法是一种处理存在负权边的单元最短路问题的算法。虽然这题要求找的是最大几率而且没有负权边，不过这玩意没有负权其实也能用，最小和最大也只不过是反过来的关系。这题的重头戏应该是Dijkstra's Algorithm，然而我真改不出来，就不放了。
+Bellman-Ford算法是一种处理存在负权边的单元最短路问题的算法。虽然这题要求找的是最大几率而且没有负权边，不过这玩意没有负权其实也能用，最小和最大也只不过是反过来的关系。这题的重头戏应该是Dijkstra's Algorithm，然而我真改不出来，就不放了
+
+我又回来了，带来了dijkstra的c++做法：
+```c++
+class Solution {
+public:
+    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start_node, int end_node) {
+        vector<double> dist(n);
+        dist[start_node]=1;
+        vector<vector<pair<int,double>>> adj(n);
+        for(int i=0;i<edges.size();i++){
+            adj[edges[i][0]].push_back(make_pair(edges[i][1],succProb[i]));
+            adj[edges[i][1]].push_back(make_pair(edges[i][0],succProb[i]));
+        }
+        priority_queue<pair<double, int>, vector<pair<double, int>>> pq;
+        pq.push(make_pair(1, start_node));
+        while (!pq.empty()) {
+            double d = pq.top().first;
+            int node = pq.top().second;
+            pq.pop();
+            if (node == end_node) return d;
+            if (node!=start_node&&d < dist[node]) continue;
+            for (const auto& neighbor : adj[node]) {
+                double new_dist = d * neighbor.second;
+                if (new_dist > dist[neighbor.first]) {
+                    dist[neighbor.first] = new_dist;
+                    pq.push(make_pair(new_dist, neighbor.first));
+                }
+            }
+        }
+        return 0;
+    }
+};
+```
