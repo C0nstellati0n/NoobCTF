@@ -17,3 +17,5 @@ $\mathbb P^1_F$ 指域F上的射影线(projective line over a field),是射影�
 - What is the structure sheaf $\mathscr O_X$ of $X$?
 
 这个问题wp里说跟解题没有关系。本来想跳过的，但是下一题也提到了structure sheaf。稍微看了chatgpt关于[sheaf](https://math.stackexchange.com/questions/2642231/what-is-an-intuitive-geometrical-explanation-of-a-sheaf)的解释，看起来这是个满足某些性质的管理数据的工具？更正式的定义根本看不明白，特别是链接里的内容。也没找到具体使用案例……感觉也是个跟群、环和域一样抽象的东西。已经不想再给解释写一篇了，脑子里留个印象就行（开摆！）
+
+真看不懂……chatgpt给出的每个解释里涉及的名词我也不懂，去搜这些名词的结果只能是套娃……看来我得看看代数几何是啥玩意。大家都说这玩意数学系的人都不敢轻易动，不过我只是去看看定义，没说要解题，不会有逝的吧？

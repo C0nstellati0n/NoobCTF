@@ -2299,5 +2299,16 @@ a=A()
 - 使用[DEBUG.EXE](https://en.wikipedia.org/wiki/Debug_(command))获取内存中的某段数据。DEBUG.EXE本身可以执行汇编或者查看内存，这题的关键其实是软件是由[DOSBox](https://zh.wikipedia.org/wiki/DOSBox)模拟运行的，但我们无法获取其GUI输出。因此这题从DOSBox入手，通过故意报错使其从报错信息中泄露内容
 - 官方解法： https://github.com/Thehackerscrew/CrewCTF-2024-Public/blob/main/challenges/misc/debugjail
 360. [minecraft](https://yun.ng/c/ctf/2024-idek-ctf/misc/minecraft)
-- 一个可能这辈子都用不到的知识： 假设一个玩家固定在一个随机位置向不同位置射箭，根据被击中时的击退距离可以判断出那个玩家的位置（triangulate the location of the shooter）
+- 一个可能这辈子都用不到的知识： 假设一个玩家固定在一个随机位置向不同位置射箭，根据被击中时的击退距离可以判断出那个玩家的位置（triangulate the location of the shooter）。在线工具及使用方法： https://www.youtube.com/watch?v=bwC69YeNCoQ
 - 用python编写mc里的机器人，用java编写client mod
+361. [MemoryFS](https://gist.github.com/jdabtieu/e169fd499d60c7e610e35ca862d81d02)
+- bash的一个冷门行为：若利用symlink进入一个目录，当该symlink被删除时，bash会将其解析为原本的路径。如下：
+```sh
+$ mkdir flag.txt
+$ mkdir flag.txt/b
+$ ln -s flag.txt a
+$ cd a/b
+/a/b$ rm ~/a
+/a/b$ cd ..
+/flag.txt$ rm ~/flag.txt/b
+```
