@@ -150,3 +150,5 @@ srcdoc里还是个iframe套娃，但是由于sandbox，内容就很简单了,因
 这个页面应该是上面提到的iframe套娃内容，本来不应该有csp的。但是因为提到的那个性质，sandbox没了，于是csp又回来了（重新加载时script给它加上去了）。但是！srcdoc的CSP继承上次的结果，和这个没关系。那上次的CSP是什么？没有啊，就是标着“空的 head，沒有 CSP”那里。于是当前页面看着有个csp，其实是没有的。完成xss
 
 此题相关issue： https://github.com/whatwg/html/issues/6809 。另外wp作者的另一篇文章也不错，iframe和open的一些奇怪特性： https://blog.huli.tw/2022/04/07/iframe-and-window-open
+
+这篇wp所介绍的payload其实是不完整的，最终payload为了关注核心概念iframe，刻意省略了原题exp的opener部分。完整exp和题目作者的tldr见 https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#srcdoc-memos

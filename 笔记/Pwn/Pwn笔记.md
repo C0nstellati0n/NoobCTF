@@ -50,6 +50,7 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
 	11. 触发FUSE技巧自带的一个free，free取到的对象A
 	12. 再次用setxattr + FUSE技巧取回刚才free的对象A。前面说个这个技巧可以修改取到的对象的内容，于是这里就能修改到pg_vec内部的堆指针了
 	13. 使用User Space Mapping Attack (USMA)提权
+  - 这题的灵感来源/参考： https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
 
 ## Shellcode题合集
 
