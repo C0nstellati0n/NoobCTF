@@ -6,7 +6,7 @@
 
 打CTF最重要的就是开心了！Have fun！
 
-长期寻找CTF搭子ᶘ ᵒᴥᵒᶅ！如果任何人有任何问题/想一起打CTF/学习的话，欢迎随时联系我！这是我的邮箱： `c0nst4llati0n@gmail.com`,discord id是`c0nst3llati0n`
+长期寻找CTF搭子ᶘ ᵒᴥᵒᶅ！如果任何人有任何问题/想一起打CTF/学习的话，欢迎随时联系我！这是我的邮箱： `c0nst4llati0n@gmail.com`,discord id是`c0nst3llati0n`。QQ号是`2940630891`（竟然忘了这么重要的媒介(._.)）
 
 (这库都两年了才想到这点……)
 

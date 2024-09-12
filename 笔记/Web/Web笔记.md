@@ -205,13 +205,15 @@
 - [hello](https://yun.ng/c/ctf/2024-idek-ctf/web/hello)
 	- 爆炸了，这题其实是个很简单的xss题，对xss payload唯一的限制是不能在payload里使用空格，`/`,`\r`,`\n`和`\t`（由此得出这些东西都可以用来代替标签里用来分割属性的空格）。然而这点用`\x0c`就能轻松绕过了（比赛期间我是在[这里](https://security.stackexchange.com/questions/47684/what-is-a-good-xss-vector-without-forward-slashes-and-spaces)找到的）。httponly的cookie可以用phpinfo页面绕过这点我也知道。那么卡在哪里了呢？卡在这个nginx.conf项：
 	```
-	        location = /info.php {
-	        allow 127.0.0.1;
-	        deny all;
-	        }
+	location = /info.php {
+	    allow 127.0.0.1;
+	    deny all;
+	}
 	```
 	但是bot和题目并不在一个机器上。结果发现这是个nginx mis-configuration，可以用`/info.php/.php`绕过……
     - 另一种绕过方式和更详细的wp： https://hxuu.github.io/blog/ctf/idek24/hello/ 。[hacktricks](https://book.hacktricks.xyz/pentesting-web/proxy-waf-protections-bypass#php-fpm)有记录
+- [Tagless](https://siunam321.github.io/ctf/SekaiCTF-2024/Web/Tagless)
+    - 对自己无语了，明明都找到关键点了还能死在最后一步……真的我这个脑子别打CTF了，干脆专职写这个repo得了（不打CTF的CTFer...）。总之这题的关键点是，题目提供了一个复述输入内容的页面，没有限制内容的格式，所以可以注入html。不能输入`<...>`，但是可以用url二次编码绕过。这点我看到了。但是csp设定了`script-src 'self'`，导致不能用inline script，只能从当前host导入js。不过网页还提供了一个功能：若当前url为404，就在网页上打出这个url。啊看到这个加上之前看过的[Noscript](https://octo-kumo.github.io/c/ctf/2024-wanictf/web/noscript)题，我就感觉可以利用一下。结果被那题带偏了，一直在想怎么用`<object>`标签导入，而且`<>`的过滤总是处理不好。用了url二次编码看起来行了，但是payload还是解析失败。看了wp才发现是js代码语法的问题，要这么搞：`<script src="/**/alert(document.domain)//"></script>`，加几个注释规避掉报错
 
 ## SSTI
 
