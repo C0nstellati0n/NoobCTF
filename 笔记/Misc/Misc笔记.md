@@ -2312,3 +2312,5 @@ $ cd a/b
 /a/b$ cd ..
 /flag.txt$ rm ~/flag.txt/b
 ```
+362. [CalcQL](https://boxmein.github.io/posts/2024-08-25-sekaictf-2024)
+- 使用[CodeQL](https://codeql.github.com)分析源代码并找到返回特定值的函数

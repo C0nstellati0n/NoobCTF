@@ -31,7 +31,7 @@
 
 ## SQL注入
 
-之前开过一个SQL分区，感觉之后的还是放在这里比较好。顺便记一些NoSQL数据库
+之前开过一个SQL分区，感觉之后的还是放在这里比较好。顺便记一些NoSQL数据库和一些类似SQL注入的漏洞
 - [Penguin-Login](https://dothidden.xyz/la_ctf_2024/penguin-login/)
     - 仅能使用`a-zA-Z0-9{_}`且不能使用LIKE和注释符的PostgreSQL盲注。LIKE的功能可以用BETWEEN代替
     - 其他wp（做法）： https://siunam321.github.io/ctf/LA-CTF-2024/web/penguin-login/ ，用`SIMILAR TO`和正则匹配代替LIKE。但是注意`{x}`在正则里表示匹配前一个字符x次，匹配带有`{}`的flag时可以去掉flag格式再匹配
@@ -54,6 +54,10 @@
     - sqlite在update语句处的注入。包含：获取表名，字段名，表结构，修改字段等。修改时要注意`INTEGER PRIMARY KEY`，这类key必须是独特的，不能和其他的重复。但没有规定必须是递增的
     - `FOREIGN KEY(id) REFERENCES users(id) ON UPDATE CASCADE`表示修改users表的id也会修改当前表的id
     - 发现一个更简洁的做法： https://docs.google.com/document/d/1WaPoR1qaCXB-iLPM8jFbspiyjFN1rbAs7ij67T9HDQI/edit 。update时可以直接`id=id-1`
+- [Intruder](https://siunam321.github.io/ctf/SekaiCTF-2024/Web/Intruder)
+    - c# ASP.NET Core（Razor Pages）网站。分析这类网站源码会比较复杂，需要利用Dockerfile找到dotnet命令启动的dll文件并反编译
+    - c# LINQ注入（语法有点像sql query语句，甚至漏洞也发生于拼接）会导致RCE： https://www.nccgroup.com/us/research-blog/dynamic-linq-injection-remote-code-execution-vulnerability-cve-2023-32571 。存在于LINQ1.0.7.10到1.2.25版本，poc见 https://github.com/Tris0n/CVE-2023-32571-POC
+    - 然后是一个经典技巧：把要泄漏的文件移到网站根目录就能看到了：`/app/src/wwwroot`
 
 ## XSS
 
