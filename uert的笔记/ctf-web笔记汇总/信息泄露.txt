@@ -1,0 +1,74 @@
+敏感目录泄露
+	常见的特殊文件夹与目录
+	admin/
+	upload/
+	download/
+	phpMyadmin/
+	manager/
+	/3/3/
+	index.php.bak
+	.index.php.swp
+	.DS_Store
+	常见的网站源码备份文件后缀
+		tar
+		tar.gz
+		zip
+		rar
+	常见的网站源码备份文件名
+		web
+		website
+		backup
+		back
+		www
+		wwwroot
+		temp	
+	
+	dirsearch(https://github.com/maurosoria/dirsearch)
+	· 用法：python dirsearch.py -u http://www.baidu.com -e php
+	
+
+git
+	·git_extract(https://github.com/gakki429/Git_Extract)（推荐使用）
+	· 用法：python2 git_extract.py http://example.com/.git/ 
+	./git-extract.sh /path/to/repo/.git/
+.git 目录的文件夹中运行 git_extract.sh 脚本
+
+svn
+	svnExploit(https://github.com/admintony/svnExploit)（推荐使用）
+	· 用法：python2 SvnExploit.py -u http://example.com/.svn --dump
+hg
+	dvcs-ripper(https://github.com/kost/dvcs-ripper)
+	· 用法：rip-hg.pl -v -u http://www.example.com/.hg/ 
+CVS
+	dvcs-ripper(https://github.com/kost/dvcs-ripper)
+	· 用法：rip-cvs.pl -v -u http://www.example.com/CVS/ 
+bzr
+	dvcs-ripper(https://github.com/kost/dvcs-ripper)
+	· 用法：rip-bzr.pl -v -u http://www.example.com/.bzr/ 
+.DS_Store
+	ds_store_exp(https://github.com/lijiejie/ds_store_exp)
+	· 用法：python2 ds_store_exp.py http://www.example.com/.DS_Store 
+	
+robots.txt
+	robots.txt必须放置在一个站点的根目录下，而且文件名必须全部小写。
+	内容与说明：
+	  User-agent: *
+	  Disallow:
+         User-agent: 后面为搜索机器人的名称，后面如果是*，则泛指所有的搜索机器人
+         Disallow: 后面为不允许访问的文件目录，为空则表示允许访问站点下的所有文件
+phpinfo
+	phpinfo()是php中查看相关信息的函数，当在页面中执行phpinfo()函数时，php会将自身的所有信息
+	全部打印出来。在phpinfo()中会泄露很多服务端的一些信息。
+	 其中信息包含有：php版本、服务器信息、环境变量等重要配置信息。
+	 
+发现了 .git/ 或 .svn/ 等敏感目录。如果发现返回403（禁止访问），这表明该目录存在
+尝试访问 .git/config 文件：
+访问 http://target.com/.git/config。
+如果能够访问该文件，查看其内容，这通常会暴露Git仓库的配置信息。可以使用 git 工具克隆整个仓库。
+git clone http://target.com/.git/ target_repo
+	 
+直接访问 http://target.com/.svn/entries。
+如果 entries 文件存在且非空，查看其中内容，可能暴露目录结构和文件路径。
+如果 entries 文件为空，尝试访问 http://target.com/.svn/wc.db。
+下载 wc.db 文件后，使用 SQLite 工具查看其中的 checksum 字段，并找到对应的文件。
+	

