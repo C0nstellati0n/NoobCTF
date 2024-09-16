@@ -1326,3 +1326,5 @@ mov     r8, qword [r13]
 - 逆向lua脚本。好新颖的一道题，调试方法也挺神奇。因为脚本内部加了一堆反调试的代码，所以直接从lua的内部实现下手，让代码里使用的关键函数有方便调试的输出，就能弄明白题目的逻辑了
 190. [html](https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/rev/html)
 - [html语言](https://html-lang.org)逆向。不是网站的那个html，确确实实是一种编程语言，只是故意设计的像html。有位大佬写了个转换器，可将这种语言转为python代码： https://github.com/harrier-lcc/html-python-transpile
+191. [Secure Computing](https://github.com/Pusty/writeups/tree/master/SekaiCTF2024)
+- 使用windows kernel syscall作为opcode的vm。见[windows-syscalls](https://github.com/j00ru/windows-syscalls)。dump所有syscall的脚本见wp
