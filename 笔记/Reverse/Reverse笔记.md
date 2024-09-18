@@ -10,6 +10,7 @@
   - 发现一个动态调试做法更有趣： https://fexsec.net/variousctfs/crackme-sekaictf2024
   - apktool的`-r`选项可以使apktool不解码资源。如果题目需要patch操作就要加上这个选项，否则没法重新编译这些binary
   - [Android SSL Pinning Bypass](https://www.youtube.com/watch?v=_7J5HrwIr0k)。安卓应用有个SSL Pinning机制，防止攻击者监听数据传输。绕过后就能配合burpsuite抓包了。需要的工具有frida，adb等。原理是用frida注入一段js代码： https://codeshare.frida.re/@akabe1/frida-multiple-unpinning
+  - patch原apk做法： https://github.com/acdwas/ctf/tree/master/2024/SekaiCTF%202024/rev/Crack%20Me
 
 ## IDA使用
 

@@ -2060,3 +2060,8 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 - [musl libc](https://github.com/kraj/musl)里的格式化字符串漏洞。有无数次利用漏洞的机会，但是musl的printf实现比较特殊，不能用类似`%7$p`的位置格式。想泄露地址的话只能一个一个`%p`凑过去，覆盖也是如此，一个一个`%c`凑过去。和不能使用`$`的情况比较像，因此也可以使用pwntools的fmtstr_payload的`no_dollars`参数
 - 官方wp getshell的方式是覆盖exit函数执行时调用的函数列表，见 https://github.com/kraj/musl/blob/kraj/master/src/exit/atexit.c#L34
 - 其他wp： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#format-muscle 。分别为“覆盖返回地址为rop”，“覆盖musl的stdin->read”
+212. [speedpwn](https://samuzora.com/posts/sekai-2024)
+- 似乎是libc 2.39下的fsop。不是直接RCE，而是利用文件结构的buf_base和buf_end进行任意地址写（需要控制一个指向文件结构的指针并能伪造假文件结构，而且已知libc地址）。这个利用点记得之前的版本就有了，不知道为什么这篇wp里需要来两个interactive，用第一个interactive输入ctrl+c刷新文件流触发fsop
+213. [Life Simulator 2](https://samuzora.com/posts/sekai-2024)
+- c++ pwn。不是那种简单的pwn `std::string` 和 `std::vector`的题，但也没有特别复杂的堆风水（在我看来挺复杂的，需要misalign address，算这个就挺麻烦的）。漏洞为uaf
+- 从堆指针任意地址写到rce。还是要用fsop，在堆指针A处伪造一个文件结构，然后将A写入某个文件结构的`_chain`。这样在退出程序时，`_IO_flush_all`会flush位于A的文件结构。然后就是“伪造整个文件结构+`_wide_data`“的fsop rce了
