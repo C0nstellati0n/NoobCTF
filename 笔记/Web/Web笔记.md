@@ -28,6 +28,17 @@
 	D  E F  G
 	```
 	D,E,F和G为要保存的数据的hash，比如D保存的数据是d，D里存储的就是`H(d)`。接着`H(B)=H(H(D)+H(E))`,C同理。一直这么递推上去，最后root处为`H(A)=H(H(B)+H(C))`。注意leaf存储的数据的长度不能正好是使用的hash函数输出字节的长度的两倍。否则就会出现second preimage attack。攻击者可以把B看成leaf（此时这个“leaf”代表的数据为`H(D)+H(E)`），提供C作为proof，也是一个正确的proof（merkle proof建议看上面提供的链接，有图会比较好理解）。当然，如果leaf不满足这个攻击前提，攻击者就没法把中间node B看成leaf，因为`H(D)+H(E)`的长度不满足合法leaf的数据长度
+- [Play to Earn](https://blog.blockmagnates.com/sekai-ctf-2024-deep-dive-into-the-play-to-earn-blockchain-challenge-a8156be9d44e)
+    - 这题的知识点之前见过：[ChairLift](https://themj0ln1r.github.io/posts/glacierctf23)，主要是erecover无法正确处理address(0)。整个bug我都找出来了，但是不知道为什么remix连不上远程rpc还是什么别的，无法调用函数……这篇wp提供了python web3模块的远程交互代码，下次用这个试试（foundry还是太难配置了，懒）
+- [zoo](https://blog.soreatu.com/posts/writeup-for-3-blockchain-challs-in-sekaictf-2024)
+    - 这题是个很诡异的东西。虽然是solidity，但是具体原理和pwn差不多……还是放在web3分类下吧
+    - 题目由solidity assembly（基于EVM的栈语言）编写，目标是改动storage中位于slot 1处的issolved变量。整个assembly只有一个opcode可以修改storage里的内容：sstore
+    - 如何查看文件a里b合约的storage布局：`forge inspect a.sol:b storageLayout`
+    - Pausable合约：当`_pause`标志为true时，执行带有whenNotPaused修饰符的函数会被revert
+    - [EVM memory layout](https://docs.soliditylang.org/en/latest/internals/layout_in_memory.html)和[EVM opcodes](https://www.evm.codes/)。注意分型memory和storage的区别。memory是暂时存储空间，存那些无需跨函数调用的数据，比如局部变量，参数和返回值等；storage则是永久存储，存全局变量等。memory按0x20字节（一个slot的大小）对齐，前4 slot `0x00~0x80`被保留。重点是`0x40~0x60`:指向空闲内存。文档里说是“当前已分配内存空间”，等同于说“指向空闲内存的指针”。注意这里只有一个指针，引用时取0x40。`0x40~0x60`准确地说是这个slot的大小。这个指针很重要，汇编里经常引用
+    - 可用`forge inspect a.sol:b deployedBytecode`查看文件a里b合约的字节码。 https://bytegraph.xyz/ 可以查看汇编的控制流图表，可以在 https://www.evm.codes/playground 调试汇编
+    - 这题的其中一个漏洞是攻击者可以修改函数指针。题目有一个数组，数组里装着一个函数指针a，a指向被whenNotPaused修饰的函数b。假如我们可以修改函数指针，就能将a修改为修饰符逻辑下面的函数b逻辑内容，进而绕过修饰符检查，从而正常执行函数b（相当于修改got表时因为某种原因改成backdoor函数的开头不行，于是就把got修改为backdoor函数的重要部分）。注意solidity里jump的目的地必须是某个jumpdest字节码。剩下的漏洞是内存溢出（有点像堆溢出）和out of bounce read（指程序读取了预期之外的内容）
+    - [预期解](https://blog.solidity.kr/posts/(ctf)-2024-SekaiCTF)里提到了[foundry debugger](https://book.getfoundry.sh/forge/debugger)。感觉和radare2一样都是基于命令行的图形ui调试器
 
 ## SQL注入
 
