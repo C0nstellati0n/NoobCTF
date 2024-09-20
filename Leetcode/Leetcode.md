@@ -355,6 +355,7 @@
 - [Word Break II](./Hard/Word%20Break%20II.md). backtrack
 - [Student Attendance Record II](./Hard/Student%20Attendance%20Record%20II.md). 3d dp
 - [Second Minimum Time to Reach Destination](./Hard/Second%20Minimum%20Time%20to%20Reach%20Destination.md). bfs
+- [Shortest Palindrome](./Hard/Shortest%20Palindrome.md). [KMP算法](https://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html)和部分匹配表（Partial Match Table）/Rolling Hash/Manacher's Algorithm
 
 ## Others
 
