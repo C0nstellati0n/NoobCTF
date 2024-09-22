@@ -2314,7 +2314,7 @@ cat /proc/self/cgroup
 
 flaskdev addition。此位为开发者设置，无固定要求
 ```
-脚本在wp里
+脚本在wp里。debug console界面在`/console`
 
 218. [A woman's weapon](https://v0lk3n.github.io/writeup/HeroCTFv5/HeroCTFv5-SystemCollection#lfm2)
 - php 日志文件（log）包含导致LFI->RCE。
@@ -3431,7 +3431,8 @@ $user = $this->model->where($data)->first();
 - 小型python ftp server代码： https://gist.github.com/dkw72n/193cfec6572fb392b671 。允许匿名连接该服务器，无需密码
 - 其他做法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#pdfify
 352. [Un Secure](https://github.com/RuiZha0/TCP1PCTF_2023)
-- php反序列化时不会记录字段的可访问性。需要手动添加（比如在两端添加`\0`来设置private属性,参考 https://stackoverflow.com/questions/23986032/php-serialize-override-privateprotected-and-stdclass-reflection ），或者使用php的反射API
+- php反序列化时不会记录字段的可访问性。需要手动添加（比如需要添加`%00类名%00`来表示当前字段是标有private的私有属性。参考 https://wiki.wgpsec.org/knowledge/ctf/php-serialize.html ），或者使用php的反射API
+- 和347条重复了……
 353. [Calculator](https://github.com/RuiZha0/TCP1PCTF_2023)
 - js只使用Math相关函数的构造技巧：
     - 构造数字：`Math.sin.name.length.valueOf()`，利用Math内置函数的名字的长度获取数字
