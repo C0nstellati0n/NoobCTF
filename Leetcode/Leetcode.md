@@ -277,6 +277,7 @@
 - [Reverse Substrings Between Each Pair of Parentheses](./Medium/Reverse%20Substrings%20Between%20Each%20Pair%20of%20Parentheses.md). Wormhole Teleportation technique
 - [Find the City With the Smallest Number of Neighbors at a Threshold Distance](./Medium/Find%20the%20City%20With%20the%20Smallest%20Number%20of%20Neighbors%20at%20a%20Threshold%20Distance.md). Floyd-Warshall
 - [Count Number of Teams](./Medium/Count%20Number%20of%20Teams.md). [binary indexed tree](https://cs.stackexchange.com/questions/10538/bit-what-is-the-intuition-behind-a-binary-indexed-tree-and-how-was-it-thought-a)
+- [Find the Length of the Longest Common Prefix](./Medium/Find%20the%20Length%20of%20the%20Longest%20Common%20Prefix.md). trie
 
 ## Hard
 - [Longest Cycle in a Graph](Hard/Longest%20Cycle%20in%20a%20Graph.md).You are given a directed graph of n nodes numbered from 0 to n - 1, where each node has at most one outgoing edge. The graph is represented with a given 0-indexed array edges of size n, indicating that there is a directed edge from node i to node edges[i]. If there is no outgoing edge from node i, then edges[i] == -1. Return the length of the longest cycle in the graph. If no cycle exists, return -1. 图表里的每个node最多只有一条向外的有向路径，返回图表内循环node的数量。dfs变种/Floyd Cycle Detection Algorithm+dp。
