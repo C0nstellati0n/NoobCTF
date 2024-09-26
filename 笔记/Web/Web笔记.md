@@ -253,7 +253,7 @@
     <body></body></html>
     ```
     假如用`data:` url加载这段内容，整个文档瞬间加载完成，浏览器直接用meta标签里定义的`iso-2022-jp`作为编码格式，那么上面那段`<script>`就会被吞掉；但是若用网络加载，我们在中间填充的垃圾内容会增加文档加载的时间，浏览器只能先加载前面的部分，`<script>`内容正常渲染。过了一段时间后才能加载到meta部分，这时才把编码格式换成`iso-2022-jp`，但不会影响之前已经渲染的内容。本来在遇到延迟的meta标签后，浏览器应该重新解析整个文档，但chrome没有，造成了这个差异漏洞
-    - 更详细的wp： https://0xalessandro.github.io/posts/sekai
+    - 更详细的wp： https://0xalessandro.github.io/posts/sekai 。官方wp： https://blog.ankursundara.com/htmlsandbox-writeup 。补充了一个知识点：从disk cache加载的文档为non-streamed parsing，而从网络加载的文档为streamed parsing。意味着打开同一个文档两次的结果可能会不同（第一次网络加载，第二次走cache）
 
 ## SSTI
 

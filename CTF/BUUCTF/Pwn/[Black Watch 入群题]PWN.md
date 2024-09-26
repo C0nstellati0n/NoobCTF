@@ -69,3 +69,5 @@ p.interactive()
 ```
 
 发送payload1时不能用sendline，否则无法getshell。在这里卡了好久。补充带图解释的[wp](https://blog.csdn.net/mcmuyanga/article/details/109260008)。
+
+今天又看了一眼，栈迁移的结果并不能让我们执行任意的shellcode，只是多开辟了一块用来写rop链的空间。所以这类题的一个特征是，rop链攻击思路很明朗，但没有足够的空间写rop链。所以用栈迁移找到一块方便写rop链的地方

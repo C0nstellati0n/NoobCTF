@@ -1330,3 +1330,7 @@ mov     r8, qword [r13]
 - [html语言](https://html-lang.org)逆向。不是网站的那个html，确确实实是一种编程语言，只是故意设计的像html。有位大佬写了个转换器，可将这种语言转为python代码： https://github.com/harrier-lcc/html-python-transpile
 191. [Secure Computing](https://github.com/Pusty/writeups/tree/master/SekaiCTF2024)
 - 使用windows kernel syscall作为opcode的vm。见[windows-syscalls](https://github.com/j00ru/windows-syscalls)。dump所有syscall的脚本见wp
+192. [Magnum-Opus](https://github.com/trinityhall49/writeups/tree/main/challenges/rev/python/sekaictf-magnum-ops-2024)
+- 又是一道python pickle bytecode逆向题,利用reduce操作执行python内部的的函数（pickle反序列化漏洞也是这个原理）
+- 这篇wp的做法是patch pickle的源代码（`/usr/lib/python3.11/pickle.py`），使其输出诸如调用函数和参数之类的调试信息
+- 建议不要自己实现pickle vm，太复杂了，容易有很多bug。建议直接像这篇wp一样利用hook的方式进行逆向
