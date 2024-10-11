@@ -138,6 +138,8 @@ ret
     - https://github.com/rerrorctf/writeups/tree/main/2024_06_29_UIUCTFCTF24/pwn/syscalls ：seccomp rule规定只要writev的fd大于0x3e9就能使用writev。于是用openat+preadv2读文件后用dup2复制文件fd再用writev写（所以为什么不用第一个wp的pwritev2）
 - [syscalls-2](https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#syscalls-2)
   - 使用io_uring raw syscall读取文件（一种很复杂的open+read，绕seccomp可用）
+- [VisibleInput](../../CTF/moectf/2024/Pwn/VisibleInput.md)
+  - alphanumeric shellcode encoder [ae64](https://github.com/veritas501/ae64)使用
 
 1. 程序关闭标准输出会导致getshell后无法得到cat flag的输出。这时可以用命令`exec 1>&0`将标准输出重定向到标准输入，再执行cat flag就能看见了。因为默认打开一个终端后，0，1，2（标准输入，标准输出，标准错误）都指向同一个位置也就是当前终端。详情见这篇[文章](https://blog.csdn.net/xirenwang/article/details/104139866)。例题：[wustctf2020_closed](https://buuoj.cn/challenges#wustctf2020_closed)
 2. 做菜单类堆题时，添加堆块的函数一般是最重要的，需要通过分析函数来构建出程序对堆块的安排。比如有些笔记管理题会把笔记名称放一个堆中，笔记内容放另一个堆中，再用一个列表记录指针。了解程序是怎么安排堆后才能根据漏洞制定利用计划。如果分析不出来，用gdb调试对着看会好很多。例题：[babyfengshui](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Pwn/babyfengshui.md)
@@ -2062,6 +2064,18 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 - 其他wp： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#format-muscle 。分别为“覆盖返回地址为rop”，“覆盖musl的stdin->read”
 212. [speedpwn](https://samuzora.com/posts/sekai-2024)
 - 似乎是libc 2.39下的fsop。不是直接RCE，而是利用文件结构的buf_base和buf_end进行任意地址写（需要控制一个指向文件结构的指针并能伪造假文件结构，而且已知libc地址）。这个利用点记得之前的版本就有了，不知道为什么这篇wp里需要来两个interactive，用第一个interactive输入ctrl+c刷新文件流触发fsop
+- 这篇[wp](https://7rocky.github.io/en/ctf/other/sekaictf/speedpwn)在关于fsop的细节上更好。fsop在任何文件结构上都能成功，这题就利用了fread和另一个打开文件的file structure：`fread((char*) &seed, 1, 8, seed_generator)`，seed_generator为修改后的文件结构，seed为读入的地方。文件结构中重要的字段只有这几个：
+  - fp->_flags
+  - fp->_IO_buf_base：写入的起始地址
+  - fp->_IO_buf_end：写入的结束地址
+  - fp->_fileno：从哪个文件描述符读入内容
+
+所以fread的第二第三个参数不重要
+
 213. [Life Simulator 2](https://samuzora.com/posts/sekai-2024)
 - c++ pwn。不是那种简单的pwn `std::string` 和 `std::vector`的题，但也没有特别复杂的堆风水（在我看来挺复杂的，需要misalign address，算这个就挺麻烦的）。漏洞为uaf
 - 从堆指针任意地址写到rce。还是要用fsop，在堆指针A处伪造一个文件结构，然后将A写入某个文件结构的`_chain`。这样在退出程序时，`_IO_flush_all`会flush位于A的文件结构。然后就是“伪造整个文件结构+`_wide_data`“的fsop rce了
+214. [栈的奇妙之旅](../../CTF/moectf/2024/Pwn/栈的奇妙之旅.md)
+- 部分buf足够大的栈迁移题公式（整体大小，不是溢出的大小。比如可以读入0x80，但只溢出0x10。这里看0x80够不够大即可）
+- 32位binary进行栈迁移时可能要注意恢复ebx原有的值
+- 32位binary用one_gadget需要注意 https://github.com/david942j/one_gadget/issues/130

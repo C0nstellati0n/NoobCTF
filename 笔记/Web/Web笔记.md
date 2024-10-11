@@ -30,6 +30,7 @@
 	D,E,F和G为要保存的数据的hash，比如D保存的数据是d，D里存储的就是`H(d)`。接着`H(B)=H(H(D)+H(E))`,C同理。一直这么递推上去，最后root处为`H(A)=H(H(B)+H(C))`。注意leaf存储的数据的长度不能正好是使用的hash函数输出字节的长度的两倍。否则就会出现second preimage attack。攻击者可以把B看成leaf（此时这个“leaf”代表的数据为`H(D)+H(E)`），提供C作为proof，也是一个正确的proof（merkle proof建议看上面提供的链接，有图会比较好理解）。当然，如果leaf不满足这个攻击前提，攻击者就没法把中间node B看成leaf，因为`H(D)+H(E)`的长度不满足合法leaf的数据长度
 - [Play to Earn](https://blog.blockmagnates.com/sekai-ctf-2024-deep-dive-into-the-play-to-earn-blockchain-challenge-a8156be9d44e)
     - 这题的知识点之前见过：[ChairLift](https://themj0ln1r.github.io/posts/glacierctf23)，主要是erecover无法正确处理address(0)。整个bug我都找出来了，但是不知道为什么remix连不上远程rpc还是什么别的，无法调用函数……这篇wp提供了python web3模块的远程交互代码，下次用这个试试（foundry还是太难配置了，懒）
+    - 使用cast命令行工具的做法： https://7rocky.github.io/en/ctf/other/sekaictf/play-to-earn 。终于找到个记录如何配置的wp，下次试试
 - [zoo](https://blog.soreatu.com/posts/writeup-for-3-blockchain-challs-in-sekaictf-2024)
     - 这题是个很诡异的东西。虽然是solidity，但是具体原理和pwn差不多……还是放在web3分类下吧
     - 题目由solidity assembly（基于EVM的栈语言）编写，目标是改动storage中位于slot 1处的issolved变量。整个assembly只有一个opcode可以修改storage里的内容：sstore
@@ -3977,3 +3978,7 @@ new URL("//a.com","http://b.com")
 490. [funny-lfr](https://blog.neilhommes.xyz/docs/Writeups/2024/sekaictf.html)
 - python [Starlette](https://www.starlette.io/) （网站框架）中出现的条件竞争。根据源码，这个框架内部用`os.stat`函数决定要下载的文件的大小，太大或者等于零都无成功下载文件。后一种情况导致我们无法读取`/proc/self`下的文件，因为整个`/proc`目录都在[procfs](https://en.wikipedia.org/wiki/Procfs)文件系统下，而这个系统又是一个不包含任何实际文件的虚拟文件系统。然而攻击者可以创建一个指向别的文件的symlink，然后让服务器下载这个symlink，同时中途将symlink指向的文件换成`/proc`下的文件
 - 这个解法不是预期解，因为需要用ssh连到题目的环境。预期解则不需要： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#funny-lfr
+491. [PetStore](../../CTF/moectf/2024/Web/PetStore.md)
+- python pickle反序列化，要求在不出网的情况下拿到命令执行的结果。见flask内存马： https://www.cnblogs.com/gxngxngxn/p/18181936
+492. [smbms](../../CTF/moectf/2024/Web/smbms.md)
+- java的StringBuffer类也可能产生拼接相关的注入漏洞，如sql注入

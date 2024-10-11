@@ -1334,3 +1334,5 @@ mov     r8, qword [r13]
 - 又是一道python pickle bytecode逆向题,利用reduce操作执行python内部的的函数（pickle反序列化漏洞也是这个原理）
 - 这篇wp的做法是patch pickle的源代码（`/usr/lib/python3.11/pickle.py`），使其输出诸如调用函数和参数之类的调试信息
 - 建议不要自己实现pickle vm，太复杂了，容易有很多bug。建议直接像这篇wp一样利用hook的方式进行逆向
+193. [BlackHole](../../CTF/moectf/2024/Reverse/BlackHole.md)
+- 如何使用mingw-w64在linux上编译c文件到exe
