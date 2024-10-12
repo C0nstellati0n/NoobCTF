@@ -48,3 +48,11 @@ pappus定理：在两条直线上分别画三个点，然后将这些点交叉�
 pappus定理实际上是pascal定理的特殊情况。pascal定理建立在2度曲线上，而二度曲线的特殊情况就是直线
 
 ![pascals](../../images/pascals.png)
+
+## Kakeya sets
+
+[Kakeya set](https://en.wikipedia.org/wiki/Kakeya_set):简单来说就是一条线可以在一个图形里转,在每个方向都包含一条直线（containing line in every direction）。课程里还提到了Wolff的有限域类比，维基百科居然也有，见 https://en.wikipedia.org/wiki/Kakeya_set#Kakeya_sets_in_vector_spaces_over_finite_fields
+
+结尾有个"27 lines on cubic surface"案例。这是代数几何里一个著名的结论，见 https://mathoverflow.net/questions/115/what-is-the-exact-statement-of-there-are-27-lines-on-a-cubic 。主要想记录一下提到的三维射影空间（3 dimensional projective space） $\mathbb{P}^3$ 。三维射影空间为全部四元组`(w:x:y:z)`的集合，同时满足 $(w:x:y:z)\equiv(\lambda w:\lambda x:\lambda y:\lambda z),\lambda\not ={0}$ 。假如z不为零，可以找到一个 $\lambda$ 使z为1，这样(w:x:y:1)就和三维仿射空间（three dimensional affine space）同构了。对w，x和y也可以做同样的操作，因此三维射影空间包含仿射空间的四份副本（is covered by four copies of affine space）。这也是为啥明明是三维空间却有四个变量
+
+我也问了chatgpt，它说三维射影空间包含了过四维空间原点的所有线，同时标量倍数相等。维基百科又是这样说的： https://en.wikipedia.org/wiki/Projective_space#Definition 。乍一看这三个定义完全不一样，难道是一个意思？

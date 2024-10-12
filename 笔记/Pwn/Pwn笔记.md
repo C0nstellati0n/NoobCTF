@@ -4,6 +4,19 @@
 
 kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇气
 
+### Windows
+
+我人生中遇见的第一道window pwn题就是内核？？？
+
+- [Process Flipper](https://github.com/MochiNishimiya/Project-Sekai-2024)
+  - 漏洞为当前进程的`_EPROCESS`结构里的任意地址写，要求拿到SYSTEM权限。`_EPROCESS`是windows kernel里的结构，用来存储某个进程的重要数据
+  - 这篇wp的思路是攻击`_EPROCESS`结构里的`_TOKEN`结构（当前进程的security access token。账号，组和权限等内容）。因为有任意地址写，直接把`_EPROCESS`里指向`_TOKEN`结构的指针覆盖成伪造的有SYSTEM权限的`_TOKEN`结构即可（需要获知system token的所在地址）
+  - 利用NtQuerySystemInformation泄漏kernel相关地址。wp里用到的技巧在[这里](https://github.com/sam-b/windows_kernel_address_leaks/blob/master/NtQuerySysInfo_SystemHandleInformation/NtQuerySysInfo_SystemHandleInformation/NtQuerySysInfo_SystemHandleInformation.cpp)有解释。要求当前进程为Medium integrity。在最新的Windows 24H2，还需要`_TOKEN`结构的`Privileges.Enabled`和`Privileges.Present`字段不为0。正好这题能伪造`_TOKEN`结构，进程也是Medium integrity
+  - 利用NtQueryInformationToken进行任意地址读。需要能够伪造或修改当前进程的`_TOKEN`结构
+  - [官方wp](https://sekai.team/blog/sekaictf-2024/flipper)是另一种做法。出题人以为覆盖`_EPROCESS`结构的`_TOKEN`指针会触发BSOD（Blue Screen of Death，一目了然的术语），事实上只有运气不好时才会。于是找了替代品DiskCounters，也是`_EPROCESS`结构里的一个字段。这是一个指向`PROCESS_DISK_COUNTERS`结构的指针，并且可以在低权限Medium integrity用户进程中用NtQuerySystemInformation下的SystemProcessInformation类请求。`PROCESS_DISK_COUNTERS`结构里有个BytesWritten字段，用NtQuerySystemInformation可以泄漏里面的内容。于是利用任意地址写，修改DiskCounters指针，使BytesWritten字段指向`_EPROCESS`结构里要泄漏的内容。因为偏移固定，所以无需提前得知任何地址。getshell方式有点看不懂，没有非预期解好懂
+
+### Linux
+
 - [Virtio-note](https://github.com/nobodyisnobody/write-ups/tree/main/bi0sCTF.2024/pwn/virtio-note)
   - 细分下来应该算qemu逃逸（qemu escape），不过这题pwn的是qemu内置的VirtIO drivers(VirtIO驱动，VirtIO drivers offer a more efficient and direct method of accessing host hardware resources compared to emulated drivers, leading to better performance and lower overhead in virtualized environments)中的作者自定义部分。需要自行写一个在qemu vm里运行的kernel模块，其与virtio backend交互，最终执行shellcode，将flag发回攻击者监听的端口
   - 题目里的bug是OOB读写，bug还是该怎么利用怎么利用，不过除了泄漏heap地址以外，还要泄漏和qemu binary有关的地址（如`qobject_input_type_null`），来计算qemu binary映射基地址。qemu bss段的`tcg_qemu_tb_exec`变量指向qemu内部用来生成jit代码的RWX段，用来写shellcode很方便

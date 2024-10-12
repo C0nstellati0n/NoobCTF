@@ -693,6 +693,9 @@ $$
 
 考虑线性组合 $[s_0, k_1, k_2, ..., k_n]$ ，即在矩阵左侧乘上这个向量，结果是 $[s_0, s_1 - B_1, s_2 - B_2]$ 。 $k_i$ 我觉得是用来抵消模p的，毕竟乘出来结果是 $a^is_0+k_ip$ 。问题是，这个出来的向量不一定就是格里最短的向量，没法直接用LLL。于是我们构造一个结构和这个向量差不多的向量 $[h_0, h_1 - B_1, ..., h_n - B_n]$ ， $h_i$ 为 $s_i$ 最大值和最小值的中点（最大值和最小值可以根据题目给出的高位推算），用cvp相关算法算出和这个向量最近的向量，期待结果就是我们想要的那玩意
 - Fast lattice reduction:[flatter](https://github.com/keeganryan/flatter)。使用案例：[SSP](https://thr34dr1pp3r.gitbook.io/ctf/deadsec-ctf-2024/crypto-ssp)。可以加速大型格的计算，但是没法处理很小的格。小格的话用sagemath自带的LLL即可
+- [はやぶさ](https://7rocky.github.io/en/ctf/other/sekaictf/%E3%81%AF%E3%82%84%E3%81%B6%E3%81%95)
+    - [Falcon](https://falcon-sign.info/) signatures（Fast-Fourier Lattice-Based Compact signatures over NTRU）key recovery attack。此攻击只能在参数n较小的情况下使用
+    - NTRU lattice由多项式组成，wp里记录了如何将由多项式构成的格转为由整数构成的格
 
 ## Elliptic Curves(ECC,椭圆曲线)
 
@@ -738,6 +741,13 @@ $$
     - 另一道类似的题目： https://rkm0959.tistory.com/232
 - [talk-to-echo](https://github.com/BCACTF/bcactf-5.0/blob/main/talk-to-echo)
     - 又是一个invalid point(invalid curve)攻击。不过这题是入门级，稍微好理解点。生成小阶数的点和曲线时都用的是随机生成的方式，求crt时用的是 $priv^2\mod p$ 的做法来消除原本的正负数两种可能。这个方法的缺点是，假如原本曲线模n，这里想恢复 $priv^2$ 就需要crt的各个质数总乘积达到 $n^2$
+- [マスタースパーク](https://7rocky.github.io/en/ctf/other/sekaictf/%E3%83%9E%E3%82%B9%E3%82%BF%E3%83%BC%E3%82%B9%E3%83%91%E3%83%BC%E3%82%AF)
+    - [CSIDH](https://csidh.isogeny.org/csidh-20181118.pdf)协议。这个协议本身问题不大，这题的漏洞是返回公共参数时返回错了……不过还是借这道题了解了一下这个协议。CSIDH是Commutative Supersingular Isogeny Diffie-Hellman的缩写，内容大概如下：
+        - A和B双方的私钥都是一组界于-m到m的随机数。假如拿的是A的私钥，协议利用这个私钥计算几个同源(isogeny)，这样就能从基础椭圆曲线 $E_0$ 到另一个椭圆曲线 $E_a$ 。如果拿的是B的私钥，就是从 $E_0$ 走到 $E_b$
+        - 协议的公钥为曲线 $E_a$ 和 $E_b$ 的（Montgomery coefficient）。有了蒙哥马利系数就能确定一条蒙哥马利形式曲线 $By^2=x^3+Ax^2+x$ （这里A和B是蒙哥马利系数）
+        - 最后，A用私钥就能从 $E_b$ 走到 $E_{ba}$ ；B能从 $E_a$ 走到 $E_{ab}$ 。殊途同归
+        - Commutative指交换性， $E_{ba}=E_{ab}$ 。同源是两个超奇异椭圆曲线之间的同态
+    - 剩下的是一些数学内容。群同态，计算曲线参数，Pohlig-Hellman（离散对数+crt，因为目标结果比模的p大，所以需要多个离散对数结果再用crt组回原来的内容。之前好像见过）等
 
 ## AES/DES
 
