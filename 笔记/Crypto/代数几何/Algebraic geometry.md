@@ -56,3 +56,38 @@ pappus定理实际上是pascal定理的特殊情况。pascal定理建立在2度�
 结尾有个"27 lines on cubic surface"案例。这是代数几何里一个著名的结论，见 https://mathoverflow.net/questions/115/what-is-the-exact-statement-of-there-are-27-lines-on-a-cubic 。主要想记录一下提到的三维射影空间（3 dimensional projective space） $\mathbb{P}^3$ 。三维射影空间为全部四元组`(w:x:y:z)`的集合，同时满足 $(w:x:y:z)\equiv(\lambda w:\lambda x:\lambda y:\lambda z),\lambda\not ={0}$ 。假如z不为零，可以找到一个 $\lambda$ 使z为1，这样(w:x:y:1)就和三维仿射空间（three dimensional affine space）同构了。对w，x和y也可以做同样的操作，因此三维射影空间包含仿射空间的四份副本（is covered by four copies of affine space）。这也是为啥明明是三维空间却有四个变量
 
 我也问了chatgpt，它说三维射影空间包含了过四维空间原点的所有线，同时标量倍数相等。维基百科又是这样说的： https://en.wikipedia.org/wiki/Projective_space#Definition 。乍一看这三个定义完全不一样，难道是一个意思？
+
+## Affine space and the Zariski topology
+
+假如有个域k，仿射空间 $A^n$ 基本等于 $k^n$ （n维向量空间）。区别在于两者的自同构群（automorphism group）。向量空间的自同构群为一般线性群（general linear group） $GL_n(k)$ ，或者说全部可逆线性变换的集合（向量空间里的自同态为可逆线性变换，这些变换的集合又能组成群）。线性代数里学过线性变换能用矩阵表示，所以一般线性群等同于那些行列式不为0的n阶方阵
+
+$A^n$ 的自同构群也包含 $GL_n(k)$ ，但还要加个平移操作（translation。之前学的全忘光了，差点以为线性变换也包括平移……）。里面的矩阵长这样：
+
+$$
+\begin{pmatrix} 
+A & \mathbf{b} \\
+0 & 1
+\end{pmatrix}
+$$
+
+其中A是 $GL_n(k)$ ，b是平移变换。仿射空间就像失去原点的向量空间。所以把向量空间的原点丢掉就成了仿射空间；随便固定仿射空间里的一点当原点就成了向量空间
+
+仿射几何(affine geometry)研究那些在线性变换、平移操作下不变的东西。比如：
+- 点
+- 线
+- 平行线
+- 圆锥曲线（conics）
+- 多项式函数（polynomial function）
+
+所以那些会变的东西就不属于仿射几何了。比如：
+- 圆（线性变换后可能就成椭圆了）
+- 角。线性变换不保证变换后角度一样
+- 长度
+
+$A^n$ 的坐标环为 $A^n$ 上的多项式。取仿射空间上的多项式就能得到坐标环 $k[x_1,...,x_n]$ ；取几个同态就能从坐标环到仿射空间
+
+$A^n$ 的代数集为 $k[x_1,...,x_n]$ 中一组多项式的零的集合。假如 $f=x^2+y^2-1$ ，其代数集就是一个圆。假如有两个方程f=x-a和g=y-b，其代数集就是点(a,b)。代数集对以下操作封闭：
+1. 交（intersections）。假如代数集 $c_1,c_2...$ 为多项式集合 $P_1,P_2...$ 的零的集合，那么 $c_1\wedge c_2...$ 为 $P_1\cup P_2...$ 的零的集合
+2. 有限并集。假如代数集 $c_1,c_2...$ 为多项式集合{ $f_1,f_2...$ },{ $g_1,g_2...$ }...的零的集合，那么 $c_1\wedge c_2...$ 为{ $f_ig_i$ }的零的集合
+
+如果一个集合对以上两个操作封闭，那么这个集合形成拓扑的封闭集,称为[Zariski topology](https://en.wikipedia.org/wiki/Zariski_topology)。这个拓扑不是Hausdorff拓扑，意味着它不像标准拓扑那样使用不相交的开集来分离点（does not separate points using disjoint open sets as in standard topologies。chatgpt给的定义，说实话我对标准拓扑都没啥概念）。一个空间X能称作是Hausdorff，需要满足：对于X中的任意两点x和y，能找到开集U和V，使得 $x\in U,y\in V,U\cap V=\emptyset$

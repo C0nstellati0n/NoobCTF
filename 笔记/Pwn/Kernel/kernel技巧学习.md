@@ -10,6 +10,8 @@
 
 一些泄漏windows kernel地址的方法。部分方法放到最新版windows已经没法用了，比如NtQuerySystemInformation系列。不过要是能伪造当前进程`_EPROCESS`结构里的`_TOKEN`结构还是可以的。见[Process Flipper](https://github.com/MochiNishimiya/Project-Sekai-2024)
 
+一些新版本的改动信息： https://windows-internals.com/kaslr-leaks-restriction
+
 ### NtQueryInformationToken 任意地址读
 
 NtQueryInformationToken函数里请求TokenBnoIsolation时，会获取进程的`_TOKEN`结构。后续会将`_TOKEN`结构里的一个buffer内容拷贝给用户。如果能修改或伪造`_TOKEN`结构（主要是修改那个buffer的地址），就能读取任意地址处任意长度的数据。见[Process Flipper](https://github.com/MochiNishimiya/Project-Sekai-2024)
