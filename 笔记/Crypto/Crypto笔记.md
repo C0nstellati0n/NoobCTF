@@ -777,6 +777,9 @@ AES是很能出题的。DES则是放在这凑数的
   - 其他解法： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#decrypt-then-eval
 - [admin](https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/crypto/admin)
 	- AES GCM,已知两条明文及其对应密文+可控制加密用的IV（IV重用），要求伪造指定明文的密文
+- [cbc](https://github.com/rerrorctf/writeups/tree/main/2024_09_06_CSAWQuals24/crypto/cbc)
+    - aes cbc padding oracle attack。题目有个oracle可以解密任意密文，返回密文是否解密成功
+    - 附赠一个rust工具：[rustpad](https://github.com/Kibouo/rustpad)
 
 ## Z3使用
 

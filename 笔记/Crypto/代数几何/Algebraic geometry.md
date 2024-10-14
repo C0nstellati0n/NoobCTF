@@ -91,3 +91,20 @@ $A^n$ 的代数集为 $k[x_1,...,x_n]$ 中一组多项式的零的集合。假�
 2. 有限并集。假如代数集 $c_1,c_2...$ 为多项式集合{ $f_1,f_2...$ },{ $g_1,g_2...$ }...的零的集合，那么 $c_1\wedge c_2...$ 为{ $f_ig_i$ }的零的集合
 
 如果一个集合对以上两个操作封闭，那么这个集合形成拓扑的封闭集,称为[Zariski topology](https://en.wikipedia.org/wiki/Zariski_topology)。这个拓扑不是Hausdorff拓扑，意味着它不像标准拓扑那样使用不相交的开集来分离点（does not separate points using disjoint open sets as in standard topologies。chatgpt给的定义，说实话我对标准拓扑都没啥概念）。一个空间X能称作是Hausdorff，需要满足：对于X中的任意两点x和y，能找到开集U和V，使得 $x\in U,y\in V,U\cap V=\emptyset$
+
+## Noetherian spaces
+
+一个环是诺特环（noetherian ring），如果这个环满足以下任意一个等价条件：
+1. 每一个理想都是有限生成的
+2. 每个非空理想集都有最大元素。就是一个理想的集合中肯定有一个最大的理想
+3. Every chain of ideas( $I_0\subseteq I_1\subseteq...$ ) is eventually constant( $I_n=I_{n+1}=...$ )。这个理想链说白了就是把理想按照从大到小的顺序排起来，排到最后肯定有个最大的理想，这个链不会无限走下去
+
+一个拓扑空间是诺特拓扑空间，如果这个拓扑空间满足以下任意一个等价条件：
+1. every descending chain of closed sets stabilizes。就是诺特环条件3的顺序反过来
+2. 每个非空闭集集合都有最小元素
+
+任意域上的仿射空间都是诺特拓扑空间
+
+一个集合称为“不可约的”，当且仅当它是非空的，且不是两个真闭子集（proper closed subsets）的并集
+
+每个诺特空间都是不可约子诺特空间的有限并集。每个代数集都是不可约代数集的有限并集。“不可约代数集”称为代数簇（algebraic variety）

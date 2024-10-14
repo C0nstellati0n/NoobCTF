@@ -3982,3 +3982,8 @@ new URL("//a.com","http://b.com")
 - python pickle反序列化，要求在不出网的情况下拿到命令执行的结果。见flask内存马： https://www.cnblogs.com/gxngxngxn/p/18181936
 492. [smbms](../../CTF/moectf/2024/Web/smbms.md)
 - java的StringBuffer类也可能产生拼接相关的注入漏洞，如sql注入
+493. [bucketwars](https://blog.hokyun.dev/posts/csaw-ctf-2024-quals-writeup)
+- AWS S3 bucket malconfigured bucket policy信息泄漏
+- 命令行解法： https://stefanin.com/posts/bucketwars-writeup
+494. [charlies angels](https://blog.hokyun.dev/posts/csaw-ctf-2024-quals-writeup),官方[wp](https://github.com/osirislab/CSAW-CTF-2024-Quals/tree/main/web/charlies-angels)
+- js needle模块不会转义、过滤属性名称。因此若可以控制传入needle的内容，就能注入任意字段。控制某些特定字段可以将任意内容以任意文件的形式传到目标服务（似乎仅限http multipart格式）
