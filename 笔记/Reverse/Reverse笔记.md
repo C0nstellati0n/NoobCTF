@@ -1336,3 +1336,10 @@ mov     r8, qword [r13]
 - 建议不要自己实现pickle vm，太复杂了，容易有很多bug。建议直接像这篇wp一样利用hook的方式进行逆向
 193. [BlackHole](../../CTF/moectf/2024/Reverse/BlackHole.md)
 - 如何使用mingw-w64在linux上编译c文件到exe
+194. [bootme](https://github.com/Pusty/writeups/tree/master/m0leConCTFTeaser2025)
+- 如何逆向`bootloader.bin`。这类bin没法直接放到反编译器里，需要自行找到起始偏移和代码relocation后的地址才能看到重要的逻辑
+195. [m0veCon](https://github.com/Pusty/writeups/tree/master/m0leConCTFTeaser2025)
+- 逆向Move语言binary。一些参考资料：
+  - https://www.zellic.io/blog/introducing-movetool/
+  - 另一个有关move的wp： https://leoq7.com/2023/02/PBCTF-Move-VM
+  - 反编译器： https://github.com/move-language/move-on-aptos ， https://aptoslabs.medium.com/move-revealed-the-revela-decompiler-b206eaf48b45

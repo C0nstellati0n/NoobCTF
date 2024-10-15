@@ -2092,3 +2092,5 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 - 部分buf足够大的栈迁移题公式（整体大小，不是溢出的大小。比如可以读入0x80，但只溢出0x10。这里看0x80够不够大即可）
 - 32位binary进行栈迁移时可能要注意恢复ebx原有的值
 - 32位binary用one_gadget需要注意 https://github.com/david942j/one_gadget/issues/130
+215. [Ducts](https://matteoschiff.com/ducts-writeup)
+- linux [pipe](https://man7.org/linux/man-pages/man7/pipe.7.html)的条件竞争。当多个写入操作作用于同一个pipe，且写入大小大于PIPE_BUF，则传入pipe的内容会穿插交错
