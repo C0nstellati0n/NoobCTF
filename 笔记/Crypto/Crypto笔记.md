@@ -2702,3 +2702,5 @@ assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
 - Neural cryptography中的[Tree parity machine](https://en.wikipedia.org/wiki/Neural_cryptography#Tree_parity_machine)。怎么也没想到有一天密码学和人工智能能扯上关系……
 - 这题大概是让一个Tree parity machine C学习另外两个machine A和B之间建立的关系。有过度拟合的毛病，但这题没关系
 - 更详细的wp： https://c0degolf.github.io/posts/writeup/deadsec-ctf/deadsec2024/ 。使用的攻击方式似乎名为[geometry attack](https://arxiv.org/pdf/0711.2411#page=33)
+159. [Uncrackable Zip](https://abuctf.github.io/posts/IronCTF)
+- 使用bkcrack工具进行zip已知明文攻击。若明文包含换行符，注意换行符使用的是LF还是CRLF。unix/linux使用前者，windows使用后者。提供bkcrack错误的明文会影响密码的破解

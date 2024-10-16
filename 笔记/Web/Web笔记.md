@@ -3987,3 +3987,6 @@ new URL("//a.com","http://b.com")
 - 命令行解法： https://stefanin.com/posts/bucketwars-writeup
 494. [charlies angels](https://blog.hokyun.dev/posts/csaw-ctf-2024-quals-writeup),官方[wp](https://github.com/osirislab/CSAW-CTF-2024-Quals/tree/main/web/charlies-angels)
 - js needle模块不会转义、过滤属性名称。因此若可以控制传入needle的内容，就能注入任意字段。控制某些特定字段可以将任意内容以任意文件的形式传到目标服务（似乎仅限http multipart格式）
+495. [Loan App](https://abuctf.github.io/posts/IronCTF)
+- HAProxy (High Availability Proxy)低版本请求走私漏洞： https://jfrog.com/blog/critical-vulnerability-in-haproxy-cve-2021-40346-integer-overflow-enables-http-smuggling 。此漏洞可使攻击者访问那些被deny的路径
+- HAProxy会带个`haproxy.cfg`文件，里面的配置错误也会导致攻击者可以访问被deny的路径

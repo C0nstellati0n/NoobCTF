@@ -2326,3 +2326,7 @@ $ cd a/b
 ```
 362. [CalcQL](https://boxmein.github.io/posts/2024-08-25-sekaictf-2024)
 - 使用[CodeQL](https://codeql.github.com)分析源代码并找到返回特定值的函数
+363. [Air Message](https://abuctf.github.io/posts/IronCTF)
+- [morse-analyzer](https://github.com/spaceymonk/morse-analyzer)工具使用。该工具可以修改音频文件里的morse码，例如将模糊的morse码变清晰
+364. [8-ball](https://abuctf.github.io/posts/IronCTF/)
+- linux使用mount命令挂载`DOS/MBR boot sector`文件

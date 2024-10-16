@@ -6,12 +6,14 @@
 
 - [Crack Me](https://github.com/Pusty/writeups/tree/master/SekaiCTF2024)
   - ReactNative application逆向。这类apk用反编译软件打开后没法在sources文件夹下看到应用的逻辑代码。虽然可以看到`MainActivity.java`和`MainApplication.java`两个文件，但是里面只会出现一些ReactNative字样，没有代码。这类应用的实际代码在`assets/index.android.bundle`文件里，是稍微混淆过的javascript。可以用[React Native Decompiler](https://github.com/numandev1/react-native-decompiler)反混淆
-  - python使用pyrebase模块连接firebase
+  - python使用pyrebase模块连接firebase。这是个托管后端的平台，题目里看到类似的`firebase.io`字符串大概率有问题。需要authentication的url需要相关登录凭证。也有不需要任何凭证的情况，直接curl网址就能拿到内容
   - 发现一个动态调试做法更有趣： https://fexsec.net/variousctfs/crackme-sekaictf2024
   - apktool的`-r`选项可以使apktool不解码资源。如果题目需要patch操作就要加上这个选项，否则没法重新编译这些binary
   - [Android SSL Pinning Bypass](https://www.youtube.com/watch?v=_7J5HrwIr0k)。安卓应用有个SSL Pinning机制，防止攻击者监听数据传输。绕过后就能配合burpsuite抓包了。需要的工具有frida，adb等。原理是用frida注入一段js代码： https://codeshare.frida.re/@akabe1/frida-multiple-unpinning
   - patch原apk做法： https://github.com/acdwas/ctf/tree/master/2024/SekaiCTF%202024/rev/Crack%20Me
   - 在这篇[wp](https://ggcoder.medium.com/solving-crackme-from-sekaictf-9660dc41b0ce)里发现了[HTTP Toolkit](https://httptoolkit.com)，可以直接拦截apk的流量
+- [Secure Vault](https://abuctf.github.io/posts/IronCTF)
+  - Flutter APK逆向工具[Blutter](https://github.com/worawit/blutter)使用
 
 ## IDA使用
 
@@ -1116,6 +1118,7 @@ finish()
 122. [Dark Secrets](https://learn-cyber.net/writeup/Dark-Secrets)
 - RPG Maker游戏逆向。由RPG Maker所制作的游戏的进程名为`RGSS2 Player`
 - `.rgss2a`后缀文件存储着RPG Maker游戏的资源。可以用 https://github.com/uuksu/RPGMakerDecrypter 提取出被加密的资源。新建一个RPG Maker VX项目，将空项目的文件用提取出来的文件替换，即可用引擎将该游戏打开。打开后可以看见对话内容，修改敌人数据等
+- 也有`.rgssad`后缀的资源文件。见 https://abuctf.github.io/posts/IronCTF
 123. [Virtual RAM](https://ctftime.org/writeup/38229)
 - Game Boy ROM image emulator:[BGB](https://bgb.bircd.org/)。这个模拟器可以查看vram
 124. [Skilift](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/intro/Skilift)
