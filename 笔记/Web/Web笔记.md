@@ -261,6 +261,30 @@
     ```
     假如用`data:` url加载这段内容，整个文档瞬间加载完成，浏览器直接用meta标签里定义的`iso-2022-jp`作为编码格式，那么上面那段`<script>`就会被吞掉；但是若用网络加载，我们在中间填充的垃圾内容会增加文档加载的时间，浏览器只能先加载前面的部分，`<script>`内容正常渲染。过了一段时间后才能加载到meta部分，这时才把编码格式换成`iso-2022-jp`，但不会影响之前已经渲染的内容。本来在遇到延迟的meta标签后，浏览器应该重新解析整个文档，但chrome没有，造成了这个差异漏洞
     - 更详细的wp： https://0xalessandro.github.io/posts/sekai 。官方wp： https://blog.ankursundara.com/htmlsandbox-writeup 。补充了一个知识点：从disk cache加载的文档为non-streamed parsing，而从网络加载的文档为streamed parsing。意味着打开同一个文档两次的结果可能会不同（第一次网络加载，第二次走cache）
+- [Hiring Platform](https://abdulhaq.me/blog/iron-ctf-2024)
+    - xss+dom clobbering。此题的csp为`script-src 'self'`，可用jsonp绕过。如果题目是一个WordPress网站的话，一般都会有JSONP端点，但这个端点源码里是看不到的
+    - 利用iframe的srcdoc属性绕过针对innerHTML属性的过滤
+    - 如果代码里引用了一个未定义的变量并以此作为if语句的判断条件：
+    ```js
+    if (some_undefined){
+        //...
+    }
+    ```
+    可以用dom clobbering进入if语句分支，如`<a id=some_undefined>`
+    - 如果能使用`<input>`标签，就可以控制某个form提交的变量名称和内容。比如有个form的id是`select`，在任意位置加上这句就能添加form字段：
+    ```html
+    <input type="text" name="remark" value="REMARK" form="select">
+    ```
+    提交id为select的form后请求参数里会有`remark=REMARK`项
+- [Secret Notes](https://abdulhaq.me/blog/iron-ctf-2024)
+    - flask内部使用jinja作为模板引擎。在使用`{{ ... }}`插入变量时，jinja会自动转义特殊字符来规避xss。但注意插入标签的属性时需要这样做：
+    ```html
+    <img class="profile" alt="{{ attr }}">
+    ```
+    如果去掉引号，变为`alt={{ attr }}`，攻击者可注入空格、引号等字符当作attr，插入xss payload：`\ src/onerror=alert(1)`
+    - cookie jar overflow。之前也见过，这里用来挤掉账号登录的cookie，实现logout的效果
+    - Cookie Path Precedence。设置cookie时若添加`path=xxx`选项，且前面没有在这个path下设置cookie；下次访问xxx路径时下发的还是这个cookie，无视实际登录时的cookie。比如admin登录账号，拥有admin cookie。但我们在admin登录前提前在路径a下设置了另一个cookie evil。那么admin访问路径a之外的所有路径持有的都是admin cookie，除了路径a。当admin访问a时，持有的cookie是evil
+    - 这题比较特别，xss payload长度限制在31个字符，而且admin bot先访问攻击者url再登录网站。题目在`/profile`下有xss payload，登录后自动重定向至`/profile`。目标是窃取admin在`/notes`下的flag。简述wp的思路：准备两个账号，attacker1和attacker2，账号里的xss payload都是`eval(window.name)`。记录下attacker2账号的cookie，称为`ATTACK`。利用csrf使admin登录attacker1账号，设置一个`path=/profile`的cookie，内容为`ATTACK`。接着利用cookie jar overflow登出attacker1账号。按照admin bot的代码逻辑，此时admin bot登录admin账号。注意此时重定向到`/profile`用的是attacker2的cookie，便可以执行提前准备好的窃取notes的payload（访问`/notes`时的cookie还是admin的，不影响拿flag）
 
 ## SSTI
 
@@ -3989,4 +4013,6 @@ new URL("//a.com","http://b.com")
 - js needle模块不会转义、过滤属性名称。因此若可以控制传入needle的内容，就能注入任意字段。控制某些特定字段可以将任意内容以任意文件的形式传到目标服务（似乎仅限http multipart格式）
 495. [Loan App](https://abuctf.github.io/posts/IronCTF)
 - HAProxy (High Availability Proxy)低版本请求走私漏洞： https://jfrog.com/blog/critical-vulnerability-in-haproxy-cve-2021-40346-integer-overflow-enables-http-smuggling 。此漏洞可使攻击者访问那些被deny的路径
-- HAProxy会带个`haproxy.cfg`文件，里面的配置错误也会导致攻击者可以访问被deny的路径
+- HAProxy会带个`haproxy.cfg`文件，里面的配置错误也会导致攻击者可以访问被deny的路径。补充一篇使用预期解的wp： https://0mr.me/ctf/ironctf24
+496. [b64SiteViewer](https://0mr.me/ctf/ironctf24)
+- 一些ssrf绕过手段，可用`127.1`代替`127.0.0.1`等

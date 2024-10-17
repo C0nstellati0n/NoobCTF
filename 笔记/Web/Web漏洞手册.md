@@ -29,4 +29,14 @@
 - 特征
   - 可以获取网站内部存储的Werkzeug密码。密码以`pbkdf2:sha256`开头
   - 有些题目会特别提供一个wordlist
-- 关键词：Werkzeug
+- 关键词：(Werkzeug) password encryption
+3. session伪造
+- flask用来验证身份/保存用户数据的session cookie可以伪造。但需要得知服务器用来签名session的密钥，或者爆破
+- 特征
+  - 题目泄露了网站使用的密钥（`app.config['SECRET_KEY']`）
+  - 题目提到密钥较简单或给出wordlist
+- 关键词
+  - session/cookie伪造
+  - secret key/`secret_key`
+4. debug console pin码伪造
+- flask运行app时若添加了`debug=True`选项，网站会自动添加路径`/console`。使用pin码解锁console后就能得到python shell。pin码的计算需要服务器上的私密信息和文件，因此该漏洞之前可能有诸如任意文件读取，代码执行等前置漏洞
