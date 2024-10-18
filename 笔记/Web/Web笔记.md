@@ -285,6 +285,8 @@
     - cookie jar overflow。之前也见过，这里用来挤掉账号登录的cookie，实现logout的效果
     - Cookie Path Precedence。设置cookie时若添加`path=xxx`选项，且前面没有在这个path下设置cookie；下次访问xxx路径时下发的还是这个cookie，无视实际登录时的cookie。比如admin登录账号，拥有admin cookie。但我们在admin登录前提前在路径a下设置了另一个cookie evil。那么admin访问路径a之外的所有路径持有的都是admin cookie，除了路径a。当admin访问a时，持有的cookie是evil
     - 这题比较特别，xss payload长度限制在31个字符，而且admin bot先访问攻击者url再登录网站。题目在`/profile`下有xss payload，登录后自动重定向至`/profile`。目标是窃取admin在`/notes`下的flag。简述wp的思路：准备两个账号，attacker1和attacker2，账号里的xss payload都是`eval(window.name)`。记录下attacker2账号的cookie，称为`ATTACK`。利用csrf使admin登录attacker1账号，设置一个`path=/profile`的cookie，内容为`ATTACK`。接着利用cookie jar overflow登出attacker1账号。按照admin bot的代码逻辑，此时admin bot登录admin账号。注意此时重定向到`/profile`用的是attacker2的cookie，便可以执行提前准备好的窃取notes的payload（访问`/notes`时的cookie还是admin的，不影响拿flag）
+- [Beautiful Buttons](https://abdulhaq.me/blog/iron-ctf-2024)
+    - css injection泄漏shadow dom里的内容。还是那个熟悉的`:host-context`，之前在IN-THE-SHADOWS里见过。不过这题的csp很严，没法导入任何外部资源，故无法外带数据。因此需要利用Chromium的一个bug，使Chromium进入无限循环然后崩溃。而页面是否崩溃在admin bot页面有回显，借此泄漏出信息
 
 ## SSTI
 
@@ -4016,3 +4018,4 @@ new URL("//a.com","http://b.com")
 - HAProxy会带个`haproxy.cfg`文件，里面的配置错误也会导致攻击者可以访问被deny的路径。补充一篇使用预期解的wp： https://0mr.me/ctf/ironctf24
 496. [b64SiteViewer](https://0mr.me/ctf/ironctf24)
 - 一些ssrf绕过手段，可用`127.1`代替`127.0.0.1`等
+- 发现一个非预期解： https://medium.com/@pphreak313/ironctf-2024-writeup-782f41854341 。在url前面加个空格会导致python的urllib认为该url的scheme为空，此漏洞在`3.11.4`的urllib前都存在。见 https://www.vicarius.io/vsociety/posts/cve-2023-24329-bypassing-url-blackslisting-using-blank-in-python-urllib-library-4

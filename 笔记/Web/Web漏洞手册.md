@@ -40,3 +40,35 @@
   - secret key/`secret_key`
 4. debug console pin码伪造
 - flask运行app时若添加了`debug=True`选项，网站会自动添加路径`/console`。使用pin码解锁console后就能得到python shell。pin码的计算需要服务器上的私密信息和文件，因此该漏洞之前可能有诸如任意文件读取，代码执行等前置漏洞
+- 特征：访问`/console`弹出输入pin码的窗口
+- 关键词：debug console
+5. 内存马
+- 题目已有rce，但远程机器无法出网，eval/exec等函数的执行结果难以回显。此时可利用flask框架里已有的gadget添加一个自定义路由，访问该路由会调用自定义匿名函数，便能轻松回显命令执行结果。见 https://www.cnblogs.com/gxngxngxn/p/18181936
+- 特征：flask框架下已获取rce，但题目描述里说明或经测试发现题目机器不出网
+- 关键词：内存马
+6. 解析差异（http参数）
+- 遇到重复的http参数时（如`a=1&a=2`），flask取第一个值。但其他框架不一定如此。例如php取最后一个值。两者的差异可能会导致程序里的逻辑漏洞
+- 特征：遇见php和python flask搭配的网站需要特别注意。这类题目通常由前后端构成。前端针对http传入的参数进行检查，无异常后传入后端。但前后端并不使用同一种语言搭建，导致前端的检查走到后端时失效
+- 关键词：HTTP parameter pollution
+7. 解析差异（http header）
+- 在flask（Werkzeug）中，下划线(`_`)会被看作`-`。如果发两个header `Content-Length`和`Content_Length`，go-proxy只会考虑第一个`Content-Length`，而flask会考虑第二个`Content_Length`（第一个header的值被第二个覆盖了）。可能存在请求走私（request smuggling）漏洞
+- 特征：flask和go-proxy搭配使用
+- 暂无关键词，因为此漏洞相关题目的wp损坏了……具体题目名为`Notes V1`
+8. `safe`的错误使用
+- flask里可用`{{content | safe}}`跳过对content的默认转义。如果程序之前也没有过滤content，有xss的风险
+- 特征：在源码里看到safe的使用。一般不会莫名其妙加这个关键词的，毕竟多一层转义的保护总比没有好
+- 关键词：`| safe`
+9. 依赖项（dependency）投毒/源码文件覆盖
+- flask运行app时若添加`debug=True`选项，则在文件内引用的外部库或是文件本身发生变化时，应用会自动重启。将app使用的文件替换成其他代码即可获取rce
+- 特征
+  - 能修改/覆盖源码文件
+  - `app.run(debug=True)`
+  - 可以使程序崩溃后重启
+- 关键词
+  - dependency
+  - `render_template`
+  - `TEMPLATES_AUTO_RELOAD`
+- 注意：若覆盖的文件是template文件，则flask在调用`render_template`函数渲染文件后会保存文件内容至cache。后续覆盖template文件后不会影响cache，自然也不会影响`render_template`的结果（与`debug=True`无关）。有两种方式解决：
+  - 覆盖从未被渲染过的template文件
+  - 使程序崩溃后重启
+  - 程序里有`app.config['TEMPLATES_AUTO_RELOAD'] = True`选项。该选项表示修改template后无需重启app，程序会自动重新加载修改后的template文件

@@ -6,7 +6,7 @@
 
 - [Crack Me](https://github.com/Pusty/writeups/tree/master/SekaiCTF2024)
   - ReactNative application逆向。这类apk用反编译软件打开后没法在sources文件夹下看到应用的逻辑代码。虽然可以看到`MainActivity.java`和`MainApplication.java`两个文件，但是里面只会出现一些ReactNative字样，没有代码。这类应用的实际代码在`assets/index.android.bundle`文件里，是稍微混淆过的javascript。可以用[React Native Decompiler](https://github.com/numandev1/react-native-decompiler)反混淆
-  - python使用pyrebase模块连接firebase。这是个托管后端的平台，题目里看到类似的`firebase.io`字符串大概率有问题。需要authentication的url需要相关登录凭证。也有不需要任何凭证的情况，直接curl网址就能拿到内容
+  - python使用pyrebase模块连接firebase。这是个托管后端的平台，题目里（`strings.xml`）看到类似的`firebase.io`字符串大概率有问题。需要authentication的url需要相关登录凭证。也有不需要任何凭证的情况，直接curl网址就能拿到内容。见 https://blog.securitybreached.org/2020/02/04/exploiting-insecure-firebase-database-bugbounty/
   - 发现一个动态调试做法更有趣： https://fexsec.net/variousctfs/crackme-sekaictf2024
   - apktool的`-r`选项可以使apktool不解码资源。如果题目需要patch操作就要加上这个选项，否则没法重新编译这些binary
   - [Android SSL Pinning Bypass](https://www.youtube.com/watch?v=_7J5HrwIr0k)。安卓应用有个SSL Pinning机制，防止攻击者监听数据传输。绕过后就能配合burpsuite抓包了。需要的工具有frida，adb等。原理是用frida注入一段js代码： https://codeshare.frida.re/@akabe1/frida-multiple-unpinning

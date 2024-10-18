@@ -2094,3 +2094,7 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 - 32位binary用one_gadget需要注意 https://github.com/david942j/one_gadget/issues/130
 215. [Ducts](https://matteoschiff.com/ducts-writeup)
 - linux [pipe](https://man7.org/linux/man-pages/man7/pipe.7.html)的条件竞争。当多个写入操作作用于同一个pipe，且写入大小大于PIPE_BUF，则传入pipe的内容会穿插交错
+216. [Blind](https://elchals.github.io/posts/IronCTF2024_Blind)
+- 格式化字符串漏洞，但是是无程序的blind pwn
+- 可以用格式化字符串漏洞打印出程序的源码
+- 当printf需要打印非常多的字节时，内部会调用malloc。因此可以将one_gadget写入malloc_hook，然后printf触发malloc来getshell（时代的眼泪了，这题libc是2.27，malloc_hook还活着）
