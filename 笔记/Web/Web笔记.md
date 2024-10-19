@@ -4017,5 +4017,10 @@ new URL("//a.com","http://b.com")
 - HAProxy (High Availability Proxy)低版本请求走私漏洞： https://jfrog.com/blog/critical-vulnerability-in-haproxy-cve-2021-40346-integer-overflow-enables-http-smuggling 。此漏洞可使攻击者访问那些被deny的路径
 - HAProxy会带个`haproxy.cfg`文件，里面的配置错误也会导致攻击者可以访问被deny的路径。补充一篇使用预期解的wp： https://0mr.me/ctf/ironctf24
 496. [b64SiteViewer](https://0mr.me/ctf/ironctf24)
-- 一些ssrf绕过手段，可用`127.1`代替`127.0.0.1`等
+- 一些ssrf绕过手段(代替`127.0.0.1`)
+```
+127.1
+2130706433
+[0:0:0:0:0:ffff:127.0.0.1]
+```
 - 发现一个非预期解： https://medium.com/@pphreak313/ironctf-2024-writeup-782f41854341 。在url前面加个空格会导致python的urllib认为该url的scheme为空，此漏洞在`3.11.4`的urllib前都存在。见 https://www.vicarius.io/vsociety/posts/cve-2023-24329-bypassing-url-blackslisting-using-blank-in-python-urllib-library-4

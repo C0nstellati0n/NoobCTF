@@ -72,3 +72,55 @@
   - 覆盖从未被渲染过的template文件
   - 使程序崩溃后重启
   - 程序里有`app.config['TEMPLATES_AUTO_RELOAD'] = True`选项。该选项表示修改template后无需重启app，程序会自动重新加载修改后的template文件
+
+### 库与函数
+
+python自带库（函数）/第三方库相关的漏洞与特性。该项省略特征字段和部分关键词，函数名/库名本身就是特征/关键词
+
+1. `os.path.join`/pathlib的`Path.joinpath`
+- 这两个函数都是路径拼接函数。在其中一个参数为绝对路径时，函数会舍弃前面的参数。利用这个特点可以绕过一些路径限制
+- 关键词：`path.join`
+2. `os.path.splitext`
+- 此函数无法正确提取出扩展名。例：
+```py
+>>> splitext('a/a.html')
+('a/a', '.html')
+>>> splitext('a/.html')
+('a/.html', '')
+```
+
+### 其他
+
+python本身的漏洞和特性
+
+1. pickle反序列化
+- pickle是python中一个序列化/反序列化对象的模块。反序列化时python会调用加载对象的魔术方法`__reduce__`。自定义一个`__reduce__`函数使其执行恶意代码即可获得rce
+- 特征
+  - `pickle.loads`
+  - `numpy.load(file, allow_pickle=True)`
+  - `hummingbird.ml.load`
+- 关键词：pickle
+2. 变量存储位置
+- python将对象、变量等内容存储在堆上。可以利用`/proc/self/maps`和`/proc/self/mem`读取到变量的内容。注意`/proc/self/mem`内容较多而且存在不可读写部分，直接读取会导致程序崩溃。因此需要搭配`/proc/self/maps`获取堆栈分布，结合maps的映射信息来确定读的偏移值
+- 特征：题目有任意文件读取或暴露`/proc/self/maps`和`/proc/self/mem`文件
+- 关键词：`/proc/self/maps+/proc/self/mem`
+3. json处理差异
+- python与mariadb处理json重复键名时的操作不同。python看最后一个key，mariadb看第一个
+- 特征：处理json时混用了两个处理器
+- 关键词：json-interoperability
+4. 格式化字符串漏洞
+- 若`str.format`执行之前str本身包含用户可控制的内容，则可以注入出全局变量等内容。请与c语言的里的同名漏洞区分。python的格式化字符串漏洞仅能用于泄漏信息
+- 特征：`str.format`，str包含攻击者可控制内容
+- 关键词：格式化字符串漏洞
+5. float计算缺陷
+- 任何数与python里的float上限`1.8e+308`相加都会返回inf
+- 特征：注意程序处理算术逻辑时是否能正确处理inf
+- 关键词：Floating point type confusion
+6. int_parsing_size错误
+- 当整数过大时，将其转为字符串会报错
+- 特征：一个该漏洞的使用案例。假如有算式x+a，a可控，目标是得到x。可以利用"是否报错"进行binary search找到x
+- 关键词：int_parsing_size
+7. class pollution
+- 类似js的原型链污染。该漏洞可以添加/修改全局变量，还能配合其他第三方库的gadget实现其他效果（污染flask session）
+- 特征：题目里出现 https://book.hacktricks.xyz/generic-methodologies-and-resources/python/class-pollution-pythons-prototype-pollution 里的merge函数
+- 关键词：class pollution
