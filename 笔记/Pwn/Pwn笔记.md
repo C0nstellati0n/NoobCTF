@@ -1901,7 +1901,7 @@ try {
 - crash postgres可获取stack trace，内部会泄露libc地址
 - postgres内部使用malloc来分配内存存储query string。若query string过长，malloc会调用mmap，mmap的内存的偏移与libc是固定的（计算方式见wp）
 - 利用libc setcontext函数进行stack pivot
-173. [boogie-woogie](https://heinen.dev/dicectf-quals-2024/boogie-woogie/)
+173. [boogie-woogie](https://heinen.dev/posts/boogie-woogie)
 - 可以利用`__dso_handle`（位于PIE + 0xf008）泄露程序基地址
 - x86/64 Linux环境下，堆起始通常位于程序结尾地址后0到8192整数页（随机）的位置。若程序里完全无法泄漏地址，1/8192的爆破概率也是可以接受的。优化后的爆破方式：随便尝试一个偏移，若该偏移为heap上有效的偏移，回去找tcache perthread header（size为0x291）即可
 - scanf会在函数执行过程中分配一个heap chunk，最后free。正常情况下这个chunk free后会与前一个free chunk合并（之前也见过类似的技巧，不过都是大量输入导致分配large bin。目前确定的是，对于大量输入，scanf会根据输入大小分配相应的chunk）
@@ -2098,3 +2098,6 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 - 格式化字符串漏洞，但是是无程序的blind pwn
 - 可以用格式化字符串漏洞打印出程序的源码
 - 当printf需要打印非常多的字节时，内部会调用malloc。因此可以将one_gadget写入malloc_hook，然后printf触发malloc来getshell（时代的眼泪了，这题libc是2.27，malloc_hook还活着）
+217. [heap01](https://hackmd.io/@naup96321/Byot537gJg)
+- libc 2.35，覆盖tcache_pthread_struct以获取任意地址写
+- 更详细的解析和非预期解： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#heap01 。非预期解利用了之前见过的一个点，分配一个大chunk会导致malloc使用mmap分配内存，且这块内存在libc之上，偏移固定；然后利用索引越界覆盖libc的got表getshell。然而我自己调试的时候发现大chunk所在地在libc下面，而且中间有块guard page。这导致这个chunk与libc的偏移不固定。我用的libc和远程是一个版本的，可能是机器的问题

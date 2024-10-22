@@ -73,25 +73,30 @@
   - 使程序崩溃后重启
   - 程序里有`app.config['TEMPLATES_AUTO_RELOAD'] = True`选项。该选项表示修改template后无需重启app，程序会自动重新加载修改后的template文件
 
-### 库与函数
+### 第三方库
 
-python自带库（函数）/第三方库相关的漏洞与特性。该项省略特征字段和部分关键词，函数名/库名本身就是特征/关键词
+python第三方库相关的漏洞与特性
 
-1. `os.path.join`/pathlib的`Path.joinpath`
-- 这两个函数都是路径拼接函数。在其中一个参数为绝对路径时，函数会舍弃前面的参数。利用这个特点可以绕过一些路径限制
-- 关键词：`path.join`
-2. `os.path.splitext`
-- 此函数无法正确提取出扩展名。例：
-```py
->>> splitext('a/a.html')
-('a/a', '.html')
->>> splitext('a/.html')
-('a/.html', '')
-```
+1. PIL/Pillow RCE
+- Ghostscript中存在大量漏洞，并影响任何内部使用Ghostscript的图像处理库。如python的PIL/Pillow
+- 特征：安装依赖项时使用了Ghostscript `9.24`前的版本
+- 关键词：ghostscript
+2. aiohttp路径穿越
+- 配置错误会导致提供静态文件的路径出现路径穿越
+- 特征：`web.static('/files', './files', follow_symlinks=True)`
+- 关键词：aiohttp
+3. gitPython RCE
+- gitPython是一个用于和git仓库交互的python第三方库。该库在`3.1.30`之前都存在RCE漏洞
+- 特征：安装的gitPython小于`3.1.30`
+- 关键词：gitPython
+4. reportlab RCE
+- reportlab是一个动态生成pdf的第三方库。该库曾出现过两个不同的rce漏洞
+- 特征：`reportlab==3.6.12`
+- 关键词：reportlab
 
 ### 其他
 
-python本身的漏洞和特性
+python语法/内置库和函数本身的漏洞和特性。该项可能省略部分特征与关键词，因漏洞名本身就是特征和关键词
 
 1. pickle反序列化
 - pickle是python中一个序列化/反序列化对象的模块。反序列化时python会调用加载对象的魔术方法`__reduce__`。自定义一个`__reduce__`函数使其执行恶意代码即可获得rce
@@ -124,3 +129,14 @@ python本身的漏洞和特性
 - 类似js的原型链污染。该漏洞可以添加/修改全局变量，还能配合其他第三方库的gadget实现其他效果（污染flask session）
 - 特征：题目里出现 https://book.hacktricks.xyz/generic-methodologies-and-resources/python/class-pollution-pythons-prototype-pollution 里的merge函数
 - 关键词：class pollution
+8. `os.path.join`/pathlib的`Path.joinpath`
+- 这两个函数都是路径拼接函数。在其中一个参数为绝对路径时，函数会舍弃前面的参数。利用这个特点可以绕过一些路径限制
+- 关键词：`path.join`
+9. `os.path.splitext`
+- 此函数无法正确提取出扩展名。例：
+```py
+>>> splitext('a/a.html')
+('a/a', '.html')
+>>> splitext('a/.html')
+('a/.html', '')
+```

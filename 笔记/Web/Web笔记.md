@@ -4024,3 +4024,5 @@ new URL("//a.com","http://b.com")
 [0:0:0:0:0:ffff:127.0.0.1]
 ```
 - 发现一个非预期解： https://medium.com/@pphreak313/ironctf-2024-writeup-782f41854341 。在url前面加个空格会导致python的urllib认为该url的scheme为空，此漏洞在`3.11.4`的urllib前都存在。见 https://www.vicarius.io/vsociety/posts/cve-2023-24329-bypassing-url-blackslisting-using-blank-in-python-urllib-library-4
+497. [BotNet](https://gist.github.com/sebastianosrt/09d43c8de2f57105e76867b977455705)
+- [ActivityPub](https://www.w3.org/TR/activitypub)协议使用

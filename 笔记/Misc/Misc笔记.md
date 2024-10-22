@@ -2330,3 +2330,5 @@ $ cd a/b
 - [morse-analyzer](https://github.com/spaceymonk/morse-analyzer)工具使用。该工具可以修改音频文件里的morse码，例如将模糊的morse码变清晰
 364. [8-ball](https://abuctf.github.io/posts/IronCTF/)
 - linux使用mount命令挂载`DOS/MBR boot sector`文件
+365. [Doubly Secure](https://github.com/PuruSinghvi/CTF-Writeups/tree/main/SunshineCTF%202024/Crypto/Doubly%20Secure)
+- [age](https://github.com/FiloSottile/age)加密系统的使用。该系统给出的公钥以`age1`开头。生成公私钥可用 https://age-wasm.ey.r.appspot.com/
