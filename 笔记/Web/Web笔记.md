@@ -3790,7 +3790,7 @@ window.recaptcha=true;
 428. [Free Cider](https://sanlokii.eu/writeups/gcc-ctf/free-cider/)
 - swagger API platform在`/static/`（比如`/static/swagger.json`）下有api列表
 - 和重置密码相关的漏洞： https://book.hacktricks.xyz/pentesting-web/reset-password 。一般重置密码后会重定向，而某些错误的重定向实现导致攻击者可以重定向至任意网站，进而窃取重置密码的token。例如重定向时直接将目标路径拼接到Host header后，攻击者就能通过修改host header重定向至任意网站
-429. [Bottle Poem](https://notateamserver.xyz/sekaictf-writeups/#bottle-poem)
+429. [Bottle Poem](https://notateamserver.xyz/blog/sekaictf-writeups)
 - python bottle网站框架的cookie处理逻辑中存在pickle反序列化漏洞
 430. [Notes V1](https://teamshakti.in/CTF-Write-ups/ShaktiCTF24/web/notes_v1/)
 - python中的`yaml.load`存在反序列化漏洞
@@ -4011,6 +4011,7 @@ new URL("//a.com","http://b.com")
 493. [bucketwars](https://blog.hokyun.dev/posts/csaw-ctf-2024-quals-writeup)
 - AWS S3 bucket malconfigured bucket policy信息泄漏
 - 命令行解法： https://stefanin.com/posts/bucketwars-writeup
+- bucket url特征：`s3.amazonaws.com`
 494. [charlies angels](https://blog.hokyun.dev/posts/csaw-ctf-2024-quals-writeup),官方[wp](https://github.com/osirislab/CSAW-CTF-2024-Quals/tree/main/web/charlies-angels)
 - js needle模块不会转义、过滤属性名称。因此若可以控制传入needle的内容，就能注入任意字段。控制某些特定字段可以将任意内容以任意文件的形式传到目标服务（似乎仅限http multipart格式）
 495. [Loan App](https://abuctf.github.io/posts/IronCTF)
@@ -4025,4 +4026,7 @@ new URL("//a.com","http://b.com")
 ```
 - 发现一个非预期解： https://medium.com/@pphreak313/ironctf-2024-writeup-782f41854341 。在url前面加个空格会导致python的urllib认为该url的scheme为空，此漏洞在`3.11.4`的urllib前都存在。见 https://www.vicarius.io/vsociety/posts/cve-2023-24329-bypassing-url-blackslisting-using-blank-in-python-urllib-library-4
 497. [BotNet](https://gist.github.com/sebastianosrt/09d43c8de2f57105e76867b977455705)
-- [ActivityPub](https://www.w3.org/TR/activitypub)协议使用
+- [ActivityPub](https://www.w3.org/TR/activitypub)协议使用。一篇相关介绍文章： https://dev.to/wadecodez/acknowledging-signing-fediverse-activity-requests-4do2
+- 有现成的浏览器： https://browser.pub
+498. [Puzzling](https://github.com/rehackxyz/REUN10N/tree/main/CTF-writeups/2024/SunshineCTF/web-puzzling)
+- xxe，但是引用外部dtd文件（需要题目机器能访问外网）

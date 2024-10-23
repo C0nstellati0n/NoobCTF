@@ -2331,4 +2331,9 @@ $ cd a/b
 364. [8-ball](https://abuctf.github.io/posts/IronCTF/)
 - linux使用mount命令挂载`DOS/MBR boot sector`文件
 365. [Doubly Secure](https://github.com/PuruSinghvi/CTF-Writeups/tree/main/SunshineCTF%202024/Crypto/Doubly%20Secure)
-- [age](https://github.com/FiloSottile/age)加密系统的使用。该系统给出的公钥以`age1`开头。生成公私钥可用 https://age-wasm.ey.r.appspot.com/
+- [age](https://github.com/FiloSottile/age)加密系统的使用。该系统给出的公钥以`age1`开头。生成公私钥可用 https://age-wasm.ey.r.appspot.com
+366. [Rogue Robloxians](https://github.com/PuruSinghvi/CTF-Writeups/tree/main/SunshineCTF%202024/Forensics/Rogue%20Robloxians)
+- 如何获取roblox游戏的旧版本
+- 其他wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#rogue-robloxians
+367. [Dropped ELF](https://github.com/PuruSinghvi/CTF-Writeups/tree/main/SunshineCTF%202024/Reversing/Dropped%20ELF)
+- 恢复被打乱的elf文件块

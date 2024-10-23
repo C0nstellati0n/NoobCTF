@@ -2101,3 +2101,6 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 217. [heap01](https://hackmd.io/@naup96321/Byot537gJg)
 - libc 2.35，覆盖tcache_pthread_struct以获取任意地址写
 - 更详细的解析和非预期解： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#heap01 。非预期解利用了之前见过的一个点，分配一个大chunk会导致malloc使用mmap分配内存，且这块内存在libc之上，偏移固定；然后利用索引越界覆盖libc的got表getshell。然而我自己调试的时候发现大chunk所在地在libc下面，而且中间有块guard page。这导致这个chunk与libc的偏移不固定。我用的libc和远程是一个版本的，可能是机器的问题
+218. [Secure Flag Terminal](https://elchals.github.io/posts/SunshineCTF_Write-Up)
+- libc 2.27。覆盖tcache_pthread_struct以获取任意地址写。看起来tcache_pthread_struct位于heap base+0x10的地方
+- wp里有个泄漏的技巧：题目因为有seccomp，没法用one_gadget；但是可以将malloc_hook覆盖成puts。这样如果能控制分配的chunk的size的话，就有了任意地址读

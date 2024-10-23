@@ -93,6 +93,14 @@ python第三方库相关的漏洞与特性
 - reportlab是一个动态生成pdf的第三方库。该库曾出现过两个不同的rce漏洞
 - 特征：`reportlab==3.6.12`
 - 关键词：reportlab
+5. [PyYAML](https://github.com/yaml/pyyaml)反序列化
+- PyYAML库支持python对象的序列化，因此反序列化时就容易出问题
+- 特征：`yaml.load`
+- 无关键词，原wp链接已损坏。此为补充的漏洞介绍链接： https://book.hacktricks.xyz/pentesting-web/deserialization/python-yaml-deserialization
+6. [Starlette](https://www.starlette.io)框架条件竞争
+- 此框架中存在条件竞争，允许攻击者下载文件大小为零（`os.stat`给出大小）的`/proc`目录下的文件
+- 特征：网站使用starlette框架的FileResponse
+- 关键词：Starlette
 
 ### 其他
 
@@ -104,6 +112,7 @@ python语法/内置库和函数本身的漏洞和特性。该项可能省略部�
   - `pickle.loads`
   - `numpy.load(file, allow_pickle=True)`
   - `hummingbird.ml.load`
+  - 网站使用bottle框架且用户可控制cookie内容
 - 关键词：pickle
 2. 变量存储位置
 - python将对象、变量等内容存储在堆上。可以利用`/proc/self/maps`和`/proc/self/mem`读取到变量的内容。注意`/proc/self/mem`内容较多而且存在不可读写部分，直接读取会导致程序崩溃。因此需要搭配`/proc/self/maps`获取堆栈分布，结合maps的映射信息来确定读的偏移值
@@ -140,3 +149,33 @@ python语法/内置库和函数本身的漏洞和特性。该项可能省略部�
 >>> splitext('a/.html')
 ('a/.html', '')
 ```
+10. urllib3请求走私
+- `urllib3.PoolManager().request()`可以发送请求。该函数有个可选参数headers，允许用户以字典的形式传入自定义header。如果攻击者可以控制任意header名及其值，会出现请求走私
+- 特征：可控制headers字典键值对
+- 关键词：`http.request`
+11. urllib url解析漏洞
+- 在url前面加个空格会导致urllib认为该url的scheme为空
+- 特征：urllib版本小于`3.11.4`
+- 关键词：urllib
+
+## PHP
+
+### 特性/漏洞
+
+php语言本身的特性和相关可利用的漏洞
+
+1. 模板注入
+- 原理类似Python/Flask/模板注入，只不过是不同语言的不同模板引擎
+- 特征
+  - 网站会回显用户输入内容
+  - 不对用户输入做过滤
+- 关键词
+  - twig
+  - smarty
+
+### 技巧
+
+题目中常见的技巧
+
+1. 伪协议
+- php里的伪协议众多，能干的事情从文件读取到rce。详细的介绍见 https://segmentfault.com/a/1190000018991087
