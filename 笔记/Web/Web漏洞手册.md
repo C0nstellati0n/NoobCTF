@@ -172,6 +172,10 @@ php语言本身的特性和相关可利用的漏洞
 - 关键词
   - twig
   - smarty
+2. preg_replace命令执行
+- preg_replace函数有个`/e`选项。该选项使preg_replace将 replacement 参数当作 PHP 代码（在替换完成之后）执行。要确保 replacement 构成一个合法的 PHP 代码字符串，否则 PHP 会报告在包含 preg_replace 的行中出现语法解析错误
+- 特征：preg_replace函数使用了`/e`选项
+- 关键词：preg_replace
 
 ### 技巧
 
@@ -179,3 +183,17 @@ php语言本身的特性和相关可利用的漏洞
 
 1. 伪协议
 - php里的伪协议众多，能干的事情从文件读取到rce。详细的介绍见 https://segmentfault.com/a/1190000018991087
+- 特征:能控制以下任一函数的参数
+  - include
+  - require
+  - file_get_contents
+  - file_put_contents
+- 关键词：伪协议
+2. 反引号和`<?=`
+- php中，反引号可用来直接执行系统命令。`<?=`是echo的别名用法，用来输出命令执行结果
+- 特征：已获取rce，但题目有过滤。此技巧可用来绕过滤
+- 关键词：反引号
+3. 无字母数字
+- 即使在所有字母和数字都被过滤的情况下，仍然可以用部分特殊符号和php的自增语法组建出全部字母的数字
+- 特征：已获取rce，但题目有过滤。此技巧可用来绕过滤
+- 关键词：无字母数字
