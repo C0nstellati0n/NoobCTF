@@ -401,7 +401,7 @@ for i in range(300,1000):
 	- php smarty 5模板注入rce。棘手的点在于smarty 5移除了很多方便rce的内容（如`system`），这个时候就要看题目里有没有可疑的库（明明dockerfile里安装了，但是完全没用，或者用得很没必要），里面可能有可用的函数
 	- smarty每次成功渲染一个模板文件后，都会在当前目录生成一个`templates_c`文件夹，里面的每个文件内容都是被渲染的模板转换成php文件的结果。不知道是不是个例，似乎模板文件名也会在转义后原封不动写入文件。该文件的名称同机器下完全一致（在docker里还原环境后查看生成的文件名，和服务端实际生成的文件名相同）
 	- 具体payload见[官方wp](https://github.com/idekctf/idekctf-2024/tree/main/web/untitled-smarty-challenge)。其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#untitled-smarty-challenge
-- [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
+- [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Python.md)
     - `{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("cmd").read()}}{%endif%}{% endfor %}`
     - https://sanlokii.eu/writeups/downunderctf/parrot-the-emu/
 

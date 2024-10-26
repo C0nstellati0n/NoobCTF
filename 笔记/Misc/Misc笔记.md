@@ -1469,8 +1469,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - how to load and unload a kernel module with the Linux kernel
 124. [vimjail](https://github.com/sigpwny/UIUCTF-2023-Public/blob/main/challenges/misc/vimjail2-5/SOLVE.md)
 - 一个有关禁用一些键和限制权限后在vim里尝试读当前目录下的文件的挑战系列。以下是我收集的其他解法
-    - https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/vimjail1
-    - https://github.com/daffainfo/ctf-writeup/tree/main/UIUCTF%202023/vimjail2 ：对`Ctrl+r=`然后tab键解法的补充。按下`Ctrl+r=`后可以使用vim的[builtin](https://vimhelp.org/builtin.txt.html)，tab键使用vim的自动补全功能就能选择要执行的函数了
+    - https://github.com/daffainfo/ctf-writeup/tree/main/2023/UIUCTF%202023/vimjail1
+    - https://github.com/daffainfo/ctf-writeup/tree/main/2023/UIUCTF%202023/vimjail2 ：对`Ctrl+r=`然后tab键解法的补充。按下`Ctrl+r=`后可以使用vim的[builtin](https://vimhelp.org/builtin.txt.html)，tab键使用vim的自动补全功能就能选择要执行的函数了
     - https://flocto.github.io/writeups/2023/uiuctf/uiuctf-writeups/#vimjail-2-and-25 ：对`eval(readfile(glob('flag.t*t'))[0])`解法的解析
     - https://github.com/Norske-Nokkelsnikere/writeups/blob/main/2023/uiuctf-2023/misc-vimjail.md
     - https://github.com/pjg11/CTF-Writeups/blob/main/2023-UIUCTF/vimjail.md
