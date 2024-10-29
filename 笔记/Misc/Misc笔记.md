@@ -1,8 +1,10 @@
 # Misc笔记
 
-## Linux privilege escalation（提权）
+## Linux privilege escalation（提权）/运维
 
 之前曾经把这类题分到过pwn里，想了想感觉做这种题包含的东西很综合，不如放misc（说实话这才是我心目中的misc分类，包罗万象，单独放在哪个分类里都感觉不足；而不是一些奇怪的guessy题）
+
+想了一下干脆把运维题一起放进来。这两种题目题型都很少，不抱团分两个感觉不够看
 
 - [privilege-not-included](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/privilege-not-included.md)
     - 无权限机器使用python安装[pspy](https://github.com/DominicBreuker/pspy)监控进程
@@ -22,6 +24,9 @@
 - [No crypto](https://github.com/0xM4hm0ud/CTF-Writeups/tree/main/GPN%20CTF%202024/Miscellaneous/No%20crypto)
     - [path hijacking](https://vk9-sec.com/privilege-escalation-linux-path-hijacking/)。若某个具有root权限的binary A内部调用了一个没有用绝对路径的binary B，可以伪造PATH环境变量，劫持A调用的B
     - stat命令可以查看文件的创建、读取等时间
+- [哦不！我的nginx！](https://github.com/XDSEC/MoeCTF_2024/tree/main/Official_Writeup/DevOps)
+    - 如何在机器没有glibc和busybox的情况下恢复libc。如果机器还有能用的bash的话，可以用bash的内建指令echo或printf读写文件。比如`printf 'xxx' > /bin/xxx`即可恢复任意文件。到这一步还不能恢复glibc，因为没有chmod修改libc的权限。不过可以用busybox恢复完整的指令集。有了busybox后就能用其内部的netcat在两台机器间传输文件了。这一步也可以用两台机器间的`/dev/tcp/`伪协议替代
+    - 似乎这个方法需要两台机器才能成立？不知道有没有单纯一台机器的做法，比如直接printf一个libc？
 
 ## Digital Forensics and Incident Response(DFIR)
 
@@ -332,6 +337,7 @@ f.close()
 31. mimikatz可分析dmp后缀文件并获取密码。例题：[[安洵杯 2019]Attack](../../CTF/BUUCTF/Misc/[安洵杯%202019]Attack.md)
 32. 当一串base64解码后是`Salted__`，可能的密文格式为AES，3DES或者Rabbit。
 33. usb流量包数据提取。例题:[usb](../../CTF/moectf/2022/Misc/usb.md)
+- 如果是拿数字键盘区输入的数字，很多常见脚本都没有对应的键值对。需要自己搜索然后加进去。见 https://github.com/XDSEC/MoeCTF_2024/blob/main/Official_Writeup/Misc/Moectf%202024%20Misc%20Writeup.md
 34. rar文件可以通过更改文件结构隐藏文件，效果是让rar里有的文件解压不出来。用010 Editor打开rar文件，注意用文件名的区域开头是否是74（在[RAR文件结构](https://www.freebuf.com/column/199854.html)中，文件块的位置应该是74并不是7A，74让文件可以被解压出来，7A则不能），如果不是要改成74让文件被解压出来。例题:[USB](https://blog.csdn.net/mochu7777777/article/details/109632626)
 35. python3 单字节16进制异或结果写入文件。今天遇到一道题，文本文件里的内容需要需要单字节与5异或后转为16进制写入文件。不知道为啥大佬们的脚本我用不了，可能是版本的问题，故自己写了一个python3的简陋玩意。题目:[[GUET-CTF2019]虚假的压缩包](https://blog.csdn.net/mochu7777777/article/details/105367979)
 
@@ -1580,6 +1586,9 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
         - 查看系统注册表（SYSTEM registry）。包含机器的hostname
     - `vol.py -f ctf.raw --profile profile hashdump -y addr -s addr`
         - https://github.com/volatilityfoundation/volatility/wiki/Command-Reference#hashdump :find the local user
+- [ez_Forensics](https://github.com/XDSEC/MoeCTF_2024/blob/main/Official_Writeup/Misc)
+    - `vol.py  -f ctf.raw --profile=profile cmdscan`
+        - 获取cmd命令内容
 131. [Attaaaaack4](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack4)
 - 时刻注意那些名字类似windows内置文件的文件，它们可能是伪装的恶意病毒。如`runddl.exe`。它的名字类似`rundll.exe`,但是后者用于run Dynamic Link Library (DLLs) on the Windows operating system，而前者是恶意文件。
 132. [Attaaaaack8](https://github.com/daffainfo/ctf-writeup/tree/main/CrewCTF%202023/Attaaaaack8)

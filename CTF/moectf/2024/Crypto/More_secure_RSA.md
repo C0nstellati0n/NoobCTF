@@ -12,3 +12,4 @@ N = 1582486998399823540384313363363200260039711250093373548450892400684356890467
 r=N//n
 print(long_to_bytes(nthroot_mod(C,e,r)))
 ```
+好像不是预期解？预期解见 https://github.com/XDSEC/MoeCTF_2024/blob/main/Official_Writeup/Crypto/MoeCTF2024%20Crypto%20Writeup.md

@@ -549,6 +549,8 @@ for i in range(1,e):
     - 已知p或q高位的coppersmith。以后遇见题目里奇怪的生成质数方式时一定要用代数乘出来看看结果，不然根本看不出来一些特殊的关系
 - [Rivest, Shamir, Adleman 1](https://bytethecookies.github.io/writeups/ironctf2024/rivest_shamir_adleman_1)
     - 一个经典的coppersmith p高位泄漏。不过这题到最后发现e和phi不互质。和之前我见过的情形不太一样，这题在分解n后尝试计算所有可能的密文。见 https://medium.com/@g2f1/bad-rsa-keys-3157bc57528e
+- [RSA_revenge](../../CTF/moectf/2024/Crypto/RSA_revenge.md)
+    - 分解互为emirp（反素数）的两个质数的乘积。注意数字的进制不重要。无论在二进制，十进制，还是十六进制下互为反素数都能尝试分解
 
 ## Sagemath
 
@@ -635,6 +637,8 @@ sympy也放这了
     - “增强版”wiener attack。想要wiener attack成功有个条件：d必须小于关于n的特定bit数。`Verheul and van Tilborg’s Extension`可以将这个条件变得宽松些，见 https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=158dd0abfe27fdf2ceba24c3d168df93743af569 第7页式子`(7)`
 - [babe-Lifting](../../CTF/moectf/2024/Crypto/babe-Lifting.md)
     - partial key exposure attack(d泄漏高位或低位)。脚本见 https://github.com/jvdsn/crypto-attacks/blob/master/attacks/rsa/partial_key_exposure.py
+    - 官方wp见 https://github.com/XDSEC/MoeCTF_2024/blob/main/Official_Writeup/Crypto/MoeCTF2024%20Crypto%20Writeup.md 。这个脚本我比赛时也试过，不知道为什么出不来结果
+
 ## Lattice(格)
 
 是的我需要一个格题分类。虽然我根本就不懂什么是格
@@ -2709,3 +2713,10 @@ assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
 - 使用bkcrack工具进行zip已知明文攻击。若明文包含换行符，注意换行符使用的是LF还是CRLF。unix/linux使用前者，windows使用后者。提供bkcrack错误的明文会影响密码的破解
 160. [Minecraft cipher](https://github.com/kevinychen/flame-ctf-writeups/blob/main/ironCTF-2024/minecraft-cipher.md)
 - 给出4个lcg的后23位输出，爆破lcg。因为只有后23位输出有用，所以可以把全部操作看成是模`2^23`下的操作。不过不是很理解wp的爆破逻辑：we can build the correct pair incrementally by computing the possible values of `(a, b) mod 2`, then mod 4, then mod 8, etc. If we know the possible values of `(a, b) mod 2^n`, then the only possible values mod $2^{n+1}$ are `(a, b)`, `(a, b+2^n)`, `(a+2^n, b)`, `(a+2^n, b+2^n)`, and we can filter down to only the values that satisfy the conditions mod $2^{n+1}$
+161. [ezLCG](https://github.com/XDSEC/MoeCTF_2024/blob/main/Official_Writeup/Crypto/MoeCTF2024%20Crypto%20Writeup.md)
+- 比赛的时候搜了“dsa with lcg”，出来了这篇论文： https://cseweb.ucsd.edu/~mihir/papers/dss-lcg.pdf 。但使用这篇论文的前提是：
+    - 获取至少两组dsa签名
+    - dsa里生成nonce k的算法用的是lcg
+    - 已知dsa和lcg的模数，且知道lcg的参数a
+
+比赛时卡在第三点。题目给了五组签名，但不知道lcg的参数a。看wp才知道这五组签名都有用，正好能提炼出一个模p的一元二次方程。这种攻击应该叫“related nonce attack”吗？
