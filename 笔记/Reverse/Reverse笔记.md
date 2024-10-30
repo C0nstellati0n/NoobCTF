@@ -1346,3 +1346,7 @@ mov     r8, qword [r13]
   - https://www.zellic.io/blog/introducing-movetool/
   - 另一个有关move的wp： https://leoq7.com/2023/02/PBCTF-Move-VM
   - 反编译器： https://github.com/move-language/move-on-aptos ， https://aptoslabs.medium.com/move-revealed-the-revela-decompiler-b206eaf48b45
+196. [upx-revenge](https://github.com/XDSEC/MoeCTF_2024/blob/main/Official_Writeup/Reverse/Moectf%202024%20Reverse%20Writeup.md)
+- UPX解压的时候会检测程序段名称是否为UPX0\UPX1这类的,如果段名称被人为篡改则无法正常解压。把名称改回来，或者动调，手动脱壳即可
+197. [Cython-Strike: Bomb Defusion](http://www.qetx.top/posts/14919)
+- 如何“逆向”pyd文件。似乎这种文件没法反编译，只能用import指令导入模块后用help查看模块里作者提供的内容

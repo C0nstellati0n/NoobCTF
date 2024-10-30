@@ -2104,3 +2104,5 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 218. [Secure Flag Terminal](https://elchals.github.io/posts/SunshineCTF_Write-Up)
 - libc 2.27。覆盖tcache_pthread_struct以获取任意地址写。看起来tcache_pthread_struct位于heap base+0x10的地方
 - wp里有个泄漏的技巧：题目因为有seccomp，没法用one_gadget；但是可以将malloc_hook覆盖成puts。这样如果能控制分配的chunk的size的话，就有了任意地址读
+219. [NX_on!](https://github.com/XDSEC/MoeCTF_2024/blob/main/Official_Writeup/Pwn/MoeCTF%202024%20Pwn%20Writeup.md)
+- 注意`void *memcpy(void *dest, const void *src, size_t n)`中长度参数n为无符号整数。如果传入负值会引发非预期行为，比如读很多个字节。但很多负值输入进去后会导致程序崩溃（我自己比赛时就卡在这点。函数实现很长我也懒得调试。现在觉得应该用fuzz的方法做，一个一个负值试，看哪个不崩溃就用哪个）
