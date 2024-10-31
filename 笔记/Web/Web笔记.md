@@ -613,7 +613,7 @@ show_source("flag.php")
 30. MD5hash长度扩展攻击+chrome利用代码添加cookie。例题：[[De1CTF 2019]SSRF Me](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BDe1CTF%202019%5DSSRF%20Me.md)
 31. ssi注入漏洞。例题:[[BJDCTF2020]EasySearch](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BBJDCTF2020%5DEasySearch.md)
 32. idna编码+utf-8解码造成的过滤绕过。例题:[[SUCTF 2019]Pythonginx](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5BSUCTF%202019%5DPythonginx.md)
-33. php格式化字符串逃逸+数组绕过strlen检查。例题1:[[0CTF 2016]piapiapia](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5B0CTF%202016%5Dpiapiapia.md)；例题2:[baby_unserialize](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Web/baby_unserialize.md)
+33. php反序列化逃逸+数组绕过strlen检查。例题1:[[0CTF 2016]piapiapia](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/BUUCTF/Web/%5B0CTF%202016%5Dpiapiapia.md)；例题2:[baby_unserialize](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/moectf/Web/baby_unserialize.md)
 34. php普通无字母数字getshell+绕过disable functions
 35. chrome console发送post请求
 
@@ -3736,7 +3736,7 @@ window.recaptcha=true;
 412. [floordrop](https://hodl.page/entry/DiceCTF-2024-Quals-floordropblockchain)
 - (完全看不懂)solidity blockchain frontrunning。唯一明白的点是提高gas price让服务器先执行我们要的函数再执行其他函数。作者还提到了一个bomb的概念，用bomb将一个block内所有的gas消耗完毕，剩下的调用会推迟到下一个block执行
 413. [Simple WAF](https://github.com/abdoghazy2015/CTF-Write-Ups/tree/main/0xL4ughCTF2024/Web/Simple%20WAF)
-- php preg_match在执行失败时会返回false。可以用`phpinfo()`查看php pcre的匹配上限，超过上限后便会匹配失败
+- php preg_match在执行失败时会返回`PREG_BACKTRACK_LIMIT_ERROR`，在if语句里作为条件会被强制转换为false。可以用`phpinfo()`查看php pcre的匹配上限，超过上限后便会匹配失败
 414. [DisLaugh](https://omakmoh.me/dislaugh/)
 - 用ElectronJS搭建的程序源代码可在`resources/app.asar`拿到。可用工具[asar](https://github.com/electron/asar)从该后缀文件中提取源代码
 - jquery的`jQuery.append()`不能用于未经过滤的用户输入，有xss的风险

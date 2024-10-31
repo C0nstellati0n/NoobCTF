@@ -9,8 +9,6 @@
 但是过滤了好多东西，/过滤了，.过滤了，基本能过滤的都过滤了。这怎么玩，看了[wp](https://blog.csdn.net/mochu7777777/article/details/105151353)才知道有源码没给出。
 
 ```php
-在网上找到的源码2333：
-
 <?php
 
 putenv('PATH=/home/rceservice/jail');

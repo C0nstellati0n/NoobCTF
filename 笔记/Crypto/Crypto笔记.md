@@ -2720,3 +2720,8 @@ assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
     - 已知dsa和lcg的模数，且知道lcg的参数a
 
 比赛时卡在第三点。题目给了五组签名，但不知道lcg的参数a。看wp才知道这五组签名都有用，正好能提炼出一个模p的一元二次方程。这种攻击应该叫“related nonce attack”吗？
+
+162. [State](https://merkletr.ee/ctf/2024/heroctf/state)
+- 给出rc4加密后的sbox（rc4加密会影响sbox，加密后的sbox和加密前就不一样了）和密文，逆向回明文
+163. [Halloween](https://github.com/rerrorctf/writeups/blob/main/2024_10_25_HeroCTF24/crypto/halloween)
+- [gostcrypto](https://github.com/drobotun/gostcrypto)库ctr模式实现漏洞。gostcrypto中的gostcipher本身没有什么漏洞，但这个库的实现导致ctr模式异或时用的nonce每0xff轮就会重复
