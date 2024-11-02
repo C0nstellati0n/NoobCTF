@@ -1057,7 +1057,7 @@ Ubuntu默认安装的PHP中session.serialize_handler默认设置为php。
 
 111. curl发送自定义数据包（PUT方法，origin，-u选项等）。例题:[[BSidesCF 2020]Hurdles](https://blog.csdn.net/weixin_44037296/article/details/112298411)
 112. thinkphp V6.0.x 反序列化链利用。例题:[[安洵杯 2019]iamthinking](https://xz.aliyun.com/t/9546)
-113. php hash_hamc函数绕过。`hash_hmac($algo, $data, $key)`：当传入的data为数组时，加密得到的结果固定为NULL。例题:[[羊城杯 2020]Blackcat](https://blog.csdn.net/qq_46263951/article/details/119796671)
+113. php hash_hmac函数绕过。`hash_hmac($algo, $data, $key)`：当传入的data为数组时，加密得到的结果固定为NULL。例题:[[羊城杯 2020]Blackcat](https://blog.csdn.net/qq_46263951/article/details/119796671)
 114. node js 8.12.0版本的[拆分攻击（CRLF）可造成SSRF](https://xz.aliyun.com/t/2894)+pug模板引擎命令执行。例题:[[GYCTF2020]Node Game](https://blog.csdn.net/cjdgg/article/details/119068329)
 115. php7.4的FFI扩展安全问题以及利用（绕过disabled functions）。例题:[[RCTF 2019]Nextphp](https://blog.csdn.net/RABCDXB/article/details/120319633)
 116. perl 文件上传+ARGV的利用。例题:[i-got-id-200](../../CTF/攻防世界/6级/Web/i-got-id-200.md)
@@ -4030,3 +4030,7 @@ new URL("//a.com","http://b.com")
 - 有现成的浏览器： https://browser.pub
 498. [Puzzling](https://github.com/rehackxyz/REUN10N/tree/main/CTF-writeups/2024/SunshineCTF/web-puzzling)
 - xxe，但是引用外部dtd文件（需要题目机器能访问外网）
+499. [ComplainIO](https://stefanin.com/posts/heroctf_complainio)
+- 3.5.5及以下版本的Carbone存在可以使原型链污染漏洞到rce的gadget。意味着Carbone本身不存在任何漏洞，但如果使用Carbone的程序里出现原型链污染，则攻击者可以利用Carbone里的代码实现rce。具体poc介绍见 https://archives.pass-the-salt.org/Pass%20the%20SALT/2024/slides/PTS2024-RUMP-02-Templating_Martin.pdf
+- 注意直接使用poc里的payload可能会报错，这是因为poc里的payload仅考虑了只有Carbone的环境。如果程序还使用了其他第三方库，比如这题的Sequelize，污染原型链的操作也会影响到其他库，进而导致报错。看起来没啥好的解决办法，只能慢慢调试补救报错的地方
+- 非预期解： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#complainio 。一条似乎更复杂的carbone利用链

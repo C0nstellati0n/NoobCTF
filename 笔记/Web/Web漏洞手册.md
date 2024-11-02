@@ -189,6 +189,7 @@ php语言本身的特性和相关可利用的漏洞
 - 关键词
   - raw md5
   - md5相关特性
+  - 绕过md5
 4. intval截断
 - 在老版本的php中，intval会截断科学计数法下的字符串。但这样的字符串进行运算后会返回其运算后的值。比如`intval("1e4")`结果为1；`intval("1e4"+1)`结果为10001。该特性在php7修复
 - 特征：php版本小于7
@@ -214,6 +215,50 @@ php语言本身的特性和相关可利用的漏洞
   - 用户可以输入任意长度的内容
   - 使用`if(preg_match('xxx', $input))`作为条件
 - 关键词：pcre
+9. basename特性
+- basename函数返回路径中的文件名部分。但如果文件名是一个不可见字符，便会将上一个目录作为返回值：
+```php
+$a="/c.php/test"
+basename($a) => test
+$b="/c.php/%ff"
+basename($b) => c.php
+```
+- 关键词：basename
+10. url解析
+- 当访问一个`存在的文件/不存在的文件`url时，php会自动忽略不存在的部分。比如`/index.php`和`/index.php/dosent_exist.php`都能访问到`index.php`
+- 关键词：url解析特性
+11. mt_rand种子爆破
+- mt_rand函数生成的随机数是伪随机数，不能用于生成安全令牌、核心加解密key等内容。给出mt_rand的几个输出，可以恢复其seed，进而预测接下来的随机数
+- 程序使用mt_rand且可以得知连续的几个输出
+- 关键词：`mt_rand`
+9. exif_imagetype绕过
+- exif_imagetype函数读取文件开头的几个字节。如果这些字节在已知的图片签名内，返回true；否则返回false。只需要在文件开头加上一些特殊的字节就能使任意文件被伪装成图片
+- 关键词：exif_imagetype
+10. open_basedir绕过
+- open_basedir是PHP中为了防御PHP跨目录进行文件（目录）读写的设置。但存在绕过手段使攻击者可以读取限制之外的文件
+- 特征：phpinfo中记录了open_basedir的值
+- 关键词：open_basedir
+11. create_function代码注入
+- create_function是php里用于动态生成函数的函数，在新版本已废弃。其内部实现可能与拼接有关，见以下payload：
+```php
+$newfunc = create_function('', '}eval($_POST["cmd"]);//');
+```
+结果如下：
+```php
+function newfunc(){
+}eval($_POST["cmd"]);//}
+```
+- 特征：可以控制create_function的参数
+- 关键词：create_function
+12. 绕过require_once函数
+- require_once函数保证一个文件只能被包含一次。但函数的实现有瑕疵，允许攻击者用`/proc/self`目录绕过限制
+- 关键词：require_once
+13. parse_url绕过
+- 在path前多加几个斜线`/`可以绕过部分过滤
+- 关键词：parse_url
+14. hash_hmac函数特性
+- `hash_hmac($algo, $data, $key)`：当传入的data为数组时，加密得到的结果固定为NULL
+- 关键词：hash_hmac
 
 ### 技巧
 
@@ -251,3 +296,25 @@ php语言本身的特性和相关可利用的漏洞
 - 部分题目的黑名单/白名单函数比较刁钻。这时构造eval的payload时可以考虑`$_GET[0]($_GET[1])`，用较少的字符实现任意shell
 - 特征：eval
 - 关键词：数学函数（利用常见数学函数构造shell）
+8. 文件操作技巧
+- PHP中可以使用POST或者PUT方法进行文本和二进制文件的上传。文件被上传后，默认存储到服务端的默认临时目录中。正常来说该文件会在表单请求结束时被删除。但如果php非正常结束，比如崩溃，那么这个临时文件就会永久的保留。比如，在上传木马的同时用`php://filter/string.strip_tags`使php崩溃重启，存有木马的tmp file就会一直留在tmp目录。进行文件名爆破并连接木马就可以getshell
+- 特征
+  - 可以得知tmp下目录的文件或允许爆破文件名
+  - 可以使php崩溃
+  - 有include等文件包含函数包含木马文件
+- 关键词：操作trick
+9. 伪协议绕过exit
+- 有些程序会在文件开头加上一句`exit`，使得后续拼接的shell内容无法执行。此时可以用伪协议绕过开头的exit
+- 特征：程序允许写入并上传shell文件，但会在开头加上exit
+- 关键词：绕过exit
+10. FFI扩展利用
+- php 7.4新加了FFI扩展功能，允许php调用C语言写的库。这也为攻击者提供了绕过disable_functions的手段。只需加载libc里的system函数即可执行系统命令
+- 特征
+  - phpinfo中显示众多disable_functions
+  - 配置项`ffi.enable=1`
+  - 没有`ffi.enable=preload`
+- 关键词：FFI扩展
+11. `_SESSION`数组的定义
+- `_SESSION`数组在`session_start()`初始化后才产生。如果在`php.ini`中设置`session.auto_start=On`，那么PHP每次处理PHP文件的时候都会自动执行`session_start()`。但是`session.auto_start`默认为Off。与Session相关的另一个叫`session.upload_progress.enabled`，默认为On，在这个选项被打开的前提下在multipart POST的时候传入PHP_SESSION_UPLOAD_PROGRESS，PHP会执行`session_start()`
+- 特征:题目使用`isset($_SESSION)`控制文件的访问权限。且只要求`_SESSION`数组被定义，不要求`_SESSION`数组里有值
+- 关键词：`SESSION_UPLOAD`
