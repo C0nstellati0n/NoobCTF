@@ -287,6 +287,22 @@
     - 这题比较特别，xss payload长度限制在31个字符，而且admin bot先访问攻击者url再登录网站。题目在`/profile`下有xss payload，登录后自动重定向至`/profile`。目标是窃取admin在`/notes`下的flag。简述wp的思路：准备两个账号，attacker1和attacker2，账号里的xss payload都是`eval(window.name)`。记录下attacker2账号的cookie，称为`ATTACK`。利用csrf使admin登录attacker1账号，设置一个`path=/profile`的cookie，内容为`ATTACK`。接着利用cookie jar overflow登出attacker1账号。按照admin bot的代码逻辑，此时admin bot登录admin账号。注意此时重定向到`/profile`用的是attacker2的cookie，便可以执行提前准备好的窃取notes的payload（访问`/notes`时的cookie还是admin的，不影响拿flag）
 - [Beautiful Buttons](https://abdulhaq.me/blog/iron-ctf-2024)
     - css injection泄漏shadow dom里的内容。还是那个熟悉的`:host-context`，之前在IN-THE-SHADOWS里见过。不过这题的csp很严，没法导入任何外部资源，故无法外带数据。因此需要利用Chromium的一个bug，使Chromium进入无限循环然后崩溃。而页面是否崩溃在admin bot页面有回显，借此泄漏出信息
+- [Telechat](https://github.com/HeroCTF/HeroCTF_v6/tree/main/Web/Telechat)
+    - 题目是一个electron应用+nodejs后端的组合，两者用socket（`socket.io`库）通信。目标是执行根目录下的可执行文件。首先需要拿到xss，以下是xss部分的关键点：
+        - 有个很明显的self xss，在本地可以轻松构建payload。但是程序在发送payload到服务器之前会过滤payload
+        - bot通过请求服务器拿到消息内容，因此需要以某种方法劫持bot请求的服务器从而绕过过滤，直接从恶意服务器发送xss payload
+        - 前端过滤了uuid格式，但后端没有。攻击者可以直接请求后端的`socket.io`服务器从而输入任意格式的“uuid”
+        - uuid最终在创建`socket.io` opener的代码里使用（conv_uuid）：
+        ```js
+        let socket_bot = io(window.electron.api_url,{
+            path: "/reviews/"+conv_uuid+"/"
+        });
+        ```
+        既然conv_uuid被攻击者控制，这里便出现了服务端路径穿越
+        - `socket.io`内部的实现没有遵循RFC，使用了遵循重定向的库。意味着如果我们能让题目使用的`socket.io`服务器A重定向到我们的恶意`socket.io`服务器B，受害者将与B进行通信
+        - 后端服务器的错误实现（将路径直接放到location处）致使攻击者可以进行任意的重定向。在js中，`//`被视为实际的scheme（http 或 https）。发送`GET //heroctf.fr`给后端服务器，会返回`Location: //heroctf.fr`，直接重定向至`/heroctf.fr`，某个受攻击者控制的恶意服务器。此时成功劫持服务器，能使bot执行任意xss payload
+    - 当然xss本身是没法实现文件执行的。主要是题目重写了electron应用的下载功能，使得应用在用户下载文件时应用也会把文件内容存储到当前目录。问题是文件名由攻击者控制，于是又出现了一个路径穿越，这次直接是任意文件写。再利用strace得知应用启动时会加载`libX11-xcb.so.1`,于是写一个恶意库文件传上去。最后故意崩溃应用。因为应用重启会加载库文件，所以直接拿到rce
+    - 最后是`path.normalize`。这个函数会把一些奇奇怪怪的字符转成`/`，比如`į`
 
 ## SSTI
 
@@ -4033,4 +4049,4 @@ new URL("//a.com","http://b.com")
 499. [ComplainIO](https://stefanin.com/posts/heroctf_complainio)
 - 3.5.5及以下版本的Carbone存在可以使原型链污染漏洞到rce的gadget。意味着Carbone本身不存在任何漏洞，但如果使用Carbone的程序里出现原型链污染，则攻击者可以利用Carbone里的代码实现rce。具体poc介绍见 https://archives.pass-the-salt.org/Pass%20the%20SALT/2024/slides/PTS2024-RUMP-02-Templating_Martin.pdf
 - 注意直接使用poc里的payload可能会报错，这是因为poc里的payload仅考虑了只有Carbone的环境。如果程序还使用了其他第三方库，比如这题的Sequelize，污染原型链的操作也会影响到其他库，进而导致报错。看起来没啥好的解决办法，只能慢慢调试补救报错的地方
-- 非预期解： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#complainio 。一条似乎更复杂的carbone利用链
+- 非预期解： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#complainio 。一条似乎更复杂的carbone利用链。[官方wp](https://github.com/HeroCTF/HeroCTF_v6/tree/main/Web/ComplainIO)也不错
