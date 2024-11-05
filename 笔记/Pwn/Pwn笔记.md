@@ -64,6 +64,8 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
 	12. 再次用setxattr + FUSE技巧取回刚才free的对象A。前面说个这个技巧可以修改取到的对象的内容，于是这里就能修改到pg_vec内部的堆指针了
 	13. 使用User Space Mapping Attack (USMA)提权
   - 这题的灵感来源/参考： https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
+- [Buafllet](https://github.com/HeroCTF/HeroCTF_v6/tree/main/Pwn/Buafllet)
+  - 漏洞是uaf。通过open `/dev/ptmx`堆喷[tty_struct](https://github.com/smallkirby/kernelpwn/blob/master/technique/tty_struct.md)，泄漏kernel base并覆盖当前task的task_creds。程序开启了CONFIG_RANDOM_KMALLOC_CACHES，解决办法似乎是kmalloc一个大小为0x2001的chunk，这样就不会走随机cache的分支了
 
 ## Shellcode题合集
 
@@ -2106,3 +2108,14 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 - wp里有个泄漏的技巧：题目因为有seccomp，没法用one_gadget；但是可以将malloc_hook覆盖成puts。这样如果能控制分配的chunk的size的话，就有了任意地址读
 219. [NX_on!](https://github.com/XDSEC/MoeCTF_2024/blob/main/Official_Writeup/Pwn/MoeCTF%202024%20Pwn%20Writeup.md)
 - 注意`void *memcpy(void *dest, const void *src, size_t n)`中长度参数n为无符号整数。如果传入负值会引发非预期行为，比如读很多个字节。但很多负值输入进去后会导致程序崩溃（我自己比赛时就卡在这点。函数实现很长我也懒得调试。现在觉得应该用fuzz的方法做，一个一个负值试，看哪个不崩溃就用哪个）
+220. [BankRupst](https://github.com/HeroCTF/HeroCTF_v6/tree/main/Pwn/BankRupst)
+- 最摸不着头脑的一集。题目使用Unsafe Rust，预期漏洞是uaf：
+```rust
+    (*account).balance = 0;
+    (*account).deposits = 0;
+    let layout = Layout::new::<BankAccount>();
+    dealloc(account as *mut u8, layout);
+    account = ptr::null_mut();
+```
+可是程序不是在dealloc前将balance置零了吗？
+- 另一种解法： https://cnf409.github.io/posts/2024/10/heroctf-2024-pwn/bankrupst

@@ -1122,7 +1122,7 @@ index()
 127. [[NPUCTF2020]验证🐎](https://blog.csdn.net/hiahiachang/article/details/105756697)。本题的知识点有：
 - js中列表，对象等与字符串相加会导致强制类型转换，结果为字符串。可用这个特点绕过一些md5加盐。以及，绕过md5时如果程序启用了json，可以利用json构造对象绕过大部分限制。
 - js利用__proto__可从原型链上引出Function和String，Function用于构造函数，String用于得到fromCharCode绕过强制过滤。利用`process.mainModule.require('child_process').execSync('cat /flag')`进行rce，同时还利用了箭头函数。
-128. 可以使用以下内容来绕过php的getmagesize()函数获得的图片长宽。
+128. 可以使用以下内容来绕过php的getimagesize()函数获得的图片长宽。
 ```
 #define width 1
 #define height 1
@@ -1139,7 +1139,7 @@ var_dump(mb_strtolower('İ')==='i');
 ?>
 ```
 
-130. 可绕过php getmagesize()函数的图片马生成[工具](https://github.com/huntergregal/PNG-IDAT-Payload-Generator)。例题:[[CISCN2021 Quals]upload](https://blog.csdn.net/jiangdie666/article/details/116997461)
+130. 可绕过php getimagesize()函数的图片马生成[工具](https://github.com/huntergregal/PNG-IDAT-Payload-Generator)。例题:[[CISCN2021 Quals]upload](https://blog.csdn.net/jiangdie666/article/details/116997461)
 131. 网页版post上传文件代码。
 
 ```html
@@ -1454,7 +1454,9 @@ $('#ajax-load').load('/ajax/articles?cat=news');
 - JSONP路由callback的利用
 - [mXss](https://security.stackexchange.com/questions/46836/what-is-mutation-xss-mxss)（mutaion Xss，突变xss）+DOM Clobbering
 
-介绍mXss的[视频](https://www.youtube.com/watch?v=Haum9UpIQzU)(16:00开始)。内容可以简述为这篇[帖子](https://juejin.cn/post/6844903571578699790)的内容。这道题使用的mXss可能更像[这种](https://xz.aliyun.com/t/6413)。这道题需要利用JSONP调用一个函数，但这个函数有一些限制。因为输入的内容会被放入div标签中，于是用mXss使dom变异，多出来的结构刚好可以提供给DOM Clobbering。
+介绍mXss的[视频](https://www.youtube.com/watch?v=Haum9UpIQzU)(16:00开始)。内容可以简述为这篇[帖子](https://juejin.cn/post/6844903571578699790)的内容。这道题使用的mXss可能更像[这种](https://xz.aliyun.com/t/6413)。这道题需要利用JSONP调用一个函数，但这个函数有一些限制。因为输入的内容会被放入div标签中，于是用mXss使dom变异，多出来的结构刚好可以提供给DOM Clobbering
+
+mxss cheatsheet: https://sonarsource.github.io/mxss-cheatsheet
 
 162. [Proxy It](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/web/ProxyIt/writeup.md)。利用[request smuggling](https://portswigger.net/web-security/request-smuggling)（请求走私）访问被禁止的路径。
 163. [Pages of Turmoil](https://github.com/Dhanush-T/PCTF23-writeups/blob/main/web/PagesOfTurmoil/writeup.md)。

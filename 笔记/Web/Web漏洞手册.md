@@ -318,3 +318,20 @@ function newfunc(){
 - `_SESSION`数组在`session_start()`初始化后才产生。如果在`php.ini`中设置`session.auto_start=On`，那么PHP每次处理PHP文件的时候都会自动执行`session_start()`。但是`session.auto_start`默认为Off。与Session相关的另一个叫`session.upload_progress.enabled`，默认为On，在这个选项被打开的前提下在multipart POST的时候传入PHP_SESSION_UPLOAD_PROGRESS，PHP会执行`session_start()`
 - 特征:题目使用`isset($_SESSION)`控制文件的访问权限。且只要求`_SESSION`数组被定义，不要求`_SESSION`数组里有值
 - 关键词：`SESSION_UPLOAD`
+12. getimagesize相关绕过
+- 可用以下代码段绕过图片长宽:
+```
+#define width 1
+#define height 1
+```
+可用 https://github.com/huntergregal/PNG-IDAT-Payload-Generator 往图片里插入木马，并符合getimagesize格式
+- 关键词：getimagesize
+13. `pearcmd.php`的利用
+- `pearcmd.php`是pecl/pear中的文件。pecl是PHP中用于管理扩展而使用的命令行工具，而pear是pecl依赖的类库。在7.3及以前，pecl/pear是默认安装的。如果题目出现本地文件包含漏洞，就能利用这个文件getshell
+- 特征
+  - 题目已有本地文件包含漏洞
+  - 环境内有`pearcmd.php`
+- 关键词：pearcmd
+14. 文件包含rce
+- 当可以完全控制require/include的文件名时，就能使用[PHP filter chain generator](https://github.com/synacktiv/php_filter_chain_generator) getshell
+- 关键词：filter chain
