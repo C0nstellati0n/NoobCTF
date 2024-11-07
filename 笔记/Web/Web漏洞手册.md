@@ -259,6 +259,10 @@ function newfunc(){
 14. hash_hmac函数特性
 - `hash_hmac($algo, $data, $key)`：当传入的data为数组时，加密得到的结果固定为NULL
 - 关键词：hash_hmac
+15. bcrypt password_verify永真hash
+- 由于password_verify函数的错误实现，存在特殊的hash可以匹配所有密码，让函数返回true。见 https://github.com/php/php-src/security/advisories/GHSA-7fj2-8x79-rjf4
+- 特征：可以控制`password_verify("pwd", 'hash')`的hash部分
+- 关键词：password_verify
 
 ### 技巧
 
@@ -276,10 +280,12 @@ function newfunc(){
 - php中，反引号可用来直接执行系统命令。`<?=`是echo的别名用法，用来输出命令执行结果
 - 特征：已获取rce，但题目有过滤。此技巧可用来绕过滤
 - 关键词：反引号
-3. 无字母数字
+3. 无字母数字/引号
 - 即使在所有字母和数字都被过滤的情况下，仍然可以用部分特殊符号和php的自增语法组建出全部字母的数字
 - 特征：已获取rce，但题目有过滤。此技巧可用来绕过滤
-- 关键词：无字母数字
+- 关键词
+  - 字母数字
+  - 字母引号
 4. extract变量覆盖
 - [extract](https://www.php.net/manual/en/function.extract.php)是php里的一个函数。利用这个函数攻击者可以自定义/覆盖任何变量及其值
 - 特征：将用户控制的数组作为extract的参数，如`extract($_POST)`
@@ -335,3 +341,41 @@ function newfunc(){
 14. 文件包含rce
 - 当可以完全控制require/include的文件名时，就能使用[PHP filter chain generator](https://github.com/synacktiv/php_filter_chain_generator) getshell
 - 关键词：filter chain
+
+## XSS
+
+### 通用技巧
+
+只要符合要求就能用的技巧，与网站是什么语言搭建的无关
+
+1. 绕过csp
+- Content Security Policy(CSP)为网站设置执行代码，引入资源等内容时的安全策略。xss payload常与这几项有关，因此csp会阻挡payload的执行。大部分题目都会设置csp来提高构造payload的难度，所以需要学习常用的绕过csp的方法
+- 特征/关键词
+  - `script-src 'self' 'https://ajax.googleapis.com;'`:只能从当前网站和`https://ajax.googleapis.com`导入script。但`https://ajax.googleapis.com`本身存在可利用的xss
+  - `default-src 'self'`：阻挡跨域fetch。xss payload不能用fetch带出数据，但可以用`window.location`
+  - `default-src www.youtube.com`:youtube存在已知的jsonp端点，允许攻击者执行xss payload。相关题目的关键词是jsonp
+  - `default-src 'self';script-src 'none'`：条件比较苛刻，具体见例题。关键词:Noscript
+  - `default-src 'none';style-src 'unsafe-inline';script-src 'unsafe-eval' 'self';connect-src xxx;connect-uri xxx`：可用WebRTC绕过。关键词：WebRTC
+    - 如果题目基于chrome且admin bot不断更换自己使用的profile，这个csp下还有另一种做法：使用Credential Management API。见题目Elements
+  - 如果有办法测量admin bot访问网站的时间或成功与否，可利用这点构建测信道攻击。可以绕过任何csp。不过大部分题目不会暴露admin bot的状态，因此很多时候用不了。关键词：side channel
+2. css injection
+- 常在csp较为严格或有过滤时使用。主要利用css语法自带的内容匹配以及外部资源加载功能一点一点泄漏flag
+- 特征
+  - 能注入html，特别是css相关内容
+  - 没有阻止css加载外部资源的csp
+  - 要泄漏的内容在当前网页的html里（包括shadow dom，但在cookie等地方不行）
+- 关键词：css
+3. dom clobbering
+- 通过注入特定的html破坏js环境，从而影响代码逻辑。具体例子见 https://portswigger.net/web-security/dom-based/dom-clobbering 。其实和xss没有太大关系，只是js+html的奇怪特性；但不知道为什么目前我见过的例题两者总是一起打配合
+- 特征
+  - 能够注入html代码
+  - 有诸如`if(xxx.xxx)`的逻辑，且if语句里的代码块是目标
+  - 需要覆盖、设置某个字段或函数
+- 关键词：dom clobbering
+4. xs leak
+- 目前我见过的xs leak题目基本局限于“注入js代码，利用测信道攻击泄漏内容“。至于怎么测信道，要么题目提供了相关的逻辑（比如搜索功能）；要么利用浏览器自身的特性（比如chrome的url长度限制）等。不过xs leak其实有很多类型很多攻击手段，见 https://xsleaks.dev
+- 特征：能注入html/js代码，或能构建测信道oracle
+- 关键词
+  - xs-search
+  - xs-leak
+  - xs leak
