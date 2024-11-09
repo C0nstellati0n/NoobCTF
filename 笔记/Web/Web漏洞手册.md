@@ -356,8 +356,8 @@ function newfunc(){
   - `default-src www.youtube.com`:youtube存在已知的jsonp端点，允许攻击者执行xss payload。相关题目的关键词是jsonp
   - `default-src 'self';script-src 'none'`：条件比较苛刻，具体见例题。关键词:Noscript
   - `default-src 'none';style-src 'unsafe-inline';script-src 'unsafe-eval' 'self';connect-src xxx;connect-uri xxx`：可用WebRTC绕过。关键词：WebRTC
-    - 如果题目基于chrome且admin bot不断更换自己使用的profile，这个csp下还有另一种做法：使用Credential Management API。见题目Elements
-  - 如果有办法测量admin bot访问网站的时间或成功与否，可利用这点构建测信道攻击。可以绕过任何csp。不过大部分题目不会暴露admin bot的状态，因此很多时候用不了。关键词：side channel
+    - 如果题目基于chrome且admin bot不断更换自己使用的profile，这个csp下还有另一种做法：使用Credential Management API;如果题目浏览器基于chromium且开启了实验功能，还可以用PendingBeacon API。见题目Elements
+  - 如果有办法测量admin bot访问网站的时间或成功与否，可利用这点构建侧信道攻击。可以绕过任何csp。不过大部分题目不会暴露admin bot的状态，因此很多时候用不了。关键词：side channel
 2. css injection
 - 常在csp较为严格或有过滤时使用。主要利用css语法自带的内容匹配以及外部资源加载功能一点一点泄漏flag
 - 特征
@@ -373,9 +373,31 @@ function newfunc(){
   - 需要覆盖、设置某个字段或函数
 - 关键词：dom clobbering
 4. xs leak
-- 目前我见过的xs leak题目基本局限于“注入js代码，利用测信道攻击泄漏内容“。至于怎么测信道，要么题目提供了相关的逻辑（比如搜索功能）；要么利用浏览器自身的特性（比如chrome的url长度限制）等。不过xs leak其实有很多类型很多攻击手段，见 https://xsleaks.dev
-- 特征：能注入html/js代码，或能构建测信道oracle
+- 目前我见过的xs leak题目基本局限于“注入js代码，利用侧信道攻击泄漏内容“。至于怎么侧信道，要么题目提供了相关的逻辑（比如搜索功能）；要么利用浏览器自身的特性（比如chrome的url长度限制）等。不过xs leak其实有很多类型很多攻击手段，见 https://xsleaks.dev
+- 特征：能注入html/js代码，或能构建侧信道oracle
 - 关键词
   - xs-search
   - xs-leak
   - xs leak
+5. mXss
+- 将html插入dom树时，浏览器的渲染引擎会重新整理插入的代码。如果构造得当的话，可以让整理后的结果出现可执行的xss payload。见 https://juejin.cn/post/6844903571578699790
+- 特征
+  - 题目没有过滤svg，math，p等标签
+  - 使用innerHTML属性
+- 关键词：mxss
+6. Cookie jar overflow
+- 浏览器里能设置的cookie数量有限。达到限制后，旧的cookie会被新添加的挤掉。这种方法甚至能移除HttpOnly的cookie。利用这个特点可以实现登出当前账户
+- 特征：能执行js代码，需要移除某个已有的cookie
+- 关键词：cookie jar overflow
+7. /cdn-cgi/trace
+- 所有使用cloudflare的网站都有这个路径（在源码里看不到）。这个路径会反射一些内容，比如user-agent。如果让网站用html处理其返回内容，就能在user-agent处插入html代码从而实现xss
+- 特征：cloudflare网站
+- 关键词：cdn
+8. chrome特性
+- 在chrome环境下，如果用js创建一个元素并设置其innerHTML，即使这个元素没有被插入dom，innerHTML里的xss payload也会执行
+- 特征：可以控制任何元素的innerHTML，即使这个元素不在dom树里
+- 关键词：`"div"`
+9. cookie tossing
+- 假如在`a.b.com`设置了cookie `c=d`，在`b.com`上也可以读取cookie c的值。问题在于`b.com`无法判断得到的d是自己设置的还是`a.b.com`设置的。这个特性不会影响[public suffix list](https://wiki.mozilla.org/Public_Suffix_List)里的domain
+- 特征：某个域名读取cookie的值作为xss payload/关键逻辑，且可以构建这个域名下的子域名
+- 关键词：toss

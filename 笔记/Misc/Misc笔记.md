@@ -1624,6 +1624,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - Make poem for Kirby using actual passphrase characters to keep Kirby cheerful
 - [spurdo-ai](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/misc/spurdo-ai)
     - 这里提一嘴，wp里的做法（叫gpt将返回内容每个字符中间加个空格）我试过，但是没成功。仔细一比对才发现，我没给gpt例子……导致无论我说的要求多清楚，gpt还是跟个傻子一样原样返回内容。其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#spurdo-ai
+- [并非并非](https://github.com/XDSEC/MoeCTF_2024/tree/main/Writeups/Zero6six#%E5%B9%B6%E9%9D%9E%E5%B9%B6%E9%9D%9E)
+    - 当gpt的输出字符被限制时，可以尝试用全角字符绕过
 - [LLM Attacks](https://doublespeak.chat/#/handbook)
 134. [Lost Evidence](https://github.com/daffainfo/ctf-writeup/tree/main/Tenable%20CTF%202023/Lost%20Evidence),[wp2](https://ctf.edwinczd.com/2023/tenable-ctf-2023/lost-evidence)
 - linux [LUKS](https://zhuanlan.zhihu.com/p/36870751)磁盘加密。可尝试用[photores](https://github.com/cgsecurity/testdisk)恢复masterKey
