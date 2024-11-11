@@ -4052,3 +4052,5 @@ new URL("//a.com","http://b.com")
 - 3.5.5及以下版本的Carbone存在可以使原型链污染漏洞到rce的gadget。意味着Carbone本身不存在任何漏洞，但如果使用Carbone的程序里出现原型链污染，则攻击者可以利用Carbone里的代码实现rce。具体poc介绍见 https://archives.pass-the-salt.org/Pass%20the%20SALT/2024/slides/PTS2024-RUMP-02-Templating_Martin.pdf
 - 注意直接使用poc里的payload可能会报错，这是因为poc里的payload仅考虑了只有Carbone的环境。如果程序还使用了其他第三方库，比如这题的Sequelize，污染原型链的操作也会影响到其他库，进而导致报错。看起来没啥好的解决办法，只能慢慢调试补救报错的地方
 - 非预期解： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#complainio 。一条似乎更复杂的carbone利用链。[官方wp](https://github.com/HeroCTF/HeroCTF_v6/tree/main/Web/ComplainIO)也不错
+500. [DNS](https://github.com/rehackxyz/REUN10N/tree/main/CTF-writeups/2024/BluehenCTF/web-DNS)
+- ECS (EDNS Client Subnet)参数绕过ip检测。类似于http的X-Forwarded-For，只不过ECS用在dns服务器

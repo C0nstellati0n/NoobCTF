@@ -556,7 +556,8 @@ flag.export("./flag.mp3", format="mp3")
 ```
 - 直接用audacity自带的除噪功能（效果没有前两个好，但是能听到）：https://github.com/m4karoni/CTF/tree/main/BCACTF/2023/Forensics#owvolume-warning
 90. Wireshark菜单栏->Statistics->Conversations可以看到抓到的包的所有通信的ip和端口号，有时候是流量题找ip的捷径。
-91. [WHITESPACES LANGUAGE](https://en.wikipedia.org/wiki/Whitespace_(programming_language))，由空格，tab键等字符组成，不可见。
+91. [WHITESPACES LANGUAGE](https://en.wikipedia.org/wiki/Whitespace_(programming_language))，由空格，tab键等字符组成
+- 空格之间有其他文字不影响解码。见[Sticky Keys](https://github.com/rehackxyz/REUN10N/tree/main/CTF-writeups/2024/BluehenCTF/misc-Sticky-Keys)
 92. [hexahue cipher](https://www.dcode.fr/hexahue-cipher)，形如：
 
 ![hexahue](../images/hexahue.png)
