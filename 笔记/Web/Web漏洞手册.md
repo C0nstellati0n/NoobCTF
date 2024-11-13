@@ -357,6 +357,7 @@ function newfunc(){
   - `default-src 'self';script-src 'none'`：条件比较苛刻，具体见例题。关键词:Noscript
   - `default-src 'none';style-src 'unsafe-inline';script-src 'unsafe-eval' 'self';connect-src xxx;connect-uri xxx`：可用WebRTC绕过。关键词：WebRTC
     - 如果题目基于chrome且admin bot不断更换自己使用的profile，这个csp下还有另一种做法：使用Credential Management API;如果题目浏览器基于chromium且开启了实验功能，还可以用PendingBeacon API。见题目Elements
+  - 如果题目的admin bot是puppeteer且能够控制`page.goto`的url，则可以用`javascript://`获得xss。csp似乎不会阻挡url的xss
   - 如果有办法测量admin bot访问网站的时间或成功与否，可利用这点构建侧信道攻击。可以绕过任何csp。不过大部分题目不会暴露admin bot的状态，因此很多时候用不了。关键词：side channel
 2. css injection
 - 常在csp较为严格或有过滤时使用。主要利用css语法自带的内容匹配以及外部资源加载功能一点一点泄漏flag
@@ -401,3 +402,9 @@ function newfunc(){
 - 假如在`a.b.com`设置了cookie `c=d`，在`b.com`上也可以读取cookie c的值。问题在于`b.com`无法判断得到的d是自己设置的还是`a.b.com`设置的。这个特性不会影响[public suffix list](https://wiki.mozilla.org/Public_Suffix_List)里的domain
 - 特征：某个域名读取cookie的值作为xss payload/关键逻辑，且可以构建这个域名下的子域名
 - 关键词：toss
+10. 编码解析差异
+- 应在response中用Content-Type指定文档的字符集。如果服务器不明确指出且html文档里没有设置charset的内容，则具体字符集由浏览器自动检测。字符集ISO-2022-JP非常特殊，包含四种escape sequences，用来切换当前使用的字符集（只要浏览器看见它们就会切换到对应的字符集）。意味着整个文档可以用多种字符集进行渲染。这其中的差异可以用来藏xss payload
+- 特征
+  - 服务器返回的response报文中没有指定Content-Type
+  - 题目有过滤，攻击者需要利用某种方式使过滤时和实际访问时看到内容不一样
+- 关键词：ISO-2022-JP
