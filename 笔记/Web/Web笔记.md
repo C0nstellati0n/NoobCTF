@@ -4054,6 +4054,7 @@ new URL("//a.com","http://b.com")
 - 非预期解： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#complainio 。一条似乎更复杂的carbone利用链。[官方wp](https://github.com/HeroCTF/HeroCTF_v6/tree/main/Web/ComplainIO)也不错
 500. [DNS](https://github.com/rehackxyz/REUN10N/tree/main/CTF-writeups/2024/BluehenCTF/web-DNS)
 - ECS (EDNS Client Subnet)参数绕过ip检测。类似于http的X-Forwarded-For，只不过ECS用在dns服务器
+- 也有网页GUI版dig： https://www.diggui.com 和 http://digwebinterface.com 。有时本机的dig命令可能被防火墙挡住
 - 另一种绕过方式： https://themreviil-blog.github.io/post/bluehens2024/bluehens-ctf-writeup
 501. [Firefun 3](https://github.com/rerrorctf/writeups/blob/main/2024_11_10_BlueHens24/web/firefun_3)
 - firebase网站信息泄漏。访问`/_/firebase/init.json`路径能看见其配置文件。如果权限也配置错误的话，攻击者可以自行增加firebase用户并修改用户权限
