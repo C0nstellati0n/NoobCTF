@@ -360,6 +360,7 @@
 - [Shortest Palindrome](./Hard/Shortest%20Palindrome.md). [KMP算法](https://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html)和部分匹配表（Partial Match Table）/Rolling Hash/Manacher's Algorithm
 - [K-th Smallest in Lexicographical Order](./Hard/K-th%20Smallest%20in%20Lexicographical%20Order.md). prefix tree(前缀树，trie)
 - [Height of Binary Tree After Subtree Removal Queries](./Hard/Height%20of%20Binary%20Tree%20After%20Subtree%20Removal%20Queries.md). binary tree
+- [Shortest Subarray with Sum at Least K](./Hard/Shortest%20Subarray%20with%20Sum%20at%20Least%20K.md). deque+sliding window+monotonic stack(monotonic queue)+prefix sum
 
 ## Others
 

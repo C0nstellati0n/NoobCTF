@@ -2119,3 +2119,6 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 ```
 可是程序不是在dealloc前将balance置零了吗？
 - 另一种解法： https://cnf409.github.io/posts/2024/10/heroctf-2024-pwn/bankrupst
+221. [flaminglips](https://github.com/Dvorhack/ctf-WU/tree/main/udctf.2024/pwn/flaminglips)
+- libc 2.39 house of tangerine+unlink+fsop
+- 重点的house of tangerine+unlink都放在堆技巧学习了，再稍微简述一下利用过程。题目只允许调用一次free，但是edit功能有堆溢出。house of tangerine可以在这种情况下实现和tcache poisoning同样的效果，这里选择劫持tcache_perthread_struct获取进一步的任意地址malloc。接着用unlink泄漏libc地址。拿到libc地址后再利用fsop泄漏environ里的栈地址。最后往栈上写rop链

@@ -15,3 +15,13 @@
     - 有时可以尝试跳转到两个指令中间的地址处执行，形成新的指令
 
 个人评价：跳着看的，部分内容有些“年代久远”，不太适用于当前的ctf pwn环境。但是对于初学者认识一下是够了。如果有ctf基础的可以选择不看或根据每个视频的名称跳着看
+
+## 如何getshell
+
+新版libc里的几种getshell方式： https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc 。第五种方式（target exit funcs）的更详细介绍： https://sec.prof.ninja/cuttingedge 以及讲解视频 https://capture.udel.edu/media/Targeting+Exit+Funcs/1_dekb3ciz
+
+## FSOP
+
+经典咏流传：fsop相关文章
+- https://blog.kylebot.net/2022/10/22/angry-FSROP
+- https://niftic.ca/posts/fsop
