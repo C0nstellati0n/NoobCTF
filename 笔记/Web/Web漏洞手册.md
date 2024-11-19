@@ -352,12 +352,13 @@ function newfunc(){
 - Content Security Policy(CSP)为网站设置执行代码，引入资源等内容时的安全策略。xss payload常与这几项有关，因此csp会阻挡payload的执行。大部分题目都会设置csp来提高构造payload的难度，所以需要学习常用的绕过csp的方法
 - 特征/关键词
   - `script-src 'self' 'https://ajax.googleapis.com;'`:只能从当前网站和`https://ajax.googleapis.com`导入script。但`https://ajax.googleapis.com`本身存在可利用的xss
+  - `script-src 'self'`：若网站允许上传图片，可利用jpeg polyglot性质往图片里插入能导入的xss payload。工具：[xss_injection_in_jpeg](https://github.com/4n86rakam1/xss_injection_in_jpeg)
   - `default-src 'self'`：阻挡跨域fetch。xss payload不能用fetch带出数据，但可以用`window.location`
   - `default-src www.youtube.com`:youtube存在已知的jsonp端点，允许攻击者执行xss payload。相关题目的关键词是jsonp
   - `default-src 'self';script-src 'none'`：条件比较苛刻，具体见例题。关键词:Noscript
   - `default-src 'none';style-src 'unsafe-inline';script-src 'unsafe-eval' 'self';connect-src xxx;connect-uri xxx`：可用WebRTC绕过。关键词：WebRTC
     - 如果题目基于chrome且admin bot不断更换自己使用的profile，这个csp下还有另一种做法：使用Credential Management API;如果题目浏览器基于chromium且开启了实验功能，还可以用PendingBeacon API。见题目Elements
-  - 如果题目的admin bot是puppeteer且能够控制`page.goto`的url，则可以用`javascript://`获得xss。csp似乎不会阻挡url的xss
+  - 如果题目的admin bot是puppeteer且能够控制`page.goto`的url，则可以用`javascript://`获得xss。csp似乎不会阻挡url的xss。相关题目：msfroggenerator2
   - 如果有办法测量admin bot访问网站的时间或成功与否，可利用这点构建侧信道攻击。可以绕过任何csp。不过大部分题目不会暴露admin bot的状态，因此很多时候用不了。关键词：side channel
 2. css injection
 - 常在csp较为严格或有过滤时使用。主要利用css语法自带的内容匹配以及外部资源加载功能一点一点泄漏flag
@@ -408,3 +409,16 @@ function newfunc(){
   - 服务器返回的response报文中没有指定Content-Type
   - 题目有过滤，攻击者需要利用某种方式使过滤时和实际访问时看到内容不一样
 - 关键词：ISO-2022-JP
+11. xss代码构造技巧
+- js语法中有一些特性，使攻击者在能使用的字符集（长度）有限的情况下构造payload
+- 特征：xss可轻易得到，但有payload长度或使用字符的过滤
+- 关键词
+  - Hex2Dec
+  - golf
+12. 重定向
+- 一些使当前页面重定向的技巧
+- 特征（内容）/关键词
+  - form+submit：todo
+  - meta标签:adminplz
+  - `@`：有些题目限制了提交网址的前缀。如果这个前缀末尾不是`/`，攻击者就可以利用`prefix@suffix`将bot重定向至suffix网站。见题目Free Chat
+  - google自带的重定向。这些重定向网址都以`google.com`开头：Report Google

@@ -14,6 +14,11 @@
   - 在这篇[wp](https://ggcoder.medium.com/solving-crackme-from-sekaictf-9660dc41b0ce)里发现了[HTTP Toolkit](https://httptoolkit.com)，可以直接拦截apk的流量
 - [Secure Vault](https://abuctf.github.io/posts/IronCTF)
   - Flutter APK逆向工具[Blutter](https://github.com/worawit/blutter)使用
+- [Where's my APK?](https://blog.ryukk.dev/ctfs/write-up/2024/1337up-live-ctf/mobile)
+  - 也是使用[Blutter](https://github.com/worawit/blutter)逆向flutter apk，不过更复杂一点
+  - 如何将`.aab`后缀文件转成apk： https://stackoverflow.com/a/68752831
+  - 使用adb命令生成携带data的activity。有些题目明明做了某些逻辑但是又没有任何触发入口，这时就可以用adb shell
+  - patch apk内部的`.so`文件并签名
 
 ## IDA使用
 

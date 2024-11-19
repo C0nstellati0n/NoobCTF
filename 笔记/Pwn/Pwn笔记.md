@@ -769,6 +769,9 @@ print(base64.b64encode(temp.encode()))
 	- 和audit hook有关的题。要求在不触发任何audit event的情况下获得shell且payload有长度限制。不确定在不触发任何audit event的情况下能不能getshell，但看这道题可以做到获取套娃函数里的参数并覆盖
 - [crator](https://outgoing-shoe-387.notion.site/Idek-CTF-2024-web-crator-WriteUp-43b1e90d7b7d40b3ad8b338fa9c08bc5)
 	- 如何更换函数的内部代码从而绕过沙盒。另外这篇wp里记录了很多不错的python沙盒逃逸学习链接
+- [Monkey's Paw](https://blog.ryukk.dev/ctfs/write-up/2024/1337up-live-ctf/misc)
+  - "反其道而行之"的pyjail。要求函数、属性等内容必须是`__xx__`的形式，且除函数和属性外的值必须是字符串。关键是可以用`__len__`取出数字
+  - 其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#monkeys-paw 。稍微提一嘴，根据官方解法（`oh_word`），题目的过滤好像写错了……预期解是用`__doc__`取出字符串，结果因为过滤的问题直接就能在payload里用字符串
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)
