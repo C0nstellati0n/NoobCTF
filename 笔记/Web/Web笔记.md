@@ -303,6 +303,10 @@
         - 后端服务器的错误实现（将路径直接放到location处）致使攻击者可以进行任意的重定向。在js中，`//`被视为实际的scheme（http 或 https）。发送`GET //heroctf.fr`给后端服务器，会返回`Location: //heroctf.fr`，直接重定向至`/heroctf.fr`，某个受攻击者控制的恶意服务器。此时成功劫持服务器，能使bot执行任意xss payload
     - 当然xss本身是没法实现文件执行的。主要是题目重写了electron应用的下载功能，使得应用在用户下载文件时应用也会把文件内容存储到当前目录。问题是文件名由攻击者控制，于是又出现了一个路径穿越，这次直接是任意文件写。再利用strace得知应用启动时会加载`libX11-xcb.so.1`,于是写一个恶意库文件传上去。最后故意崩溃应用。因为应用重启会加载库文件，所以直接拿到rce
     - 最后是`path.normalize`。这个函数会把一些奇奇怪怪的字符转成`/`，比如`į`
+- [SafeNotes 2.0](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/web/safenotes_2)
+    - 这题看漏了一个最基本的漏洞：`.replace(/\.\.[\/\\]/g, "")`。经典非递归replace过滤。利用这个漏洞可以实现CSPT（Client-Side Path Traversal）
+    - 关于dompurify到底能不能过滤dom clobbering： https://cure53.de/pentest-report_dompurify.pdf 。里面提到dompurify过滤了id却没有过滤name属性。虽然dom clobbering大多利用id属性实现，但某些情况下name属性也可以（结果这题还是用id属性进行clobbering……到底是过滤了还是没有啊？clobber的对象是一个本来就在html里的element（相比于其他题目的无中生有），难道这是不过滤的原因？）
+    - 设置`outerHTML`属性一样会触发xss漏洞
 
 ## SSTI
 
@@ -417,6 +421,9 @@ for i in range(300,1000):
 	- php smarty 5模板注入rce。棘手的点在于smarty 5移除了很多方便rce的内容（如`system`），这个时候就要看题目里有没有可疑的库（明明dockerfile里安装了，但是完全没用，或者用得很没必要），里面可能有可用的函数
 	- smarty每次成功渲染一个模板文件后，都会在当前目录生成一个`templates_c`文件夹，里面的每个文件内容都是被渲染的模板转换成php文件的结果。不知道是不是个例，似乎模板文件名也会在转义后原封不动写入文件。该文件的名称同机器下完全一致（在docker里还原环境后查看生成的文件名，和服务端实际生成的文件名相同）
 	- 具体payload见[官方wp](https://github.com/idekctf/idekctf-2024/tree/main/web/untitled-smarty-challenge)。其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#untitled-smarty-challenge
+- [Cat Club](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/web/cat_club)
+    - jwt [algorithm confusion](https://portswigger.net/web-security/jwt/algorithm-confusion)
+    - js pug库ssti。注意`pug.render`的参数有没有未过滤的用户输入
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Python.md)
     - `{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("cmd").read()}}{%endif%}{% endfor %}`
     - https://sanlokii.eu/writeups/downunderctf/parrot-the-emu/

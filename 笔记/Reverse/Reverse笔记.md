@@ -19,6 +19,7 @@
   - 如何将`.aab`后缀文件转成apk： https://stackoverflow.com/a/68752831
   - 使用adb命令生成携带data的activity。有些题目明明做了某些逻辑但是又没有任何触发入口，这时就可以用adb shell
   - patch apk内部的`.so`文件并签名
+  - 另一种解法： https://learn-cyber.net/writeup/Where's-my-APK 。利用[httptoolkit](https://httptoolkit.com)分析并修改请求，这样就不需要patch apk了
 
 ## IDA使用
 
@@ -1157,7 +1158,8 @@ finish()
 130. [One Step Closer](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/forensics/%5BEasy%5D%20One%20Step%20Closer)
 - 使用`cscript.exe`+visual studio动态调试vbs脚本
 131. [Il2CppDumper](https://github.com/Perfare/Il2CppDumper)
-- Unity IL2CPP编译打包的游戏的逆向工具。暂时不清楚和一般用dnSpy逆向`Assembly-CSharp.dll`的题目有什么区别
+- Unity IL2CPP编译打包的游戏的逆向工具。和一般用dnSpy逆向`Assembly-CSharp.dll`的题目（Mono打包）的区别是两者反编译方法不能共用
+- 补充另一道IL2CPP题目：[Bug Squash 2](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/game/bug_squash2)。另一种反编译的方式是用cheatengine，见 https://www.youtube.com/watch?v=Nk-TNzHxN0M 的做法
 132. [noodle-nightmare](https://meashiri.github.io/ctf-writeups/posts/202312-pingctf/#noodle-nightmare)
 - 有时候源代码复杂的逆向题编译后看汇编或动调反而会简单一点。还可以参考wp的做法，编译时保存C++ preprocessor的输出，逻辑也会简单很多
 133. [Warmup - Game](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#warmup---game)
