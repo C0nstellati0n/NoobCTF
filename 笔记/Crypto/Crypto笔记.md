@@ -551,6 +551,8 @@ for i in range(1,e):
     - 一个经典的coppersmith p高位泄漏。不过这题到最后发现e和phi不互质。和之前我见过的情形不太一样，这题在分解n后尝试计算所有可能的密文。见 https://medium.com/@g2f1/bad-rsa-keys-3157bc57528e
 - [RSA_revenge](../../CTF/moectf/2024/Crypto/RSA_revenge.md)
     - 分解互为emirp（反素数）的两个质数的乘积。注意数字的进制不重要。无论在二进制，十进制，还是十六进制下互为反素数都能尝试分解
+- [kRSA](https://github.com/rerrorctf/writeups/blob/main/2024_11_15_1337UP24/crypto/krsa)
+    - 假如用rsa加密一个数字k，攻击者可以尝试找满足ij=k的i和j，然后利用rsa的同态特性进行meet in the middle攻击
 
 ## Sagemath
 

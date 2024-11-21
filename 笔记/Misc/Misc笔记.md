@@ -1750,6 +1750,7 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - [Firefed](https://github.com/numirias/firefed)/[dumpzilla](https://github.com/Busindre/dumpzilla):通用工具
 - [Firefox Decrypt](https://github.com/unode/firefox_decrypt):extract passwords from profiles of Mozilla
 - 顺便记一下，chrome的web browser forensic工具： https://github.com/obsidianforensics/hindsight 。参考 https://forums.opera.com/topic/52472/where-are-stored-passwords-and-form-autofill-data/2 ，Saved passwords are stored in Login Data file. And auto fill data is in Web Data file
+- 另一道也用了Firefox Decrypt的题目：[Password Management](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/forensics/password_management)。profile有时会被加密，需要密码
 156. [temu](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Misc/temu),[wp](https://github.com/daeMOn63/ctf-writeups/tree/main/imaginary23/temu)
 - 利用[ReDoS](https://www.regular-expressions.info/redos.html)延长条件竞争的窗口期从而提高利用成功率。redos指的是程序使用了某些时间复杂度为指数级的正则表达式，导致程序运行/占用时间过长。可用[redos-checker](https://devina.io/redos-checker)检查
 157. [Forensics](https://github.com/ImaginaryCTF/ImaginaryCTF-2023-Challenges/tree/main/Forensics)

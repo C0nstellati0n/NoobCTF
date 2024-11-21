@@ -20,6 +20,9 @@
   - 使用adb命令生成携带data的activity。有些题目明明做了某些逻辑但是又没有任何触发入口，这时就可以用adb shell
   - patch apk内部的`.so`文件并签名
   - 另一种解法： https://learn-cyber.net/writeup/Where's-my-APK 。利用[httptoolkit](https://httptoolkit.com)分析并修改请求，这样就不需要patch apk了
+- [Cold Storage](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/mobile/cold_storage)
+  - 逆向[cordova](https://cordova.apache.org) app。cordova允许用html，css和js写应用
+  - 这题主要是分析`index.html`里被混淆的逻辑。我就比较特别了，由于这类型app反编译后和一般app不同，直接没找到入口点……
 
 ## IDA使用
 
