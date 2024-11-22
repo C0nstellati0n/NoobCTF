@@ -422,8 +422,8 @@ for i in range(300,1000):
 	- smarty每次成功渲染一个模板文件后，都会在当前目录生成一个`templates_c`文件夹，里面的每个文件内容都是被渲染的模板转换成php文件的结果。不知道是不是个例，似乎模板文件名也会在转义后原封不动写入文件。该文件的名称同机器下完全一致（在docker里还原环境后查看生成的文件名，和服务端实际生成的文件名相同）
 	- 具体payload见[官方wp](https://github.com/idekctf/idekctf-2024/tree/main/web/untitled-smarty-challenge)。其他解法： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#untitled-smarty-challenge
 - [Cat Club](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/web/cat_club)
-    - jwt [algorithm confusion](https://portswigger.net/web-security/jwt/algorithm-confusion)
-    - js pug库ssti。注意`pug.render`的参数有没有未过滤的用户输入
+    - jwt [algorithm confusion](https://portswigger.net/web-security/jwt/algorithm-confusion)。常出现于“明明有现成的jwt库但是却自己写了个验证函数“的情况
+    - js pug库ssti。注意`pug.render`(compile函数也会触发ssti)的参数有没有未过滤的用户输入。补点常用payload： https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection#pugjs-nodejs
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Python.md)
     - `{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("cmd").read()}}{%endif%}{% endfor %}`
     - https://sanlokii.eu/writeups/downunderctf/parrot-the-emu/

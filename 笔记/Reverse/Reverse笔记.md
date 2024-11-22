@@ -23,6 +23,7 @@
 - [Cold Storage](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/mobile/cold_storage)
   - 逆向[cordova](https://cordova.apache.org) app。cordova允许用html，css和js写应用
   - 这题主要是分析`index.html`里被混淆的逻辑。我就比较特别了，由于这类型app反编译后和一般app不同，直接没找到入口点……
+  - 另一篇更详细的wp： https://majix.notion.site/Cold-Storage-13f2c37daa29807a930eed847be939f8 。没经过签名的apk无法运行，不过可以自行生成key并签名
 
 ## IDA使用
 
@@ -1162,7 +1163,7 @@ finish()
 - 使用`cscript.exe`+visual studio动态调试vbs脚本
 131. [Il2CppDumper](https://github.com/Perfare/Il2CppDumper)
 - Unity IL2CPP编译打包的游戏的逆向工具。和一般用dnSpy逆向`Assembly-CSharp.dll`的题目（Mono打包）的区别是两者反编译方法不能共用
-- 补充另一道IL2CPP题目：[Bug Squash 2](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/game/bug_squash2)。另一种反编译的方式是用cheatengine，见 https://www.youtube.com/watch?v=Nk-TNzHxN0M 的做法
+- 补充一道IL2CPP题目：[Bug Squash 2](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/game/bug_squash2)。使用Il2CppDumper的做法： https://snocc.dev/blog/1337UP-gamepwn#bugsquash2 。另一种反编译的方式是用cheatengine，见 https://www.youtube.com/watch?v=Nk-TNzHxN0M
 132. [noodle-nightmare](https://meashiri.github.io/ctf-writeups/posts/202312-pingctf/#noodle-nightmare)
 - 有时候源代码复杂的逆向题编译后看汇编或动调反而会简单一点。还可以参考wp的做法，编译时保存C++ preprocessor的输出，逻辑也会简单很多
 133. [Warmup - Game](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#warmup---game)
@@ -1360,3 +1361,8 @@ mov     r8, qword [r13]
 - UPX解压的时候会检测程序段名称是否为UPX0\UPX1这类的,如果段名称被人为篡改则无法正常解压。把名称改回来，或者动调，手动脱壳即可
 197. [Cython-Strike: Bomb Defusion](http://www.qetx.top/posts/14919)
 - 如何“逆向”pyd文件。似乎这种文件没法反编译，只能用import指令导入模块后用help查看模块里作者提供的内容
+198. [Lighthouse of DOOM](https://snocc.dev/blog/1337UP-gamepwn)
+- 逆向`.tap`后缀文件（ZX Spectrum游戏）。相关内容：
+  - 文章： https://mrcook.uk/reverse-engineering-zx-spectrum-games
+  - 反编译工具：[SkoolKit](https://github.com/skoolkid/skoolkit)
+  - 模拟器：[Fuse](https://fuse-emulator.sourceforge.net)
