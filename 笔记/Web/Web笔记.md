@@ -4068,3 +4068,10 @@ new URL("//a.com","http://b.com")
 - 一些相关工具
     - [Baserunner](https://github.com/iosiro/baserunner)
     - [firepwn](https://github.com/0xbigshaq/firepwn-tool)
+502. [Greetings](https://blog.jaquiez.dev/Blogs/1337UP2024)
+- php fopen函数相关ssrf。题目设置如下：
+```php
+fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
+```
+其中`$protocol`,`$name`和`$context`都由用户控制。利用`php://filter`可以访问内部服务器路径，但无法传递参数。传递参数可以利用`ftp://`协议（但ssrf目标可能仅限werkzeug，比如flask网站。原因见下一条）加上`$name`处的CRLF injection实现请求走私
+- werkzeug只看路径。假设有一个`GET ftp://127.0.0.1:3000/flag`的http请求，werkzeug判断实际访问路径的方法是用`urllib.parse.urlsplit`解析出路径。此处为`/flag`

@@ -1162,7 +1162,7 @@ finish()
 130. [One Step Closer](https://github.com/hackthebox/uni-ctf-2023/tree/main/uni-ctf-2023/forensics/%5BEasy%5D%20One%20Step%20Closer)
 - 使用`cscript.exe`+visual studio动态调试vbs脚本
 131. [Il2CppDumper](https://github.com/Perfare/Il2CppDumper)
-- Unity IL2CPP编译打包的游戏的逆向工具。和一般用dnSpy逆向`Assembly-CSharp.dll`的题目（Mono打包）的区别是两者反编译方法不能共用
+- Unity IL2CPP编译打包的游戏的逆向工具。和一般用dnSpy逆向`Assembly-CSharp.dll`的题目（Mono打包）的区别是两者反编译方法不能共用。介绍网站： https://il2cppdumper.com
 - 补充一道IL2CPP题目：[Bug Squash 2](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/game/bug_squash2)。使用Il2CppDumper的做法： https://snocc.dev/blog/1337UP-gamepwn#bugsquash2 。另一种反编译的方式是用cheatengine，见 https://www.youtube.com/watch?v=Nk-TNzHxN0M
 - 再来一道：[Space Maze](https://github.com/tien0246/writeup/tree/main/spacemaze)。可以从文件头看出使用的unity版本，还可以用frida hook函数
 132. [noodle-nightmare](https://meashiri.github.io/ctf-writeups/posts/202312-pingctf/#noodle-nightmare)
@@ -1367,7 +1367,7 @@ mov     r8, qword [r13]
   - 文章： https://mrcook.uk/reverse-engineering-zx-spectrum-games
   - 反编译工具：[SkoolKit](https://github.com/skoolkid/skoolkit)
   - 模拟器：[Fuse](https://fuse-emulator.sourceforge.net)
-  - 逆向工具：[Spectrum Analyser](https://colourclash.co.uk/spectrum-analyser)
+  - 逆向工具：[Spectrum Analyser](https://colourclash.co.uk/spectrum-analyser)。使用这个工具的视频wp： https://www.youtube.com/watch?v=ZcnWdFjS5WE
 199. [Funny](https://dungwinux.github.io/-blog/security/2024/11/17/1337up-live-writeup.html)
 - 逆向pyc文件的技巧
   - 由于python每次版本更新可能会修改opcode，所以不同版本的python生成pyc的magic number不同，也就不能跨版本运行。因此，相关反编译工具pycdc（也叫Decompyle++）也无法反编译较新版本的pyc。提供一个暂时的解决方法： https://idafchev.github.io/blog/Decompile_python ，通过假装支持某些opcode从而阻止工具停止运行

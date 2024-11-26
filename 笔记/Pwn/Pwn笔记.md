@@ -1,5 +1,12 @@
 # Pwn笔记
 
+## Chrome V8
+
+这玩意我完全不懂，一切交给未来的我
+
+- [XSS Finder Tool](https://jopraveen.github.io/xss-finder)
+  - 这道题基于一个已知cve，见 https://bnovkebin.github.io/blog/CVE-2024-0517 和 https://bnovkebin.github.io/blog/CVE-2024-0517 。wp主要讲如何调试，修改现有exp
+
 ## Kernel
 
 kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇气
@@ -1421,7 +1428,7 @@ def csu(rbx, rbp, r12, r13, r14, r15, last):
     - [UTS namespace](https://man7.org/linux/man-pages/man7/uts_namespaces.7.html)
   - cross loopback mount: refers to the process of mounting a loopback device in one mount namespace and making it accessible in another mount namespace.
   - loopback device: In Linux, a loopback device is a virtual device that allows a file to be treated as a block device. It enables files to be mounted as filesystems, just like physical disks or partitions.
-93. Headless Chrome exploit for 73.0.3683.86 (--no-sandbox) V8 version 6.9.0: https://github.com/timwr/CVE-2019-5825/tree/master
+93. Headless Chrome exploit for 73.0.3683.86 (--no-sandbox) V8 version 6.9.0: https://github.com/timwr/CVE-2019-5825
 94. [himitsu](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/pwn/himitsu),[wp](https://ptr-yudai.hatenablog.com/entry/2023/07/22/184044#Himitsu-Note)
 - 若将main函数的返回地址的最后一位设为0，就能泄露argv[0]指向的地址。且由于修改后的返回地址在`__libc_csu_init`里，后面又会重新调用main。使用步骤：
   1. 在main函数保存的rbp处插入一个随机的heap地址。rbp->random heap address，不是把rbp改成heap address
