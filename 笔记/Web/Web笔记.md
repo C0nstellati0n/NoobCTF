@@ -4075,3 +4075,9 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 ```
 其中`$protocol`,`$name`和`$context`都由用户控制。利用`php://filter`可以访问内部服务器路径，但无法传递参数。传递参数可以利用`ftp://`协议（但ssrf目标可能仅限werkzeug，比如flask网站。原因见下一条）加上`$name`处的CRLF injection实现请求走私
 - werkzeug只看路径。假设有一个`GET ftp://127.0.0.1:3000/flag`的http请求，werkzeug判断实际访问路径的方法是用`urllib.parse.urlsplit`解析出路径。此处为`/flag`
+503. [Global Backups](https://github.com/JorianWoltjer/challenges/blob/main/1337up-live-2024/global-backups)
+- express session爆破。其实爆破的是sessino末尾的签名，所以等同于爆破HMAC-SHA256
+- [session-file-store](https://github.com/valery-barysok/session-file-store)用于将session内容存储到文件里。但这个库内部使用`path.join`连接固定path的session id。假如可以伪造session id且可以往服务器上传文件，则可以伪造任何session数据
+- 在`1.1.8`及以前的版本，[bun shell](https://bun.sh/docs/runtime/shell)存在通配符注入。假如可以检测命令执行是否成功的话，可以用来泄漏目录/文件名
+- scp命令参数注入。和ssh的参数注入利用差不多，见 https://sonarsource.github.io/argument-injection-vectors
+- 利用通配符执行命令。一个小技巧，可以将要执行的命令（或参数）以文件名的形式写在当前目录，这样就能用通配符匹配出完整的命令了。可用于绕过滤

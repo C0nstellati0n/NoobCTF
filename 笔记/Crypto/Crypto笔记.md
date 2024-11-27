@@ -769,9 +769,14 @@ AES是很能出题的。DES则是放在这凑数的
     - AES ECB。在key固定且可以进行query的情况下（每次query的明文不同）预测某个明文的最后一个密文块。其实很简单，因为ECB是分块加密的，只要最后一个密文块对应的明文不变即可
 - [tag-series-2](https://github.com/C0d3-Bre4k3rs/WolvCTF2024-Writeups/tree/main/tag-series-2)
     - 跟上面那题目标一样，但是是CBC。更详细的解析： https://docs.google.com/presentation/d/1FfM7ZblrqmNklG5NX9T5UyTDdEb5h1BRZTtwNrm_-mQ
+- [admin](https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/crypto/admin)
+	- AES GCM,已知两条明文及其对应密文+可控制加密用的IV（IV重用，不过更多时候叫nonce），要求伪造指定明文的密文
 - [Lazy STEK](https://blog.soreatu.com/posts/writeup-for-lazy-stek-in-line-ctf-2022/)
-    - AES-GCM forbidden attack（nonce reused攻击）
+    - AES GCM forbidden attack（nonce reused攻击）
     - 还是在这个[脚本](https://rbtree.blog/posts/2022-03-27-sage-script-for-aes-gcm/)里知道这题的。脚本内容为“在sagemath里如何将字节块转换为 $F_2^{128}$ 里的元素”
+- [Conversationalist](https://github.com/JorianWoltjer/challenges/blob/main/1337up-live-2024/conversationalist)
+    - AES GCM nonce reused攻击的实际案例。出问题的库是rust的[cocoon](https://crates.io/crates/cocoon)
+    - 知识点和上面两道题一样。补充一篇文章： https://frereit.de/aes_gcm 。nonce重用后，和ctr模式类似，整个gcm就成了many time pad。不过gcm对每条消息都提供了验证tag，导致针对gcm模式的密文伪造攻击比ctr多了一步：构造多项式方程恢复验证用的key
 - [Invisible Salamanders in AES-GCM-SIV](https://keymaterial.net/2020/09/07/invisible-salamanders-in-aes-gcm-siv/)
     - 构建一条`ciphertext+tag`使其用两个已知的不同密钥解密后得到两个不一样但有效的明文
 - [DODOLOUF](https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#dodolouf)
@@ -784,8 +789,6 @@ AES是很能出题的。DES则是放在这凑数的
   - aes cfb猜明文。cfb模式是 $C=E\bigotimes P$ （具体见 https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_feedback_(CFB) ）,假如知道C和P，就能找到E，进而自己伪造密文。前提是key和iv重用且我们有足够的oracle
   - [官方wp](https://github.com/DownUnderCTF/Challenges_2024_Public/tree/main/crypto/decrypt-then-eval)处理了更复杂的情况
   - 其他解法： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#decrypt-then-eval
-- [admin](https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/crypto/admin)
-	- AES GCM,已知两条明文及其对应密文+可控制加密用的IV（IV重用），要求伪造指定明文的密文
 - [cbc](https://github.com/rerrorctf/writeups/tree/main/2024_09_06_CSAWQuals24/crypto/cbc)
     - aes cbc padding oracle attack。题目有个oracle可以解密任意密文，返回密文是否解密成功
     - 附赠一个rust工具：[rustpad](https://github.com/Kibouo/rustpad)
