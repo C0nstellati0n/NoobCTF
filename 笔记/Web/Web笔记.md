@@ -307,6 +307,10 @@
     - 这题看漏了一个最基本的漏洞：`.replace(/\.\.[\/\\]/g, "")`。经典非递归replace过滤。利用这个漏洞可以实现CSPT（Client-Side Path Traversal）
     - 关于dompurify到底能不能过滤dom clobbering： https://cure53.de/pentest-report_dompurify.pdf 。里面提到dompurify过滤了id却没有过滤name属性。虽然dom clobbering大多利用id属性实现，但某些情况下name属性也可以（结果这题还是用id属性进行clobbering……到底是过滤了还是没有啊？clobber的对象是一个本来就在html里的element（相比于其他题目的无中生有），难道这是不过滤的原因？）
     - 设置`outerHTML`属性一样会触发xss漏洞
+- [WorkBreak](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#workbreak)
+    - [mass assignment](https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html)漏洞。简单来说，网站将请求参数与程序里的数据模型进行动态绑定。所以如果不对参数过滤的话，攻击者可以猜内部模型的特殊字段，比如`is_admin`
+    - 程序禁止在创建对象A时传tasks字段。但内部使用了`Object.assign`创建对象。所以用`__proto__`就能绕过
+    - 另外这题我有一点没看明白。看wp似乎有两个xss点A和B，其中B点需要用postMessage触发。wp的做法是在A点往B点post带出flag的payload。为啥不直接在A点做啊？
 
 ## SSTI
 
