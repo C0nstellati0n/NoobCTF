@@ -2350,3 +2350,6 @@ $ cd a/b
 - 其他wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#rogue-robloxians
 367. [Dropped ELF](https://github.com/PuruSinghvi/CTF-Writeups/tree/main/SunshineCTF%202024/Reversing/Dropped%20ELF)
 - 恢复被打乱的elf文件块
+368. [Schrödinger Compiler](https://github.com/plvie/writeup/blob/main/glacierctf2024/schrodinger_compiler)
+- 利用编译过程泄漏指定文件里的内容。可以用`#include`在编译时读文件，然后用时间oracle爆破flag
+- 多线程脚本： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#schr%C3%B6dinger-compiler

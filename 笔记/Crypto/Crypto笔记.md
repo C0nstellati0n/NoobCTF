@@ -705,6 +705,8 @@ $$
 - [はやぶさ](https://7rocky.github.io/en/ctf/other/sekaictf/%E3%81%AF%E3%82%84%E3%81%B6%E3%81%95)
     - [Falcon](https://falcon-sign.info/) signatures（Fast-Fourier Lattice-Based Compact signatures over NTRU）key recovery attack。此攻击只能在参数n较小的情况下使用
     - NTRU lattice由多项式组成，wp里记录了如何将由多项式构成的格转为由整数构成的格
+- [SignMeUp](https://github.com/plvie/writeup/blob/main/glacierctf2024/signmeup)
+    - 又是一道将模某个质数的多未知数方程转成格的题目。感觉将来某一天我会困于如何造方形的格基矩阵（
 
 ## Elliptic Curves(ECC,椭圆曲线)
 

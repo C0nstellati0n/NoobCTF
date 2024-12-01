@@ -60,7 +60,7 @@ $$\begin{pmatrix}a_1&k_2&1\end{pmatrix}\begin{pmatrix}p&0&0\cr t^{-1}&1&0\cr -r_
 
 ||v|| < $\sqrt{D}|det(L)|^{\frac{1}{D}}$
 
-D为矩阵阶数，||v||为最短向量的长度。见 https://www.youtube.com/watch?v=g6EruH_29ew
+D为矩阵阶数，||v||为最短向量的长度，L是格基矩阵。见 https://www.youtube.com/watch?v=g6EruH_29ew
 
 顺便在这里记一些没有例题，纯粹是见到的论文：
 - [IMPROVED LOW-DENSITY SUBSET SUM ALGORITHMS](https://www.di.ens.fr/~fouque/ens-rennes/sac-LLL.pdf)

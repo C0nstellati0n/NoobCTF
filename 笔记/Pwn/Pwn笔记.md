@@ -5,7 +5,7 @@
 这玩意我完全不懂，一切交给未来的我
 
 - [XSS Finder Tool](https://jopraveen.github.io/xss-finder)
-  - 这道题基于一个已知cve，见 https://bnovkebin.github.io/blog/CVE-2024-0517 和 https://bnovkebin.github.io/blog/CVE-2024-0517 。wp主要讲如何调试，修改现有exp
+  - 这道题基于一个已知cve，见 https://bnovkebin.github.io/blog/CVE-2024-0517 和 https://blog.exodusintel.com/2024/01/19/google-chrome-v8-cve-2024-0517-out-of-bounds-write-code-execution 。wp主要讲如何调试，修改现有exp
 
 ## Kernel
 

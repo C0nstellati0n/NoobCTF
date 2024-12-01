@@ -37,7 +37,7 @@
     - 如何查看文件a里b合约的storage布局：`forge inspect a.sol:b storageLayout`
     - Pausable合约：当`_pause`标志为true时，执行带有whenNotPaused修饰符的函数会被revert
     - [EVM memory layout](https://docs.soliditylang.org/en/latest/internals/layout_in_memory.html)和[EVM opcodes](https://www.evm.codes/)。注意分型memory和storage的区别。memory是暂时存储空间，存那些无需跨函数调用的数据，比如局部变量，参数和返回值等；storage则是永久存储，存全局变量等。memory按0x20字节（一个slot的大小）对齐，前4 slot `0x00~0x80`被保留。重点是`0x40~0x60`:指向空闲内存。文档里说是“当前已分配内存空间”，等同于说“指向空闲内存的指针”。注意这里只有一个指针，引用时取0x40。`0x40~0x60`准确地说是这个slot的大小。这个指针很重要，汇编里经常引用
-    - 可用`forge inspect a.sol:b deployedBytecode`查看文件a里b合约的字节码。 https://bytegraph.xyz/ 可以查看汇编的控制流图表，可以在 https://www.evm.codes/playground 调试汇编
+    - 可用`forge inspect a.sol:b deployedBytecode`查看文件a里b合约的字节码。 https://bytegraph.xyz 可以查看汇编的控制流图表，可以在 https://www.evm.codes/playground 调试汇编
     - 这题的其中一个漏洞是攻击者可以修改函数指针。题目有一个数组，数组里装着一个函数指针a，a指向被whenNotPaused修饰的函数b。假如我们可以修改函数指针，就能将a修改为修饰符逻辑下面的函数b逻辑内容，进而绕过修饰符检查，从而正常执行函数b（相当于修改got表时因为某种原因改成backdoor函数的开头不行，于是就把got修改为backdoor函数的重要部分）。注意solidity里jump的目的地必须是某个jumpdest字节码。剩下的漏洞是内存溢出（有点像堆溢出）和out of bounce read（指程序读取了预期之外的内容）
     - [预期解](https://blog.solidity.kr/posts/(ctf)-2024-SekaiCTF)里提到了[foundry debugger](https://book.getfoundry.sh/forge/debugger)。感觉和radare2一样都是基于命令行的图形ui调试器
 - [SURVIVE](https://blog.soreatu.com/posts/writeup-for-3-blockchain-challs-in-sekaictf-2024)
@@ -46,13 +46,22 @@
     - https://www.alchemy.com/blog/account-abstraction-paymasters
     - https://www.alchemy.com/blog/account-abstraction-wallet-creation
   - 此题的漏洞在于，实现Abstract Account system的wrapper时关键正则部分写错了，导致攻击者可以将beneficiary(bundlers)填写为任意地址，进而获取多余的ETH
+- [Arctic Vault](https://writeups.hanz.dev/GCTF24MostBlockchainChallenges.pdf)
+    - delegatecall相关漏洞。去年在GlacierVault见过这个知识点。这题做个补充。delegatecall保留`msg.sender`和`msg.value`的值。所以类似这样的结构是危险的：
+    ```solidity
+    for(uint256 i = 0; i < _data.length; i++)
+    {
+        (bool success, ) = address(this).delegatecall(_data[i]); //设想这里如果调用deposit会发生什么
+    }
+    ```
+    我对这里的`msg.value`的理解是“调用者调用某个函数时附带的eth数“。假如攻击者正常调用两次deposit，就需要付两次eth。但利用上面的for循环+delegatecall，可调用任意次deposit，且只用付一次eth。withdraw的时候就能凭空提取不属于自己的eth
 
 ## SQL注入
 
 之前开过一个SQL分区，感觉之后的还是放在这里比较好。顺便记一些NoSQL数据库和一些类似SQL注入的漏洞
-- [Penguin-Login](https://dothidden.xyz/la_ctf_2024/penguin-login/)
+- [Penguin-Login](https://dothidden.xyz/la_ctf_2024/penguin-login)
     - 仅能使用`a-zA-Z0-9{_}`且不能使用LIKE和注释符的PostgreSQL盲注。LIKE的功能可以用BETWEEN代替
-    - 其他wp（做法）： https://siunam321.github.io/ctf/LA-CTF-2024/web/penguin-login/ ，用`SIMILAR TO`和正则匹配代替LIKE。但是注意`{x}`在正则里表示匹配前一个字符x次，匹配带有`{}`的flag时可以去掉flag格式再匹配
+    - 其他wp（做法）： https://siunam321.github.io/ctf/LA-CTF-2024/web/penguin-login ，用`SIMILAR TO`和正则匹配代替LIKE。但是注意`{x}`在正则里表示匹配前一个字符x次，匹配带有`{}`的flag时可以去掉flag格式再匹配
 - [Order Up 1](https://github.com/sambrow/my_ctf_challenges/tree/main/wolvsec_ctf_2024/order-up)
     - postgres sql布尔盲注。注入点发生在order字段处
     - 如何判断服务器使用的数据库
@@ -61,9 +70,9 @@
     - MongoDB noSQL注入。要求在给定用户名但不知道其密码的情况下绕过登录
     - 也可以用`{"$gt":""}`
     - 另一篇详细的介绍wp： https://voxal.dev/blog/pico-2024-web#no-sql-injection
-- [one-shot](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/one-shot/)
+- [one-shot](https://gerlachsnezka.xhyrom.dev/writeups/amateursctf/2024/web/one-shot)
     - union all select的使用。union仅会返回不重复的查询内容，而union all会返回包括重复项的全部内容
-- [Hacker Web Store](https://siunam321.github.io/ctf/NahamCon-CTF-2024/Web/Hacker-Web-Store/)
+- [Hacker Web Store](https://siunam321.github.io/ctf/NahamCon-CTF-2024/Web/Hacker-Web-Store)
     - 很少见这么完整的sqlite注入过程了。注入点出现在insert语句的values中，可以用[subquery](https://www.w3resource.com/sqlite/sqlite-subqueries.php)带出数据（即再包一层select语句）。当然经典union select在这里也能用： https://twc1rcle.com/ctf/team/ctf_writeups/nahamcon_2024/web/TheHackerWebstore
     - python flask(Werkzeug) password encryption破解。这类hash以`pbkdf2:sha256:600000`开头。有现成的破解工具:[Werkzeug-Cracker](https://github.com/AnataarXVI/Werkzeug-Cracker)
 - [bbsqli](https://kashmir54.github.io/ctfs/L3akCTF2024)
@@ -4085,3 +4094,6 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 - 在`1.1.8`及以前的版本，[bun shell](https://bun.sh/docs/runtime/shell)存在通配符注入。假如可以检测命令执行是否成功的话，可以用来泄漏目录/文件名
 - scp命令参数注入。和ssh的参数注入利用差不多，见 https://sonarsource.github.io/argument-injection-vectors
 - 利用通配符执行命令。一个小技巧，可以将要执行的命令（或参数）以文件名的形式写在当前目录，这样就能用通配符匹配出完整的命令了。可用于绕过滤
+504. [GlacierChat](https://themreviil-blog.github.io/post/glacierctf2024)
+- 用了`$db->prepare`都还有sql注入……prepare的sql语句里诸如`?`,`:xx`才是可以被正确bind的内容，直接用`$xx`还是普通的语句拼接
+- OTPHP使用。php里用来生成一次性密码的库。安全性依赖于totp_secret。如果攻击者得知这个字段的值，就能破解接下来生成的所有otp（取决于otp的类型，Time-based otp还需要拿到服务器上的时间戳）
