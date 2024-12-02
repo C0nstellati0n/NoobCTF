@@ -77,6 +77,7 @@
 7. upx手动脱壳： https://cloud.tencent.com/developer/article/2098526 。注意不脱壳的程序在手动脱壳前搜索字符串是搜不到的
 8. upx脱壳（程序，非手动）后的程序可能无法运行，使用调试器也不行
 9. 反反调试的插件：[ScyllaHide](https://github.com/x64dbg/ScyllaHide)
+10. 如果需要在调试exe时附加参数(argv)，可以用这些命令： https://help.x64dbg.com/en/latest/commands/debug-control/InitDebug.html 。输入命令的地方在x64dbg下方的位置（可以用上下箭头浏览输入过的命令）。有一个坑点在于，输入命令的参数默认以逗号分割，而且必须加个空格。比如`init path,param`不行，需要`init path, param`
 
 ## dnSpy
 1. 如果遇到莫名其妙的报错导致编辑类后无法compile，可以尝试菜单栏->File->Reload All Assemblies

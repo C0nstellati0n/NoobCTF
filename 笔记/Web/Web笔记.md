@@ -4097,3 +4097,5 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 504. [GlacierChat](https://themreviil-blog.github.io/post/glacierctf2024)
 - 用了`$db->prepare`都还有sql注入……prepare的sql语句里诸如`?`,`:xx`才是可以被正确bind的内容，直接用`$xx`还是普通的语句拼接
 - OTPHP使用。php里用来生成一次性密码的库。安全性依赖于totp_secret。如果攻击者得知这个字段的值，就能破解接下来生成的所有otp（取决于otp的类型，Time-based otp还需要拿到服务器上的时间戳）
+505. [Fuzzybytes](https://sibivasan.gitbook.io/sibivasan/writeups/2024/glacier-ctf-2024)
+- [zipslip](https://github.com/snyk/zip-slip-vulnerability)（tarslip）漏洞。攻击者构造带有`../`的恶意文件名，tar命令解压时会将该文件写到解压目录外的地方去。路径穿越的锅

@@ -2352,4 +2352,6 @@ $ cd a/b
 - 恢复被打乱的elf文件块
 368. [Schrödinger Compiler](https://github.com/plvie/writeup/blob/main/glacierctf2024/schrodinger_compiler)
 - 利用编译过程泄漏指定文件里的内容。可以用`#include`在编译时读文件，然后用时间oracle爆破flag
-- 多线程脚本： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#schr%C3%B6dinger-compiler
+- 其他做法：
+    - 多线程脚本： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#schr%C3%B6dinger-compiler
+    - https://github.com/nononovak/glacierctf-2024-writeups/blob/main/Schrodinger%20Compiler%20(writeup).md
