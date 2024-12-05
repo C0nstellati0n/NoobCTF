@@ -931,6 +931,9 @@ print(ops_list)
 - [angry](https://ihuomtia.onrender.com/l3ak-rev-angry)
   - 以前遇到那种输入flag到栈上的题总是不知道怎么写脚本，不知道该把代表flag的BVS存到栈上的哪个地址。看了这个wp才知道，随便存到一个地址即可。接下来设置blank_state时跳过输入的部分，直接到判断逻辑，然后设置好寄存器即可。还可以将程序分成多次检查，第一次explore成功后将solution state取出来，重新设置好寄存器再explore即可
   - 此题的z3解法： https://github.com/L3AK-TEAM/L3akCTF-2024-public/tree/main/rev/angry 。该脚本会求出所有可能的解
+- [Qamu](https://www.sudeepvision.com/blog/glacier_ctf_2024_qamu_reverse_engineering_challenge)
+  - 利用capstone库编译汇编指令并写入文件
+  - Concat的使用。把多个BVS拼接成一个表达式（方便初始化时将输入内容以整体的形式用store存进某个地址？）
 100. qiling框架调试。使用[qdb](https://github.com/ucgJhe/Qdb): https://docs.qiling.io/en/latest/qdb/
 101. [🏴❓🇨🇹🇫](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/%F0%9F%8F%B4%E2%9D%93%F0%9F%87%A8%F0%9F%87%B9%F0%9F%87%AB),[wp](https://wiki.cve.gay/en/Writeups/amateursCTF2023/emojis)
 - [emojicode](https://www.emojicode.org/docs/)逆向

@@ -2134,3 +2134,5 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 221. [flaminglips](https://github.com/Dvorhack/ctf-WU/tree/main/udctf.2024/pwn/flaminglips)
 - libc 2.39 house of tangerine+unlink+fsop
 - 重点的house of tangerine+unlink都放在堆技巧学习了，再稍微简述一下利用过程。题目只允许调用一次free，但是edit功能有堆溢出。house of tangerine可以在这种情况下实现和tcache poisoning同样的效果，这里选择劫持tcache_perthread_struct获取进一步的任意地址malloc。接着用unlink泄漏libc地址。拿到libc地址后再利用fsop泄漏environ里的栈地址。最后往栈上写rop链
+222. [Genie in an ELF](https://github.com/LosFuzzys/GlacierCTF2024_writeups/blob/master/pwn/genie_in_an_elf)
+- 又是一道“任意地址写任意字节”类型的题目。这次利用了`/proc/self/mem`，所以标有只读的地址也可以写。预期解很复杂，首先要patch汇编代码使程序多次重入main（这步的计算可太困难了），然后再写shellcode。不知道下次遇见类似的题还能不能借用……不过我想记这个是因为有人发现只写两个字节也能getshell（甚至是爆破出来的）： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#genie-in-an-elf

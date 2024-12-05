@@ -794,6 +794,9 @@ AES是很能出题的。DES则是放在这凑数的
 - [cbc](https://github.com/rerrorctf/writeups/tree/main/2024_09_06_CSAWQuals24/crypto/cbc)
     - aes cbc padding oracle attack。题目有个oracle可以解密任意密文，返回密文是否解密成功
     - 附赠一个rust工具：[rustpad](https://github.com/Kibouo/rustpad)
+- [AES Overdrive](https://mcsch.dev/posts/glacierctf-2024)
+    - 假如AES只执行一轮，利用明文攻击可以恢复其密钥。使用工具[aeskeyschedule](https://github.com/fanosta/aeskeyschedule)的做法： https://johan6337.github.io/posts/write-up-glacierctf-2024
+    - 搜"Low Data Complexity Attack"的时候发现我之前居然见过类似的题目，见Shmooving 3
 
 ## Z3使用
 
