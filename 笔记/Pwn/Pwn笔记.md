@@ -781,6 +781,7 @@ print(base64.b64encode(temp.encode()))
   - 其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#monkeys-paw 。稍微提一嘴，根据官方解法（`oh_word`），题目的过滤好像写错了……预期解是用`__doc__`取出字符串，结果因为过滤的问题直接就能在payload里用字符串
 - [Korra](https://github.com/nononovak/glacierctf-2024-writeups/blob/main/Korra%20(writeup).md)
   - 只能用`abcdef"{>:}`的pyjail。关键是利用f-string的format语法，比如`f"""{"a">"a":d}"""`是字符0
+- pyjail cheatsheet： https://shirajuki.js.org/blog/pyjail-cheatsheet
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
 p=remote("",443,ssl=True)

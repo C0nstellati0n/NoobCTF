@@ -15,3 +15,7 @@ print(web3.eth.chain_id)
 这样应该就可以了，后面正常写攻击合约正常deploy并调用函数即可，用大白话说就是“Remix该怎么用咱们就怎么用”。顺便再说一句，开头提到的那篇wp确实是最适合初学者入门的，包括里面攻击合约的编写也是最基础的
 
 这里是一个blockchain（solidity）的javascript web3开发教程： https://www.youtube.com/watch?v=gyMwXuJrbJQ ,不过也有blockchain（solidity）的基础/深度知识讲解
+
+一些练习题：
+- https://ethernaut.openzeppelin.com
+- https://www.damnvulnerabledefi.xyz
