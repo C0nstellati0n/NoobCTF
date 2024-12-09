@@ -78,6 +78,7 @@
 8. upx脱壳（程序，非手动）后的程序可能无法运行，使用调试器也不行
 9. 反反调试的插件：[ScyllaHide](https://github.com/x64dbg/ScyllaHide)
 10. 如果需要在调试exe时附加参数(argv)，可以用这些命令： https://help.x64dbg.com/en/latest/commands/debug-control/InitDebug.html 。输入命令的地方在x64dbg下方的位置（可以用上下箭头浏览输入过的命令）。有一个坑点在于，输入命令的参数默认以逗号分割，而且必须加个空格。比如`init path,param`不行，需要`init path, param`
+11. [savedata](https://help.x64dbg.com/en/latest/commands/memory-operations/savedata.html)命令可以将从某个地址开始，长度为n的内存数据保存到一个文件里（太适合那些把代码藏在运行时的程序了）。使用案例：[Flag Checker](https://github.com/acdwas/ctf/tree/master/2024/World%20Wide%20CTF%202024/rev/Flag%20Checker)
 
 ## dnSpy
 1. 如果遇到莫名其妙的报错导致编辑类后无法compile，可以尝试菜单栏->File->Reload All Assemblies

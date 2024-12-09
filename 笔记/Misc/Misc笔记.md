@@ -136,6 +136,12 @@
 	- 有些memory dump无法使用Volatility分析，原因在于Volatility需要特别的profile。这种情况下，若题目给出了相关代码或是相关内容，可直接用strings过滤关键字。配合bulk_extractor可以找到dump里的文件
 - [Fiilllleeeeeeee](https://warlocksmurf.github.io/posts/crewctf2024)
 	- `.ad1`后缀文件分析：恢复被[sdelete64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sdelete)删除的文件。被删除文件的文件名为一串相同字母。[$LogFile](https://forensafe.com/blogs/windowslogfile.html)存储了所有文件系统事件（event，或者说transactions），可以用[LogFileParser](https://github.com/jschicht/LogFileParser)分析文件并获取每个transaction的内容。由于创建、删除文件等都会触发transaction，所以相关文件的内容可能被记录在了MFT中,通过LogFile索引
+- [Black Meet Wukong](https://d33znu75.github.io/posts/wwctf2024)
+    - Edge浏览器的历史记录位于`C:\Users\{USER}\AppData\Local\Microsoft\Edge\User Data\Default`
+    - telegram api使用：
+        - 获取bot的信息（需要bot token）
+        - 获取bot所有的chatid
+        - 控制bot转发消息（需要目标和来源的chatid）
 
 ## Network Forensics
 
@@ -1778,8 +1784,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
 - DNA code解码脚本
 164. [Frozen Xip](https://meashiri.github.io/ctf-writeups/posts/202308-cybergonctf/#frozen-xip)
 - 若解压zip文件发现报错`mismatching local filename`，可能是0x1A处的字节有问题。这个偏移处记录了压缩文件名的长度
-165. [RegRipper3.0](https://github.com/keydet89/RegRipper3.0)
-- 可用于处理hive文件，windows里timezone和hostname能在SYSTEM里找到
+165. [Forgot Password](https://ahmed-naser.medium.com/world-wide-ctf-2024-forensics-challenges-f6cdfc8b017c)
+- 使用[RegRipper3.0](https://github.com/keydet89/RegRipper3.0)处理与密码相关的SAM注册表文件。不过这个工具不是专门处理SAM文件的，而是处理所有registry hive文件。比如windows里timezone和hostname的相关信息能在SYSTEM hive里找到
 166. [I love this world](https://meashiri.github.io/ctf-writeups/posts/202308-sekaictf/#i-love-this-world)
 - .svp文件结构分析： https://www.bilibili.com/read/cv16383991/ 。可用Synthesizer V软件播放svp文件
 - svp文件为json格式，所以也可以自行打开分析
