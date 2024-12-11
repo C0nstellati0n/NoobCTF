@@ -142,6 +142,7 @@
         - 获取bot的信息（需要bot token）
         - 获取bot所有的chatid
         - 控制bot转发消息（需要目标和来源的chatid）
+        - 竟然有工具： https://github.com/soxoj/telegram-bot-dumper
 
 ## Network Forensics
 

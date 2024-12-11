@@ -1053,6 +1053,7 @@ main()
 - [watchdog](https://github.com/ImaginaryCTF/ImaginaryCTF-2024-Challenges-Public/blob/main/Reversing/watchdog)
 	- 又是被z3坑的一天……本来都逆出来逻辑了，是个多项式求值，给定几组(x,y)后逆出系数。本来说用Lagrange，结果发现程序的里的y值只能保存64bit，不是真正的结果。于是用z3，明明都按位或了，结果怎样都不对。搜了一下可能是z3使用带符号数的原因，不过不确定。官方解法是把它看成个线性模方程组，64位整数用模`2**64`代替
 	- 其他解法（sage线性方程组求解和正确z3脚本）： https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#watchdog
+- 有些时候如果8-bit vector出不来结果，可以尝试用32-bit vector： https://github.com/opcode86/ctf_writeups/tree/main/wwCTF2024
 115. [Conquest of Camelot](https://black-frost.github.io/posts/sekai2023/)
 - OCaml语言binary逆向。这种语言的函数调用约定比较奇怪，ida可能无法生成伪代码。另外，这种语言对数组的操作会自动添加大量的bound checking，函数体会看起来很复杂但逻辑可能很简单
 - 參考 https://mcfx.us/posts/2023-09-01-sekaictf-2023-writeup/#conquest-of-camelot ，（ida里）calling convection应该为`__int64 __usercall func<rax>(__int64 arg0@<rax>, __int64 arg1@<rax>, __int64 arg2@<rdi>)`
