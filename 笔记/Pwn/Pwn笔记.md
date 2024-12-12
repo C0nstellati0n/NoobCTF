@@ -2139,3 +2139,7 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 - 又是一道“任意地址写任意字节”类型的题目。这次利用了`/proc/self/mem`，所以标有只读的地址也可以写。预期解很复杂，首先要patch汇编代码使程序多次重入main（这步的计算可太困难了），然后再写shellcode。不知道下次遇见类似的题还能不能借用……不过我想记这个是因为有人发现只写两个字节也能getshell（甚至是爆破出来的）： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#genie-in-an-elf
 223. [Free My Man Pascal](https://kileak.github.io/ctf/2024/wwctf2024-freemymanpascal)
 - Free Pascal是编译Pascal语言的编译器。这题漏洞是UAF。可能底层是一样的吧，也能通过写next指针拿到任意地址chunk分配。getshell则是利用了exitfuncs，通过实验确认了攻击的全局函数指针目标`U_$SYSTEM_$$_STDOUT`（不是怎么换了个语言还有你？）。不过这里的stdout利用方式和c里的不一样，佬的探索过程也值得学习
+224. [CTF Registration](https://kileak.github.io/ctf/2024/wwctf2024-ctfreg)
+- 如何找自制内存分配器的漏洞。这题的漏洞是off by null，利用overlapped chunk可以覆盖next pointer（说是自制的内存分配器，但由于也用了链表结构，正常分配器怎么pwn这里就怎么pwn。甚至还降低难度了）
+- 总感觉见过很多次的技巧：mmap chunk与libc的偏移固定。不过具体的偏移量和是否开启aslr有关，也和机子的不同有关（本地和远程不一定一样）
+- https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc#1---targetting-libc-got-entries 的实践。`__vfprintf_internal`内部调用的`*ABS*+0xa86a0`是常用目标
