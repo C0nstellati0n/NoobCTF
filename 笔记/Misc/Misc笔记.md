@@ -143,6 +143,11 @@
         - 获取bot所有的chatid
         - 控制bot转发消息（需要目标和来源的chatid）
         - 竟然有工具： https://github.com/soxoj/telegram-bot-dumper
+- [Counter Defensive](https://github.com/hackthebox/business-ctf-2024/tree/main/forensics/%5BHard%5D%20Counter%20Defensive)
+    - Brave浏览器的历史记录位于`C:\Users\{USER}\AppData\Local\BraveSoftware\Brave-Browser\User Data\Default`
+    - 恶意软件常利用注册表相关内容实现persistence。有关registry keys的手段： https://kamransaifullah.medium.com/registry-run-keys-startup-folder-malware-persistence-7ae3cf160680 。植入的恶意命令在用户登录时就能触发
+    - 对于windows默认无法识别的文件后缀，攻击者可以在配置单元文件（hive file）`UsrClass.dat`里创建一个key并配置相关handler。这样就能控制计算机打开这类文件后执行的内容了。这种技巧叫[Event Triggered Execution: Change Default File Association](https://attack.mitre.org/techniques/T1546/001)
+    - 这题也有telegram bot api的使用
 
 ## Network Forensics
 
