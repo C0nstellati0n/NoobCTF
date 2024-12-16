@@ -862,69 +862,7 @@ print(ops_list)
     - https://riscv.org/wp-content/uploads/2015/01/riscv-calling.pdf
 99. angr。虽然前面已经记过了，但还会继续记一些复杂的angr题的脚本。
 - [topology](https://github.com/zer0pts/zer0pts-ctf-2023-public/tree/master/rev/topology)
-    ```py
-    from tqdm import tqdm
-    from ptrlib import *
-    import archinfo
-    import angr
-    import re
-    path = "topology"
-    elf = ELF(path) #这块是ptrlib的： https://github.com/ptr-yudai/ptrlib/
-    counters, funcs = {}, {}
-    for symbol, address in elf.symbols().items(): #elf.symbols()返回elf文件里的symbols，比如函数之类的
-        if re.fullmatch(b"[a-zA-Z0-9]{8}\.\d+", symbol):
-            counters[symbol[:8].decode()] = address
-        if re.fullmatch(b"[a-zA-Z0-9]{8}", symbol):
-            funcs[symbol.decode()] = address
-    ANSWERS = {}
-    def hook_ret(state):
-        global ANSWERS
-        instr = state.memory.load(state.regs.rip, 1) #state.regs.rip表示当前状态下rip的值。从rip指向的地方加载一个字节
-        if state.solver.eval(instr) == 0xc3: #eval上面取出的字节，与期望值比对。似乎像上面那样load出来的只能这样eval
-            state.solver.add(state.regs.rax == 0) #给当前state的solver添加个新的约束。添加后，solver只会考虑那些rax为0的执行路径
-            ANSWERS[FUNCTION].append(state.solver.eval(FLAG, cast_to=bytes)) #使用eval将FLAG转为byte
-    p = angr.Project(path, auto_load_libs=False)
-    cfg = p.analyses.CFGFast() #performs a fast control flow graph (CFG) analysis on the project p。CFG是程序执行流的表示，显示了代码块和指令之间是怎么连接起来的
-    ADDR_STR = 0xdead0000
-    FUNCTION = None
-    for symbol in tqdm(funcs): #tqdm是个轻量级进度条 https://github.com/tqdm/tqdm
-        addr_start = 0x400000+funcs[symbol] #angr默认0x400000为基地址
-        FUNCTION = symbol
-        ANSWERS[FUNCTION] = []
-        print(symbol, hex(addr_start))
-        # Hook ret instruction
-        function = cfg.functions[addr_start] #获取在addr_start出的function object
-        for block in function.blocks: #函数内的基本代码块。基本代码块是指程序中一串无jump或分支的指令，且只有一个入口点和一个出口点
-            end_addr = block.addr + block.size - 1
-            p.hook(end_addr, hook_ret, length=0) #用上面定义的hook_ret hook住返回地址。hook后，angr会将end_addr出的指令换成hook_ret函数。length参数表示要hook的指令或函数长度的。0表示angr自动检测
-        for part in range(10):
-            state = p.factory.blank_state( #创建一个blank state。blank state是程序在addr_start处的初始状态
-                addr=addr_start,
-                add_options={angr.options.ZERO_FILL_UNCONSTRAINED_REGISTERS} \
-                | {angr.options.ZERO_FILL_UNCONSTRAINED_MEMORY}, #state的一些设置。这俩表示让angr initialize any unconstrained registers or memory locations with zero values
-            )
-            # Set initial state
-            state.regs.rdi = ADDR_STR
-            state.memory.store(0x400000+counters[symbol], #往0x400000+counters[symbol]存state.solver.BVV(part, 32)值。state.solver.BVV()用于创建一个bitvector，值为part，宽度为32
-                            state.solver.BVV(part, 32),
-                            endness=archinfo.Endness.LE)
-            FLAG = state.solver.BVS('v', 64) #创建一个symbolic bitvector。v是它的名字，64是它的bitwidth。
-            state.memory.store(state.regs.rdi, FLAG)
-            sim = p.factory.simgr(state)
-            sim.run()
-        print(ANSWERS[FUNCTION])
-    flag = b""
-    for i in range(10):
-        counts = {}
-        for func in funcs:
-            ans = ANSWERS[func][i]
-            if ans in counts:
-                counts[ans] += 1
-            else:
-                counts[ans] = 1
-        flag += sorted(counts.items(), key=lambda x: -x[1])[0][0]
-        print(flag)
-    ```
+  - https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#topology
 - [icancount](https://guyinatuxedo.github.io/13-angr/plaid19_icancount/index.html)
   - PIE下的angr模拟
 - [Classic Crackme 0x100](https://anugrahn1.github.io/pico2024#classic-crackme-0x100-300-pts)
@@ -935,6 +873,9 @@ print(ops_list)
 - [Qamu](https://www.sudeepvision.com/blog/glacier_ctf_2024_qamu_reverse_engineering_challenge)
   - 利用capstone库编译汇编指令并写入文件
   - Concat的使用。把多个BVS拼接成一个表达式（方便初始化时将输入内容以整体的形式用store存进某个地址？）
+- [tinylock](https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#tinylock)
+  - 其实不是angr脚本，而是claripy的使用。claripy自己就能单独拿出来用，作用类似z3
+  - 这题一共有两个阶段，第一个阶段检查flag长度，第二个阶段检查flag的实际值。巧思在于检查flag的逻辑藏在第一个阶段的汇编指令所用的立即数中，用push和ret实现跳跃。因此对编译器不可见，也是一个不错的混淆手段
 100. qiling框架调试。使用[qdb](https://github.com/ucgJhe/Qdb): https://docs.qiling.io/en/latest/qdb/
 101. [🏴❓🇨🇹🇫](https://github.com/les-amateurs/AmateursCTF-Public/tree/main/2023/rev/%F0%9F%8F%B4%E2%9D%93%F0%9F%87%A8%F0%9F%87%B9%F0%9F%87%AB),[wp](https://wiki.cve.gay/en/Writeups/amateursCTF2023/emojis)
 - [emojicode](https://www.emojicode.org/docs/)逆向
@@ -1382,3 +1323,5 @@ mov     r8, qword [r13]
   - 由于python每次版本更新可能会修改opcode，所以不同版本的python生成pyc的magic number不同，也就不能跨版本运行。因此，相关反编译工具pycdc（也叫Decompyle++）也无法反编译较新版本的pyc。提供一个暂时的解决方法： https://idafchev.github.io/blog/Decompile_python ，通过假装支持某些opcode从而阻止工具停止运行
   - dis module可以反编译pyc文件，不过要跳过文件起始处的文件头。见 https://stackoverflow.com/a/59431935
   - `dis.get_instructions`可以提供opcode的详细内容，比如各个opcode的行列号（坐标）
+200. [platyprotect64](https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#platyprotect64)
+- 逆向`.prg`后缀文件（Commodore C64 program）

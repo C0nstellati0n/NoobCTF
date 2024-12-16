@@ -2669,6 +2669,7 @@ c2=encrypt(k2,c1)
 - 此题的漏洞见论文第7节（pdf第8页）： solve a system of n randomly chosen quadratic equations in n + v variables, when $v ≥ n^2$
 145. [dream-revenge](https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#dream-revenge)
 - 现在只需要8个输出就能破解python random库的seed了……见 https://stackered.com/blog/python-random-prediction/ 。MT19937你不行啊（doge）
+- 用的时候差点没搜到，添加关键词：mersenne twister，python随机数预测
 146. [Many Xor Shift](https://thr34dr1pp3r.gitbook.io/ctf/wanictf-2024/crypto-many-xor-shift)
 - 使用矩阵与向量表达异或和位移等操作。常用来加速某些线性操作的组合
 - 官方wp： https://qiita.com/KowerKoint/items/89d94343e6ceee32645c
@@ -2737,3 +2738,5 @@ assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
 - 官方wp： https://github.com/HeroCTF/HeroCTF_v6/tree/main/Crypto/State
 163. [Halloween](https://github.com/rerrorctf/writeups/blob/main/2024_10_25_HeroCTF24/crypto/halloween)
 - [gostcrypto](https://github.com/drobotun/gostcrypto)库ctr模式实现漏洞。gostcrypto中的gostcipher本身没有什么漏洞，但这个库的实现导致ctr模式异或时用的nonce每0xff轮就会重复
+164. [sha-home](https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#sha-home)
+- sha0 hash collision。相关论文： https://iacr.org/archive/fse2008/50860017/50860017.pdf

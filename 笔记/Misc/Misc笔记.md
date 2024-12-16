@@ -1,10 +1,12 @@
 # Misc笔记
 
-## Linux privilege escalation（提权）/运维
+## Linux相关
 
 之前曾经把这类题分到过pwn里，想了想感觉做这种题包含的东西很综合，不如放misc（说实话这才是我心目中的misc分类，包罗万象，单独放在哪个分类里都感觉不足；而不是一些奇怪的guessy题）
 
 想了一下干脆把运维题一起放进来。这两种题目题型都很少，不抱团分两个感觉不够看
+
+继续扩大，跟linux有关的都放这
 
 - [privilege-not-included](https://github.com/LazyTitan33/CTF-Writeups/blob/main/Unbreakable-Individual-2024/privilege-not-included.md)
     - 无权限机器使用python安装[pspy](https://github.com/DominicBreuker/pspy)监控进程
@@ -27,6 +29,8 @@
 - [哦不！我的nginx！](https://github.com/XDSEC/MoeCTF_2024/tree/main/Official_Writeup/DevOps)
     - 如何在机器没有glibc和busybox的情况下恢复libc。如果机器还有能用的bash的话，可以用bash的内建指令echo或printf读写文件。比如`printf 'xxx' > /bin/xxx`即可恢复任意文件。到这一步还不能恢复glibc，因为没有chmod修改libc的权限。不过可以用busybox恢复完整的指令集。有了busybox后就能用其内部的netcat在两台机器间传输文件了。这一步也可以用两台机器间的`/dev/tcp/`伪协议替代
     - 似乎这个方法需要两台机器才能成立？不知道有没有单纯一台机器的做法，比如直接printf一个libc？
+- [MyFirstCloud](https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#myfirstcloud)
+    - 关于bash/posix shell使用由用户控制值的变量时不加引号的安全问题
 
 ## Digital Forensics and Incident Response(DFIR)
 
@@ -2367,3 +2371,8 @@ $ cd a/b
 - 其他做法：
     - 多线程脚本： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#schr%C3%B6dinger-compiler
     - https://github.com/nononovak/glacierctf-2024-writeups/blob/main/Schrodinger%20Compiler%20(writeup).md
+369. [Satan Himself](https://www.youtube.com/watch?v=G6cYc_7I_Sc)
+- esoteric language Malbolge。一些可用的编译器：
+    - https://www.trs.css.i.nagoya-u.ac.jp/projects/Malbolge/debugger
+    - https://lutter.cc/malbolge/debugger.html
+    - https://github.com/bipinu/malbolge
