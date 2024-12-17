@@ -2376,3 +2376,5 @@ $ cd a/b
     - https://www.trs.css.i.nagoya-u.ac.jp/projects/Malbolge/debugger
     - https://lutter.cc/malbolge/debugger.html
     - https://github.com/bipinu/malbolge
+370. [texnically-insecure](https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#texnically-insecure)
+- latex绕过黑名单读flag文件

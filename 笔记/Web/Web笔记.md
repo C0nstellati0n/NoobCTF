@@ -326,6 +326,9 @@
     - 最后是个利用url+eval缩短payload的技巧，之前见过。补充其他人的payload： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#saas
     - js的`new URL`特性。经过url编码的url也可以正常解析，甚至于往url里塞几个奇怪字符也不影响
     - mxss cheatsheet： https://sonarsource.github.io/mxss-cheatsheet/examples
+- [Notes](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#notes)
+    - 鸡肋的self xss，只有自己才能查看自己的note。突破点是网站使用了java的Apache Struts框架，这个框架竟然能在url里设置访问者的cookie：`/sample.action;jsessionid=[…]`……
+    - 非预期解在于report功能直接用了攻击者提供的url，没有过滤。所以提交`file:///var/lib/jetty/browser-state.json`就能看到bot的cookie
 
 ## SSTI
 
@@ -4108,3 +4111,8 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 - OTPHP使用。php里用来生成一次性密码的库。安全性依赖于totp_secret。如果攻击者得知这个字段的值，就能破解接下来生成的所有otp（取决于otp的类型，Time-based otp还需要拿到服务器上的时间戳）
 505. [Fuzzybytes](https://sibivasan.gitbook.io/sibivasan/writeups/2024/glacier-ctf-2024)
 - [zipslip](https://github.com/snyk/zip-slip-vulnerability)（tarslip）漏洞。攻击者构造带有`../`的恶意文件名，tar命令解压时会将该文件写到解压目录外的地方去。路径穿越的锅
+506. [Cash Puzzle](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#cash-puzzle)
+- 这题有两个由go写的后端，分别在机器A和B上。两者共用A上的httpd反向代理。唯一的漏洞是文件读取，但出现这个漏洞的机器A上没有flag，flag在B里。关键是利用httpd反向代理的缓存机制，通过代理访问B的flag后缓存文件留在了A里，这时就能利用文件读取漏洞拿flag了
+- 一个干扰项是每一个请求都有`Cache-Control: no-cache` header。这个header并不代表不会缓存网页，而是缓存后的每一次请求都要检查缓存是否是最新内容。还有一个难点在于缓存文件的路径由某种哈希算法生成，不好找。最简单的解决办法是自己跑一次docker，手动确认缓存文件的路径
+507. [Pretty HTML Page](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#pretty-html-page)
+- php mb_strpos和mb_substr的解析差异
