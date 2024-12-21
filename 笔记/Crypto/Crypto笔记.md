@@ -797,6 +797,9 @@ AES是很能出题的。DES则是放在这凑数的
 - [AES Overdrive](https://mcsch.dev/posts/glacierctf-2024)
     - 假如AES只执行一轮，利用明文攻击可以恢复其密钥。使用工具[aeskeyschedule](https://github.com/fanosta/aeskeyschedule)的做法： https://johan6337.github.io/posts/write-up-glacierctf-2024
     - 搜"Low Data Complexity Attack"的时候发现我之前居然见过类似的题目，见Shmooving 3
+- [Subathon](https://github.com/WorldWideFlags/World-Wide-CTF-2024/blob/main/Cryptography/Subathon)
+    - aes sbox如果有一个重复的字节（即有一个字节不存在于sbox），则可以利用oracle恢复最后一轮的轮密钥，进而破解密文
+    - 这题sbox里不会出现的字节是0xea。根据最后一轮的操作（`sub_bytes`,`shift_rows`,`add_round_key`），sub_bytes产生的结果绝对不会有0xea，shift_rows也不会改变这个结果，add_round_key也只是异或。因此假如有一个orcacle（可以得到随机明文的加密结果），用0xea异或其密文，则异或结果不可能是最后一轮的轮密钥。利用这点慢慢排除可能的轮密钥字节就能得到确切的结果
 
 ## Z3使用
 
@@ -2740,3 +2743,6 @@ assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
 - [gostcrypto](https://github.com/drobotun/gostcrypto)库ctr模式实现漏洞。gostcrypto中的gostcipher本身没有什么漏洞，但这个库的实现导致ctr模式异或时用的nonce每0xff轮就会重复
 164. [sha-home](https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#sha-home)
 - sha0 hash collision。相关论文： https://iacr.org/archive/fse2008/50860017/50860017.pdf
+165. [Just Lattice](https://yun.ng/c/ctf/2024-wwctf/crypto/just-lattice)
+- 结果这题和lattice没有关系……题目是个Learning with Errors (LWE)加密方案，本身是安全的加密方案。但这题设置的参数导致可能的私钥空间太小，直接爆破就能得到结果
+- 官方wp不是最佳爆破方式，最佳方式见 https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#just-lattice
