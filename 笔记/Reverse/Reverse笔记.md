@@ -24,6 +24,8 @@
   - 逆向[cordova](https://cordova.apache.org) app。cordova允许用html，css和js写应用
   - 这题主要是分析`index.html`里被混淆的逻辑。我就比较特别了，由于这类型app反编译后和一般app不同，直接没找到入口点……
   - 另一篇更详细的wp： https://majix.notion.site/Cold-Storage-13f2c37daa29807a930eed847be939f8 。没经过签名的apk无法运行，不过可以自行生成key并签名
+- [Remind's funny stories 3](https://github.com/Qynklee/Public_CTF_Writeups/blob/main/WWFCTF-2024/Remind's%20funny%20stories%203)
+  - 继续逆向flutter apk。可以在blutter输出的`pp.txt`中找到程序使用的字符串
 
 ## IDA使用
 
@@ -996,6 +998,7 @@ main()
 	- 其他解法（sage线性方程组求解和正确z3脚本）： https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#watchdog
 - [Floats](https://github.com/imenyoo2/ctf_writeups/blob/main/wwctf2024/Floats.md)
   - 如何编写有关浮点数计算的z3脚本。这题计算的浮点数比较刁钻，`0.0`和`-0.0`。需要使用正确的类型z3才能正常工作，比如`FP("x", Float32())`。脚本见 https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#floats
+  - [官方wp](https://github.com/WorldWideFlags/World-Wide-CTF-2024/tree/main/Reverse%20Engineering/Floats)提到这题的灵感来源： https://orlp.net/blog/subtraction-is-functionally-complete 。话说wp里的z3脚本长得还挺别致的（？）
   - 此题计算时只用了加和减两种运算，结果很像按位和。所以也可以用简单的bitvec来模拟方程
 - 有些时候如果8-bit vector出不来结果，可以尝试用32-bit vector： https://github.com/opcode86/ctf_writeups/tree/main/wwCTF2024
 115. [Conquest of Camelot](https://black-frost.github.io/posts/sekai2023/)

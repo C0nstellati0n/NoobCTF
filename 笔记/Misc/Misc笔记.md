@@ -2378,3 +2378,7 @@ $ cd a/b
     - https://github.com/bipinu/malbolge
 370. [texnically-insecure](https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#texnically-insecure)
 - latex绕过黑名单读flag文件
+371. [Mutual TLS](https://github.com/WorldWideFlags/World-Wide-CTF-2024/tree/main/Miscellaneous/Mutual%20TLS)
+- Mutual TLS(mTLS)的错误实现： https://github.blog/security/vulnerability-research/mtls-when-certificate-authentication-is-done-wrong 。这题属于第一种（Improper certificate extraction），用python ssl库的get_unverified_chain获取client发送的一系列证书，并使用最后一个作为用户的CN。然而服务器只会验证第一个证书，也就是说后续内容都是未经验证的，使得攻击者可以伪造证书内容
+372. [Safe Unsafe](https://github.com/WorldWideFlags/World-Wide-CTF-2024/tree/main/Miscellaneous/Safe%20Unsafe)
+- 这题的设置是，flag作为某个函数A的参数，需要编写A的具体代码使其打印出flag。难点在于常用的打印手段都被ban了。剩下一个`Err().expect()`可以打印内容，然而`.expect()`要求参数的lifetime为static。需要用之前见过的[技巧](https://github.com/rust-lang/rust/issues/25860)延伸某个变量的lifetime

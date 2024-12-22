@@ -326,6 +326,7 @@
     - 最后是个利用url+eval缩短payload的技巧，之前见过。补充其他人的payload： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#saas
     - js的`new URL`特性。经过url编码的url也可以正常解析，甚至于往url里塞几个奇怪字符也不影响
     - mxss cheatsheet： https://sonarsource.github.io/mxss-cheatsheet/examples
+    - 官方wp： https://abdulhaq.me/blog/saas-mxss-challenge-writeup-from-wwctf-2024
 - [Notes](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#notes)
     - 鸡肋的self xss，只有自己才能查看自己的note。突破点是网站使用了java的Apache Struts框架，这个框架竟然能在url里设置访问者的cookie：`/sample.action;jsessionid=[…]`……
     - 非预期解在于report功能直接用了攻击者提供的url，没有过滤。所以提交`file:///var/lib/jetty/browser-state.json`就能看到bot的cookie
@@ -2955,9 +2956,11 @@ SuperSerial不处理函数，所以没法像python的pickle那样直接RCE。
     - https://github.com/Connor-Maddison/ctf_event_writeups/blob/main/tenable_ctf_2023/rose/Rose_writeup.md ：似乎在session里加上`'is_authenticated': True, '_user_id': '1'`也是可以的
 259. [Bad Waf No Donut](https://ctftime.org/writeup/37739)
 - [unicode-normalization](https://hacktricks.boitatech.com.br/pentesting-web/unicode-normalization-vulnerability):字符串经过unicode标准化后，某些不一样的unicode字符最后会标准化成一个。可利用这个特点绕过一些waf和过滤。unicode参考： https://appcheck-ng.com/wp-content/uploads/unicode_normalization.html ， https://qaz.wtf/u/convert.cgi
-- 类似知识点的题目：[World Wide Email Search](https://www.thesecuritywind.com/post/world-wide-ctf-2024-world-wide-email-search-web)。顺便记录一下看到的好玩意
+- 类似知识点的题目：[World Wide Email Search](https://www.thesecuritywind.com/post/world-wide-ctf-2024-world-wide-email-search-web)，利用python的标准化插入引号进而引发sql注入。顺便记录一下看到的好玩意
     - 各类网站架构的默认404页面： https://0xdf.gitlab.io/cheatsheets/404
     - https://book.hacktricks.xyz/pentesting-web/unicode-injection/unicode-normalization
+    - https://book.hacktricks.xyz/pentesting-web/phone-number-injections
+    - https://book.hacktricks.xyz/pentesting-web/email-injections
 260. [sequence_gallery](https://siunam321.github.io/ctf/CrewCTF-2023/Web/sequence_gallery/)
 - linux dc命令参数注入导致的rce。`-e`选项可以执行一个表达式，但当表达式中出现`!`时，会将剩余的语句当作系统命令执行。
     - `-e"!cat$IFS*.txt%0A`：第一个`"`用于分割命令（这种情况下不是必须的，详情见文档。本来标准是用空格的，这里绕过滤），`$IFS`表示空格也是绕过滤，`%0A`表示换行，不换行命令是不会执行的
@@ -4116,3 +4119,5 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 - 一个干扰项是每一个请求都有`Cache-Control: no-cache` header。这个header并不代表不会缓存网页，而是缓存后的每一次请求都要检查缓存是否是最新内容。还有一个难点在于缓存文件的路径由某种哈希算法生成，不好找。最简单的解决办法是自己跑一次docker，手动确认缓存文件的路径
 507. [Pretty HTML Page](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#pretty-html-page)
 - php mb_strpos和mb_substr的解析差异
+508. [Guessy CTF Solver](https://github.com/WorldWideFlags/World-Wide-CTF-2024/tree/main/Web%20Exploitation/Guessy%20CTF%20Solver)
+- happy-dom的[rce漏洞](https://github.com/capricorn86/happy-dom/issues/1585)

@@ -640,6 +640,9 @@ sympy也放这了
 - [babe-Lifting](../../CTF/moectf/2024/Crypto/babe-Lifting.md)
     - partial key exposure attack(d泄漏高位或低位)。脚本见 https://github.com/jvdsn/crypto-attacks/blob/master/attacks/rsa/partial_key_exposure.py
     - 官方wp见 https://github.com/XDSEC/MoeCTF_2024/blob/main/Official_Writeup/Crypto/MoeCTF2024%20Crypto%20Writeup.md 。这个脚本我比赛时也试过，不知道为什么出不来结果
+- [Twister](https://github.com/WorldWideFlags/World-Wide-CTF-2024/blob/main/Cryptography/Twister)
+    - 如何用solve_right解模2的线性方程组
+    - 对着wp都差点没看出来这题是解线性方程组……长点心吧
 
 ## Lattice(格)
 
