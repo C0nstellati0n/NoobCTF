@@ -368,6 +368,7 @@
 - [Minimum Obstacle Removal to Reach Corner](./Hard/Minimum%20Obstacle%20Removal%20to%20Reach%20Corner.md). 0-1 Breadth-First Search([0-1 bfs](https://cp-algorithms.com/graph/01_bfs.html))
 - [Minimum Time to Visit a Cell In a Grid](./Hard/Minimum%20Time%20to%20Visit%20a%20Cell%20In%20a%20Grid.md). dijkstra的grid优化版本
 - [Valid Arrangement of Pairs](./Hard/Valid%20Arrangement%20of%20Pairs.md). Hierholzer's Algorithm：在Eulerian Graph/Semi-Eulerian Graph中寻找Eulerian path
+- [Find Minimum Diameter After Merging Two Trees](./Hard/Find%20Minimum%20Diameter%20After%20Merging%20Two%20Trees.md). 寻找树（tree）的直径（diameter）
 
 ## Others
 

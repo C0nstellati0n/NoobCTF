@@ -2143,3 +2143,13 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 - 如何找自制内存分配器的漏洞。这题的漏洞是off by null，利用overlapped chunk可以覆盖next pointer（说是自制的内存分配器，但由于也用了链表结构，正常分配器怎么pwn这里就怎么pwn。甚至还降低难度了）
 - 总感觉见过很多次的技巧：mmap chunk与libc的偏移固定。不过具体的偏移量和是否开启aslr有关，也和机子的不同有关（本地和远程不一定一样）
 - https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc#1---targetting-libc-got-entries 的实践。`__vfprintf_internal`内部调用的`*ABS*+0xa86a0`是常用目标
+225. [Mixed Signals](https://github.com/rerrorctf/writeups/blob/main/2024_12_13_NiteCTF24/pwn/mixed_signal)
+- 自己的做法在这： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#mixed-signals 。原来比赛中做这题的痛苦一大半都是我自己给自己找的……
+- 一个卡了我很久的地方是，程序自己打开了flag文件，但fd未知。本地的fd是3，但是docker里可能是因为开了socket，fd为5。以后要注意
+226. got gadget
+- a got gadget is just a snippet of instructions that end in a jump or call to a function pointer on the global offset table, depending on the libraries protections, the entry on the got can be rewritten, so you chain snippets of code together where the instructions before the jump to the next gadget perform what you are trying to get the binary to do
+- 看起来像是一个帮助调整one_gadget执行环境的小技巧？一个例子：overwrite libc got strcmp with one_gadget and libc got strlen with `mov rbx, rdx;jump strcmp` so you chain the two and make the one_gadget constraints sat
+- 相关工具
+  - [LibcGOTchain](https://github.com/thisusernameistaken/LibcGOTchain)
+  - [gopper](https://github.com/tsheinen/gopper)
+  - ghidra插件[GotGadget](https://github.com/michael-benedetti/gotgadget)

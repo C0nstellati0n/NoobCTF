@@ -1,5 +1,12 @@
 # Reverse笔记
 
+## Game
+
+游戏相关，不过大部分都是unity/godot/game maker
+
+- [Restricted Jumper](https://yun.ng/c/ctf/2024-nitectf/rev/restricted-jumper)
+  - [UnityExplorer](https://github.com/sinai-dev/UnityExplorer)：允许在游戏内进行调试，修改的mod。支持IL2CPP和Mono
+
 ## APK
 
 记录android apk相关题目

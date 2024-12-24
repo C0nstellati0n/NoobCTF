@@ -158,7 +158,7 @@
 记那种分析pcapng的流量题
 
 - [Sussy](https://auteqia.garden/posts/write-ups/akasec2024/sussy/)
-    - 在docker里使用[zeek](https://zeek.org/)分析流量包
+    - 在docker里使用[zeek](https://zeek.org)分析流量包
     - john爆破7z和pdf文件密码
 - [I_wanna_be_a_streamer](https://odintheprotector.github.io/2024/06/23/wanictf-forensic-writeup.html)
     - RTP 和 RTSP 协议流量分析。这种流量包常用于传输视频和音频。此协议不会加密传输的内容。可以用Wireshark插件[H264extractor](https://github.com/volvet/h264extractor)提取其中的H.264视频数据
@@ -168,6 +168,12 @@
         - https://www.yuque.com/sanxun-phiqb/czl271/dy7pfgq48o1x06fv?#%E3%80%8A%E6%B5%81%E9%87%8F%E5%8C%85%E9%9B%86%E5%90%88%E3%80%8B ：无插件手动提取做法
 - [Unfare](https://github.com/Thehackerscrew/CrewCTF-2024-Public/tree/main/challenges/forensics/Unfare)
 	- 分析[proxmark3](https://github.com/RfidResearchGroup/proxmark3)流量包中的数据
+- [mine-the-cap](https://yun.ng/c/ctf/2024-nitectf/forensics/mine-the-cap)
+    - 分析minecraft服务器流量包。使用的协议参考 http://web.archive.org/web/20201202115228/https://wiki.vg/Protocol 。有现成的python库：[Quarry](https://github.com/barneygale/quarry)。也有提供给服务器和bot的在线浏览器：[prismarine-viewer](https://github.com/PrismarineJS/prismarine-viewer)
+    - 其他相关链接：
+        - [官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/forensics/mine-the-cap)自己实现了部分协议
+        - https://prismarinejs.github.io/minecraft-data
+        - https://www.npmjs.com/package/minecraft-protocol
 
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
@@ -2382,3 +2388,7 @@ $ cd a/b
 - Mutual TLS(mTLS)的错误实现： https://github.blog/security/vulnerability-research/mtls-when-certificate-authentication-is-done-wrong 。这题属于第一种（Improper certificate extraction），用python ssl库的get_unverified_chain获取client发送的一系列证书，并使用最后一个作为用户的CN。然而服务器只会验证第一个证书，也就是说后续内容都是未经验证的，使得攻击者可以伪造证书内容
 372. [Safe Unsafe](https://github.com/WorldWideFlags/World-Wide-CTF-2024/tree/main/Miscellaneous/Safe%20Unsafe)
 - 这题的设置是，flag作为某个函数A的参数，需要编写A的具体代码使其打印出flag。难点在于常用的打印手段都被ban了。剩下一个`Err().expect()`可以打印内容，然而`.expect()`要求参数的lifetime为static。需要用之前见过的[技巧](https://github.com/rust-lang/rust/issues/25860)延伸某个变量的lifetime
+373. [BuckSpeak](https://kerszl.github.io/hacking/walkthrough/ctf/ctf-nitectf-BuckSpeak)
+- [Bücking Music Cipher](https://legacy.wmich.edu/mus-theo/ciphers/bucking.html)
+- 使用mkvinfo和mkvextract分析并提取`.mkv`后缀文件的资源
+- 字体（font）文件（`.otf`）隐写
