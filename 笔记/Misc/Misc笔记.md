@@ -1,5 +1,15 @@
 # Misc笔记
 
+## Hardware
+
+说不定有一天我就喜欢上硬件了
+
+- [U ARe T Detective](https://abuctf.github.io/posts/NiteCTF2024)
+    - [UART](https://www.rohde-schwarz.com/ca/products/test-and-measurement/essentials-test-equipment/digital-oscilloscopes/understanding-uart_254524.html)协议信号分析： https://electronics.stackexchange.com/questions/501849/decode-analyse-the-following-uart-signals
+    - `.sr`后缀文件可以用Sigrok Pulse Viewer软件打开
+- [Ancient Ahh Display](https://abuctf.github.io/posts/NiteCTF2024)
+    - [Seven-Segment LED Display on Basys 3 FPGA](https://www.fpga4student.com/2017/09/seven-segment-led-display-controller-basys3-fpga.html)
+
 ## Linux相关
 
 之前曾经把这类题分到过pwn里，想了想感觉做这种题包含的东西很综合，不如放misc（说实话这才是我心目中的misc分类，包罗万象，单独放在哪个分类里都感觉不足；而不是一些奇怪的guessy题）
@@ -152,6 +162,10 @@
     - 恶意软件常利用注册表相关内容实现persistence。有关registry keys的手段： https://kamransaifullah.medium.com/registry-run-keys-startup-folder-malware-persistence-7ae3cf160680 。植入的恶意命令在用户登录时就能触发
     - 对于windows默认无法识别的文件后缀，攻击者可以在配置单元文件（hive file）`UsrClass.dat`里创建一个key并配置相关handler。这样就能控制计算机打开这类文件后执行的内容了。这种技巧叫[Event Triggered Execution: Change Default File Association](https://attack.mitre.org/techniques/T1546/001)
     - 这题也有telegram bot api的使用
+- [und3rC0VEr](https://lov2.netlify.app/nitectf-2024-tuan-dui-writeup)
+    - 使用[DiskGenius](https://www.diskgenius.com)分析vmdk、恢复数据
+    - 结果是非预期解。题目的vmdk不是拿来分析的，而是应该按照[官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/misc/und3rC0VEr)说的这样用[已知漏洞](https://github.com/smokeintheshell/CVE-2023-20198)暴露出密码
+    - 同样是非预期解的纯命令行做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#und3rc0ver
 
 ## Network Forensics
 

@@ -710,6 +710,10 @@ $$
     - NTRU lattice由多项式组成，wp里记录了如何将由多项式构成的格转为由整数构成的格
 - [SignMeUp](https://github.com/plvie/writeup/blob/main/glacierctf2024/signmeup)
     - 又是一道将模某个质数的多未知数方程转成格的题目。感觉将来某一天我会困于如何造方形的格基矩阵（
+- [R Stands Alone](https://lov2.netlify.app/nitectf-2024-tuan-dui-writeup)
+    - 用格求解形如 $ax^n + by^n$ 的质数的x和y值。类似题目： https://connor-mccartney.github.io/cryptography/other/TCP51Prime-TCP1PCTF2024International
+    - 比赛时借着moectf学到的知识弄出了非预期解。加密的明文长度必须超过n的最大素数因子的位数，否则就能直接拿最大素数因子-1当作phi进行解密（得到的是m模那个质数，然而m比那个质数小，于是就直接出来了）
+    - 另一个未曾设想的道路： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#r-stands-alone ，竟然能直接解啊？
 
 ## Elliptic Curves(ECC,椭圆曲线)
 

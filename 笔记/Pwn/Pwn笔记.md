@@ -73,6 +73,10 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
   - 这题的灵感来源/参考： https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
 - [Buafllet](https://github.com/HeroCTF/HeroCTF_v6/tree/main/Pwn/Buafllet)
   - 漏洞是uaf。通过open `/dev/ptmx`堆喷[tty_struct](https://github.com/smallkirby/kernelpwn/blob/master/technique/tty_struct.md)，泄漏kernel base并覆盖当前task的task_creds。程序开启了CONFIG_RANDOM_KMALLOC_CACHES，解决办法似乎是kmalloc一个大小为0x2001的chunk，这样就不会走随机cache的分支了
+- [pci_config_mayhem](https://4n0nym4u5.tech/blog/nite_ctf_2024)
+  - qemu逃逸到主机。PCI driver(这题以qemu提供的PCIDeviceClass定义)出现的漏洞是负索引越界读和写。有了越界读就能泄漏堆地址，qemu的pie地址和qemu创建的RWX JIT区域（经常用来放shellcode）
+  - 因为这题用了qemu的PCIDevice，所以负索引很好利用。这个结构内部存储了配置的读和写函数的函数指针，以及指向device config space的`config`指针。因为题目driver提供了对pci_default_read_config的调用，所以修改config指针就能实现任意地址读写。有了任意地址写就能往前面提到的RWX JIT区域写shellcode，最后修改PCIDevice结构的函数指针即可逃逸成功
+  - [官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/binex/pci_config_mayhem)要复杂很多。首先exp纯用bash写我就看不懂了，其次感觉虽然也是写shellcode，但冒出来的w1cmask和wmask让人不明所以
 
 ## Shellcode题合集
 

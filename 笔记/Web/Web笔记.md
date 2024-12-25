@@ -449,7 +449,8 @@ for i in range(300,1000):
     - js pug库ssti。注意`pug.render`(compile函数也会触发ssti)的参数有没有未过滤的用户输入。补点常用payload： https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection#pugjs-nodejs
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Python.md)
     - `{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("cmd").read()}}{%endif%}{% endfor %}`
-    - https://sanlokii.eu/writeups/downunderctf/parrot-the-emu/
+    - https://sanlokii.eu/writeups/downunderctf/parrot-the-emu
+    - [Charlie Hunt 1](https://abuctf.github.io/posts/NiteCTF2024)
 
 1. 当网站没有任何提示时，可以去看看一些敏感目录。
 
