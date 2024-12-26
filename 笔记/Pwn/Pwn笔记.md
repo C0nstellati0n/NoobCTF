@@ -76,7 +76,7 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
 - [pci_config_mayhem](https://4n0nym4u5.tech/blog/nite_ctf_2024)
   - qemu逃逸到主机。PCI driver(这题以qemu提供的PCIDeviceClass定义)出现的漏洞是负索引越界读和写。有了越界读就能泄漏堆地址，qemu的pie地址和qemu创建的RWX JIT区域（经常用来放shellcode）
   - 因为这题用了qemu的PCIDevice，所以负索引很好利用。这个结构内部存储了配置的读和写函数的函数指针，以及指向device config space的`config`指针。因为题目driver提供了对pci_default_read_config的调用，所以修改config指针就能实现任意地址读写。有了任意地址写就能往前面提到的RWX JIT区域写shellcode，最后修改PCIDevice结构的函数指针即可逃逸成功
-  - [官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/binex/pci_config_mayhem)要复杂很多。首先exp纯用bash写我就看不懂了，其次感觉虽然也是写shellcode，但冒出来的w1cmask和wmask让人不明所以
+  - [官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/binex/pci_config_mayhem)要复杂很多。首先exp纯用bash写我就看不懂了，其次感觉虽然也是写shellcode，但冒出来的w1cmask和wmask让人不明所以。又找了篇[wp](https://ditt0.medium.com/nitectf-2024-solving-my-first-qemu-pwn-051c07dccd92)，好像懂了。wmask和w1cmask与pci_default_write_config有关，控制了两者后就能实现任意地址写
 
 ## Shellcode题合集
 

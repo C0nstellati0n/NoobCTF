@@ -166,6 +166,11 @@
     - 使用[DiskGenius](https://www.diskgenius.com)分析vmdk、恢复数据
     - 结果是非预期解。题目的vmdk不是拿来分析的，而是应该按照[官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/misc/und3rC0VEr)说的这样用[已知漏洞](https://github.com/smokeintheshell/CVE-2023-20198)暴露出密码
     - 同样是非预期解的纯命令行做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#und3rc0ver
+- [Patterned Secrets](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/forensics/Patterned%20Secrets)
+    - 分析android `.avd`文件（好像是[这个](https://developer.android.com/studio/run/managing-avds)）
+    - 使用adb获取存储在`mmssms.db`里的sms短信
+    - 用[gesture-crack](https://github.com/Webblitchy/AndroidGestureCrack)可以从`gesture.key`文件中破解pattern lock code
+    - 其他wp（也许算个wp……）： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#patterned-secrets
 
 ## Network Forensics
 

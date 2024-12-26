@@ -1335,3 +1335,5 @@ mov     r8, qword [r13]
   - `dis.get_instructions`可以提供opcode的详细内容，比如各个opcode的行列号（坐标）
 200. [platyprotect64](https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#platyprotect64)
 - 逆向`.prg`后缀文件（Commodore C64 program）
+201. [BasicAVR](https://github.com/Cryptonite-MIT/niteCTF-2024/blob/main/hardware/BasicAVR)
+- 似乎是逆向atmega2560 microcontroller程序elf，基于avr8。指令集参照 https://ww1.microchip.com/downloads/en/DeviceDoc/AVR-Instruction-Set-Manual-DS40002198A.pdf

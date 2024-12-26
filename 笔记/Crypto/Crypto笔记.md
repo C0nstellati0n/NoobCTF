@@ -643,6 +643,10 @@ sympy也放这了
 - [Twister](https://github.com/WorldWideFlags/World-Wide-CTF-2024/blob/main/Cryptography/Twister)
     - 如何用solve_right解模2的线性方程组
     - 对着wp都差点没看出来这题是解线性方程组……长点心吧
+- [Quadrillion Matrices](https://lov2.netlify.app/nitectf-2024-tuan-dui-writeup)
+    - 计算矩阵是否是二次剩余（legendre symbol）。不过看题目的矩阵生成代码，只有可对角化并可逆的矩阵才有可能使用legendre symbol，有和整数类似的性质。看[官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/crypto/quadrillion_matrices)的解法会更清楚。比赛中由于生成矩阵的代码被隐藏了，直接没想到这点。看来以后遇到矩阵幂的情况要看看矩阵的对角化和jordan form形式
+    - 计算矩阵的的dlp。需要神奇的CADO-NFS，而且耗时较长
+    - 原来这题很久以前就有人研究过了，结合 https://cstheory.stackexchange.com/questions/12655/discrete-log-in-gl2-p 和 https://crypto.stackexchange.com/questions/22830/finding-xs-parity-in-the-discrete-log-problem 即可
 
 ## Lattice(格)
 
@@ -2680,6 +2684,7 @@ c2=encrypt(k2,c1)
 145. [dream-revenge](https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#dream-revenge)
 - 现在只需要8个输出就能破解python random库的seed了……见 https://stackered.com/blog/python-random-prediction/ 。MT19937你不行啊（doge）
 - 用的时候差点没搜到，添加关键词：mersenne twister，python随机数预测
+- 如果已知种子是一个32位整数，则只需要6个输出就能破解。见[import rAnDoM](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/crypto/import%20rAnDoM)
 146. [Many Xor Shift](https://thr34dr1pp3r.gitbook.io/ctf/wanictf-2024/crypto-many-xor-shift)
 - 使用矩阵与向量表达异或和位移等操作。常用来加速某些线性操作的组合
 - 官方wp： https://qiita.com/KowerKoint/items/89d94343e6ceee32645c
