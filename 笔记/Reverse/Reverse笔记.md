@@ -1,5 +1,12 @@
 # Reverse笔记
 
+## Tools
+
+平时见到的乱七八糟的工具，没有例题
+
+- [Instruction Stomp](https://github.com/ChrisTheCoolHut/Instruction-Stomp)
+  - 侧信道逆向工具，支持不同架构的binary。原理是计算程序执行的指令数量来判断当前输入是否为正确输入
+
 ## Game
 
 游戏相关，不过大部分都是unity/godot/game maker
@@ -1125,6 +1132,7 @@ finish()
 - Unity IL2CPP编译打包的游戏的逆向工具。和一般用dnSpy逆向`Assembly-CSharp.dll`的题目（Mono打包）的区别是两者反编译方法不能共用。介绍网站： https://il2cppdumper.com
 - 补充一道IL2CPP题目：[Bug Squash 2](https://crypto-cat.gitbook.io/ctf-writeups/2024/intigriti/game/bug_squash2)。使用Il2CppDumper的做法： https://snocc.dev/blog/1337UP-gamepwn#bugsquash2 。另一种反编译的方式是用cheatengine，见 https://www.youtube.com/watch?v=Nk-TNzHxN0M
 - 再来一道：[Space Maze](https://github.com/tien0246/writeup/tree/main/spacemaze)。可以从文件头看出使用的unity版本，还可以用frida hook函数
+- https://noob3xploiter.medium.com/hacking-and-reverse-engineering-il2cpp-games-with-ghidra-5cee894024f2
 132. [noodle-nightmare](https://meashiri.github.io/ctf-writeups/posts/202312-pingctf/#noodle-nightmare)
 - 有时候源代码复杂的逆向题编译后看汇编或动调反而会简单一点。还可以参考wp的做法，编译时保存C++ preprocessor的输出，逻辑也会简单很多
 133. [Warmup - Game](https://github.com/rixinsc/ctf-writeups/blob/master/wgmy2023.md#warmup---game)

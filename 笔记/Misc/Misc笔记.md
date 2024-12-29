@@ -193,6 +193,15 @@
         - [官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/forensics/mine-the-cap)自己实现了部分协议
         - https://prismarinejs.github.io/minecraft-data
         - https://www.npmjs.com/package/minecraft-protocol
+- [Torrent Tempest](https://kerszl.github.io/hacking/walkthrough/ctf/ctf-backdoorctf-torrent)
+    - BitTorrent协议分析；提取传输的内容
+    - 也可以用一下[bittorent-traffic-analyzer](https://github.com/mfindra/bittorent-traffic-analyzer)。就是感觉有点鸡肋，实际提取文件内容还要自己写脚本。见 https://seall.dev/posts/backdoorctf2024
+    - 可能是最简单的脚本： https://1keii.vercel.app/posts/backdoor-ctf-2024
+- [American Spy](https://rjcyber.gitbook.io/ctf/ctf-writeups/backdoor-ctf-2024/american-spy-forensics)
+    - Real-time Transport Protocol (RTP),Session Initiation Protocol (SIP) 和 Voice over IP (VoIP)数据包分析
+    - 提取Advanced Video Coding (AVC,也叫H.264)传输的视频文件:[H264extractor](https://github.com/volvet/h264extractor)
+    - Fast Fourier Transform (FFT) （佬到底是怎么注意到的FFT……提示给我指出来了我也完全看不出来）
+    - DTMF。平时需要找软件听，有数据包的情况下可以直接从数据包中看出传输的数字
 
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
@@ -1668,6 +1677,8 @@ for i in "${!data[@]}"; do modbus host:port $((i+19))=${data[$i]}; done
     - 这里提一嘴，wp里的做法（叫gpt将返回内容每个字符中间加个空格）我试过，但是没成功。仔细一比对才发现，我没给gpt例子……导致无论我说的要求多清楚，gpt还是跟个傻子一样原样返回内容。其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#spurdo-ai
 - [并非并非](https://github.com/XDSEC/MoeCTF_2024/tree/main/Writeups/Zero6six#%E5%B9%B6%E9%9D%9E%E5%B9%B6%E9%9D%9E)
     - 当gpt的输出字符被限制时，可以尝试用全角字符绕过
+- [VulnKart](https://seall.dev/posts/backdoorctf2024)
+    - 应该是个例，这题可以注入python ssti payload并由AI执行
 - [LLM Attacks](https://doublespeak.chat/#/handbook)
 134. [Lost Evidence](https://github.com/daffainfo/ctf-writeup/tree/main/Tenable%20CTF%202023/Lost%20Evidence),[wp2](https://ctf.edwinczd.com/2023/tenable-ctf-2023/lost-evidence)
 - linux [LUKS](https://zhuanlan.zhihu.com/p/36870751)磁盘加密。可尝试用[photores](https://github.com/cgsecurity/testdisk)恢复masterKey
@@ -2411,3 +2422,7 @@ $ cd a/b
 - [Bücking Music Cipher](https://legacy.wmich.edu/mus-theo/ciphers/bucking.html)
 - 使用mkvinfo和mkvextract分析并提取`.mkv`后缀文件的资源
 - 字体（font）文件（`.otf`）隐写
+374. [Cursed Credential](https://seall.dev/posts/backdoorctf2024)
+- 若mozilla firefox password database经过master key加密，就不能直接用firefox-decrypt，需要先恢复其master key。可以用[FireMaster](https://securityxploded.com/firemaster.php)，也可以用[工具](https://fossies.org/linux/hashcat/tools/mozilla2hashcat.py)配合hashcat爆破
+- 还有个[firepwd](https://github.com/lclevy/firepwd)工具，见 https://github.com/kossiitkgp/ctf-writeups/tree/master/backdoor/for/cursed_credentials
+- 各种浏览器是如何存储密码的： https://apr4h.github.io/2019-12-20-Harvesting-Browser-Credentials

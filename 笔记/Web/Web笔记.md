@@ -450,7 +450,7 @@ for i in range(300,1000):
 - [更多模板注入payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Python.md)
     - `{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("cmd").read()}}{%endif%}{% endfor %}`
     - https://sanlokii.eu/writeups/downunderctf/parrot-the-emu
-    - [Charlie Hunt 1](https://abuctf.github.io/posts/NiteCTF2024)
+    - [Charlie Hunt 1](https://abuctf.github.io/posts/NiteCTF2024)。不过这题[预期解](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/webex/charlie_hunt_1)是找到当前类对象里的get_flag方法并调用
 
 1. 当网站没有任何提示时，可以去看看一些敏感目录。
 
@@ -4122,3 +4122,6 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 - php mb_strpos和mb_substr的解析差异
 508. [Guessy CTF Solver](https://github.com/WorldWideFlags/World-Wide-CTF-2024/tree/main/Web%20Exploitation/Guessy%20CTF%20Solver)
 - happy-dom的[rce漏洞](https://github.com/capricorn86/happy-dom/issues/1585)
+509. [Tammy's Tantrums](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/webex/tammys_tantrums)
+- mongoose findOne where语句布尔注入。自己做出来了，不过需要更正一下之前的错误认知。之前以为必须要找到正确的id才能用`this.xxx`去泄漏对应id的对象的xxx属性的值。事实上id给个空值就行，只要条件用`||`来判断就能取到数据库里的全部对象了（被this给误导了，以为必须先用id选出一个对象才能用this去代表那个对象……）
+- 自己的单线程垃圾脚本： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#tammys-tantrums
