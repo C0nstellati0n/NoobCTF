@@ -19,7 +19,7 @@ if (window.opener !== null) {
 1. 让某个window在open目标window后再使用window.close快速关闭自己，这样那个打开的window的opener属性就是null（console上这样做没用，说是“不能在没有动作下就开启新的window，所以第二个open会被挡住”）
 2. 用window.open开启window后手动将opener设为null。这样并不代表被开启的window就没法访问父window了，只需要记住父window的name属性即可。具体怎么找到父window见 https://blog.huli.tw/2022/04/07/iframe-and-window-open/#windowopen
 
-还剩个csp要解决。`script-src 'none';`在这肯定是啥也干不了的，但是这个csp是在index页面的script里添加的，可不可以让它不执行？可以考虑用iframe的csp属性，我们自己写个iframe，其src为`/memo`。这样在重定向到index时，由于我们自己的csp，script不会运行，从而csp无法生效
+还剩个csp要解决。`script-src 'none';`在这肯定是啥也干不了的，但是这个csp是在index页面的script里添加的，可不可以让它不执行？可以考虑用iframe的csp属性，我们自己写个iframe，其src为`/`。这样在重定向到index时，由于我们自己的csp，script不会运行，从而csp无法生效
 ```html
 <script>
   const challengeHost = 'xxx'
@@ -70,7 +70,7 @@ iframe是一个独立的window，自然也可以做navigation。假如有个ifra
 3. 按下top level navigation，把网页跳去其他地方
 4. 按下浏览器上的上一页
 
-如果有bfcache的话，结果就是上一页之前的状态（4个操作后）。毕竟都cache了，和之前不一样就怪了。如果没有bfcache呢？网页应该重新加载一遍，回到最开始的状态。即sandbox iframe `f`载入test1。然而结果是sandbox iframe `f`载入test2。看起来f的sandbox属性跟着页面最新的状态，但src却不是（最新的应为test1），还是和之前的结论一样，回到上一个src test2。这个「回到上一页时，iframe的src回到上次的内容」的机制，就叫做iframe reparenting，似乎没有对应的文档完整描述，而且各个浏览器的实现也都不太一样。不懂为什么叫reparenting，google翻译叫“iframe 重新定位”，我感觉叫iframe src restoring比较直白，反正就是回到上一个src。这个操作反着看就是一个绕过手段，比如无sandbox iframe+安全test1，然后改成sandbox iframe+危险test2。攻击者可以将网页导去其他地方，再回来就出现了无sandbox iframe+危险test2。总之：
+如果有bfcache的话，结果就是上一页之前的状态（上述4个操作执行后的状态）。毕竟都cache了，和之前不一样就怪了。如果没有bfcache呢？网页应该重新加载一遍，回到最开始的状态。即sandbox iframe `f`载入test1。然而结果是sandbox iframe `f`载入test2。看起来f的sandbox属性跟着页面最新的状态，但src却不是（最新的应为test1），还是和之前的结论一样，回到上一个src test2。这个「回到上一页时，iframe的src回到上次的内容」的机制，就叫做iframe reparenting，似乎没有对应的文档完整描述，而且各个浏览器的实现也都不太一样。不懂为什么叫reparenting，google翻译叫“iframe 重新定位”，我感觉叫iframe src restoring比较直白，反正就是回到上一个src。这个操作反着看就是一个绕过手段，比如无sandbox iframe+安全test1，然后改成sandbox iframe+危险test2。攻击者可以将网页导去其他地方，再回来就出现了无sandbox iframe+危险test2。总之：
 1. sandbox属性永远跟着最新的页面
 2. src是上一次最后载入的网页
 
@@ -140,7 +140,7 @@ srcdoc里还是个iframe套娃，但是由于sandbox，内容就很简单了,因
     </iframe>
 </body>
 ```
-……是吗？你这srcdoc也要回到上一个吧（话说这个回退的操作是不是最后做的，本来页面重新加载就应该把`<iframe></iframe>`写上去的，可能back后又给它覆盖回去了？），上一个是啥来着？往上翻，是`<script>alert(1)</script>`。然后啥都不要想，根据之前学的内容，sandbox是什么？它一定跟着最新的页面，所以不要考虑那么多，当前页面没看见sandbox，那就是没有，所以应该是这样：
+……是吗？你这srcdoc也要回到上一个吧（话说这个回退的操作是不是最后做的，本来页面重新加载就应该把`<iframe></iframe>`写上去的，可能back后又给它覆盖回去了？啊这里又仔细看了一下，payload执行`history.back`的方式是载入一个`createObjectURL`的url，这玩意也算在history里的。所以back后自然是`/memo?memo=<iframe></iframe>`），上一个是啥来着？往上翻，是`<script>alert(1)</script>`。然后啥都不要想，根据之前学的内容，sandbox是什么？它一定跟着最新的页面，所以不要考虑那么多，当前页面没看见sandbox，那就是没有，所以应该是这样：
 ```html
 <head>
     <meta http-equiv="Content-Security-Policy" content="script-src 'none';">

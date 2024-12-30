@@ -718,6 +718,25 @@ $$
     - 用格求解形如 $ax^n + by^n$ 的质数的x和y值。类似题目： https://connor-mccartney.github.io/cryptography/other/TCP51Prime-TCP1PCTF2024International
     - 比赛时借着moectf学到的知识弄出了非预期解。加密的明文长度必须超过n的最大素数因子的位数，否则就能直接拿最大素数因子-1当作phi进行解密（得到的是m模那个质数，然而m比那个质数小，于是就直接出来了）
     - 另一个未曾设想的道路： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#r-stands-alone ，竟然能直接解啊？
+- [Hashing Frenzy](https://hackmd.io/@r4sti/BkCBDWuryl)
+    - 有进步！看出格的可能性了！但是又退步到没看出来怎么找模数p……题目自定义的hash算法多项式如下： $A = s_6 = \sum_{i = 0}^5{s_ih_i(m)} \pmod p$ ,但p未知， $h_i$ 是已知的哈希算法。不过可以连续hash两条明文，自行计算 $\sum_{i = 0}^5{s_ih_i(m)}$ 后与服务器得到的结果相减得到 $k_1p$ 和 $k_2p$ ，gcd两者有很大可能得到p
+    - 格的构造（svp做法）wp讲的很详细，不过这里记录一下个人的疑惑和见到的补充内容
+        - 这个做法提到需要加个scaling factor LLL才能找到正确的结果。但最后又发现其实不加scaling factor，只要多加一个列即可。可能是因为最开始不加列所构造的格基矩阵不是一个方矩阵？当然更有可能是这样构造出来的格的最短向量比目标更短，毕竟[这个做法](https://github.com/kh4rg0sh/ctf_writeups/tree/main/backdoorctf-2024/crypto/Hashing-Frenzy)使用的格基矩阵也不是方矩阵，但LLL成功了。不过那个做法怎么是8个9维行向量组成的格？这也行吗？还是其实是9个8维列向量？后面发现去掉从右往左数第二个列也是可以的,见 https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#hashing-frenzy
+        - 加了scaling factor后的线性关系是不是写错了？见`the target vector is derived as`部分，个人觉得应该是:
+
+        $$
+        \begin{pmatrix}
+        h_0 & h_1 & h_2 & h_3 & h_4 & h_5 & 1 & -k
+        \end{pmatrix}
+        $$
+
+        - 终于稍微看懂点cvp用法了。看起来用cvp需要知道要求的各个变量的大概大小？线性关系的选择也有讲究？
+    - 在上方的gists处我还记了一位佬对这篇wp的补充说明+讨论。包括：
+        - sagemath的block_matrix的用法
+        - 利用PolynomialRing更快构造格的方法
+        - LLL解题过程中权重（weight）的思考——什么时候该加权重，加了意味着什么？详情见 https://magicfrank00.github.io/writeups/posts/lll-to-solve-linear-equations ，我见过的有关LLL解线性方程组的最好解释
+- [Secure Nonsense](https://hackmd.io/@Solderet/rk2g-kwr1g)
+    - hidden number problem(hnp)。包装好直接用的hnp见 https://github.com/josephsurin/lattice-based-cryptanalysis/blob/main/lbc_toolkit/problems/hidden_number_problem.sage 。主要是这样一个式子: $\beta_i - t_i \alpha + a_i \equiv 0 \pmod p$ ,输入各个 $t_i$ 和 $a_i$ 的值并给出 $\beta_i$ 的上限，返回 $\alpha$
 
 ## Elliptic Curves(ECC,椭圆曲线)
 

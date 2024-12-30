@@ -330,6 +330,10 @@
 - [Notes](https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#notes)
     - 鸡肋的self xss，只有自己才能查看自己的note。突破点是网站使用了java的Apache Struts框架，这个框架竟然能在url里设置访问者的cookie：`/sample.action;jsessionid=[…]`……
     - 非预期解在于report功能直接用了攻击者提供的url，没有过滤。所以提交`file:///var/lib/jetty/browser-state.json`就能看到bot的cookie
+- [srcdoc-memos](../../CTF/idekCTF/srcdoc-memos.md)
+    - 不对我怎么忘记记这篇了……总之这是一个极为复杂的xss题，不过关键在于`history.back()`引起的不统一性。执行`history.back()`后，iframe的src属性和srcdoc的csp都会遵循history里记录的上一次结果，但iframe的sandbox属性却遵循最新页面的实时结果
+    - 如何绕过`window.opener !== null`的检查
+    - 类似题目见[Sand Notes](https://hackmd.io/@Solderet/rk2g-kwr1g)。官方wp和关键的`loader.html`见 https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#sand-notes
 
 ## SSTI
 

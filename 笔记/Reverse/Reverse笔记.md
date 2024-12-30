@@ -1345,3 +1345,6 @@ mov     r8, qword [r13]
 - 逆向`.prg`后缀文件（Commodore C64 program）
 201. [BasicAVR](https://github.com/Cryptonite-MIT/niteCTF-2024/blob/main/hardware/BasicAVR)
 - 似乎是逆向atmega2560 microcontroller程序elf，基于avr8。指令集参照 https://ww1.microchip.com/downloads/en/DeviceDoc/AVR-Instruction-Set-Manual-DS40002198A.pdf
+202. [Between Two Worlds](https://hackmd.io/@Solderet/rk2g-kwr1g)
+- 逆向[Windows Mixed Mode Assemblies](https://learn.microsoft.com/en-us/cpp/dotnet/mixed-native-and-managed-assemblies)。这题由c#和native code组成，同一个binary需要用两种不同的反编译器打开才能看到完整逻辑
+- [Reverse Engineering Mixed Mode Assemblies (IDA, DnSpyEx)](https://www.youtube.com/watch?v=H8gr3NxWteM)

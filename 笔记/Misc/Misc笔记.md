@@ -1,5 +1,13 @@
 # Misc笔记
 
+## AI
+
+疑似被时代抛弃，完全对AI训练不感兴趣。我猜是因为我数学太拉了，这动不动就gradient descent的我跟不上
+
+- [Multi Image](https://hackmd.io/@Solderet/rk2g-kwr1g)
+    - 对抗性扰动（adversarial perturbation）。生成添加进图片的噪音（noise），使训练好的模型无法正确辨别图片类型
+    - 我也不明白在干什么，什么“gradient descent“，“Adam“之类的东西，也不懂为啥这样就能找到更好的noise……但是更详细有注释的exp见 https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#multi-image
+
 ## Hardware
 
 说不定有一天我就喜欢上硬件了
