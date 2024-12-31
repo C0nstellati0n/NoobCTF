@@ -724,11 +724,7 @@ $$
         - 这个做法提到需要加个scaling factor LLL才能找到正确的结果。但最后又发现其实不加scaling factor，只要多加一个列即可。可能是因为最开始不加列所构造的格基矩阵不是一个方矩阵？当然更有可能是这样构造出来的格的最短向量比目标更短，毕竟[这个做法](https://github.com/kh4rg0sh/ctf_writeups/tree/main/backdoorctf-2024/crypto/Hashing-Frenzy)使用的格基矩阵也不是方矩阵，但LLL成功了。不过那个做法怎么是8个9维行向量组成的格？这也行吗？还是其实是9个8维列向量？后面发现去掉从右往左数第二个列也是可以的,见 https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#hashing-frenzy
         - 加了scaling factor后的线性关系是不是写错了？见`the target vector is derived as`部分，个人觉得应该是:
 
-        $$
-        \begin{pmatrix}
-        h_0 & h_1 & h_2 & h_3 & h_4 & h_5 & 1 & -k
-        \end{pmatrix}
-        $$
+        $$\begin{pmatrix}h_0 & h_1 & h_2 & h_3 & h_4 & h_5 & 1 & -k\end{pmatrix}$$
 
         - 终于稍微看懂点cvp用法了。看起来用cvp需要知道要求的各个变量的大概大小？线性关系的选择也有讲究？
     - 在上方的gists处我还记了一位佬对这篇wp的补充说明+讨论。包括：
@@ -737,6 +733,10 @@ $$
         - LLL解题过程中权重（weight）的思考——什么时候该加权重，加了意味着什么？详情见 https://magicfrank00.github.io/writeups/posts/lll-to-solve-linear-equations ，我见过的有关LLL解线性方程组的最好解释
 - [Secure Nonsense](https://hackmd.io/@Solderet/rk2g-kwr1g)
     - hidden number problem(hnp)。包装好直接用的hnp见 https://github.com/josephsurin/lattice-based-cryptanalysis/blob/main/lbc_toolkit/problems/hidden_number_problem.sage 。主要是这样一个式子: $\beta_i - t_i \alpha + a_i \equiv 0 \pmod p$ ,输入各个 $t_i$ 和 $a_i$ 的值并给出 $\beta_i$ 的上限，返回 $\alpha$
+- [A-Complex-Shamir](https://github.com/kh4rg0sh/ctf_writeups/blob/main/backdoorctf-2024/crypto/A-Complex-Shamir)
+    - lagrange's interpolation，但是只能得到 $C^{f(x)}$ ，其中C为复数，等于 $e^{i\theta}$ 。wp展示了一种求出系数的更聪明的方式，利用指数运算也有和正常多项式类似的性质用矩阵求出 $C^{a_i}$ （这块绕了我好久，实际上把存在的矩阵运算写出来就能看明白了。以及关键的部分： $f(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_{68} x^{68}$ , $C^{f(x)} = C^{a_0} \cdot (C^{a_1})^x \cdot (C^{a_2})^{x^2} \cdot \dots \cdot (C^{a_{68}})^{x^{68}}$ ），其中 $a_i$ 为要求的系数
+    - 接上一条，求解过程中会发现需要构造一个范德蒙矩阵（Vandermonde matrix），而这个矩阵的逆通常会包含一些分数。题目在指数下操作，分数中的分母n就会转换为取n次根，容易有精度损失。所以可以给矩阵乘上个scaling factor，把分数取消掉。最后求出结果后除以这个factor便是真正的结果了
+    - 复数（complex number）的dlp。重点是可以用 $e^{i\theta}$ 表示任意复数，可以把dlp转为求模 $2\pi$ 下的线性同余方程。可惜求不了模逆元，所以只能用格来求
 
 ## Elliptic Curves(ECC,椭圆曲线)
 
