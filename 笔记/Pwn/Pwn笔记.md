@@ -77,6 +77,24 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
   - qemu逃逸到主机。PCI driver(这题以qemu提供的PCIDeviceClass定义)出现的漏洞是负索引越界读和写。有了越界读就能泄漏堆地址，qemu的pie地址和qemu创建的RWX JIT区域（经常用来放shellcode）
   - 因为这题用了qemu的PCIDevice，所以负索引很好利用。这个结构内部存储了配置的读和写函数的函数指针，以及指向device config space的`config`指针。因为题目driver提供了对pci_default_read_config的调用，所以修改config指针就能实现任意地址读写。有了任意地址写就能往前面提到的RWX JIT区域写shellcode，最后修改PCIDevice结构的函数指针即可逃逸成功
   - [官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/binex/pci_config_mayhem)要复杂很多。首先exp纯用bash写我就看不懂了，其次感觉虽然也是写shellcode，但冒出来的w1cmask和wmask让人不明所以。又找了篇[wp](https://ditt0.medium.com/nitectf-2024-solving-my-first-qemu-pwn-051c07dccd92)，好像懂了。wmask和w1cmask与pci_default_write_config有关，控制了两者后就能实现任意地址写
+- [Kuwu](https://hyggehalcyon.gitbook.io/page/ctfs/2024/backdoorctf)
+  - uaf，但是只能free。一般题目的uaf在free某个chunk后还能控制里面的内容。这题就非常纯粹，只能无数次free一块chunk（位于`kmalloc-4k`）且途中不能控制里面的内容。目标是任意地址读，不是提权
+  - 简述exp过程以及当中的知识点。提到的“free”都是指用题目的uaf漏洞free，所有后缀为target的struct其实都处于同一块内存
+    - 喷射msg_msg尝试重新拿回出现uaf的chunk，将这个msg_msg称为msg_msg_target
+    - 根据msg_msg的结构，我们只能在偏移0x30的地方写数据。由于拿到的uaf漏洞不够“彻底”，没法写msg_msg_target的header部分
+    - free msg_msg_target，继续喷射新的msg_msg结构。一个msg_msg结构只能存下固定大小的数据，剩下的数据需要用msg_segment存储（多个segment之间用单向链表连接）。所以这次喷射要保证存储的数据足够大（似乎是大于一个page？），启用msg_segment。msg_segment可以让我们在偏移8的地方写数据。于是便可以用msg_segment_target篡改msg_msg_target的header
+    - [poll](https://linux.die.net/man/3/poll)系统调用会分配[poll_list](https://elixir.bootlin.com/linux/v5.10.127/source/fs/select.c#L839)对象。这个对象内部有个entries数组，存储pollfd struct。每个entry为8个字节。前30个entry存储在栈上，超过30的部分则存储在内核堆上。因为entry的数量由攻击者控制，这意味着我们可以控制分配的内核堆块大小，从kmalloc-32到kmalloc-4k。一个page最多分配POLLFD_PER_PAGE (510)个entry，超过的部分会新开一个poll_list存储。不同的poll_list之间用单向链表连接。分配的内核堆chunk会在超时后由内核自动free（此处不是漏洞的free，单纯指内核的free）
+    - 查看poll_list和msg_segment的定义，会发现它们的第一个字段都是单向列表的指针。于是再分配一个msg_segment，此时msg_segment_target会指向这个新分配的msg_segment。free msg_segment_target，然后喷射entry数为542(30 + 510 + 2)的poll_list。这里542的大小有讲究。前30个在栈上，中间510个是一个page最大能分配的数，由一个kmalloc-4k slot存储。剩下2个则是kmalloc-32 slot（将这块区域称为A）。完成后能得到poll_list_target，poll_list_target里的单向链表指针指向A
+    - 等待poll_list被自动free掉后堆喷大小为32的对象shm_file_data。会有一个shm_file_data位于A处，称为shm_file_data_A。此时便能调用peek_msg泄漏shm_file_data_A里的内容，获得内核（kernel `.text`）和堆的地址。这两步wp里有图，重点是target处同时是msg_segment_target和poll_list_target，两者单向链表指针的字段位置也一样
+    - 用msg_msg_target实现任意地址读。不过flag不在`.text`段，需要用两次任意地址读。一次泄漏`.text`里flag的地址，一次读flag
+  - wp内的其他内容
+    - 泄漏地址时需要利用msg_segment的单向链表，因此有两个限制。第一是泄漏的目标对象的大小必须是kmalloc-4k，第二是目标对象的前8个字节必须是null或者能够形成有效的单向链表结构
+    - 每个free slot都有freelist pointer，用来维持slot之间的freelist。类似普通堆中的bins。可以利用这个指针泄漏地址。不过这题因为开启了hardened freelist，这个指针被加密了，便只能作罢
+  - 一些关于基础知识的碎碎念
+    - 内核堆（Kernel Heap）和编写exp时的User-Space Heap（用户空间堆？我就叫它堆好了）不一样，用户空间只能通过特定的系统调用间接地控制内核堆的内容。非常合理，要是用户空间也能控制内核就乱套了，我直接修改msg_msg的header，谁还用这么复杂的漏洞啊？
+    - 通常free msg_msg后还能继续用的情况不会发生，因为用户空间free某个msg_msg对象后对应这个对象的fd就无效了，后续无法继续操作。然而在有漏洞的情况下，我们的free走的不是正规系统调用，而是走漏洞给的捷径，直接把那块内存free了。同时系统是不知道的，系统还以为这个对象是正常的
+    - slab是一块内存空间，存储着数个相同大小的slot。每个slot可以存储一个对象。所以搞堆喷时需要根据出现漏洞的slot大小选择同样大小的目标对象。参考 https://ptr-yudai.hatenablog.com/entry/2020/03/16/165628
+    - kernel pwn工具： https://github.com/HyggeHalcyon/CTFs/tree/main/Scripts/pwn/kernelspace
 
 ## Shellcode题合集
 
