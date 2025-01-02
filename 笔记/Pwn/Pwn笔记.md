@@ -6,6 +6,20 @@
 
 - [XSS Finder Tool](https://jopraveen.github.io/xss-finder)
   - 这道题基于一个已知cve，见 https://bnovkebin.github.io/blog/CVE-2024-0517 和 https://blog.exodusintel.com/2024/01/19/google-chrome-v8-cve-2024-0517-out-of-bounds-write-code-execution 。wp主要讲如何调试，修改现有exp
+- [V8Box](https://linz04.github.io/2024/12/24/BackdoorCTF-2024-V8Box)
+  - 这题的思路基本就是利用 https://github.com/google/google-ctf/tree/main/2023/quals/sandbox-v8box 里的技巧。题目提供了三个函数，`getPIELeak`可用来泄漏PIE的高位；`leakIsolate`可以读v8 heap上任意偏移处的值，但只能读一次；`ArbMemoryWrite`则非常直白，任意地址写，同样只有一次机会
+  - 解法主要围绕Javascript Bytecode。v8会把每个函数都转成bytecode并存储在v8 heap中。bytecode所在的地址则存在Trusted Pointer Table（TPT）中。如果能修改TPT中存储的地址，就能在别处地址伪造假的bytecode。所以exp做的事情大概如下：
+    - 定义函数pwn，调用一次使该函数的bytecode被存储到堆中，地址被存在TPT中
+    - 创建一个buf，内含pwn函数的bytecode拷贝（这里无需修改任何bytecode，毕竟啥地址也没有，也写不了shellcode）
+    - 使用`leakIsolate`泄漏存储pwn的bytecode指针的地址。这步能成功多亏堆上有这个地址
+    - 获取buf的地址，使用`ArbMemoryWrite`将TPT上存储的bytecode地址改成buf的地址。从此调用pwn就等同于调用buf代表的shellcode
+    - 修改buf里的bytecode使其泄漏出PIE的低位。配合`getPIELeak`的PIE高位组合出完整的PIE地址泄漏。这里没法完整泄漏出地址的原因见那篇google ctf的wp。V8以32位存储所有JavaScript值，函数返回值时v8自动丢弃高位的32bit
+    - 继续修改buf里的bytecode从而操控rip指向伪造的堆buf。堆buf里写入常用的rop shellcode，执行shellcode后便成功getshell。这个技巧也在google ctf的wp里有详细介绍，主要是利用了ldar和Star Frame Pointer这两个v8里的bytecode
+  - 一些帮助看懂exp的知识
+    - 能在exp里看到`buf=new ArrayBuffer(0x1000);new Uint8Array(buf)`等类似内容。`new ArrayBuffer`申请了一块内存，后续的Uint8Array只是同一块内存的不同引用方式，用来帮助修改和查看内存
+    - `new DataView(new Sandbox.MemoryView(0, 0x100000000));`真的就是字面意思，提供了修改从0到0x100000000内存的权柄，直接任意读写。只有`args.gn`里标注了`v8_enable_memory_corruption_api(v8_expose_memory_corruption_api) = true`的v8才有这个功能。然而即使有了这玩意也不知道读哪里往哪里写，所以才需要利用漏洞拿地址
+    - kHeapObjectTag是v8里用于区分某个值是指针还是值的玩意。如果某个值是指针，其lsb就会是1，否则是0
+    - byteCodeTag是v8里用于标注某个东西和bytecode有关的东西。伪造bytecode时，装有假bytecode的buf地址得有这个玩意v8才会承认这个地址装的是bytecode。看起来tag的值是固定的，至少对于单个v8 build来说
 
 ## Kernel
 

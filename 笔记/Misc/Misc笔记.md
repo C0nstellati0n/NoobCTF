@@ -2431,6 +2431,6 @@ $ cd a/b
 - 使用mkvinfo和mkvextract分析并提取`.mkv`后缀文件的资源
 - 字体（font）文件（`.otf`）隐写
 374. [Cursed Credential](https://seall.dev/posts/backdoorctf2024)
-- 若mozilla firefox password database经过master key加密，就不能直接用firefox-decrypt，需要先恢复其master key。可以用[FireMaster](https://securityxploded.com/firemaster.php)，也可以用[工具](https://fossies.org/linux/hashcat/tools/mozilla2hashcat.py)配合hashcat爆破
+- 若mozilla firefox password database经过master key加密，就不能直接用firefox-decrypt，需要先恢复其master key。可以用[FireMaster](https://securityxploded.com/firemaster.php)，也可以用[工具](https://fossies.org/linux/hashcat/tools/mozilla2hashcat.py)配合hashcat爆破。 https://github.com/openwall/john/files/8884833/mozilla_key4_2john.zip 也行
 - 还有个[firepwd](https://github.com/lclevy/firepwd)工具，见 https://github.com/kossiitkgp/ctf-writeups/tree/master/backdoor/for/cursed_credentials
 - 各种浏览器是如何存储密码的： https://apr4h.github.io/2019-12-20-Harvesting-Browser-Credentials
