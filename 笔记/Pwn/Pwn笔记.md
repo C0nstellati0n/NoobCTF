@@ -17,9 +17,10 @@
     - 继续修改buf里的bytecode从而操控rip指向伪造的堆buf。堆buf里写入常用的rop shellcode，执行shellcode后便成功getshell。这个技巧也在google ctf的wp里有详细介绍，主要是利用了ldar和Star Frame Pointer这两个v8里的bytecode
   - 一些帮助看懂exp的知识
     - 能在exp里看到`buf=new ArrayBuffer(0x1000);new Uint8Array(buf)`等类似内容。`new ArrayBuffer`申请了一块内存，后续的Uint8Array只是同一块内存的不同引用方式，用来帮助修改和查看内存
-    - `new DataView(new Sandbox.MemoryView(0, 0x100000000));`真的就是字面意思，提供了修改从0到0x100000000内存的权柄，直接任意读写。只有`args.gn`里标注了`v8_enable_memory_corruption_api(v8_expose_memory_corruption_api) = true`的v8才有这个功能。然而即使有了这玩意也不知道读哪里往哪里写，所以才需要利用漏洞拿地址
+    - `new DataView(new Sandbox.MemoryView(0, 0x100000000));`真的就是字面意思，提供了修改从0到0x100000000内存的权柄，直接任意读写(不过仅限sandbox之内的heap部分)。只有`args.gn`里标注了`v8_enable_memory_corruption_api(v8_expose_memory_corruption_api) = true`的v8才有这个功能。然而即使有了这玩意也不知道读哪里往哪里写，所以才需要利用漏洞拿地址
     - kHeapObjectTag是v8里用于区分某个值是指针还是值的玩意。如果某个值是指针，其lsb就会是1，否则是0
     - byteCodeTag是v8里用于标注某个东西和bytecode有关的东西。伪造bytecode时，装有假bytecode的buf地址得有这个玩意v8才会承认这个地址装的是bytecode。看起来tag的值是固定的，至少对于单个v8 build来说
+  - 另一种做法： https://github.com/mwlik/v8-ctf-challenges/tree/main/infoseciitr2024/pwn/V8box ，需要爆破一个字节（`cpt_page+0x10ae0n`处）。getshell则用了 https://ju256.de/posts/kitctfctf22-date 里介绍的技巧。v8里每个函数对象的code对象都有一个`code_entry_point`原始指针（raw pointer，区别于sandbox里其他“其实是相对heap base或external pointer table的索引”的指针）字段，覆盖这项后便能控制程序的rip。然而这个覆盖相当于覆盖malloc_hook这类的东西，只能执行一个gadget。v8里只执行一个gadget还不足以getshell（再次感慨为什么libc里会存在one_gadget这种逆天东西）。所以这里可以结合jop（jump orientated programming，应该是指末尾是jmp指令的gadget）和rop做个栈迁移。另外这个技巧其实是 https://anvbis.au/posts/code-execution-in-chromiums-v8-heap-sandbox 的延伸。如果sandbox开了JIT，有更简单的方式直接使v8运行shellcode
 
 ## Kernel
 
@@ -2189,3 +2190,8 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
   - [LibcGOTchain](https://github.com/thisusernameistaken/LibcGOTchain)
   - [gopper](https://github.com/tsheinen/gopper)
   - ghidra插件[GotGadget](https://github.com/michael-benedetti/gotgadget)
+227. [Yet Another Format String Bug](https://buddurid.netlify.app/2024/12/27/0xl4ugh-ctf-2024)
+- 通过覆盖栈上的计数变量从而获取printf的多次调用。比赛时差点没搞明白栈上的格式化字符串怎么修改栈上的变量（疑似学bss段格式化字符串过拟合了），最后搞出了个1/4096的概率exp，本地能通远程寄。原来正确做法只需要赌1/16的概率，关键在于输入payload时长度不能超过8，因为目标指针在input+8处。我调试时payload超过了8，所以怎么也找不到那个指针……
+228. [Recover Your Vision](https://buddurid.netlify.app/2024/12/27/0xl4ugh-ctf-2024)
+- 多线程的canary问题。主线程新开的线程的栈和tls区域其实是主线程中一个mmap chunk，rwx属性继承自主线程。tls里装着canary，而且和栈挨着。如果有足够大的溢出，则可以直接覆盖tls中存储的canary，绕过canary保护
+- https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#recover-your-vision

@@ -3742,6 +3742,9 @@ window.recaptcha=true;
 - cloud AWS渗透（获取RCE及泄漏敏感信息）
 401. [X Et Et](https://hackmd.io/@Solderet/HJ52F9496)
 - js electron RCE。若electron内`new BrowserWindow`时设置了`sandbox: false`和`contextIsolation: false`，就能利用原型链污染获取RCE。类似技巧见 https://github.com/maple3142/My-CTF-Challenges/tree/master/HITCON%20CTF%202023/Harmony#rce-using-client-side-prototype-pollution
+    - 读harmony的wp时发现里面还有更多没见过的技巧
+        - Electron里`file://`属于same-origin，和Chromium不同
+        - 如果可以上传文件的话，配合原型链污染有更简单的rce方式。除了设置sandbox为false，再把`Object.prototype.webview`设置为true。这样就能随意加载服务器上的js文件了
 - 又一道相同考点的题，利用electron的这个特性从xss到RCE:[Elec](https://octo-kumo.github.io/c/ctf/2024-wanictf/web/elec)。完整脚本见 https://github.com/rerrorctf/writeups/tree/main/2024_06_21_WaniCTF24/web/elec
 402. [Stress Release Service](https://medium.com/@s4r7h4k/7-characters-php-tetctf-2024-5f43ee0c7293)
 - 利用7个非字母数字的字符在php内实现eval内代码执行。wp内列举了几个phpfuck相关的网站，不过这类网站给出的payload通常较长。php内可以将字符串看作函数执行：`'function_name'()`，所以可以利用这个特点加上异或获取字符执行任意代码
@@ -4133,3 +4136,14 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 509. [Tammy's Tantrums](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/webex/tammys_tantrums)
 - mongoose findOne where语句布尔注入。自己做出来了，不过需要更正一下之前的错误认知。之前以为必须要找到正确的id才能用`this.xxx`去泄漏对应id的对象的xxx属性的值。事实上id给个空值就行，只要条件用`||`来判断就能取到数据库里的全部对象了（被this给误导了，以为必须先用id选出一个对象才能用this去代表那个对象……）
 - 自己的单线程垃圾脚本： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#tammys-tantrums
+510. [Manifesto](https://blog.regularofvanilla.com/posts/0xl4ugh)
+- 寻找[Clojure](https://clojure.org)搭建的网站的漏洞（题外话，这个语言的语法好奇怪，和我之前见过的完全不一样……）
+- mass assignment漏洞。题目直接将请求参数merge进session，于是攻击者可以随意设置session里的字段和值
+- clojure的read-string函数存在代码执行(`https://clojuredocs.org/clojure.core/*read-eval*`)。其他payload： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#manifesto 。这玩意因为[Java Interop](https://clojure.org/reference/java_interop)受限较大，只能用构造函数（constructors），比如`#java.net.Socket[]`。加上read-eval的`#=`语法，又只能用静态方法。于是想拿完整RCE还是很困难的
+511. [Ada Indonesia Coy](https://blog.regularofvanilla.com/posts/0xl4ugh)
+- 好像每半年就会遇见一道electron原型链污染rce……这次再补充点知识
+    - electron安全相关的设置有三个，contextIsolation（`preload.js`与webContents的环境是否不同），nodeIntegration(webContents环境是否可以访问Node.js的api)和sandbox(限制权限，是否能够运行shell script)。nodeIntegration是true或者sandbox是false才有可能拿rce
+    - rce部分主要是hook [webpack](https://webpack.js.org)的`__webpack_require__`函数，使其在加载某个模块时运行攻击者的恶意代码（`Object.defineProperty`设置setter，借机保存module模块）。更详细的内容见 https://i.blackhat.com/USA-22/Thursday/US-22-Purani-ElectroVolt-Pwning-Popular-Desktop-Apps.pdf
+- `Element.setHTML`属于Sanitizer api。虽然在大部分地方已经被弃用了，然而在electron里还能用。不过过滤的也不完全，可以用`<meta>`标签重定向
+- setInterval可以用字符串作为第一参数。所以可以留意那些`setInterval(xx.xx)`的地方，如果有dom clobbering就能执行自己的js代码
+- 更详细的wp： https://nolangilardi.github.io/blog/2024-0xl4ugh-ctf--ada-indonesia-coy
