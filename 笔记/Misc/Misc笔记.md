@@ -17,6 +17,11 @@
     - `.sr`后缀文件可以用Sigrok Pulse Viewer软件打开
 - [Ancient Ahh Display](https://abuctf.github.io/posts/NiteCTF2024)
     - [Seven-Segment LED Display on Basys 3 FPGA](https://www.fpga4student.com/2017/09/seven-segment-led-display-controller-basys3-fpga.html)
+- [Squinty](https://yun.ng/c/ctf/2024-0xl4ugh-ctf/hardware/squinty)
+    - 稍微看明白了一点用FFT分析信号携带数据的做法……但是为什么我看plot出来的图表看不出来啊？
+    - 这下看懂了： https://hegz.io/posts/0xl4ugh24-hw-writeups 。这题原来是个Simple Power Analysis (SPA)
+- [Power-SCAndal](https://hegz.io/posts/0xl4ugh24-hw-writeups)
+    - power analysis侧信道攻击（题目根据输入的内容输出numpy数组，以供绘图）。wp使用的distinguisher为Sum of Absolute Differences，mean absolute difference做法见 https://github.com/r3-ck0/writeups/tree/master/0xl4ugh/hw/power-scandal
 
 ## Linux相关
 
@@ -53,8 +58,9 @@
 ## Digital Forensics and Incident Response(DFIR)
 
 开个新的分类，用于存储这个困扰我很久的题目类型:(。顺便把disk，mem类型的forensic题也放这
-- 一些插件（平时看到的零零散散的插件，没有例题）
-    - https://www.tc4shell.com/en/7zip/forensic7z/ ：在7-Zip里玩disk forensics？
+- 一些插件/工具（平时看到的零零散散的插件，没有例题）
+    - https://www.tc4shell.com/en/7zip/forensic7z ：在7-Zip里玩disk forensics？
+    - https://www.sans.org/tools/sift-workstation ：forensics工具集合
 - https://github.com/slaee/ret-CTF-writeups/tree/main/2024/bitsCTF/DFIR
     - 题目情景为`.ad`后缀文件+mem文件+pcap文件。使用工具volatility3,FTK Imager
 - [verboten](https://github.com/warlocksmurf/onlinectf-writeups/blob/main/bi0sCTF24/forensics.md)
@@ -179,6 +185,11 @@
     - 使用adb获取存储在`mmssms.db`里的sms短信
     - 用[gesture-crack](https://github.com/Webblitchy/AndroidGestureCrack)可以从`gesture.key`文件中破解pattern lock code
     - 其他wp（也许算个wp……）： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#patterned-secrets
+- [Batman: The dark knight](https://github.com/thmai11/writeups/blob/main/2024/0xl4ugh/batman_the_dark_knight)
+    - 这题的目标是恢复一个被删除的文件，提示给的是Alternate Data Stream manipulation（具体联系在下方的官方wp里有）
+    - autopsy+FTK Imager分析DOS/MBR boot sector。foremost有时也能派上用场
+    - [Volume Shadow Copy Service](https://learn.microsoft.com/en-us/windows-server/storage/file-server/volume-shadow-copy-service)。这玩意好像就是专门用来做备份的。可以用libvshadow-utils中的vshadowinfo找到备份数据
+    - [官方wp](https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#batman-the-dark-knight)还介绍了一些恢复被删除数据的方法和[Shadow Explorer](https://www.shadowexplorer.com/downloads.html)工具
 
 ## Network Forensics
 

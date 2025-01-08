@@ -939,6 +939,7 @@ flag = md.hexdigest()
 print(flag)                   
 ```
 以及其他人的脚本：[PARtly bintastic](https://github.com/Cryptonite-MIT/niteCTF-2023/tree/main/crypto/partly_bintastic)
+
 6. rsa题目时要看清楚密文即证书的格式。有些题密文和n等信息会以文件的形式给出，有可能是bytes形式，可以直接long_to_bytes，但也有可能是base64编码后的形式。解密前注意这些细节，能省去很多怀疑人生的时间。
 7. polybius方阵密码爆破。常见的方阵密码用数字1，2，3，4，5表示，不过任何5个元素都能表示polybius密文，比如aeiou。这里有个思维惯性，可能会下意识认为方阵排列形式就是aeiou，但可能并不是这样，aioue也不是不行。不同的排列组合会影响解密的结果。故需要爆破，利用下面的脚本：
 
