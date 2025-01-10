@@ -190,6 +190,9 @@
     - autopsy+FTK Imager分析DOS/MBR boot sector。foremost有时也能派上用场
     - [Volume Shadow Copy Service](https://learn.microsoft.com/en-us/windows-server/storage/file-server/volume-shadow-copy-service)。这玩意好像就是专门用来做备份的。可以用libvshadow-utils中的vshadowinfo找到备份数据
     - [官方wp](https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#batman-the-dark-knight)还介绍了一些恢复被删除数据的方法和[Shadow Explorer](https://www.shadowexplorer.com/downloads.html)工具
+- [Batman - Gotham's Secret](https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#batman---gothams-secret)
+    - 似乎是MacBook（macos）forensics？目标是恢复加密的note
+    - 加密的note存储于keychain；keychain database则是用机器的密码（machine's password，可能也是登录的密码）加密。之前在215条`A.R.K`见过，不过这题的机器密码很复杂，没法直接爆破出来。一个技巧是可以查看用户是否开启了Auto Login。一旦开启，电脑上会出现`/etc/kcpassword`文件。此文件用静态密钥+异或加密，因此可以直接恢复原本的密码
 
 ## Network Forensics
 

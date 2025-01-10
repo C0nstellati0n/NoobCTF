@@ -553,6 +553,8 @@ for i in range(1,e):
     - 分解互为emirp（反素数）的两个质数的乘积。注意数字的进制不重要。无论在二进制，十进制，还是十六进制下互为反素数都能尝试分解
 - [kRSA](https://github.com/rerrorctf/writeups/blob/main/2024_11_15_1337UP24/crypto/krsa)
     - 假如用rsa加密一个数字k，攻击者可以尝试找满足ij=k的i和j，然后利用rsa的同态特性进行meet in the middle攻击
+- [small eqs](https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#small-eqs)
+    - [Williams's p + 1 algorithm](https://en.wikipedia.org/wiki/Williams%27s_p_%2B_1_algorithm)分解n。概率算法，不是百分之百成功。而且这题的p的构造有漏洞，构成p的多项式中包含一个很小的质数
 
 ## Sagemath
 
@@ -789,6 +791,10 @@ $$
         - 最后，A用私钥就能从 $E_b$ 走到 $E_{ba}$ ；B能从 $E_a$ 走到 $E_{ab}$ 。殊途同归
         - Commutative指交换性， $E_{ba}=E_{ab}$ 。同源是两个超奇异椭圆曲线之间的同态
     - 剩下的是一些数学内容。群同态，计算曲线参数，Pohlig-Hellman（离散对数+crt，因为目标结果比模的p大，所以需要多个离散对数结果再用crt组回原来的内容。之前好像见过）等
+- [Private Curve](https://connor-mccartney.github.io/cryptography/ecc/PrivateCurve-0xl4ughCTF2024)
+    - 获取EC-LCG的7个输出后恢复曲线的参数p，a和b。主要是 https://arxiv.org/pdf/1609.03305 第5页的算法的简单实现
+    - 光滑阶数曲线（smooth order curve）求离散对数
+    - 另一位佬不看论文的做法，使用polynomial resultants： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#private-curve
 
 ## AES/DES
 

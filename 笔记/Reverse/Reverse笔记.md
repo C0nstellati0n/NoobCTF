@@ -13,6 +13,9 @@
 
 - [Restricted Jumper](https://yun.ng/c/ctf/2024-nitectf/rev/restricted-jumper)
   - [UnityExplorer](https://github.com/sinai-dev/UnityExplorer)：允许在游戏内进行调试，修改的mod。支持IL2CPP和Mono
+- [Russian Roulette](https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#russian-roulette)
+    - IL2Cpp unity apk逆向： https://palant.info/2021/02/18/reverse-engineering-a-unity-based-android-game 。其实和IL2Cpp exe差不多，都需要用[Il2CppDumper(GUI)](https://github.com/AndnixSH/Il2CppDumper-GUI)。注意工具输出的`Assemble-CSharp.dll`只包含函数签名而没有实际的代码，还需要用ida pro/ghidra配合工具提供的script反编译`libil2cpp.so`
+    - 如何用[frida-il2cpp-bridge](https://github.com/vfsfitvnm/frida-il2cpp-bridge)调用任意函数
 
 ## APK
 
@@ -1348,3 +1351,5 @@ mov     r8, qword [r13]
 202. [Between Two Worlds](https://hackmd.io/@Solderet/rk2g-kwr1g)
 - 逆向[Windows Mixed Mode Assemblies](https://learn.microsoft.com/en-us/cpp/dotnet/mixed-native-and-managed-assemblies)。这题由c#和native code组成，同一个binary需要用两种不同的反编译器打开才能看到完整逻辑
 - [Reverse Engineering Mixed Mode Assemblies (IDA, DnSpyEx)](https://www.youtube.com/watch?v=H8gr3NxWteM)
+203. [Sentir](https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#sentir)
+- 逆向`.NET` AOT程序： https://harfanglab.io/insidethelab/reverse-engineering-ida-pro-aot-net
