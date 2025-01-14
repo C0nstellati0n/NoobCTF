@@ -4147,3 +4147,11 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 - `Element.setHTML`属于Sanitizer api。虽然在大部分地方已经被弃用了，然而在electron里还能用。不过过滤的也不完全，可以用`<meta>`标签重定向
 - setInterval可以用字符串作为第一参数。所以可以留意那些`setInterval(xx.xx)`的地方，如果有dom clobbering就能执行自己的js代码
 - 更详细的wp： https://nolangilardi.github.io/blog/2024-0xl4ugh-ctf--ada-indonesia-coy
+512. [political](https://tsuruyu.gitbook.io/tsuryus-ctf-writeups/irisctf-2025/web/political-easy)
+- “绕过”chrome `policy.json`内容。关键还是经典的url编码混淆(构造类似`//xxx`的url也可以)，而url在检查前未经normalized
+513. [webwebhookhook](https://jorianwoltjer.com/blog/p/ctf/irisctf-2025-webwebhookhook)
+- dns rebinding攻击。kotlin基于java，而java在执行URL类的比较时会调用dns解析，检查两个url解析到的ip是否相同。相同的话则判定两个url相同，与url的字面值无关。所以有可能出现dns rebinding攻击：程序检查两个url是否相同后再建立连接，这中间有条件竞争的窗口。攻击者可以搭建自己的dns服务器不断更换解析的ip，能绕过url检查而建立http连接后却导向攻击者的服务器
+- 其他资源：
+    - https://zimzi.substack.com/p/irisctf-2025-webwebhookhook
+    - https://ireland.re/posts/irisctf_2025
+    - 在线dns rebinding攻击工具： https://lock.cmpxchg8b.com/rebinder.html

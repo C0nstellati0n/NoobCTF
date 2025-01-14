@@ -22,6 +22,19 @@
     - 这下看懂了： https://hegz.io/posts/0xl4ugh24-hw-writeups 。这题原来是个Simple Power Analysis (SPA)
 - [Power-SCAndal](https://hegz.io/posts/0xl4ugh24-hw-writeups)
     - power analysis侧信道攻击（题目根据输入的内容输出numpy数组，以供绘图）。wp使用的distinguisher为Sum of Absolute Differences，mean absolute difference做法见 https://github.com/r3-ck0/writeups/tree/master/0xl4ugh/hw/power-scandal
+- [dotdotdot](https://yun.ng/c/ctf/2025-iris-ctf/radio/dotdotdot)
+    - 如何将`.iq`文件数据转为wav
+    - 看起来提取数据的前一步都是用FFT分析数据所在的频率。我再多看几题应该就能看出规律了吧（
+    - 自动morse code解码器
+- [DΔς](https://yun.ng/c/ctf/2025-iris-ctf/misc/dac)
+    - delta-sigma modulation,输出结果由1和-1组成。这题数据混在图片里了，看起来像密集的条形码。不知道是不是特征
+    - 其他做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#d%CE%B4%CF%82
+- [sinefm](https://yun.ng/c/ctf/2025-iris-ctf/radio/sinefm)
+    - 如何使用GNU Radio的FM demodulation block。虽然不知道为啥要用这个，因为题目名说了吗（
+- [nethog](https://yun.ng/c/ctf/2025-iris-ctf/forensics/nethog)
+    - Hamming code error correction。wp妙在这题几乎没提到hamming code，但通过画出数据发现2次幂处的数据不太正常，从而想到hamming code。题目作者也说了，要是看见一段数据除了2次幂的地方几乎都是正常数据，这基本就是hamming code
+- [rfoip](https://yun.ng/c/ctf/2025-iris-ctf/radio/rfoip)
+    - IQ数据转wav文件
 
 ## Linux相关
 
@@ -224,6 +237,12 @@
     - 提取Advanced Video Coding (AVC,也叫H.264)传输的视频文件:[H264extractor](https://github.com/volvet/h264extractor)
     - Fast Fourier Transform (FFT) （佬到底是怎么注意到的FFT……提示给我指出来了我也完全看不出来）
     - DTMF。平时需要找软件听，有数据包的情况下可以直接从数据包中看出传输的数字
+- [tracem-1](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-1)
+    - 分析DNS和DHCP的数据包（`logs.json`文件）
+    - 同系列的另一道题：[tracem-2](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-2)
+- [Rip Art](https://deadgawk.notion.site/IrisCTF-2025-171c04e26b2d80dcbc7bf920d2e3c654)
+    - usb流量分析。这题的难点在于一个流量包同时记录了两个device的数据，而且每个HID data里都有padding（不过这个通过diff找不变的内容就能找到padding）
+    - 感觉这题算比较全的了，usb重点还是看hid数据和leftover capture data
 
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
