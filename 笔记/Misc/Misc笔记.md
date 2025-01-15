@@ -238,11 +238,14 @@
     - Fast Fourier Transform (FFT) （佬到底是怎么注意到的FFT……提示给我指出来了我也完全看不出来）
     - DTMF。平时需要找软件听，有数据包的情况下可以直接从数据包中看出传输的数字
 - [tracem-1](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-1)
-    - 分析DNS和DHCP的数据包（`logs.json`文件）
+    - 分析DNS和DHCP的数据包日志json文件，识别可疑行为。不确定这个json文件是不是wireshark里导出来的
     - 同系列的另一道题：[tracem-2](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-2)
 - [Rip Art](https://deadgawk.notion.site/IrisCTF-2025-171c04e26b2d80dcbc7bf920d2e3c654)
     - usb流量分析。这题的难点在于一个流量包同时记录了两个device的数据，而且每个HID data里都有padding（不过这个通过diff找不变的内容就能找到padding）
-    - 感觉这题算比较全的了，usb重点还是看hid数据和leftover capture data
+    - 感觉这题算比较全的了，usb重点还是看hid数据和leftover capture data。加个如何过滤USB IN Packets的wp： https://github.com/g4rud4kun/CTF-Writeups/tree/main/2025/IrisCTF2025/Forensics/Deldeldel
+- [No Shark?](https://github.com/gimel-team/ctf-writeups/tree/master/2025/iris-ctf/no-shark)
+    - 分析hex编码的raw tcp数据流。可以用text2pcap将其转换为pcap
+    - 纯命令行做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#no-shark
 
 1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
@@ -2467,3 +2470,5 @@ $ cd a/b
 - 若mozilla firefox password database经过master key加密，就不能直接用firefox-decrypt，需要先恢复其master key。可以用[FireMaster](https://securityxploded.com/firemaster.php)，也可以用[工具](https://fossies.org/linux/hashcat/tools/mozilla2hashcat.py)配合hashcat爆破。 https://github.com/openwall/john/files/8884833/mozilla_key4_2john.zip 也行
 - 还有个[firepwd](https://github.com/lclevy/firepwd)工具，见 https://github.com/kossiitkgp/ctf-writeups/tree/master/backdoor/for/cursed_credentials
 - 各种浏览器是如何存储密码的： https://apr4h.github.io/2019-12-20-Harvesting-Browser-Credentials
+375. [Shake my hand](https://tomadimitrie.dev/posts/shake-my-hand)
+- 使用python scapy库执行tcp handshake

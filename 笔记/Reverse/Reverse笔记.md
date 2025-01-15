@@ -2,10 +2,13 @@
 
 ## Tools
 
-平时见到的乱七八糟的工具，没有例题
+平时见到的乱七八糟的工具
 
 - [Instruction Stomp](https://github.com/ChrisTheCoolHut/Instruction-Stomp)
   - 侧信道逆向工具，支持不同架构的binary。原理是计算程序执行的指令数量来判断当前输入是否为正确输入
+- [edb-debugger](https://github.com/eteran/edb-debugger)
+  - 和x64dbg很像,但是适用于AArch32/x86/x86-64架构
+  - 使用案例见[Now This Will Run on My 486?](https://github.com/gimel-team/ctf-writeups/blob/master/2025/iris-ctf/now-this-will-run-on-my-486)。这题我做的时候用的是pwndbg，然而题目涉及JIT+signal handling，通过报错进设置好的signal handling函数来动态解码执行的代码。pwndbg直接把signal传到我手里来了，continue也动不了……
 
 ## Game
 

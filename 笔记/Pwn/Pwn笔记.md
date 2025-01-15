@@ -110,6 +110,11 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
     - 通常free msg_msg后还能继续用的情况不会发生，因为用户空间free某个msg_msg对象后对应这个对象的fd就无效了，后续无法继续操作。然而在有漏洞的情况下，我们的free走的不是正规系统调用，而是走漏洞给的捷径，直接把那块内存free了。同时系统是不知道的，系统还以为这个对象是正常的
     - slab是一块内存空间，存储着数个相同大小的slot。每个slot可以存储一个对象。所以搞堆喷时需要根据出现漏洞的slot大小选择同样大小的目标对象。参考 https://ptr-yudai.hatenablog.com/entry/2020/03/16/165628
     - kernel pwn工具： https://github.com/HyggeHalcyon/CTFs/tree/main/Scripts/pwn/kernelspace
+- [Checksumz](https://tomadimitrie.dev/posts/checksumz)
+  - 漏洞是越界读+越界写，进而转化成任意地址读和任意地址写。主要包含以下技巧：
+    - 利用cpu_entry_area（其地址固定，不被kaslr影响）泄漏kernel base
+    - 利用modprobe_path提权
+  - 内核堆似乎没法像用户态pwn一样，泄漏一个堆地址就能计算出其他chunk的地址。这题用了两次kzalloc分配处chunk A和B。攻击时可以泄漏B的地址，但A的地址仍不确定（wp里是相对于B地址随便减了个偏移当作A的地址，成功率也挺高的）
 
 ## Shellcode题合集
 
