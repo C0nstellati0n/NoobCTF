@@ -4149,9 +4149,11 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 - 更详细的wp： https://nolangilardi.github.io/blog/2024-0xl4ugh-ctf--ada-indonesia-coy
 512. [political](https://tsuruyu.gitbook.io/tsuryus-ctf-writeups/irisctf-2025/web/political-easy)
 - “绕过”chrome `policy.json`内容。关键还是经典的url编码混淆(构造类似`//xxx`的url也可以)，而url在检查前未经normalized
+- 这样也行啊？ https://github.com/negasora/Some-CTF-Solutions/blob/master/irisctf-2025/web/political
 513. [webwebhookhook](https://jorianwoltjer.com/blog/p/ctf/irisctf-2025-webwebhookhook)
-- dns rebinding攻击。kotlin基于java，而java在执行URL类的比较时会调用dns解析，检查两个url解析到的ip是否相同。相同的话则判定两个url相同，与url的字面值无关。所以有可能出现dns rebinding攻击：程序检查两个url是否相同后再建立连接，这中间有条件竞争的窗口。攻击者可以搭建自己的dns服务器不断更换解析的ip，能绕过url检查而建立http连接后却导向攻击者的服务器
+- dns rebinding攻击。kotlin基于java，而java在执行URL类的比较时会调用dns解析，检查两个url解析到的ip是否相同。相同的话则判定两个url相同，与url的字面值无关。所以有可能出现dns rebinding攻击：程序检查两个url是否相同后再建立连接，这中间有条件竞争的窗口。攻击者可以搭建自己的dns服务器不断更换解析的ip，能绕过url检查而建立http连接后却导向攻击者的服务器。虽然java为了防止这类攻击会把dns结果记忆30秒，然而攻击者仍然可以卡30秒过期之前的时间
 - 其他资源：
     - https://zimzi.substack.com/p/irisctf-2025-webwebhookhook
     - https://ireland.re/posts/irisctf_2025
     - 在线dns rebinding攻击工具： https://lock.cmpxchg8b.com/rebinder.html
+    - [官方wp](https://github.com/Seraphin-/ctf/blob/master/2025/irisctf/webwebhookhook.md)和DNS rebinding attack框架[singularity](https://github.com/nccgroup/singularity)

@@ -823,6 +823,8 @@ print(base64.b64encode(temp.encode()))
   - 其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#monkeys-paw 。稍微提一嘴，根据官方解法（`oh_word`），题目的过滤好像写错了……预期解是用`__doc__`取出字符串，结果因为过滤的问题直接就能在payload里用字符串
 - [Korra](https://github.com/nononovak/glacierctf-2024-writeups/blob/main/Korra%20(writeup).md)
   - 只能用`abcdef"{>:}`的pyjail。关键是利用f-string的format语法，比如`f"""{"a">"a":d}"""`是字符0
+- [cobras-den](https://github.com/negasora/Some-CTF-Solutions/tree/master/irisctf-2025/misc/cobras-den)
+  - 用上之前见过的知识了（喜）。再看看大家的做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#cobras-den
 - pyjail cheatsheet： https://shirajuki.js.org/blog/pyjail-cheatsheet
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
@@ -2051,6 +2053,7 @@ try {
 194. [Echo Chamber](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/pwn/echo-chamber)
 - 能用的格式化字符串被过滤时，可以用`%*`泄漏32-bit值。题目作者的解释：“tho u can not specify the index for this but to can pad some %c before it to leak value on any position. ex: `%c %c %c %*` will leak the 4th value”
 - `__run_exit_handlers`(`.fini_array`,`.dtors`)的利用。这个之前见过很多次了，覆盖成想要的函数就能在程序退出时调用那个函数。可能要用`readelf -d`查看`.fini_array`的偏移。顺便再复习一下，这玩意只能帮助重新调用函数一次，不能无限循环。不过还不确定是不是只能覆盖一次，因为wp后续就利用stack修改返回地址了，没有再用`.fini_array`
+  - 仅限binary的保护为`No RELRO`。之前试了一下，似乎连partial relro下的`.fini_array`都是不可写的
 195. [libprce3](https://mwlik.github.io/2024-05-10-defcon-quals-libprce3-challenge/)
 - 后门分析实战。大概是先用git diff找到新版本文件与之前稳定版本的区别，然后即兴发挥，分析后门在哪
 - 当无法使用空格时可以使用`$IFS`。但有时候会被bash错误识别，比如`ls$IFSsomething`，意在执行命令`ls something`，但bash有可能将整个`$IFSsomething`识别为一个东西，进而得到一个空字符串。解决办法是在中间加个任意数字`$num`：bash parses `$somenumber` it stops by the first number and get evaluated to nothing

@@ -35,6 +35,8 @@
     - Hamming code error correction。wp妙在这题几乎没提到hamming code，但通过画出数据发现2次幂处的数据不太正常，从而想到hamming code。题目作者也说了，要是看见一段数据除了2次幂的地方几乎都是正常数据，这基本就是hamming code
 - [rfoip](https://yun.ng/c/ctf/2025-iris-ctf/radio/rfoip)
     - IQ数据转wav文件
+- [Spicy Messaging Sinusoids](https://github.com/TFNS/writeups/tree/master/2025-01-05-IrisCTF/spicy_messaging_sinusoids)
+    - [Universal Radio Hacker](https://github.com/jopohl/urh)处理digital FSK modulation。这工具还可以直接加载iq文件
 
 ## Linux相关
 
@@ -239,7 +241,7 @@
     - DTMF。平时需要找软件听，有数据包的情况下可以直接从数据包中看出传输的数字
 - [tracem-1](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-1)
     - 分析DNS和DHCP的数据包日志json文件，识别可疑行为。不确定这个json文件是不是wireshark里导出来的
-    - 同系列的另一道题：[tracem-2](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-2)
+    - 同系列的另一道题：[tracem-2](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-2)。这题还可以用[Kibana & Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html)帮助分析，见 https://stefanin.com/posts/irisctf-tracem2
 - [Rip Art](https://deadgawk.notion.site/IrisCTF-2025-171c04e26b2d80dcbc7bf920d2e3c654)
     - usb流量分析。这题的难点在于一个流量包同时记录了两个device的数据，而且每个HID data里都有padding（不过这个通过diff找不变的内容就能找到padding）
     - 感觉这题算比较全的了，usb重点还是看hid数据和leftover capture data。加个如何过滤USB IN Packets的wp： https://github.com/g4rud4kun/CTF-Writeups/tree/main/2025/IrisCTF2025/Forensics/Deldeldel
