@@ -1,5 +1,12 @@
 # Misc笔记
 
+## Tools
+
+又是没例题的一天……
+
+- [Bitwarden PIN Bruteforce](https://github.com/JorianWoltjer/bitwarden-pin-bruteforce)
+    - Bitwarden好像是个chrome插件，用来存储密码。用户可以选择用master password或是pin码来查看存储的全部密码。如果是后者的话，爆破的选择就少了很多，可以离线爆破出pin码
+
 ## AI
 
 疑似被时代抛弃，完全对AI训练不感兴趣。我猜是因为我数学太拉了，这动不动就gradient descent的我跟不上
@@ -241,7 +248,7 @@
     - DTMF。平时需要找软件听，有数据包的情况下可以直接从数据包中看出传输的数字
 - [tracem-1](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-1)
     - 分析DNS和DHCP的数据包日志json文件，识别可疑行为。不确定这个json文件是不是wireshark里导出来的
-    - 同系列的另一道题：[tracem-2](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-2)。这题还可以用[Kibana & Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html)帮助分析，见 https://stefanin.com/posts/irisctf-tracem2
+    - 同系列的另一道题：[tracem-2](https://yun.ng/c/ctf/2025-iris-ctf/forensics/tracem-2)。这题还可以用[Kibana & Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html)帮助分析，见 https://stefanin.com/posts/irisctf-tracem2 。 https://team-bytesized.github.io/ctf/iris2025/writeups/tracem-2.html 讲的也不错
 - [Rip Art](https://deadgawk.notion.site/IrisCTF-2025-171c04e26b2d80dcbc7bf920d2e3c654)
     - usb流量分析。这题的难点在于一个流量包同时记录了两个device的数据，而且每个HID data里都有padding（不过这个通过diff找不变的内容就能找到padding）
     - 感觉这题算比较全的了，usb重点还是看hid数据和leftover capture data。加个如何过滤USB IN Packets的wp： https://github.com/g4rud4kun/CTF-Writeups/tree/main/2025/IrisCTF2025/Forensics/Deldeldel

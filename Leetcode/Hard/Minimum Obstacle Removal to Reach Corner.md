@@ -52,7 +52,7 @@ public:
             q.pop();
             for(int i=0;i<4;i++){
                 int x = p.first+dx[i],y=p.second+dy[i];
-                if(x>=0&&x<n&&y>=0&&y<m&&dp[x][y]==-1){
+                if(x>=0&&x<n&&y>=0&&y<m&&dp[x][y]==-1){ //注意这个写法不适用于全部题目，仅在这道题内每个坐标(x,y)第一次访问时就是最佳路径。其他时候还是要用类似 d[i][j] + grid[u][w] < d[u][w] 的判断
                     dp[x][y] = dp[p.first][p.second] + grid[x][y];
                     if(grid[x][y]){ //模拟deque的操作
                         //q1装优先级较低的edge

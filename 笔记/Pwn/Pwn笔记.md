@@ -114,7 +114,7 @@ kernel pwn题合集。用于纪念我连堆都没搞明白就敢看内核的勇�
   - 漏洞是越界读+越界写，进而转化成任意地址读和任意地址写。主要包含以下技巧：
     - 利用cpu_entry_area（其地址固定，不被kaslr影响）泄漏kernel base
     - 利用modprobe_path提权
-  - 内核堆似乎没法像用户态pwn一样，泄漏一个堆地址就能计算出其他chunk的地址。这题用了两次kzalloc分配处chunk A和B。攻击时可以泄漏B的地址，但A的地址仍不确定（wp里是相对于B地址随便减了个偏移当作A的地址，成功率也挺高的）
+  - 内核堆似乎没法像用户态pwn一样，泄漏一个堆地址就能计算出其他chunk的地址。这题的源码用了两次kzalloc分配chunk A和B。攻击时可以泄漏B的地址，但A的地址仍不确定（wp里是相对于B地址随便减了个偏移当作A的地址，成功率也挺高的）
 
 ## Shellcode题合集
 
@@ -825,6 +825,11 @@ print(base64.b64encode(temp.encode()))
   - 只能用`abcdef"{>:}`的pyjail。关键是利用f-string的format语法，比如`f"""{"a">"a":d}"""`是字符0
 - [cobras-den](https://github.com/negasora/Some-CTF-Solutions/tree/master/irisctf-2025/misc/cobras-den)
   - 用上之前见过的知识了（喜）。再看看大家的做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#cobras-den
+- [warden](https://github.com/IrisSec/IrisCTF-2025-Challenges/tree/main/warden),[wp](https://github.com/Seraphin-/ctf/blob/master/2025/irisctf/warden.md)
+  - 一道绕audithook的pyjail，和之前见过的Diligent Auditor构造类似：可以从某个指定模块导入一个函数，然后用指定参数调用那个函数。至于怎么找模块，还真没什么技巧，除了把builtins里的模块一个一个看一遍。`_testcapi`模块里的`run_in_subinterp`可以开启一个新的子解释器，同时移除所有的audit hook和seccomp
+  - `\r`可以被看作是python源码里的空格和换行，而且可以通过input输入
+  - 可以用`from...import...as __getattr__`覆盖`__getattr__`，然后调用`from __main__ import xxx`就能调用`__getattr__`，进而调用引入的函数了
+  - 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#warden 。其实都是预期解，几乎完全一样
 - pyjail cheatsheet： https://shirajuki.js.org/blog/pyjail-cheatsheet
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python
@@ -1904,7 +1909,7 @@ try {
 163. [Konsolidator](https://github.com/MarcoPellero/writeups/tree/main/backdoor/konsolidator)
 - （libc 2.31）假如暂时无已泄漏的地址但可以修改tcache中某个chunk的fd指针，尝试partial overwrite LSB，有机率让fd指向heap起始处的chunk。这块区域存储着tcache结构体，包含bin_counters（各个bin里的free chunk数量）和first_chunk（每个bin中单项链表的起始chunk）。pwndbg里可用bins查看，方括号里是counter，每个bin里最左边的指针为first_chunk。修改这个结构的counter和first_chunk即可实现任意地址分配。最重要的是，first_chunk指针未被mangled
 164. [pizzeria](https://github.com/MarcoPellero/writeups/tree/main/backdoor/pizzeria)
-- libc 2.35 [fastbin dup](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/fastbin_dup.c)(double free)。how2heap里展示时用的是calloc，因为calloc可以跳过tcache直接从fastbin里取chunk。如果题目中只能用malloc，参考wp的做法
+- libc 2.35 [fastbin dup](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/fastbin_dup.c)(double free)。how2heap里展示时用的是calloc，因为calloc可以跳过tcache直接从fastbin里取chunk。如果题目中只能用malloc，参考wp的做法。要注意的是，how2heap里只用calloc的做法没法完全做到任意地址分配，表现在需要提前给目标区域写指定的size。而wp里的malloc做法则没有这个烦恼
   - [house of botcake](https://github.com/shellphish/how2heap/blob/master/glibc_2.35/house_of_botcake.c)没用calloc，这俩有共通点。更详细的解析wp： https://www.youtube.com/watch?v=qVLXHNqxpkE
 165. [Sequilitis](https://gold3nb0y.github.io/blog/posts/irisctf/)
 - sqlite3相关pwn。攻击者可修改sql查询语句的bytecode
