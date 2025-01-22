@@ -237,6 +237,10 @@
         - [官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/forensics/mine-the-cap)自己实现了部分协议
         - https://prismarinejs.github.io/minecraft-data
         - https://www.npmjs.com/package/minecraft-protocol
+- [minecraft-safe](https://yun.ng/c/ctf/2025-uoft-ctf/forensics/minecraft-safe)
+    - 和上面那题一样，也是分析minecraft pcap。不过这题的通信是加密的，所以又要写新的脚本
+    - wp里提到的“use two ciphers”大概是需要创建两个AES cipher对象，不这么做的话解密不成功（似乎是因为cipher object解密后不会重置，所以server和client得各自用自己的）
+    - 其他wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#minecraft-safe
 - [Torrent Tempest](https://kerszl.github.io/hacking/walkthrough/ctf/ctf-backdoorctf-torrent)
     - BitTorrent协议分析；提取传输的内容
     - 也可以用一下[bittorent-traffic-analyzer](https://github.com/mfindra/bittorent-traffic-analyzer)。就是感觉有点鸡肋，实际提取文件内容还要自己写脚本。见 https://seall.dev/posts/backdoorctf2024
@@ -2481,3 +2485,9 @@ $ cd a/b
 - 各种浏览器是如何存储密码的： https://apr4h.github.io/2019-12-20-Harvesting-Browser-Credentials
 375. [Shake my hand](https://tomadimitrie.dev/posts/shake-my-hand)
 - 使用python scapy库执行tcp handshake
+376. [Decrypt Me](https://github.com/thmai11/writeups/blob/main/2025/uoftctf/decrypt_me)
+- 复习一下rar和alternate data stream（ads）。此题还包含如何使用john爆破rar密码
+- 7zip可以直接看到ads的内容，linux的unrar命令也可以
+377. [Out of the container](https://github.com/thmai11/writeups/blob/main/2025/uoftctf/out_of_the_container)
+- 可以用[dive](https://github.com/wagoodman/dive)查看docker image的各个layer(a set of changes made to a file system,比如添加或者修改文件的操作)
+- GCP（google cloud platform）相关操作

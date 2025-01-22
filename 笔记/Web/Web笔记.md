@@ -85,6 +85,11 @@
     - c# ASP.NET Core（Razor Pages）网站。分析这类网站源码会比较复杂，需要利用Dockerfile找到dotnet命令启动的dll文件并反编译
     - c# LINQ注入（语法有点像sql query语句，甚至漏洞也发生于拼接）会导致RCE： https://www.nccgroup.com/us/research-blog/dynamic-linq-injection-remote-code-execution-vulnerability-cve-2023-32571 。存在于LINQ1.0.7.10到1.2.25版本，poc见 https://github.com/Tris0n/CVE-2023-32571-POC
     - 然后是一个经典技巧：把要泄漏的文件移到网站根目录就能看到了：`/app/src/wwwroot`
+- [prepared](https://yun.ng/c/ctf/2025-uoft-ctf/web/prepared)
+    - python格式化字符串漏洞+mariadb sql注入。注入时用的是布尔注入，使网站仅在爆破出正确flag后登录成功。原理是用了`OR EXISTS`和`%`通配符（感觉这个东西起到个检查前缀的作用）。爆破flag字符时要注意`%`和`_`等在sql里有特殊意义的符号
+    - sql注入还可以往本地文件系统写文件（之前在php里见过类似的，只在某些权限开启时能用。不确定这里是不是）。看起来好像有两种语法，`OUTFILE`和`DUMPFILE`，有些时候一个能用一个不能用
+    - 格式化字符串漏洞rce。有点像pyjail或模板注入时的做法。这题由于引入了[setuptools](https://github.com/pypa/setuptools)模块,多了个用`windows_support.ctypes.cdll`的做法。[官方wp](https://github.com/UofTCTF/uoftctf-2025-chals-public/blob/master/prepared-1)则要复杂一点，从ctypes库拿cdll。这些做法仅限题目有文件上传时使用，因为需要服务器加载恶意`.so`文件
+    - sqlmap高级用法；使用tamper script： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#prepared
 
 ## XSS
 
@@ -4157,3 +4162,5 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
     - https://ireland.re/posts/irisctf_2025
     - 在线dns rebinding攻击工具： https://lock.cmpxchg8b.com/rebinder.html
     - [官方wp](https://github.com/Seraphin-/ctf/blob/master/2025/irisctf/webwebhookhook.md)和DNS rebinding attack框架[singularity](https://github.com/nccgroup/singularity)
+514. [CodeDB](https://yun.ng/c/ctf/2025-uoft-ctf/web/code-db)
+- 看了半天都没找到代码的逻辑错误在哪，结果是个正则时间注入（自己编的怪名字）。早有耳闻regex在条件竞争里的延长竞争窗口用法，今天总算遇见了其最直接的利用方法。题目允许输入任意regex匹配含有flag的内容，可以通过regex匹配时间的长短判断当前猜测的flag前缀是否正确
