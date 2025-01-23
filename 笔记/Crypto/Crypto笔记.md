@@ -843,6 +843,21 @@ AES是很能出题的。DES则是放在这凑数的
     - 这题sbox里不会出现的字节是0xea。根据最后一轮的操作（`sub_bytes`,`shift_rows`,`add_round_key`），sub_bytes产生的结果绝对不会有0xea，shift_rows也不会改变这个结果，add_round_key也只是异或。因此假如有一个orcacle（可以得到随机明文的加密结果），用0xea异或其密文，则异或结果不可能是最后一轮的轮密钥。利用这点慢慢排除可能的轮密钥字节就能得到确切的结果
 - [AYES](https://github.com/Seraphin-/ctf/blob/master/2025/irisctf/ayes.md)
     - 翻转aes sbox指定索引处的指定bit,通过oracle（输入明文获取其密文）恢复密钥。wp的做法我没怎么看懂，比赛时发现和上一题Subathon很像，就直接用了。也能恢复密钥，在我看来还更好理解许多。见 https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#ayes
+- [Enchanted Oracle](https://connor-mccartney.github.io/cryptography/other/EnchantedOracle-UofTCTF2025)
+    - aes cbc padding oracle attack，但目标是伪造已知明文的密文。关键是要倒着来推：随便生成16个字节当密文块后通过oracle获得其明文，然后异或期望明文，就能得到下一个密文块。重复此步骤即可
+    - 个人做法： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#enchanted-oracle
+- [Timed AES](https://www.da.vidbuchanan.co.uk/blog/uoftctf-timed-aes.html)
+    - 错误的AES实现导致的side channel attack。问题出在aes的sub_bytes_inv用了下面的代码：
+    ```c
+    for (size_t i = 0; i < 256; i++)
+    {
+        if (sbox[i] == num) return i;
+    }
+    ```
+    题目还提供了每次运行后的纳秒级用时记录。可以看出for循环的运行次数等同于`inverse_sbox[num]`，两者间有相关性。可以用[numpy.corrcoef](https://numpy.org/doc/2.1/reference/generated/numpy.corrcoef.html)找到相关性最好的byte
+    - aes有10轮，每轮都会调用subBytesInv，而且每轮的expandKey都不一样，所以都会有影响。不过wp说correlation function会将这些内容看作噪音忽略掉
+    - AES/DES轮密钥逆向工具： https://github.com/SideChannelMarvels/Stark
+    - 官方wp： https://github.com/UofTCTF/uoftctf-2025-chals-public/blob/master/timed-aes 。原理一样不过脚本要复杂些
 
 ## Z3使用
 

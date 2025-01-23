@@ -2486,8 +2486,13 @@ $ cd a/b
 375. [Shake my hand](https://tomadimitrie.dev/posts/shake-my-hand)
 - 使用python scapy库执行tcp handshake
 376. [Decrypt Me](https://github.com/thmai11/writeups/blob/main/2025/uoftctf/decrypt_me)
-- 复习一下rar和alternate data stream（ads）。此题还包含如何使用john爆破rar密码
-- 7zip可以直接看到ads的内容，linux的unrar命令也可以
+- 复习一下rar和alternate data stream（ads；之前见的时候叫ntfs，一样的）。此题还包含如何使用john爆破rar密码
+- 7zip可以直接看到ads的内容，linux的unrar命令也可以。参考 https://kerszl.github.io/hacking/walkthrough/ctf/ctf-UofTCTF-2025 ， 还能用Get-Item命令提取出ntfs数据流，不过可能会有一些编码问题
 377. [Out of the container](https://github.com/thmai11/writeups/blob/main/2025/uoftctf/out_of_the_container)
 - 可以用[dive](https://github.com/wagoodman/dive)查看docker image的各个layer(a set of changes made to a file system,比如添加或者修改文件的操作)
 - GCP（google cloud platform）相关操作
+378. [Simple File Storage](https://blog.hexf.me/uoftctf25_simple_file_storage)
+- 题目作者说这题有很多解法：ziptar polyglot,zipzip polyglot,zip multidisking。这篇wp是第三种；[官方wp](https://github.com/UofTCTF/uoftctf-2025-chals-public/blob/master/simple-file-storage)是第一种，第二种解法则是`cat a.zip b.zip > solution.zip`
+- 题目的关键是利用7zip和php libzip的解析差异。以下是第一和第三种思路的概要（第二种解法没人解析，我猜是因为libzip看到第一个zip文件的结尾就结束了，然而7zip会继续往下解压）：
+    - 第一种：用[truepolyglot](https://github.com/ansemjo/truepolyglot)构造一个zip/tar的polyglot，使tar压缩的一个文件的文件名为zip的文件头（这样这个polyglot就会以zip的文件头开头了）。libzip将其看成zip，但7zip将其看成tar
+    - 第三种：zip文件的末尾有个end-of central directory (EOCD)块，指向第一个中央目录（central directory）。multi-disk ZIP是一种将太大的zip文件拆分成较小的部分跨磁盘存储的技术。7zip支持但libzip不支持，表现在会忽略当前EOCD块，转而寻找下一个。通常情况下zip文件只有一个EOCD块，于是报错。然而可以在末尾手动加上另一个EOCD块，使libzip不报错的同时7zip也解压成功。这个做法包含较复杂的手动zip构造
