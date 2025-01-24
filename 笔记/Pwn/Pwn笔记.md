@@ -405,7 +405,7 @@ print(f"ret: {next(libc.search(asm('ret'), executable=True))}")
 - house of force任意地址写。例题:[hitcontraining_bamboobox](../../CTF/BUUCTF/Pwn/hitcontraining_bamboobox.md)
 - uaf改free_hook为system+tcache dup。例题:[ciscn_2019_es_1](../../CTF/BUUCTF/Pwn/ciscn_2019_es_1.md)
 - off by one+unlink+格式化字符串泄露地址。例题:[axb_2019_heap](../../CTF/BUUCTF/Pwn/axb_2019_heap.md)
-- 劫持_IO_2_1_stdin_结构体里的_fileno使其读取制定文件而不是stdin+只能泄露地址后4字节的解决办法。例题:[](../../CTF/BUUCTF/Pwn/ciscn_2019_final_2.md)
+- 劫持_IO_2_1_stdin_结构体里的_fileno使其读取指定文件而不是stdin+只能泄露地址后4字节的解决办法。例题:[ciscn_2019_final_2](../../CTF/BUUCTF/Pwn/ciscn_2019_final_2.md)
 - off by null+Chunk Extend and Overlapping+tcache dup。例题:[hitcon_2018_children_tcache](../../CTF/BUUCTF/Pwn/hitcon_2018_children_tcache.md)
 - house of orange+FSOP。例题:[houseoforange_hitcon_2016](../../CTF/BUUCTF/Pwn/houseoforange_hitcon_2016.md)
 
@@ -2208,3 +2208,10 @@ fn get_ptr<'a, 'b, T: ?Sized>(x: &'a mut T) -> &'b mut T {
 228. [Recover Your Vision](https://buddurid.netlify.app/2024/12/27/0xl4ugh-ctf-2024)
 - 多线程的canary问题。主线程新开的线程的栈和tls区域其实是主线程中一个mmap chunk，rwx属性继承自主线程。tls里装着canary，而且和栈挨着。如果有足够大的溢出，则可以直接覆盖tls中存储的canary，绕过canary保护
 - https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#recover-your-vision
+229. [book-editor](https://sky-lance.github.io/2025/01/13/UoftCTF25-book-editor)
+- 当malloc的size参数过大或是负数时，malloc会返回null
+- 利用exit handlers(也叫exit hook) getshell的详细解析
+- 比赛时没注意到malloc可以返回null的点，倒是找到了一处堆溢出。队友提出用house of tangerine+scanf输入内容过大会调用malloc的性质操控内存。太复杂了根本搞不明白，没想到预期解这么简单……
+- fsop解法： https://vulnx.github.io/blog/posts/UofTCTF2025
+  - pwntools可以直接用`FileStructure().write`生成可以泄漏任意地址的stdout结构体
+  - 可以通过覆盖stdin来修改输入字节的存储地址（任意地址写）

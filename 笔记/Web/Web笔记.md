@@ -4164,6 +4164,8 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
     - [官方wp](https://github.com/Seraphin-/ctf/blob/master/2025/irisctf/webwebhookhook.md)和DNS rebinding attack框架[singularity](https://github.com/nccgroup/singularity)
 514. [CodeDB](https://yun.ng/c/ctf/2025-uoft-ctf/web/code-db)
 - 看了半天都没找到代码的逻辑错误在哪，结果是个正则时间注入（自己编的怪名字）。早有耳闻regex在条件竞争里的延长竞争窗口用法，今天总算遇见了其最直接的利用方法。题目允许输入任意regex匹配含有flag的内容，可以通过regex匹配时间的长短判断当前猜测的flag前缀是否正确
+- 感觉[这样构造](https://github.com/RickdeJager/CTF/blob/master/JUSTCAT2020/web/computeration/writeup.md#the-vulnerability)的regex payload更好，爆破的耗时更少
 515. [Prismatic Blogs](https://nullbrunk.github.io/posts/UofTCTF2025-prismatic-copy)
 - [prisma orm](https://www.prisma.io/docs/orm)注入。比赛时又脑抽，不知道怎么通过get请求传object；事实上因为题目用的是`req.query`取参数，直接`?key[a][b]=value`即可
 - 之前见过注入mutation请求的题目。这道是where语句注入，目标是泄漏数据库的内容
+- 这题的考点 https://www.elttam.com/blog/plorming-your-primsa-orm 里有，还介绍了基于时间（时间盲注？）的orm注入payload

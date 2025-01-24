@@ -240,6 +240,7 @@
 - [minecraft-safe](https://yun.ng/c/ctf/2025-uoft-ctf/forensics/minecraft-safe)
     - 和上面那题一样，也是分析minecraft pcap。不过这题的通信是加密的，所以又要写新的脚本
     - wp里提到的“use two ciphers”大概是需要创建两个AES cipher对象，不这么做的话解密不成功（似乎是因为cipher object解密后不会重置，所以server和client得各自用自己的）
+    - 参考 https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge/Protocol 可以自己实现一个Minecraft协议解析器
     - 其他wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#minecraft-safe
 - [Torrent Tempest](https://kerszl.github.io/hacking/walkthrough/ctf/ctf-backdoorctf-torrent)
     - BitTorrent协议分析；提取传输的内容

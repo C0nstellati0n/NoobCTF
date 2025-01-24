@@ -10,18 +10,16 @@ class Solution {
         int n = graph.Length;
         int[] indegree = new int[n];
         List<List<int>> adj = new();
-
         for(int i = 0; i < n; i++) {
             adj.Add(new());
         }
-
         for (int i = 0; i < n; i++) {
             foreach(int node in graph[i]) {
                 adj[node].Add(i); //虽然已经有邻接表graph了，但是graph记录的是一个node向外的edge数量，或者说“出度”；然而拓补排序需要看“入度”，一个node有多少edge指向它的数量
                 indegree[i]++; //说实话这我有点不懂，按照题目对graph的描述，foreach里的每个node应该都为i->node,那入度加的应该是node的吧？所以这里加的应该是出度。不过是对的，因为这题要求找的terminal node是出度为0的node，而不是入度为0。评论区有人提到这点了，有人觉得是写错了，有人觉得是 “nodes are added in reverse order , so outdegree becomes indegree in this case”。看editorial的解析图可能是因为把edge反过来了
+                //今天又遇见了这题，这里indegree确实没错，adj构造的是把graph的每个有向edge反过来的图。这么做的原因是这题要求找出度为0或任何路径都无环的node，和拓扑排序能干的事一致；但拓扑排序只能处理入度
             }
         }
-
         Queue<int> q = new();
         // Push all the nodes with indegree zero in the queue.
         for (int i = 0; i < n; i++) {
@@ -29,12 +27,10 @@ class Solution {
                 q.Enqueue(i);
             }
         }
-
         bool[] safe = new bool[n];
         while (q.Any()) {
             int node = q.Dequeue();
-            safe[node] = true; //所有出度为0的node会被加进queue，等于就是terminal node，可以放心加进safe里
-
+            safe[node] = true; //所有入度为0的node会被加进queue，等于就是terminal node，可以放心加进safe里
             foreach(int neighbor in adj[node]) {
                 // Delete the edge "node -> neighbor".
                 indegree[neighbor]--;
@@ -43,7 +39,6 @@ class Solution {
                 }
             }
         }
-
         List<int> safeNodes = new();
         for (int i = 0; i < n; i++) {
             if (safe[i]) {
@@ -72,9 +67,9 @@ If there is no path from the node that enters a cycle, we will always be able to
 The problem is reduced to finding the nodes that do not have any paths that lead to a cycle.
 ```
 
-所以要判环。那这又有拓扑什么事？假如一个node的所有路径都导向一个terminal或safe node，它应该是类似a->b->c->d这样的。意味着，它所有path的出度都是很清晰的一条，可以从一个有限的终点倒着推回去。假如node在一个环里，那么环里的node都是头尾相接的，没法从任何一个node那里倒着推回去。这里用的拓扑为[Topological Sort Using Kahn's Algorithm](https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/)，从入度（出度）为零的node出发，慢慢削减，环里的node因为入度与环里的node密切相关，而环里的node永远没法入队列，故拓扑算法永远不会走到它们上面。走到的node一定是safe或者terminal node。
+所以要判环。那这又有拓扑什么事？假如一个node的所有路径都导向一个terminal或safe node，它应该是类似a->b->c->d这样的。意味着，它所有path的出度都是很清晰的一条，可以从一个有限的终点倒着推回去。假如node在一个环里，那么环里的node都是头尾相接的，没法从任何一个node那里倒着推回去。这里用的拓扑为[Topological Sort Using Kahn's Algorithm](https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/)，从入度（原graph的出度）为零的node出发，慢慢削减，环里的node因为入度与环里的node密切相关，而环里的node永远没法入队列，故拓扑算法永远不会走到它们上面。走到的node一定是safe或者terminal node。
 
-当然dfs也能做啊。
+当然dfs也能做，甚至因为不需要逆向题目给的graph，速度更快
 ```c#
 //采样最佳，editorial里也有介绍
 public class Solution {
@@ -82,33 +77,24 @@ public class Solution {
         //Dettect Cycle in a DIrected Graph
         // If cycle is present mark those nodes as true and then remove those nodes and add remaining
         // to the list and return.
-
         bool[] visited = new bool[graph.Length]; //上面提到的dfs问题就用两个visited解决，一个记录走过的node，一个记录dfs走过的node
         bool[] dfsVisited = new bool[graph.Length];
-
         bool[] cyclePresent = new bool[graph.Length];
-
         for(int i =0;i<graph.Length;i++){
             if(!visited[i])
             DFSRec(i,graph,visited,dfsVisited,cyclePresent);
         }
-
         IList<int> result = new List<int>();
-
-       for(int i =0;i<graph.Length;i++){
+        for(int i =0;i<graph.Length;i++){
             if(!cyclePresent[i]){
                 result.Add(i);
             }
         }
-
         return result;
     }
-
     public bool  DFSRec(int s,int[][] graph, bool[] visited, bool[] dfsVisited, bool[] cyclePresent){
-        
         visited[s] = true;
         dfsVisited[s] = true;
-
         foreach(var t in graph[s]){
             if(!visited[t]){
                 if(DFSRec(t,graph,visited,dfsVisited,cyclePresent)){

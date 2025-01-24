@@ -845,6 +845,7 @@ AES是很能出题的。DES则是放在这凑数的
     - 翻转aes sbox指定索引处的指定bit,通过oracle（输入明文获取其密文）恢复密钥。wp的做法我没怎么看懂，比赛时发现和上一题Subathon很像，就直接用了。也能恢复密钥，在我看来还更好理解许多。见 https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#ayes
 - [Enchanted Oracle](https://connor-mccartney.github.io/cryptography/other/EnchantedOracle-UofTCTF2025)
     - aes cbc padding oracle attack，但目标是伪造已知明文的密文。关键是要倒着来推：随便生成16个字节当密文块后通过oracle获得其明文，然后异或期望明文，就能得到下一个密文块。重复此步骤即可
+    - 看[另一篇wp](https://merkletr.ee/ctf/2025/uoftctf/aescbc)时发现竟然有人写过Padding Oracle Attack的论文： https://www.usenix.org/legacy/event/woot10/tech/full_papers/Rizzo.pdf
     - 个人做法： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#enchanted-oracle
 - [Timed AES](https://www.da.vidbuchanan.co.uk/blog/uoftctf-timed-aes.html)
     - 错误的AES实现导致的side channel attack。问题出在aes的sub_bytes_inv用了下面的代码：
