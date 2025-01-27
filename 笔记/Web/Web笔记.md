@@ -87,9 +87,12 @@
     - 然后是一个经典技巧：把要泄漏的文件移到网站根目录就能看到了：`/app/src/wwwroot`
 - [prepared](https://yun.ng/c/ctf/2025-uoft-ctf/web/prepared)
     - python格式化字符串漏洞+mariadb sql注入。注入时用的是布尔注入，使网站仅在爆破出正确flag后登录成功。原理是用了`OR EXISTS`和`%`通配符（感觉这个东西起到个检查前缀的作用）。爆破flag字符时要注意`%`和`_`等在sql里有特殊意义的符号
+        - 使用LIKE BINARY的做法： https://blog.regularofvanilla.com/posts/UotT
+        - https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md
     - sql注入还可以往本地文件系统写文件（之前在php里见过类似的，只在某些权限开启时能用。不确定这里是不是）。看起来好像有两种语法，`OUTFILE`和`DUMPFILE`，有些时候一个能用一个不能用
     - 格式化字符串漏洞rce。有点像pyjail或模板注入时的做法。这题由于引入了[setuptools](https://github.com/pypa/setuptools)模块,多了个用`windows_support.ctypes.cdll`的做法。[官方wp](https://github.com/UofTCTF/uoftctf-2025-chals-public/blob/master/prepared-1)则要复杂一点，从ctypes库拿cdll。这些做法仅限题目有文件上传时使用，因为需要服务器加载恶意`.so`文件
     - sqlmap高级用法；使用tamper script： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#prepared
+    - rce部分和这题有点像： https://ctf.gg/blog/buckeyectf-2024/gentleman 。这篇wp关于如何找利用的模块部分很详细
 
 ## XSS
 
@@ -4169,3 +4172,9 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 - [prisma orm](https://www.prisma.io/docs/orm)注入。比赛时又脑抽，不知道怎么通过get请求传object；事实上因为题目用的是`req.query`取参数，直接`?key[a][b]=value`即可
 - 之前见过注入mutation请求的题目。这道是where语句注入，目标是泄漏数据库的内容
 - 这题的考点 https://www.elttam.com/blog/plorming-your-primsa-orm 里有，还介绍了基于时间（时间盲注？）的orm注入payload
+516. [Timeless](https://blog.regularofvanilla.com/posts/UotT)
+- 如果服务器设置了`random.seed`，就能用以下三个数据就能计算任意时刻生成的`uuid.uuid1`值：
+    - 服务器的mac地址
+    - uuid创建的时间（纳秒级）
+    - seed值（uuid1的生成调用了`random.getrandbits`，本来是不可预测的。如果服务器提前seed后就可以了）
+- [flask-session](https://github.com/pallets-eco/flask-session)若使用了[filesystem](https://flask-session.readthedocs.io/en/latest/api.html#flask_session.filesystem.FileSystemSessionInterface)模式，则session内容会以pickle的形式存储在服务器的文件系统中，位于`md5("session:"+sessionId)`（具体路径得看[源码](https://github.com/pallets-eco/cachelib/blob/main/src/cachelib/file.py#L210),取决于cache_dir的值）。因此如果有文件上传能力且能控制文件名和session使用的sessionId，就能利用pickle实现rce

@@ -1,5 +1,7 @@
 # Misc笔记
 
+此篇笔记对应的gist： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54 。题目对应的关键词将加粗
+
 ## Tools
 
 又是没例题的一天……
@@ -76,7 +78,9 @@
     - 似乎这个方法需要两台机器才能成立？不知道有没有单纯一台机器的做法，比如直接printf一个libc？
 - [MyFirstCloud](https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#myfirstcloud)
     - 关于bash/posix shell使用由用户控制值的变量时不加引号的安全问题
-
+- [Racing 2](https://github.com/avid-eclipse/CTF-Writeups/blob/main/UofTCTF%202025%20Tau%20Writeup.md)
+    - 一个很明显的条件竞争，然而我只做过读文件的，一时竟不知道写文件的该怎么搞……我是AI的概率还真不是零。特此记录，明明有个`/etc/passwd`可以写
+    - `ld.so.preload`，ctrl+z解法（题目的设置有问题，允许攻击者用ctrl+z将竞争窗口无限延长）和ssh session re-use（只是将ctrl+z换成了两个ssh连接，见 https://www.cyberciti.biz/faq/linux-unix-reuse-openssh-connection ）：**Racing 2**
 ## Digital Forensics and Incident Response(DFIR)
 
 开个新的分类，用于存储这个困扰我很久的题目类型:(。顺便把disk，mem类型的forensic题也放这
