@@ -2,6 +2,8 @@
 
 越来越认识到什么是“好记性不如烂笔头”
 
+此篇笔记对应的gist: https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5 。题目对应的关键词将加粗
+
 ## Web3
 
 似乎混进来了奇怪的分类……
@@ -407,6 +409,9 @@ for i in range(300,1000):
 - [My First App](https://ireland.re/posts/UofTCTF_2024/#webmy-first-app)
     - 过滤方括号、下划线及引号。利用lipsum逃逸，`|attr()`代替方括号，并将带有下划线的项放在请求头，用`request.pragma.0`访问（有些header里面没法放下划线，Pragma可以，所以用多个Pragma传递带有下划线的项，数字表示第i个Pragma里的内容）
     - https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#my-first-app
+- [My Second App](https://hubert.hackin.ca/posts/uoftctf25-my-second-app)
+    - python flask ssti绕过滤的究极题目。关键是用filter语法`|`（jinjia独有，普通pyjail不能用）
+    - 这题还有个hash extension attack
 - [Frog-WAF](https://fireshellsecurity.team/sekaictf-frog-waf-and-chunky/)
     - java ssti模板注入（[EL - Expression Language](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection/el-expression-language)）。此题的难点在于waf，限制了所有数字和一些特殊符号与java的类名
     - 其他payload：
@@ -4106,7 +4111,7 @@ new URL("//a.com","http://b.com")
 499. [ComplainIO](https://stefanin.com/posts/heroctf_complainio)
 - 3.5.5及以下版本的Carbone存在可以使原型链污染漏洞到rce的gadget。意味着Carbone本身不存在任何漏洞，但如果使用Carbone的程序里出现原型链污染，则攻击者可以利用Carbone里的代码实现rce。具体poc介绍见 https://archives.pass-the-salt.org/Pass%20the%20SALT/2024/slides/PTS2024-RUMP-02-Templating_Martin.pdf
 - 注意直接使用poc里的payload可能会报错，这是因为poc里的payload仅考虑了只有Carbone的环境。如果程序还使用了其他第三方库，比如这题的Sequelize，污染原型链的操作也会影响到其他库，进而导致报错。看起来没啥好的解决办法，只能慢慢调试补救报错的地方
-- 非预期解： https://gist.github.com/C0nstellati0n/248ed49dea0accfef1527788494e2fa5#complainio 。一条似乎更复杂的carbone利用链。[官方wp](https://github.com/HeroCTF/HeroCTF_v6/tree/main/Web/ComplainIO)也不错
+- 非预期解：**complainio** 。一条似乎更复杂的carbone利用链。[官方wp](https://github.com/HeroCTF/HeroCTF_v6/tree/main/Web/ComplainIO)也不错
 500. [DNS](https://github.com/rehackxyz/REUN10N/tree/main/CTF-writeups/2024/BluehenCTF/web-DNS)
 - ECS (EDNS Client Subnet)参数绕过ip检测。类似于http的X-Forwarded-For，只不过ECS用在dns服务器
 - 也有网页GUI版dig： https://www.diggui.com 和 http://digwebinterface.com 。有时本机的dig命令可能被防火墙挡住
@@ -4178,3 +4183,6 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
     - uuid创建的时间（纳秒级）
     - seed值（uuid1的生成调用了`random.getrandbits`，本来是不可预测的。如果服务器提前seed后就可以了）
 - [flask-session](https://github.com/pallets-eco/flask-session)若使用了[filesystem](https://flask-session.readthedocs.io/en/latest/api.html#flask_session.filesystem.FileSystemSessionInterface)模式，则session内容会以pickle的形式存储在服务器的文件系统中，位于`md5("session:"+sessionId)`（具体路径得看[源码](https://github.com/pallets-eco/cachelib/blob/main/src/cachelib/file.py#L210),取决于cache_dir的值）。因此如果有文件上传能力且能控制文件名和session使用的sessionId，就能利用pickle实现rce
+517. [1337 v4ul7](https://github.com/UofTCTF/uoftctf-2025-chals-public/blob/master/leet-vault)
+- 提取签名jwt的公钥（和之前见过的i am confusion类似）的工具：[JWT-Key-Recovery](https://github.com/FlorianPicca/JWT-Key-Recovery)
+- 其他wp：**1337 v4ul7**

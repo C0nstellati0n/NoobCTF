@@ -1,5 +1,7 @@
 # Pwn笔记
 
+此篇笔记对应的gist： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5 。题目对应的关键词将加粗
+
 ## Chrome V8
 
 这玩意我完全不懂，一切交给未来的我
@@ -1901,7 +1903,7 @@ try {
 - 格式化字符串漏洞。此题格式化字符串的payload用scanf读入字符串的方式接受，一旦遇到null字符就会终止。pwntools自动生成payload的fmtstr_payload函数便不能用。只需把地址放在payload的最后，一个字节一个字节覆盖即可
 160. [shellcode level3](https://github.com/XDSEC/MoeCTF_2023/blob/main/WriteUps/RocketDev_Pwn/shellcode_level3.md)
 - 字节码`e8`,`e9`后跟偏移的计算。`跳转时指令所在地址-目标跳转地址+5`
-161. [Master Formatter](https://fallingraindrop.moe/2023/12/24/backdoorctf-2023-formatter-brief-writeup-got-of-glibc/)
+161. [Master Formatter](https://fallingraindrop.moe/2023/12/24/backdoorctf-2023-formatter-brief-writeup-got-of-glibc)
 - 除了environ，libc里还有个`__libc_argv`可以用来泄露栈地址。不过`__libc_argv`不在导出符号表里，需要用pwndbg（leakfind）/gef（scan）尝试寻找libc里的stack地址（看来其他找到的地址也可以用来泄露stack）。不止一个libc地址里存储着栈地址，找法参考 https://www.youtube.com/watch?v=qVLXHNqxpkE
 - 通过覆盖glibc的GOT表来getshell。参考 https://github.com/nobodyisnobody/docs/tree/main/code.execution.on.last.libc/#1---targetting-libc-got-entries 。很多常见的函数（如puts）内部会调用其他函数，从而调用got表。例如strdup() 调用 strlen() 和 memcpy()，可以选择覆盖memcpy的got表为one_gadget（似乎写ropchain也可以），接下来调用strdup就能getshell了。 https://github.com/nobodyisnobody/write-ups/tree/main/RCTF.2022/pwn/bfc#code-execution-inferno 补充了如果one_gadget使用条件不满足时的做法：`__GI___printf_fp_l+5607`处有个清空要求寄存器并调用memcpy的gadget。于是把任意一个libc函数的got改为这个gadget，再把one_gadget写入memcpy的got即可
 - 顺便记一下，自己做这道题的时候成功泄露了一个栈地址，但似乎是因为泄露的地址与函数的返回地址太远了，两者偏移不同，导致找不到正确的返回地址。之前没遇见过这种情况，只能猜测是不在同一页/stack frame的地址没法这样做，或者本地环境不同（patch了libc也无济于事）？总之以后留个心眼，泄露与目标地址近的栈地址即可
@@ -1919,12 +1921,12 @@ try {
   - 使用Function opcode调用用户函数并实现RCE。一些复杂的select语句内部会使用该opcode。需要重点伪造sqlite3_context和FuncDef结构中的一两个指针，其他的直接抄内存里原本的结构即可。rdi的控制似乎会出现问题，可使用one_gadget。操控sqlite3_context结构体后可以控制rdx
 166. [Memory](https://scavengersecurity.com/posts/memory/)
 - kernel相关pwn。get_user函数从用户页地址处获取一个变量。当提供的地址有效且可读时，耗时会比不可读的无效地址短上不少。可利用这点实现基于时间的测信道攻击。wp提供了一种C语言获取时间戳并实现测信道攻击的方式
-- 官方解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#memory 。利用被cache后的地址访问速度会更快的特点实现测信道攻击
+- 官方解法： **IOCTL accesses** 。利用被cache后的地址访问速度会更快的特点实现测信道攻击
 - 调试kernel可以用[kgdb](https://www.kernel.org/doc/html/latest/dev-tools/kgdb.html)
 167. javascript jail合集
 - [Baby JS Blacklist](https://github.com/daffainfo/ctf-writeup/tree/main/2024/UofTCTF%202024/Baby%20JS%20Blacklist)
   - 使用babel库将输入代码转为Abstract Syntax Tree (AST)，并检查是否有函数调用。参考 https://gist.github.com/arkark/a31f57c271e4aca4516c5a7072845aca 里的做法可以绕过babel的检测。不过wp里使用的是`process.binding`而不是`process.mainModule.require`来获取flag。个人做这题时发现，高版本的nodejs里默认没有require了，必须要导入模块才能使用。于是只能用binding实现RCE（binding也可以用来调用C++函数）
-  - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#baby-js-blacklist
+  - 其他做法：**Baby JS Blacklist**
 - [js_blacklist](https://github.com/UofTCTF/uoftctf-2024-chals-public/tree/master/Jail/js_blacklist)
   - 利用jsfuck绕过过滤
   - Add a `, []` at the end of the payload to form a sequence expression. Babel's `path.evaluate()` ignores expressions in a sequence expression except the last one, allowing us to bypass the static evaluation check.
@@ -1945,6 +1947,12 @@ try {
   - 其他做法/参考资料： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#jscripting ， https://gist.github.com/jcreedcmu/4f6e6d4a649405a9c86bb076905696af
 - [jscripting-revenge](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/web/jscripting-revenge)
   - 自定义jsc文件分析+util.inspect的使用
+- [Smol JS](https://merkletr.ee/ctf/2025/uoftctf/smoljs)
+  - 类似去年的js_blacklist，利用`f?.(args)`替代`f(args)`来调用函数，从而绕过ast traverse时的`CallExpression|AssignmentExpression`过滤
+  - babel-minify库的minify会移除代码的注释
+  - js eval代码时，被eval的代码能够访问eval所在位置的作用域的变量（即被eval的代码等同于放在eval所在位置执行）
+- [js-blacklist-v2](https://github.com/UofTCTF/uoftctf-2025-chals-public/blob/master/js-blacklist-v2)
+  - 只有payload，没有详细wp（比赛时甚至零解）。题目作者的提示：**js-blacklist-v2**
 168. [U2S](https://ptr-yudai.hatenablog.com/entry/2024/01/23/174849#U2S-2-solves)
 - lua pwn入门。通过lua数组负索引溢出获取任意地址读写并实现RCE。lua上可以使用堆喷，然后利用负索引溢出修改lua内置object元数据。具体可参考 https://ricercasecurity.blogspot.com/2023/07/fuzzing-farm-4-hunting-and-exploiting-0.html
 169. [CoolPool](https://ajomix.hashnode.dev/pwn-coolpool-tetctf2024)
@@ -1955,11 +1963,11 @@ try {
 - cjson会跳过所有ascii值小于等于0x20的字符，pcre2的`\s`只会匹配空白字符（`\n`, `\r`, `\t`, 空格等）。可利用该解析差异绕过一些waf
 - https://seclists.org/bugtraq/2015/Sep/137
 171. [Let's party in the house](https://github.com/mmm-team/public-writeups/tree/main/rwctf2024/lets_party_in_the_house)
-- Synology固件漏洞pwn，可获取RCE。参考 https://www.synology.com/en-us/security/advisory/Synology_SA_23_15 和 https://teamt5.org/en/posts/teamt5-pwn2own-contest-experience-sharing-and-vulnerability-demonstration/
+- Synology固件漏洞pwn，可获取RCE。参考 https://www.synology.com/en-us/security/advisory/Synology_SA_23_15 和 https://teamt5.org/en/posts/teamt5-pwn2own-contest-experience-sharing-and-vulnerability-demonstration
 - gdb调试相关：
   - https://github.com/leommxj/prebuilt-multiarch-bin
   - https://github.com/hacksysteam/gdb-cross-compiler
-  - https://bin.leommxj.com/
+  - https://bin.leommxj.com
 172. [pgsum](https://rivit.dev/posts/real-world-ctf-6th-pgsum-pwn/)
 - PostgreSQL pwn——获取反弹shell。漏洞来源于引入的自定义函数中调用了pg_detoast_datum函数，该函数仅针对于toasted data，但程序却将其用在非toastable数据类型。可以利用`select proname,prosrc from pg_proc where prosrc in ('vuln1', 'vuln2');`在数据库内部中搜寻源代码包含vuln1和vuln2的函数
 - crash postgres可获取stack trace，内部会泄露libc地址

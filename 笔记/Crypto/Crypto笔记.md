@@ -651,6 +651,7 @@ sympy也放这了
     - 计算矩阵是否是二次剩余（legendre symbol）。不过看题目的矩阵生成代码，只有可对角化并可逆的矩阵才有可能使用legendre symbol，有和整数类似的性质。看[官方wp](https://github.com/Cryptonite-MIT/niteCTF-2024/tree/main/crypto/quadrillion_matrices)的解法会更清楚。比赛中由于生成矩阵的代码被隐藏了，直接没想到这点。看来以后遇到矩阵幂的情况要看看矩阵的对角化和jordan form形式
     - 计算矩阵的的dlp。需要神奇的CADO-NFS，而且耗时较长
     - 原来这题很久以前就有人研究过了，结合 https://cstheory.stackexchange.com/questions/12655/discrete-log-in-gl2-p 和 https://crypto.stackexchange.com/questions/22830/finding-xs-parity-in-the-discrete-log-problem 即可
+- 记录个工具： https://github.com/Aeren1564/CTF ，里面的CTF_Library看起来很香
 
 ## Lattice(格)
 
@@ -2809,4 +2810,6 @@ assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
 - sha0 hash collision。相关论文： https://iacr.org/archive/fse2008/50860017/50860017.pdf
 165. [Just Lattice](https://yun.ng/c/ctf/2024-wwctf/crypto/just-lattice)
 - 结果这题和lattice没有关系……题目是个Learning with Errors (LWE)加密方案，本身是安全的加密方案。但这题设置的参数导致可能的私钥空间太小，直接爆破就能得到结果
-- 官方wp不是最佳爆破方式，最佳方式见 https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101#just-lattice
+- 官方wp不是最佳爆破方式，最佳方式见 **Just Lattice**
+166. [simple-signing](https://github.com/UofTCTF/uoftctf-2025-chals-public/tree/master/simple-signing)
+- 针对python tuple的hash的preimage attack（找到某个hash值的对应的明文）。 https://ctf.0xff.re/2022/fcsc_2022/khal-hash 讲的更详细

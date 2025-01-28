@@ -1022,6 +1022,9 @@ main()
   - 如何编写有关浮点数计算的z3脚本。这题计算的浮点数比较刁钻，`0.0`和`-0.0`。需要使用正确的类型z3才能正常工作，比如`FP("x", Float32())`。脚本见 https://gist.github.com/C0nstellati0n/a066c450ed5d4c8ffbb0c1328283fe14#floats
   - [官方wp](https://github.com/WorldWideFlags/World-Wide-CTF-2024/tree/main/Reverse%20Engineering/Floats)提到这题的灵感来源： https://orlp.net/blog/subtraction-is-functionally-complete 。话说wp里的z3脚本长得还挺别致的（？）
   - 此题计算时只用了加和减两种运算，结果很像按位和。所以也可以用简单的bitvec来模拟方程
+- [bloatware](https://sylvie.fyi/posts/bloatware)
+  - 逆向js mixed boolean-arithmetic (MBA) expression混淆。这个混淆方式结合一堆位运算和算术运算，使整个算式看起来非常复杂，但实际上只是在做一些基本的操作。比如`(x ^ y) + 2 * (x & y)`等同于`x+y`。可以用[SiMBA](https://github.com/DenuvoSoftwareSolutions/SiMBA)简化线性MBA
+  - MBA会影响z3，使z3解方程的复杂度变高。需要简化算式后再放入z3，不然可能没法在规定时间内跑出结果。我认为wp作者的做法太聪明了，没有使用上述提到的工具而是直接手搓了遍历ast并简化的代码；题目有1950个条件，利用随机生成的input尝试通过某个条件，然后比对能够通过条件的值找到潜在的规则。这个“潜在的规则”相当于简化了MBA算式方程，这时放到z3里就能解出来了
 - 有些时候如果8-bit vector出不来结果，可以尝试用32-bit vector： https://github.com/opcode86/ctf_writeups/tree/main/wwCTF2024
 115. [Conquest of Camelot](https://black-frost.github.io/posts/sekai2023/)
 - OCaml语言binary逆向。这种语言的函数调用约定比较奇怪，ida可能无法生成伪代码。另外，这种语言对数组的操作会自动添加大量的bound checking，函数体会看起来很复杂但逻辑可能很简单

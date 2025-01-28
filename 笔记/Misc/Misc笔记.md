@@ -15,7 +15,9 @@
 
 - [Multi Image](https://hackmd.io/@Solderet/rk2g-kwr1g)
     - 对抗性扰动（adversarial perturbation）。生成添加进图片的噪音（noise），使训练好的模型无法正确辨别图片类型
-    - 我也不明白在干什么，什么“gradient descent“，“Adam“之类的东西，也不懂为啥这样就能找到更好的noise……但是更详细有注释的exp见 https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#multi-image
+    - 我也不明白在干什么，什么“gradient descent“，“Adam“之类的东西，也不懂为啥这样就能找到更好的noise……但是更详细有注释的exp见 **Multi Image**
+- [walk-in-the-forest](https://github.com/UofTCTF/uoftctf-2025-chals-public/tree/master/walk-in-the-forest)
+    - [DRAFT](https://github.com/vidalt/DRAFT)攻击。给定由一组数据训练出的决策树随机森林模型，尝试寻找训练用的数据
 
 ## Hardware
 
@@ -245,7 +247,7 @@
     - 和上面那题一样，也是分析minecraft pcap。不过这题的通信是加密的，所以又要写新的脚本
     - wp里提到的“use two ciphers”大概是需要创建两个AES cipher对象，不这么做的话解密不成功（似乎是因为cipher object解密后不会重置，所以server和client得各自用自己的）
     - 参考 https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge/Protocol 可以自己实现一个Minecraft协议解析器
-    - 其他wp： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#minecraft-safe
+    - 其他wp：**minecraft-safe** 。[官方wp](https://github.com/UofTCTF/uoftctf-2025-chals-public/blob/master/minecraft-safe)更详细
 - [Torrent Tempest](https://kerszl.github.io/hacking/walkthrough/ctf/ctf-backdoorctf-torrent)
     - BitTorrent协议分析；提取传输的内容
     - 也可以用一下[bittorent-traffic-analyzer](https://github.com/mfindra/bittorent-traffic-analyzer)。就是感觉有点鸡肋，实际提取文件内容还要自己写脚本。见 https://seall.dev/posts/backdoorctf2024
@@ -2494,7 +2496,7 @@ $ cd a/b
 - 复习一下rar和alternate data stream（ads；之前见的时候叫ntfs，一样的）。此题还包含如何使用john爆破rar密码
 - 7zip可以直接看到ads的内容，linux的unrar命令也可以。参考 https://kerszl.github.io/hacking/walkthrough/ctf/ctf-UofTCTF-2025 ， 还能用Get-Item命令提取出ntfs数据流，不过可能会有一些编码问题
 377. [Out of the container](https://github.com/thmai11/writeups/blob/main/2025/uoftctf/out_of_the_container)
-- 可以用[dive](https://github.com/wagoodman/dive)查看docker image的各个layer(a set of changes made to a file system,比如添加或者修改文件的操作)
+- 可以用[dive](https://github.com/wagoodman/dive)查看docker image的各个layer(a set of changes made to a file system,比如添加或者修改文件的操作)。参考 https://github.com/UofTCTF/uoftctf-2025-chals-public/tree/master/out-of-the-container ，docker原生命令也可以，就是没有GUI界面
 - GCP（google cloud platform）相关操作
 378. [Simple File Storage](https://blog.hexf.me/uoftctf25_simple_file_storage)
 - 题目作者说这题有很多解法：ziptar polyglot,zipzip polyglot,zip multidisking。这篇wp是第三种；[官方wp](https://github.com/UofTCTF/uoftctf-2025-chals-public/blob/master/simple-file-storage)是第一种，第二种解法则是`cat a.zip b.zip > solution.zip`
