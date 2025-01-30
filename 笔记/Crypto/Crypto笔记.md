@@ -2650,7 +2650,7 @@ print(hex(random.getrandbits(256)))
 - Bluestein's algorithm
 - 为了理解这题去看了傅里叶分析的介绍： https://zhuanlan.zhihu.com/p/19763358 ，还是啥也不懂
 116. [Electronical](https://github.com/D13David/ctf-writeups/tree/main/buckeyectf23/crypto/electronical)
-- aes ecb padding oracle attack. 特征是有oracle接收任意输入，拼接上flag后返回整体的加密结果。其他可用脚本： https://gist.github.com/C0nstellati0n/cf6ae2c5e0e9fe1ecb532d257a56e101
+- aes ecb padding oracle attack. 特征是有oracle接收任意输入，拼接上flag后返回整体的加密结果。其他可用脚本：**Electronical**
 117. [Real Smooth](https://github.com/nass15456/CTFs/blob/main/BuckeyeCTF/Real%20Smooth.md)
 - chacha20 key/nonce reuse+明文攻击。chacha20的算法比较复杂，但是可以简易地理解成“对于明文中的每个字节，生成一个对应的密钥字节与其异或”。不同的key/nonce组合会生成不同的密钥字节（与key不同），因此重用一对key/nonce就成了many time pad。假如已知一对明文和密文，就能异或两者得到完整的密钥字节，进而解码其余密文
 118. [coding](https://github.com/cscosu/buckeyectf-2023-public/tree/master/crypto-coding)
@@ -2813,3 +2813,6 @@ assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
 - 官方wp不是最佳爆破方式，最佳方式见 **Just Lattice**
 166. [simple-signing](https://github.com/UofTCTF/uoftctf-2025-chals-public/tree/master/simple-signing)
 - 针对python tuple的hash的preimage attack（找到某个hash值的对应的明文）。 https://ctf.0xff.re/2022/fcsc_2022/khal-hash 讲的更详细
+167. [Chess](https://github.com/srdnlen/srdnlenctf-2025_public/blob/main/crypto_Chess)
+- xorshift128 prng破解。这题比较特殊，只能获取prng生成值的lsb，不过还是能利用sagemath的BooleanPolynomialRing构造线性方程组解出state
+- 也可以用工具： https://github.com/StroppaFR/mathrandomcrack

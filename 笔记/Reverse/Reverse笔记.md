@@ -11,6 +11,13 @@
   - 使用案例见[Now This Will Run on My 486?](https://github.com/gimel-team/ctf-writeups/blob/master/2025/iris-ctf/now-this-will-run-on-my-486)。这题我做的时候用的是pwndbg，然而题目涉及JIT+signal handling，通过报错进设置好的signal handling函数来动态解码执行的代码。pwndbg直接把signal传到我手里来了，continue也动不了……
 - [ghidra-wasm-plugin](https://github.com/nneonneo/ghidra-wasm-plugin)：WASM逆向。chrome自带的开发者工具可以调试wasm，见 https://developer.chrome.com/docs/devtools/wasm 和 https://developer.chrome.com/docs/devtools/memory-inspector
   - [????????](https://hackmd.io/@fsharp/Hk1cfCwIye)
+- [A child's dream](https://github.com/srdnlen/srdnlenctf-2025_public/blob/main/pwn_A_childs_dream)
+  - [Mesen2](https://github.com/SourMesen/Mesen2)
+    - Multi-system emulator (NES, SNES, GB, GBA, PCE, SMS/GG, WS) 
+  - ida pro也可以反编译SNES,参考 https://r3kapig-not1on.notion.site/Srdnlen-CTF-2025-Writeup-by-r4kapig-181ec1515fb98004b3e2c42e74ce5fc5
+  - 另一个snes调试器：[bsnes-plus](https://github.com/devinacker/bsnes-plus)
+- [diaphora](http://diaphora.re)
+  - IDA插件；program diffing tool
 
 ## Game
 

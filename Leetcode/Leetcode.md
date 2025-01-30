@@ -126,7 +126,7 @@
 - [Swap Nodes in Pairs](./Medium/Swap%20Nodes%20in%20Pairs.md).
 - [Maximum Twin Sum of a Linked List](./Medium/Maximum%20Twin%20Sum%20of%20a%20Linked%20List.md). 反转单向链表。
 - [Minimum Number of Vertices to Reach All Nodes](./Medium/Minimum%20Number%20of%20Vertices%20to%20Reach%20Al.md). 找出图表中所有入度为零的node。
-- [Is Graph Bipartite?](./Medium/Is%20Graph%20Bipartite%3F.md). dfs/bfs,graph coloring
+- [Is Graph Bipartite?](./Medium/Is%20Graph%20Bipartite.md). dfs/bfs,graph coloring
 - [Evaluate Division](./Medium/Evaluate%20Division.md). dfs/union find/bfs/Floyd Warshall
 - [Shortest Bridge](./Medium/Shortest%20Bridge.md).flood fill/dfs+multi-source bfs（多源bfs）
 - [Top K Frequent Elements](./Medium/Top%20K%20Frequent%20Elements.md).bucket sort.

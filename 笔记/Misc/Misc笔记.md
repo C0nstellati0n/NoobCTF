@@ -2503,3 +2503,5 @@ $ cd a/b
 - 题目的关键是利用7zip和php libzip的解析差异。以下是第一和第三种思路的概要（第二种解法没人解析，我猜是因为libzip看到第一个zip文件的结尾就结束了，然而7zip会继续往下解压）：
     - 第一种：用[truepolyglot](https://github.com/ansemjo/truepolyglot)构造一个zip/tar的polyglot，使tar压缩的一个文件的文件名为zip的文件头（这样这个polyglot就会以zip的文件头开头了）。libzip将其看成zip，但7zip将其看成tar
     - 第三种：zip文件的末尾有个end-of central directory (EOCD)块，指向第一个中央目录（central directory）。multi-disk ZIP是一种将太大的zip文件拆分成较小的部分跨磁盘存储的技术。7zip支持但libzip不支持，表现在会忽略当前EOCD块，转而寻找下一个。通常情况下zip文件只有一个EOCD块，于是报错。然而可以在末尾手动加上另一个EOCD块，使libzip不报错的同时7zip也解压成功。这个做法包含较复杂的手动zip构造
+379. [Malvent](https://g4rud4kun.github.io/2025/01/21/Srdnlen-CTF-2025)
+- 使用[Event Viewer](https://learn.microsoft.com/en-us/shows/inside/event-viewer)分析`.evtx` windows日志文件

@@ -4186,3 +4186,6 @@ fopen("$protocol://127.0.0.1:3000/$name", 'r', false, $context)
 517. [1337 v4ul7](https://github.com/UofTCTF/uoftctf-2025-chals-public/blob/master/leet-vault)
 - 提取签名jwt的公钥（和之前见过的i am confusion类似）的工具：[JWT-Key-Recovery](https://github.com/FlorianPicca/JWT-Key-Recovery)
 - 其他wp：**1337 v4ul7**
+518. [Sparkling Sky](https://github.com/srdnlen/srdnlenctf-2025_public/blob/main/web_sparklingsky)
+- 大名鼎鼎的log4j漏洞利用
+- 其他wp： https://r3kapig-not1on.notion.site/Srdnlen-CTF-2025-Writeup-by-r4kapig-181ec1515fb98004b3e2c42e74ce5fc5

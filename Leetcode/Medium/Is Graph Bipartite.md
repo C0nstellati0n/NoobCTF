@@ -54,7 +54,7 @@ class Solution {
                     if (colors[next] == 0) {          // If this node hasn't been colored;
                         colors[next] = -colors[cur];  // Color it with a different color;
                         queue.Enqueue(next);
-                    } else if (colors[next] != -colors[cur]) {   // If it is colored and its color is different, return false;当前node与相邻node的颜色的负数一致，那就是不能和相邻的onde颜色一样
+                    } else if (colors[next] != -colors[cur]) {   // If it is colored and its color is different, return false;当前node与相邻node的颜色的负数一致，那就是不能和相邻的node颜色一样
                         return false;
                     }
                 }
