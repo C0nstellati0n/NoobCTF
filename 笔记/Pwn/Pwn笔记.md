@@ -780,29 +780,29 @@ print(base64.b64encode(temp.encode()))
   - python内部有个`__doc__`属性，可以由此获取任意字符
 - [Avatar](https://github.com/4n86rakam1/writeup/tree/main/GlacierCTF_2023/misc/Avatar)
   - 利用f string(`f'{}'`)构造字符并实现双eval RCE。`f"{97:c}"`输出为a
-  - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#avatar
+  - 其他做法： **avatar**
 - eval里不能用=号定义变量或给变量赋值，但是用海象运算符`:=`可以
 - [least ELOistic fish](https://github.com/Cryptonite-MIT/niteCTF-2023/tree/main/misc/least%20ELOistic%20fish)
   - 利用多重getattr套娃和bytearray绕过过滤
   - 这题本身是python stockfish（国际象棋分析库）的使用，因为输入未被过滤，可以直接跳过当前输入，让stockfish自己和自己下棋
 - [LLM Sanitizer](https://1-day.medium.com/llm-sanitizer-real-world-ctf-2024-walkthrough-233dbdb0b90f)
-  - 绕语言模型过滤。其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#llm-sanitizer
+  - 绕语言模型过滤。其他解法： **llm sanitizer**
 - [Diligent Auditor](https://ur4ndom.dev/posts/2024-02-11-dicectf-quals-diligent-auditor/)
   - 在只能使用import导入一个名称不含下划线及`.`模块且大部分builtins被删除，添加audithook的情况下实现RCE/读文件
   - FileFinder内部的`_path_cache`缓存着文件夹下的所有文件名称，意味着即使不知道flag完整的文件名（只知道名称包含flag），也能通过`_path_cache`找到完整的文件名并读取
   - 使用readline类读取文件。open会被audit hook监视，但用readline读文件则不会触发audit hook
   - 一些利用ctypes绕过audit hook逃脱pyjail并获取RCE的技巧
-  - 其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#diligent-auditor
+  - 其他解法： **diligent auditor**
 - [IRS](https://maplebacon.org/2024/02/dicectf2024-irs/)
   - 算是上面那道题的究极升级版（加了ast以及其他乱七八糟的过滤），甚至利用到了python内部的uaf。没有简略总结因为全篇都是知识点
 - [pyquinejailgolf](https://gerlachsnezka.github.io/writeups/amateursctf/2024/jail/pyquinejailgolf/)
   - 使用python编写[quine](https://en.wikipedia.org/wiki/Quine_(computing)) 程序（输出自己源码的程序）。注意payload被包在题目文件里执行，所以部分payload会利用这点，导致其单独运行不是quine程序，只有在题目文件里才是
-  - 其他做法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#pyquinejailgolf
+  - 其他做法： **pyquinejailgolf**
 - [Picklestar](https://github.com/cr3mov/cr3ctf-2024/tree/main/challenges/misc/picklestar)
   - python pickle反序列化挑战，限制可使用的opcode和字符串实现RCE。可以用INST字节码调用breakpoint然后执行命令
 - [my-favorite-code](https://github.com/acmucsd/sdctf-2024/tree/main/misc/my-favorite-code)
   - 只能用两个python opcode调用breakpoint函数（建议看题目源码，要求`dis.Bytecode`返回的函数opcode只有两种，一个是COMPARE_OP，另一个自选）
-  - 在discord的聊天里艰难地拼出了一个wp： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#my-favorite-code 。关键点在于利用python 3.11新加的功能code objects cache（见 https://docs.python.org/3.11/whatsnew/3.11.html#cpython-bytecode-changes 和  https://github.com/python/cpython/issues/90997 ）隐藏部分opcode。cache的部分不会被`dis.Bytecode`看到
+  - 在discord的聊天里艰难地拼出了一个wp: **my-favorite-code** 。关键点在于利用python 3.11新加的功能code objects cache（见 https://docs.python.org/3.11/whatsnew/3.11.html#cpython-bytecode-changes 和  https://github.com/python/cpython/issues/90997 ）隐藏部分opcode。cache的部分不会被`dis.Bytecode`看到
 - [PySysMagic](https://github.com/salvatore-abello/CTF-Writeups/blob/main/L3ak%20CTF%202024/PySysMagic)
   - obligatory pyjail+PyMagic(这两题我竟然都记过)。这题倒没什么绕过audit hook的技巧，但是pyjail技巧不少
   - wp作者的python相关cheatsheet： https://github.com/salvatore-abello/python-ctf-cheatsheet
@@ -815,14 +815,14 @@ print(base64.b64encode(temp.encode()))
     - 如何查看jail环境下可用的builtin函数
 - [Astea](https://octo-kumo.me/c/ctf/2024-uiuctf/misc/astea)
   - 禁止使用以下操作：assign, call, import, import from, binary operation (`+-/`等)，尝试获取RCE。可以用函数装饰器（function decorators），但是这样出来的payload不是一行。一行的做法可以用AnnAssign（之前真没见过这种语法）。属于abstract syntax tree（ast）sandbox题
-  - 其他做法: https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#astea 。用海象运算符（walrus operator）+list comprehension，以及其他很好的wp
+  - 其他做法: **astea** 。用海象运算符（walrus operator）+list comprehension，以及其他很好的wp
 - [Calc](https://crocus-script-051.notion.site/Calc-dbdf7f34430d403d9a1550f88b2a4316)
 	- 和audit hook有关的题。要求在不触发任何audit event的情况下获得shell且payload有长度限制。不确定在不触发任何audit event的情况下能不能getshell，但看这道题可以做到获取套娃函数里的参数并覆盖
 - [crator](https://outgoing-shoe-387.notion.site/Idek-CTF-2024-web-crator-WriteUp-43b1e90d7b7d40b3ad8b338fa9c08bc5)
 	- 如何更换函数的内部代码从而绕过沙盒。另外这篇wp里记录了很多不错的python沙盒逃逸学习链接
 - [Monkey's Paw](https://blog.ryukk.dev/ctfs/write-up/2024/1337up-live-ctf/misc)
   - "反其道而行之"的pyjail。要求函数、属性等内容必须是`__xx__`的形式，且除函数和属性外的值必须是字符串。关键是可以用`__len__`取出数字
-  - 其他解法： https://gist.github.com/C0nstellati0n/c5657f0c8e6d2ef75c342369ee27a6b5#monkeys-paw 。稍微提一嘴，根据官方解法（`oh_word`），题目的过滤好像写错了……预期解是用`__doc__`取出字符串，结果因为过滤的问题直接就能在payload里用字符串
+  - 其他解法： **monkey's paw** 。稍微提一嘴，根据官方解法（`oh_word`），题目的过滤好像写错了……预期解是用`__doc__`取出字符串，结果因为过滤的问题直接就能在payload里用字符串
 - [Korra](https://github.com/nononovak/glacierctf-2024-writeups/blob/main/Korra%20(writeup).md)
   - 只能用`abcdef"{>:}`的pyjail。关键是利用f-string的format语法，比如`f"""{"a">"a":d}"""`是字符0
 - [cobras-den](https://github.com/negasora/Some-CTF-Solutions/tree/master/irisctf-2025/misc/cobras-den)
@@ -832,6 +832,12 @@ print(base64.b64encode(temp.encode()))
   - `\r`可以被看作是python源码里的空格和换行，而且可以通过input输入
   - 可以用`from...import...as __getattr__`覆盖`__getattr__`，然后调用`from __main__ import xxx`就能调用`__getattr__`，进而调用引入的函数了
   - 其他解法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#warden 。其实都是预期解，几乎完全一样
+- [Another Impossible Escape](https://r3kapig-not1on.notion.site/Srdnlen-CTF-2025-Writeup-by-r4kapig-181ec1515fb98004b3e2c42e74ce5fc5)
+  - 感觉应该把这类可以输入多个payload的pyjail与只能输入一个payload的pyjail区分开。这类题可以用海象运算符（`:=`）给变量赋值
+  - 负号(`-`)被禁时可以用取反`～`拿到负数（用于负索引）
+  - 可以用Garbage Collector interface（gc模块）获取被删除的变量值
+  - 另一种解法： https://gist.github.com/lebr0nli/1923a935134a2643ac58cf94ac59fd94 。用`sys._getframe()`里的`f_code.co_consts`也能拿到被删除的变量
+  - [官方wp](https://github.com/srdnlen/srdnlenctf-2025_public/blob/main/misc_Another_Impossible_Escape)反而最复杂，要用gcore命令给正在运行的python线程生成一个core文件，然后grep出里面的flag
 - pyjail cheatsheet： https://shirajuki.js.org/blog/pyjail-cheatsheet
 40. pwntools可以连接启用ssl/tls的远程服务器，只需给remote添加一个参数`ssl=True`。如：
 ```python

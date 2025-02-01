@@ -2816,3 +2816,7 @@ assert crc32(a)^crc32(b)==crc32(c)^crc32(d)
 167. [Chess](https://github.com/srdnlen/srdnlenctf-2025_public/blob/main/crypto_Chess)
 - xorshift128 prng破解。这题比较特殊，只能获取prng生成值的lsb，不过还是能利用sagemath的BooleanPolynomialRing构造线性方程组解出state
 - 也可以用工具： https://github.com/StroppaFR/mathrandomcrack
+168. [Based-sbox](https://github.com/srdnlen/srdnlenctf-2025_public/blob/main/crypto_Based-sbox)
+- Feistel network类型密码攻击。给定明文对应的密文，要求恢复密钥。这题是7轮的Feistel结构，轮函数`_f`在 $F_{2^{64}}$ 下完全线性，为 $F(x):\frac{1}{x}+c$ ，c为常数。故可以用 $F_{2^{64}}$ 中整数（环？）与多项式环的同构，用sagemath实现一个多项式GF下的Feistel，再用PolynomialRing多项式代表未知的key，跑一遍Feistel，即可构成有关密钥的多项式方程组
+- wp利用XL算法（eXtended Linearization algorithm）求方程组的根。和groebner_basis()与ideal()目标差不多，不过XL适合稀疏方程组，在这题的表现下更快。sagemath的gb的基础设置在这题可能会超时，参考 https://github.com/DagurB/informalWriteups/tree/master/srdnlen/basedsbox ，用`singular:slimgb`可以提高速度。或者直接用“更好”的gb实现： https://www.singular.uni-kl.de/Manual/4-0-3/sing_396.htm 。属于密码学中的代数攻击（Algebraic attack）
+- 整数转多项式：首先把数字转成二进制，比如0x1b的二进制是`00011011`。然后从右往左看，每个1就代表一个 $x^n$ 项的系数。比如0x1b的多项式表示为 $x^4+x^3+x+1$ 。在这个同构下，异或`^`和加法`+`之间可以相互转换

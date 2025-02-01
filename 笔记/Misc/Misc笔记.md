@@ -266,10 +266,12 @@
 - [No Shark?](https://github.com/gimel-team/ctf-writeups/tree/master/2025/iris-ctf/no-shark)
     - 分析hex编码的raw tcp数据流。可以用text2pcap将其转换为pcap
     - 纯命令行做法： https://gist.github.com/C0nstellati0n/78f5887b5bee235583a026840354ae54#no-shark
+- [Cheese with Friends](https://github.com/srdnlen/srdnlenctf-2025_public/blob/main/foren_Cheese_with_Friends)
+    - usb keyboard pcap，但是包含vscode快捷键。最好的办法是用pynput库模拟出全部的击键
 
-1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/6%E7%BA%A7/Misc/arrdeepee.md)
+1. 将tcp流解码为tpkt+openssl检查ASN.1。例题：[arrdeepee](../../CTF/攻防世界/6级/Misc/arrdeepee.md)
 2. mca后缀名文件为游戏Minecraft使用的世界格式。例题:[Russian-zips](https://blog.csdn.net/weixin_44604541/article/details/113741829)
-3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](https://github.com/C0nstellati0n/NoobCTF/blob/main/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C/3%E7%BA%A7/Misc/%E4%BC%A0%E6%84%9F%E5%99%A81.md)
+3. 传感器相关知识点（差分曼彻斯特、曼彻斯特编码，crc校验）。[传感器1](../../CTF/攻防世界/3级/Misc/传感器1.md)
 4. 有时候会遇见需要改宽高的情况，一般会根据图片的crc值爆破出正确的宽高。
 
 ```python
